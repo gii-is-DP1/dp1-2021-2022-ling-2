@@ -14,6 +14,21 @@
     </parent>
     <name>petclinic</name>
 
+    <developers>
+        <developer>
+            <id>jstockwell</id>
+            <name>Jaime Stockwell Mendoza</name>
+            <email>jstockwellmendoza@gmail.com</email>
+            <url>https://github.com/jstockwell/</url>
+            <organization>us.es</organization>
+            <organizationUrl>https://www.us.es/</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>dev</role>
+            </roles>
+        </developer>
+    </developers>
+
     <properties>
 
         <!-- Generic properties -->
