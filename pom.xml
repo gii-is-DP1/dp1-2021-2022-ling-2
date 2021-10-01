@@ -27,6 +27,18 @@
                 <role>dev</role>
             </roles>
         </developer>
+        <developer>
+            <id>Pablosancval</id>
+            <name>Pablo Sanchez Valenzuela</name>
+            <email>pablosancval@gmail.com</email>
+            <url>https://github.com/pablosancval</url>
+            <organization>us.es</organization>
+            <organizationUrl>https://www.us.es/</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>dev</role>
+            </roles>
+        </developer>
     </developers>
 
     <properties>
