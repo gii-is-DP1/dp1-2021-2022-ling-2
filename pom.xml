@@ -28,6 +28,18 @@
             </roles>
         </developer>
         <developer>
+        <id>andrsdt</id>
+            <name>Andres Duran Terrero</name>
+            <email>andresdt@pm.me</email>
+            <url>https://github.com/andrsdt/</url>
+            <organization>us.es</organization>
+            <organizationUrl>https://www.us.es/</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>dev</role>
+            </roles>
+        </developer>
+        <developer>
             <id>Pablosancval</id>
             <name>Pablo Sanchez Valenzuela</name>
             <email>pablosancval@gmail.com</email>
@@ -58,7 +70,6 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
