@@ -51,6 +51,18 @@
                 <role>dev</role>
             </roles>
         </developer>
+        <developer>
+            <id>pablonunnez</id>
+            <name>Pablo Núñez Moreno</name>
+            <email>pabnunmor@alum.us.es</email>
+            <url>https://github.com/pablonunnez/</url>
+            <organization>us.es</organization>
+            <organizationUrl>https://www.us.es/</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>dev</role>
+            </roles>
+        </developer>
     </developers>
 
     <properties>
