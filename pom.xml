@@ -63,6 +63,18 @@
                 <role>dev</role>
             </roles>
         </developer>
+        <developer>
+            <id>Icaro212</id>
+            <name>Pablo Jose Robledo Campa</name>
+            <email>pablorcmail@gmail.com</email>
+            <url>https://github.com/Icaro212/</url>
+            <organization>us.es</organization>
+            <organizationUrl>https://www.us.es/</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>dev</role>
+            </roles>
+        </developer>
     </developers>
 
     <properties>
