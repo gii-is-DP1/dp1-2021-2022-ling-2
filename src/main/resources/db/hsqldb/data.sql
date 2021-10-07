@@ -11,6 +11,12 @@ INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
 INSERT INTO users(username,password,enabled) VALUES ('anddurter','anddurter',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (4,'anddurter','owner');
 
+INSERT INTO users(username,password,enabled) VALUES ('pabsanval1','idk',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (5,'pabsanval1','owner');
+
+INSERT INTO users(username,password,enabled) VALUES ('jaistomen','idk2',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (6,'jaistomen','owner');
+
 INSERT INTO vets VALUES (1, 'James', 'Carter');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary');
 INSERT INTO vets VALUES (3, 'Linda', 'Douglas');
