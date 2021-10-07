@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
-    <artifactId>spring-petclinic</artifactId>
+    <artifactId>LIng-2</artifactId>
     <version>2.2.0.BUILD-SNAPSHOT</version>
 
     <parent>
@@ -12,7 +12,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.4.RELEASE</version>
     </parent>
-    <name>petclinic</name>
+    <name>LIng-2</name>
 
     <developers>
         <developer>
@@ -44,6 +44,18 @@
             <name>Pablo Sanchez Valenzuela</name>
             <email>pablosancval@gmail.com</email>
             <url>https://github.com/pablosancval</url>
+            <organization>us.es</organization>
+            <organizationUrl>https://www.us.es/</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>dev</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>pablonunnez</id>
+            <name>Pablo Núñez Moreno</name>
+            <email>pabnunmor@alum.us.es</email>
+            <url>https://github.com/pablonunnez/</url>
             <organization>us.es</organization>
             <organizationUrl>https://www.us.es/</organizationUrl>
             <timezone>+1</timezone>
