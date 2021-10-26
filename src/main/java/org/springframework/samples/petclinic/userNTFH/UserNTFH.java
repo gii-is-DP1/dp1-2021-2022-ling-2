@@ -15,6 +15,7 @@ import lombok.Setter;
 @Table(name = "usersNTFH")
 
 public class UserNTFH {
+   
     @Id
     String username;
     boolean isRegistered;
@@ -23,4 +24,50 @@ public class UserNTFH {
 //  In future we will change the String achievements to another entity called List<Achievements>, for now, to ensure the java file compile, we put an String, in the end, it will be: List<String> achievements
     List<String> achievements;
     Boolean isBanned;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(boolean isRegistered) {
+        this.isRegistered = isRegistered;
+    }
+
+    public String getStats() {
+        return stats;
+    }
+
+    public void setStats(String stats) {
+        this.stats = stats;
+    }
+
+    public List<String> getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(List<String> achievements) {
+        this.achievements = achievements;
+    }
+
+    public Boolean getIsBanned() {
+        return isBanned;
+    }
+
+    public void setIsBanned(Boolean isBanned) {
+        this.isBanned = isBanned;
+    }
+
+    @Override
+    public String toString() {
+        return "UserNTFH [achievements=" + achievements + ", isBanned=" + isBanned + ", isRegistered=" + isRegistered
+                + ", stats=" + stats + ", username=" + username + "]";
+    }
 }

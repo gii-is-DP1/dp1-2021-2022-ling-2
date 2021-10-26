@@ -22,8 +22,16 @@ public class UserNTFHService {
 	}	
 
 	@Transactional(readOnly = true)
-	public Collection<UserNTFH> findUserNTFHByLastName(String username) throws DataAccessException {
+	public Collection<UserNTFH> findUserNTFHByUsername(String username) throws DataAccessException {
 		return userNTFHRepository.findByUsername(username);
 	}
-    	
+    
+	@Transactional
+	public void saveUserNTFH(UserNTFH userNTFH) throws DataAccessException {
+		//creating owner
+		userNTFHRepository.save(userNTFH);		
+		//creating authorities
+		authoritiesService.saveAuthorities(userNTFH.getUsername(), "userNTFH");
+	}
+
 }
