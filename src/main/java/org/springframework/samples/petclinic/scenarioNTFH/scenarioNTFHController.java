@@ -1,5 +1,5 @@
 package org.springframework.samples.petclinic.scenarioNTFH;
-
+/*
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,3 +21,4 @@ public class scenarioNTFHController {
         Collection<scenarioNTFH> scenarios = 
     }
 }
+*/
