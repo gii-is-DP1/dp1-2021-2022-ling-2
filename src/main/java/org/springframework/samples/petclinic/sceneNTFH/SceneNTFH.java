@@ -8,6 +8,7 @@ import org.springframework.samples.petclinic.model.NamedEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+//Prueba para Pablo
 @Getter
 @Setter
 @Entity
