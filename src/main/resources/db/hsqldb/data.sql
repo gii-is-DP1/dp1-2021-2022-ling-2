@@ -11,6 +11,12 @@ INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
 INSERT INTO users(username,password,enabled) VALUES ('anddurter','anddurter',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (4,'anddurter','owner');
 
+INSERT INTO users(username,password,enabled) VALUES ('pabsanval1','idk',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (5,'pabsanval1','owner');
+
+INSERT INTO users(username,password,enabled) VALUES ('jaistomen','idk2',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (6,'jaistomen','owner');
+
 INSERT INTO users(username,password,enabled) VALUES ('pabrobcam','pabrobcam',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (5,'pabrobcam','owner');
 
@@ -73,3 +79,4 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
+INSERT INTO scenes(id, name, modifier) VALUES (1, 'Mercado de Lotharion', 'Mientras este sea el escenario activo, todos los articulos del Mercado cuesta una Moneda menos.');
