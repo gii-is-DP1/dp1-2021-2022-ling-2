@@ -3,7 +3,7 @@ package org.springframework.samples.ntfh.scene;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.springframework.samples.petclinic.model.NamedEntity;
+import org.springframework.samples.ntfh.model.NamedEntity;
 
 import lombok.Getter;
 import lombok.Setter;
