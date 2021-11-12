@@ -1,9 +1,9 @@
-package org.springframework.samples.petclinic.web;
+package org.springframework.samples.ntfh.web;
 
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
-import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.ntfh.model.Person;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
