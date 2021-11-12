@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.sceneNTFH;
+package org.springframework.samples.ntfh.scene;
 
 import java.util.Optional;
 
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/scenes")
-public class SceneNTFHController {
+public class SceneController {
 
     @Autowired
-    private SceneNTFHService sceneNTFHService;
+    private SceneService sceneNTFHService;
 
     @GetMapping()
     public String getAll(ModelMap modelMap) { // modelmap object contains the data that will be passed to the view
         String view = "scenes/listScenes";
-        Iterable<SceneNTFH> scenes = sceneNTFHService.findAll();
+        Iterable<Scene> scenes = sceneNTFHService.findAll();
         modelMap.addAttribute("scenes", scenes);
         return view;
     }
@@ -32,12 +32,12 @@ public class SceneNTFHController {
     @GetMapping(path = "/new")
     public String createScene(ModelMap modelMap) {
         String view = "scenes/editScene";
-        modelMap.addAttribute("scene", new SceneNTFH()); // we add a new created scene to the context so we can edit it
+        modelMap.addAttribute("scene", new Scene()); // we add a new created scene to the context so we can edit it
         return view;
     }
 
     @PostMapping(path = "/save")
-    public String saveScene(@Valid SceneNTFH scene, BindingResult result, ModelMap modelMap) {
+    public String saveScene(@Valid Scene scene, BindingResult result, ModelMap modelMap) {
         String view = "scenes/listScenes";
         if (result.hasErrors()) {
             modelMap.addAttribute("scene", scene); // scene with errors as new context to represent it again
@@ -53,7 +53,7 @@ public class SceneNTFHController {
     @GetMapping(path = "/delete/{sceneId}")
     public String deleteScene(@PathVariable("sceneId") int sceneId, ModelMap modelMap) {
         String view = "scenes/listScenes";
-        Optional<SceneNTFH> scene = sceneNTFHService.findSceneById(sceneId);
+        Optional<Scene> scene = sceneNTFHService.findSceneById(sceneId);
         if (scene.isPresent()) {
             sceneNTFHService.delete(sceneId);
             modelMap.addAttribute("message", "Scene successfully deleted");

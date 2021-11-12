@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.sceneNTFH;
+package org.springframework.samples.ntfh.scene;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "scenes")
-public class SceneNTFH extends NamedEntity {
+public class Scene extends NamedEntity {
 
     private String modifier;
 }
