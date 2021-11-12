@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.sceneNTFH;
+package org.springframework.samples.ntfh.scene;
 
 import java.util.Optional;
 
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SceneNTFHService {
+public class SceneService {
     @Autowired
-    private SceneNTFHRepository sceneNTFHRepository;
+    private SceneRepository sceneNTFHRepository;
 
     @Transactional
     public Integer sceneNTFHCount() {
@@ -18,17 +18,17 @@ public class SceneNTFHService {
     }
 
     @Transactional
-    public Iterable<SceneNTFH> findAll() {
+    public Iterable<Scene> findAll() {
         return sceneNTFHRepository.findAll();
     }
 
     @Transactional
-    public Optional<SceneNTFH> findSceneById(int id) {
+    public Optional<Scene> findSceneById(int id) {
         return sceneNTFHRepository.findById(id);
     }
 
     @Transactional
-    public void save(SceneNTFH scene) {
+    public void save(Scene scene) {
         sceneNTFHRepository.save(scene);
     }
 

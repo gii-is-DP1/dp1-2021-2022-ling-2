@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.sceneNTFH;
+package org.springframework.samples.ntfh.scene;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,10 +9,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-public class SceneNTFHServiceTest {
+public class SceneServiceTest {
 
     @Autowired
-    private SceneNTFHService sceneNTFHService;
+    private SceneService sceneNTFHService;
 
     @Test
     public void testCountWithInitialData() {
