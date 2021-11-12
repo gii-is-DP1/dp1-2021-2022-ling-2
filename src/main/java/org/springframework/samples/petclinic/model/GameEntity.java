@@ -16,13 +16,13 @@ import lombok.Getter;
 public class GameEntity extends NamedEntity {
 
     private Integer duration;
-    @DateTimeFormat (pattern = "yyyy/MM/dd")
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate date;
-    @DateTimeFormat (pattern = "HH/mm/ss")
-    private LocalTime stratTime;
-    @DateTimeFormat (pattern = "HH/mm/ss")
+    @DateTimeFormat(pattern = "HH/mm/ss")
+    private LocalTime startTime;
+    @DateTimeFormat(pattern = "HH/mm/ss")
     private LocalTime finishTime;
     private String comments;
     private Boolean spectatorsAllowed;
-    
+
 }
