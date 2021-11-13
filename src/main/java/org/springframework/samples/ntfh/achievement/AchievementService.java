@@ -19,22 +19,22 @@ public class AchievementService {
     }
 
     @Transactional
-    public Iterable<Achievement> findAll(){
+    public Iterable<Achievement> findAll() {
         return achievementRepository.findAll();
     }
 
     @Transactional
-    public Optional<Achievement> findAchievementById(Integer id){
+    public Optional<Achievement> findAchievementById(Integer id) {
         return achievementRepository.findById(id);
     }
 
     @Transactional
-    public void save(Achievement achievement){
+    public void save(Achievement achievement) {
         achievementRepository.save(achievement);
     }
 
-    public void delete(Integer achievementId){
-        achievementRepository.deleteById(achievementId);;
+    public void delete(Integer achievementId) {
+        achievementRepository.deleteById(achievementId);
     }
-    
+
 }
