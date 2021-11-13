@@ -1,6 +1,7 @@
--- -- One admin user, named admin1 with passwor 4dm1n and authority admin
--- INSERT INTO users(username,password,enabled) VALUES ('admin1','4dm1n',TRUE);
--- INSERT INTO authorities(id,username,authority) VALUES (1,'admin1','admin');
+-- One admin user, named admin1 with passwor 4dm1n and authority admin
+INSERT INTO users(username,password, email) VALUES ('admin','admin', 'admin@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
+
 -- -- One owner user, named owner1 with passwor 0wn3r
 -- INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
 -- INSERT INTO authorities(id,username,authority) VALUES (2,'owner1','owner');
@@ -17,4 +18,4 @@
 -- INSERT INTO users(username,password,enabled) VALUES ('pabrobcam','pabrobcam',TRUE);
 -- INSERT INTO authorities(id,username,authority) VALUES (7,'pabrobcam','owner');
 
-INSERT INTO scenes(id, name, modifier) VALUES (1, 'Mercado de Lotharion', 'Mientras este sea el escenario activo, todos los articulos del Mercado cuesta una Moneda menos.');
+INSERT INTO scenes(id, name) VALUES (1, 'Mercado de Lotharion');
