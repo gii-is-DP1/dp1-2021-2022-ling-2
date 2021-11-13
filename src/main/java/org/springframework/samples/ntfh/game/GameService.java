@@ -16,4 +16,8 @@ public class GameService {
         return (int) gameRepo.count();
     }
     
+    public Iterable<GameEntity> findAll(){
+        return gameRepo.findAll();
+    }
+
 }
