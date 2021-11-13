@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SceneController {
 
     @Autowired
-    private SceneService sceneNTFHService;
+    private SceneService sceneService;
 
     @GetMapping()
     public String getAll(ModelMap modelMap) { // modelmap object contains the data that will be passed to the view
         String view = "scenes/listScenes";
-        Iterable<Scene> scenes = sceneNTFHService.findAll();
+        Iterable<Scene> scenes = sceneService.findAll();
         modelMap.addAttribute("scenes", scenes);
         return view;
     }
@@ -43,7 +43,7 @@ public class SceneController {
             modelMap.addAttribute("scene", scene); // scene with errors as new context to represent it again
             return "scenes/editScene"; // and we return to the form which should show the errors
         } else {
-            sceneNTFHService.save(scene);
+            sceneService.save(scene);
             modelMap.addAttribute("message", "Scene successfully saved");
             view = getAll(modelMap); // after saving the scene, we will udpate the view with the new data
         }
@@ -53,9 +53,9 @@ public class SceneController {
     @GetMapping(path = "/delete/{sceneId}")
     public String deleteScene(@PathVariable("sceneId") int sceneId, ModelMap modelMap) {
         String view = "scenes/listScenes";
-        Optional<Scene> scene = sceneNTFHService.findSceneById(sceneId);
+        Optional<Scene> scene = sceneService.findSceneById(sceneId);
         if (scene.isPresent()) {
-            sceneNTFHService.delete(sceneId);
+            sceneService.delete(sceneId);
             modelMap.addAttribute("message", "Scene successfully deleted");
             view = getAll(modelMap); // after saving the scene, we will udpate the view with the new data
         } else {

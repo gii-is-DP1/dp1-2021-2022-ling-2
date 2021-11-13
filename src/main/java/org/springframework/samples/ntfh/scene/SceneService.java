@@ -13,7 +13,7 @@ public class SceneService {
     private SceneRepository sceneRepository;
 
     @Transactional
-    public Integer sceneNTFHCount() {
+    public Integer sceneCount() {
         return (int) sceneRepository.count();
     }
 
@@ -23,7 +23,7 @@ public class SceneService {
     }
 
     @Transactional
-    public Optional<Scene> findSceneById(int id) {
+    public Optional<Scene> findSceneById(Integer id) {
         return sceneRepository.findById(id);
     }
 
