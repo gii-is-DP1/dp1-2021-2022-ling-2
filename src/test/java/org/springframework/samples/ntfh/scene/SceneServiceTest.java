@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 public class SceneServiceTest {
 
     @Autowired
-    private SceneService sceneNTFHService;
+    private SceneService sceneService;
 
     @Test
     public void testCountWithInitialData() {
         // TODO: Delete all and create mock initial data. Then test count.
         // By doing this we will make this test independent of the initial data.
-        Integer count = sceneNTFHService.sceneNTFHCount();
+        Integer count = sceneService.sceneCount();
         assertEquals(count, 1);
     }
 
