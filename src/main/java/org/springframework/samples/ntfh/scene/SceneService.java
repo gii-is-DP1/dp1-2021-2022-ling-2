@@ -10,29 +10,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class SceneService {
     @Autowired
-    private SceneRepository sceneNTFHRepository;
+    private SceneRepository sceneRepository;
 
     @Transactional
     public Integer sceneNTFHCount() {
-        return (int) sceneNTFHRepository.count();
+        return (int) sceneRepository.count();
     }
 
     @Transactional
     public Iterable<Scene> findAll() {
-        return sceneNTFHRepository.findAll();
+        return sceneRepository.findAll();
     }
 
     @Transactional
     public Optional<Scene> findSceneById(int id) {
-        return sceneNTFHRepository.findById(id);
+        return sceneRepository.findById(id);
     }
 
     @Transactional
     public void save(Scene scene) {
-        sceneNTFHRepository.save(scene);
+        sceneRepository.save(scene);
     }
 
     public void delete(int sceneId) {
-        sceneNTFHRepository.deleteById(sceneId);
+        sceneRepository.deleteById(sceneId);
     }
 }
