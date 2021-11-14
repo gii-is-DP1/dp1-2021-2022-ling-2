@@ -1,14 +1,11 @@
 package org.springframework.samples.ntfh.enemy;
 
-import org.springframework.samples.ntfh.enumerates.EnemyType;
+import org.springframework.samples.ntfh.interfaces.EnemyType;
+import org.springframework.samples.ntfh.interfaces.PhysicalCard;
 
-public interface Enemy {
+public interface Enemy extends PhysicalCard {
 
     public Integer getEndurance();
-
-    public String getFrontImage();
-
-    public String getBackImage();
 
     public EnemyType getType();
 }
