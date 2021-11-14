@@ -45,6 +45,5 @@ public class Game extends BaseEntity {
      */
     public Long getDuration() {
         return finishTime.getTimestamp().getTime() - startTime.getTimestamp().getTime();
-
     }
 }
