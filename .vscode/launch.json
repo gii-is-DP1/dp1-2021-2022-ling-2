@@ -9,6 +9,13 @@
       "name": "Launch NtfhApplication",
       "request": "launch",
       "mainClass": "org.springframework.samples.ntfh.NtfhApplication",
+      "projectName": "spring-petclinic"
+    },
+    {
+      "type": "java",
+      "name": "Launch NtfhApplication",
+      "request": "launch",
+      "mainClass": "org.springframework.samples.ntfh.NtfhApplication",
       "projectName": "LIng-2"
     },
     {
