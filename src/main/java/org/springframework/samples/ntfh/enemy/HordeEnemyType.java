@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.enumerates;
+package org.springframework.samples.ntfh.enemy;
 
 import org.springframework.samples.ntfh.interfaces.EnemyType;
 
