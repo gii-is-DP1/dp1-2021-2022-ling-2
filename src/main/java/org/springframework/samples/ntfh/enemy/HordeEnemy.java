@@ -8,8 +8,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-import org.springframework.samples.ntfh.enumerates.HordeEnemyType;
-import org.springframework.samples.ntfh.enumerates.HordeModifier;
 import org.springframework.samples.ntfh.interfaces.Location;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
@@ -20,6 +18,10 @@ import lombok.Getter;
 @Entity
 @Table(name = "horde_enemies")
 public class HordeEnemy extends BaseEntity implements Enemy {
+
+    @Enumerated(EnumType.STRING)
+    private EnemyLocation location;
+
     @Column(name = "extra_glory", columnDefinition = "integer default 0")
     private Integer extraGlory;
 
