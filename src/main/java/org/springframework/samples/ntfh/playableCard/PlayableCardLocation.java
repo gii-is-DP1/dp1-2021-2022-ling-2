@@ -1,6 +1,6 @@
-package org.springframework.samples.ntfh.card;
+package org.springframework.samples.ntfh.playableCard;
 
-public enum CardLocation {
+public enum PlayableCardLocation {
     /** The card is player's hand */
     HAND,
 

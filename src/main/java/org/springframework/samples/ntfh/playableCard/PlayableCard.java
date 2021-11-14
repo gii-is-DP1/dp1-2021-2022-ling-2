@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.card;
+package org.springframework.samples.ntfh.playableCard;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,14 +13,14 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "cards")
-public class Card extends NamedEntity implements PhysicalCard {
+@Table(name = "playable_cards")
+public class PlayableCard extends NamedEntity implements PhysicalCard {
 
     @Enumerated(EnumType.STRING)
-    private CardLocation location;
+    private PlayableCardLocation location;
 
     @Enumerated(EnumType.STRING)
-    private CardType cardType;
+    private PlayableCardType cardType;
 
     @Override
     public String getFrontImage() {
