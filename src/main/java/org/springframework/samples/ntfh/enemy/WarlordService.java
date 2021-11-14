@@ -21,6 +21,6 @@ public class WarlordService {
         return warlordRepository.findById(id);
     }
 
-    // Only GET methods are provided because all Warlord data will be injected via
-    // .sql file
+    // Only GET methods are available because all Warlord data will be injected from
+    // the data.sql file
 }
