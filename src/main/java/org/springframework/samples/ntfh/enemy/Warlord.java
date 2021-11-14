@@ -25,7 +25,8 @@ public class Warlord extends BaseEntity implements Enemy {
     private WarlordType type;
 
     /**
-     * Return the endurance of a warlord. Can be obtained by knowing the WarlordType
+     * Derived. Return the endurance of a warlord. Can be obtained by knowing the
+     * WarlordType
      * 
      * @author andrsdt
      * @return Integer value of the warlord's endurance
@@ -39,8 +40,8 @@ public class Warlord extends BaseEntity implements Enemy {
     }
 
     /**
-     * Return the route to the front image of a warlord. Can be obtained by knowing
-     * the WarlordType
+     * Derived. Return the route to the front image of a warlord. Can be obtained by
+     * knowing the WarlordType
      * 
      * @author andrsdt
      * @return String route to the card's front image
@@ -51,7 +52,7 @@ public class Warlord extends BaseEntity implements Enemy {
     }
 
     /**
-     * Return the route to the standard back image of a warlord.
+     * Derived. Return the route to the standard back image of a warlord.
      * 
      * @author andrsdt
      * @return String route to the card's back image

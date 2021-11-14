@@ -29,14 +29,13 @@ public class HordeEnemy extends BaseEntity implements Enemy {
     private HordeEnemyType type;
 
     /**
-     * Return the HordeModifier of an enemy, or null if it doesn't have any. Derived
-     * from HordeEnemyType.
+     * Derived. Return the HordeModifier of an enemy, or null if it doesn't have
+     * any.
      * 
      * @author andrsdt
      * @return HordeModifier enum value of the HordeEnemy
      */
     public HordeModifier getHordeModifier() {
-        // Derived property,
         HordeModifier modifier = null;
         if (type == HordeEnemyType.SHAMAN || type == HordeEnemyType.MAGE) {
             modifier = HordeModifier.MAGIC_ATTACKER;
@@ -47,7 +46,8 @@ public class HordeEnemy extends BaseEntity implements Enemy {
     }
 
     /**
-     * Return the endurance of an enemy computed by knowing its HordeEnemyType.
+     * Derived. Return the endurance of an enemy computed by knowing its
+     * HordeEnemyType.
      * 
      * @author andrsdt
      * @return Integer value of the HordeEnemy's endurance
@@ -62,17 +62,15 @@ public class HordeEnemy extends BaseEntity implements Enemy {
     }
 
     /**
-     * Return the route to the image of an enemy. Can be obtained by knowing the
-     * HordeEnemyType and, in case of the warrior, also the loot behind the card
+     * Derived. Return the route to the image of an enemy. Can be obtained by
+     * knowing the HordeEnemyType and, in case of the warrior, also the loot behind
+     * the card
      * 
      * @author andrsdt
      * @return route to the card image
      */
     @Override
     public String getFrontImage() {
-        // Derived property. Can be obtained by knowing the EnemyType, and in some
-        // specific cases the extraGlory and gold
-
         // WarlordType.GURDRUG -> gurdrug
         String hordeEnemyName = type.toString().toLowerCase();
 
@@ -84,7 +82,7 @@ public class HordeEnemy extends BaseEntity implements Enemy {
     }
 
     /**
-     * Return the route to the standard back image of a HordeEnemy.
+     * Derived. Return the route to the standard back image of a HordeEnemy.
      * 
      * @author andrsdt
      * @return String route to the card's back image
