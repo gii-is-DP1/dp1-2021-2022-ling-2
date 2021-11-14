@@ -95,6 +95,15 @@ public class HordeEnemy extends BaseEntity implements Enemy {
         return String.format("/cards/enemies/horde_enemies/backs/%dgold_%dglory.png", gold, extraGlory);
     }
 
+    /**
+     * @author alegestor
+     * @return String type of the enemy
+     */
+    // @Override
+    // public EnemyType getType() {
+    // return this.type;
+    // }
+
     @Override
     public Location getLocation() {
         // TODO Auto-generated method stub

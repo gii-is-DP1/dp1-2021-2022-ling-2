@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PlayableCardController {
 
     @Autowired
-    private PlayableCardService cardService;
+    private PlayableCardService playableCardService;
 
     @GetMapping()
     public String getAll(ModelMap modelMap) { // modelmap object contains the data that will be passed to the view
         String view = "cards/listCards";
-        Iterable<PlayableCard> cards = cardService.findAll();
+        Iterable<PlayableCard> cards = playableCardService.findAll();
         modelMap.addAttribute("cards", cards);
         return view;
     }

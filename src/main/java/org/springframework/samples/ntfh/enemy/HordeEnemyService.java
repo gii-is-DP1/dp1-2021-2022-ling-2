@@ -9,8 +9,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HordeEnemyService {
+
     @Autowired
     private HordeEnemyRepository hordeEnemyRepository;
+
+    @Transactional
+    public Integer hordeEnemyCount() {
+        return (int) hordeEnemyRepository.count();
+    }
 
     @Transactional
     public Iterable<HordeEnemy> findAll() {
