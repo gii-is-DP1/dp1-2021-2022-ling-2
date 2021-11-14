@@ -8,8 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-import org.springframework.samples.ntfh.enumerates.HordeEnemyType;
-import org.springframework.samples.ntfh.enumerates.HordeModifier;
+import org.springframework.samples.ntfh.interfaces.Location;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
@@ -19,6 +18,10 @@ import lombok.Getter;
 @Entity
 @Table(name = "horde_enemies")
 public class HordeEnemy extends BaseEntity implements Enemy {
+
+    @Enumerated(EnumType.STRING)
+    private EnemyLocation location;
+
     @Column(name = "extra_glory", columnDefinition = "integer default 0")
     private Integer extraGlory;
 
@@ -90,6 +93,12 @@ public class HordeEnemy extends BaseEntity implements Enemy {
     @Override
     public String getBackImage() {
         return String.format("/cards/enemies/horde_enemies/backs/%dgold_%dglory.png", gold, extraGlory);
+    }
+
+    @Override
+    public Location getLocation() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

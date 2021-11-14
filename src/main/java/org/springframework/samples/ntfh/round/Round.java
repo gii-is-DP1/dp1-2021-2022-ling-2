@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Round extends BaseEntity{
-    
+public class Round extends BaseEntity {
+
     private Integer GameId;
     private Integer RoundNumber;
 }
