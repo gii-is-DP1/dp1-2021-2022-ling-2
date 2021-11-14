@@ -22,6 +22,7 @@ INSERT INTO warlords(id, endurance, type, image) VALUES (1, 8, 'GURDRUG', '/card
 INSERT INTO warlords(id, endurance, type, image) VALUES (2, 9, 'ROGHKILLER', '/cards/enemies/warlords/warlords__0000s_0000_Thunberg.png');
 INSERT INTO warlords(id, endurance, type, image) VALUES (3, 10, 'SHRIEKKNIFER', '/cards/enemies/warlords/warlords__0000s_0000_Shrek.png');
 
+
 INSERT INTO scenes(id, name) VALUES (1, 'Mercado de Lotharion');
 INSERT INTO scenes(id, name) VALUES (2, 'Campo de Batalla');
 INSERT INTO scenes(id, name) VALUES (3, 'Lágrimas de Aradiel');
