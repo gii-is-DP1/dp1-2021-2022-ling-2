@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.samples.ntfh.enumerates.EnemyType;
 import org.springframework.samples.ntfh.enumerates.WarlordType;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
@@ -61,4 +62,16 @@ public class Warlord extends BaseEntity implements Enemy {
     public String getBackImage() {
         return "/cards/enemies/warlords/backs/standard.png";
     }
+
+    /**
+     * @author alegestor
+     * @return String name of the warlord
+     */
+    @Override
+    public EnemyType getType() {
+            return this.type;
+    }
+
+    
+
 }

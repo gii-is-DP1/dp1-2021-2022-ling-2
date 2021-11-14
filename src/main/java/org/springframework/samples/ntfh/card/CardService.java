@@ -27,4 +27,7 @@ public class CardService {
         return cardRepository.findById(id);
     }
 
+    // Only GET methods are available because all cards data will be injected from
+    // the data.sql file
+
 }

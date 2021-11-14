@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import org.springframework.samples.ntfh.enumerates.EnemyType;
 import org.springframework.samples.ntfh.enumerates.HordeEnemyType;
 import org.springframework.samples.ntfh.enumerates.HordeModifier;
 import org.springframework.samples.ntfh.model.BaseEntity;
@@ -90,6 +91,15 @@ public class HordeEnemy extends BaseEntity implements Enemy {
     @Override
     public String getBackImage() {
         return String.format("/cards/enemies/horde_enemies/backs/%dgold_%dglory.png", gold, extraGlory);
+    }
+
+    /**
+     * @author alegestor
+     * @return String type of the enemy
+     */
+    @Override
+    public EnemyType getType() {
+            return this.type;
     }
 
 }
