@@ -51,3 +51,14 @@ INSERT INTO warlords(id, type) VALUES (2 'ROGHKILLER');
 INSERT INTO warlords(id, type) VALUES (3 'SHRIEKKNIFER');
 
 INSERT INTO scenes(id, name) VALUES (1, 'Mercado de Lotharion');
+INSERT INTO scenes(id, name) VALUES (2, 'Campo de Batalla');
+INSERT INTO scenes(id, name) VALUES (3, 'Lágrimas de Aradiel');
+INSERT INTO scenes(id, name) VALUES (4, 'Lodazal de Kalern');
+INSERT INTO scenes(id, name) VALUES (5, 'Montañas de Ur');
+INSERT INTO scenes(id, name) VALUES (6, 'Pantano Umbrío');
+INSERT INTO scenes(id, name) VALUES (7, 'Planicie de Skaarg');
+INSERT INTO scenes(id, name) VALUES (8, 'Portal de Ulthar');
+INSERT INTO scenes(id, name) VALUES (9, 'Puerto de Eqûe');
+INSERT INTO scenes(id, name) VALUES (10, 'Ruinas de Brunmar');
+INSERT INTO scenes(id, name) VALUES (11, 'Yacimientos de Jade');
+INSERT INTO scenes(id, name) VALUES (12, 'Yermo de Cémenmar');

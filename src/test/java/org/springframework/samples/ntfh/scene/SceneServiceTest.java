@@ -19,7 +19,7 @@ public class SceneServiceTest {
         // TODO: Delete all and create mock initial data. Then test count.
         // By doing this we will make this test independent of the initial data.
         Integer count = sceneService.sceneCount();
-        assertEquals(count, 1);
+        assertEquals(count, 12);
     }
 
 }
