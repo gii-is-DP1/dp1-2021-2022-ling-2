@@ -1,5 +1,5 @@
 package org.springframework.samples.ntfh.enumerates;
 
-public enum CharacterClass {
+public enum CharacterType {
     RANGER, WARRIOR, ROGUE, WIZARD
 }
