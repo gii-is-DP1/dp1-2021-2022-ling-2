@@ -75,6 +75,18 @@
                 <role>dev</role>
             </roles>
         </developer>
+        <developer>
+            <id>Alegestor</id>
+            <name>Alejandro Manuel Gestoso Torres</name>
+            <email>alegestor@alum.us.es</email>
+            <url>https://github.com/alegestor/</url>
+            <organization>us.es</organization>
+            <organizationUrl>https://www.us.es/</organizationUrl>
+            <timezone>+1</timezone>
+            <roles>
+                <role>dev</role>
+            </roles>
+        </developer>
     </developers>
 
     <properties>
