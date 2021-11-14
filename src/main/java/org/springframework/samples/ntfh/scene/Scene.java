@@ -6,7 +6,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.samples.ntfh.enumerates.SceneType;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
