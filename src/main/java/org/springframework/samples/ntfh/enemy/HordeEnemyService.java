@@ -23,6 +23,5 @@ public class HordeEnemyService {
     }
 
     // Only GET methods are provided because all HordeEnemy data will be injected
-    // via
-    // .sql file
+    // via .sql file
 }

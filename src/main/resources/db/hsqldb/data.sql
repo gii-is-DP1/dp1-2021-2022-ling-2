@@ -18,4 +18,8 @@ INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
 -- INSERT INTO users(username,password,enabled) VALUES ('pabrobcam','pabrobcam',TRUE);
 -- INSERT INTO authorities(id,username,authority) VALUES (7,'pabrobcam','owner');
 
+INSERT INTO warlords(id, endurance, type, image) VALUES (1, 8, 'GURDRUG', '/cards/enemies/warlords/warlords__0000s_0000_Thunberg.png');
+INSERT INTO warlords(id, endurance, type, image) VALUES (2, 9, 'ROGHKILLER', '/cards/enemies/warlords/warlords__0000s_0000_Thunberg.png');
+INSERT INTO warlords(id, endurance, type, image) VALUES (3, 10, 'SHRIEKKNIFER', '/cards/enemies/warlords/warlords__0000s_0000_Shrek.png');
+
 INSERT INTO scenes(id, name) VALUES (1, 'Mercado de Lotharion');
