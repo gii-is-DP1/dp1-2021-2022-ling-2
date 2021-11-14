@@ -1,8 +1,47 @@
 package org.springframework.samples.ntfh.playableCard;
 
-import org.springframework.samples.ntfh.interfaces.PlayableCardType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
-public enum MarketCard implements PlayableCardType {
-    DAGA_ELFICA, POCION_CURATIVA, PIEDRA_DE_AMOLAR, VIAL_DE_CONJURACION, ELIXIR_DE_LA_CONCENTRACION, CAPA_ELFICA, 
-    ARMADURA_DE_PLACAS, ALABARDA_ORCA, ARCO_COMPUESTO
+import org.springframework.samples.ntfh.interfaces.Location;
+import org.springframework.samples.ntfh.interfaces.PhysicalCard;
+import org.springframework.samples.ntfh.model.BaseEntity;
+
+import lombok.Getter;
+
+@Getter
+@Entity
+@Table(name = "playable_cards")
+public class MarketCard extends BaseEntity implements PhysicalCard {
+
+    @Enumerated(EnumType.STRING)
+    private PlayableCardLocation location;
+
+    private Integer price;
+
+    @Enumerated(EnumType.STRING)
+    private MarketCardEnum name;
+
+    @Override
+    public Location getLocation() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getFrontImage() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getBackImage() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    
 }

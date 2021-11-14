@@ -9,8 +9,6 @@ import org.springframework.samples.ntfh.interfaces.Location;
 import org.springframework.samples.ntfh.interfaces.PhysicalCard;
 import org.springframework.samples.ntfh.interfaces.PlayableCardType;
 import org.springframework.samples.ntfh.model.BaseEntity;
-import org.springframework.samples.ntfh.model.NamedEntity;
-
 import lombok.Getter;
 
 @Getter
