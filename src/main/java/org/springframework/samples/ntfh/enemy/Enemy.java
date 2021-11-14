@@ -1,20 +1,14 @@
 package org.springframework.samples.ntfh.enemy;
 
-import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
+import org.springframework.samples.ntfh.enumerates.EnemyType;
 
-import org.springframework.samples.ntfh.model.BaseEntity;
+public interface Enemy {
 
-import lombok.Getter;
-import lombok.Setter;
+    public Integer getEndurance();
 
-@Getter
-@Setter
-@MappedSuperclass
-public class Enemy extends BaseEntity {
-    @NotNull
-    private Integer endurance;
+    public String getFrontImage();
 
-    @NotNull
-    private String image;
+    public String getBackImage();
+
+    public EnemyType getType();
 }
