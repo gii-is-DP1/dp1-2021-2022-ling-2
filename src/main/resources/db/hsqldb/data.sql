@@ -46,9 +46,9 @@ INSERT INTO horde_enemies(id, type, gold, extra_glory) VALUES (25, 'MAGE', 2, 1)
 INSERT INTO horde_enemies(id, type, gold, extra_glory) VALUES (27, 'SHAMAN', 1, 1);
 INSERT INTO horde_enemies(id, type, gold, extra_glory) VALUES (26, 'SHAMAN', 2, 0);
 
-INSERT INTO warlords(id, type) VALUES (1 'GURDRUG');
-INSERT INTO warlords(id, type) VALUES (2 'ROGHKILLER');
-INSERT INTO warlords(id, type) VALUES (3 'SHRIEKKNIFER');
+INSERT INTO warlords(id, type) VALUES (1, 'GURDRUG');
+INSERT INTO warlords(id, type) VALUES (2, 'ROGHKILLER');
+INSERT INTO warlords(id, type) VALUES (3, 'SHRIEKKNIFER');
 
 INSERT INTO scenes(id, name) VALUES (1, 'Mercado de Lotharion');
 INSERT INTO scenes(id, name) VALUES (2, 'Campo de Batalla');
