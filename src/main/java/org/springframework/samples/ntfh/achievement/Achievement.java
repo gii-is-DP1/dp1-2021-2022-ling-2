@@ -15,10 +15,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "achievements")
-public class Achievement extends NamedEntity{
-    
-    private String name;
-    private Date date;
-    private Predicate achievementCondition;
+public class Achievement extends NamedEntity {
+
+    // private Date date; // TODO: Date of? shouldn't be used.
+    // private Predicate<Object> achievementCondition;
+    // This can't be stored as a predicate here because it can't be stored in a db.
 
 }
