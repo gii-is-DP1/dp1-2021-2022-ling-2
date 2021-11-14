@@ -13,6 +13,5 @@ import lombok.Setter;
 @Entity
 @Table(name = "scenes")
 public class Scene extends NamedEntity {
-
     private String modifier;
 }

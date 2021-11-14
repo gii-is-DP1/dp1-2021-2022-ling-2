@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.scene;
+package org.springframework.samples.ntfh.achievement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,17 +9,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-public class SceneServiceTest {
+public class AchievementServiceTest {
 
     @Autowired
-    private SceneService sceneService;
+    private AchievementService achievementService;
 
     @Test
     public void testCountWithInitialData() {
-        // TODO: Delete all and create mock initial data. Then test count.
-        // By doing this we will make this test independent of the initial data.
-        Integer count = sceneService.sceneCount();
-        assertEquals(count, 1);
+        Integer count = achievementService.achievementCount();
+        assertEquals(count, 0);
     }
 
 }
