@@ -1,10 +1,14 @@
 package org.springframework.samples.ntfh.game;
 
 import java.security.Timestamp;
-import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import org.springframework.samples.ntfh.comments.Comment;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
@@ -13,6 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "games")
 public class Game extends BaseEntity {
 
     // Note: we should consider dd/MM/yyyy HH:mm:ss format since a game can start
@@ -25,7 +30,10 @@ public class Game extends BaseEntity {
     // @DateTimeFormat(pattern = "HH/mm/ss")
     private Timestamp finishTime;
 
-    private List<String> comments; // The list of comments would be another table. To be implemented yet.
+    // The set of comments would be fetched from another table. To be implemented
+    // yet.
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
+    private Set<Comment> comments;
 
     private Boolean spectatorsAllowed;
 
