@@ -63,5 +63,5 @@ INSERT INTO scenes(id, type) VALUES (10, 'RUINAS_DE_BRUNMAR');
 INSERT INTO scenes(id, type) VALUES (11, 'YACIMIENTOS_DE_JADE');
 INSERT INTO scenes(id, type) VALUES (12, 'YERMO_DE_CEMENMAR');
 
-INSERT INTO cards(id, card_type, location) VALUES (1, 'ABILITY_CARD','PILE');
+INSERT INTO playable_cards(id, card_type, location) VALUES (1, 'ABILITY_CARD','PILE');
 

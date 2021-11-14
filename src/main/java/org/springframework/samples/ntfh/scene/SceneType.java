@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.enumerates;
+package org.springframework.samples.ntfh.scene;
 
 public enum SceneType {
     MERCADO_DE_LOTHARION, CAMPO_DE_BATALLA, LAGRIMAS_DE_ARADIEL, LODAZAL_DE_KALERN, MONTANAS_DE_UR, PANTANO_UMBRIO,

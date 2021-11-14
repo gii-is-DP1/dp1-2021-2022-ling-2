@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.card;
+package org.springframework.samples.ntfh.playableCard;
 
 import java.util.Optional;
 
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CardService {
-    
+public class PlayableCardService {
+
     @Autowired
-    private CardRepository cardRepository;
+    private PlayableCardRepository cardRepository;
 
     @Transactional
     public Integer cardCount() {
@@ -18,12 +18,12 @@ public class CardService {
     }
 
     @Transactional
-    public Iterable<Card> findAll() {
+    public Iterable<PlayableCard> findAll() {
         return cardRepository.findAll();
     }
 
     @Transactional
-    public Optional<Card> findSceneById(Integer id) {
+    public Optional<PlayableCard> findSceneById(Integer id) {
         return cardRepository.findById(id);
     }
 

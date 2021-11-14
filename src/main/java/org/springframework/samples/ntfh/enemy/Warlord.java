@@ -8,8 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.samples.ntfh.enumerates.EnemyType;
-import org.springframework.samples.ntfh.enumerates.WarlordType;
+import org.springframework.samples.ntfh.interfaces.Location;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
@@ -24,6 +23,9 @@ public class Warlord extends BaseEntity implements Enemy {
     @NotNull
     @Enumerated(EnumType.STRING)
     private WarlordType type;
+
+    @Enumerated(EnumType.STRING)
+    private EnemyLocation location;
 
     /**
      * Derived. Return the endurance of a warlord. Can be obtained by knowing the
@@ -63,15 +65,9 @@ public class Warlord extends BaseEntity implements Enemy {
         return "/cards/enemies/warlords/backs/standard.png";
     }
 
-    /**
-     * @author alegestor
-     * @return String name of the warlord
-     */
     @Override
-    public EnemyType getType() {
-            return this.type;
+    public Location getLocation() {
+        // TODO Auto-generated method stub
+        return null;
     }
-
-    
-
 }
