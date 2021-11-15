@@ -15,7 +15,10 @@
  */
 package org.springframework.samples.ntfh.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @author Juergen Hoeller
@@ -25,8 +28,16 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class UserController {
-	/*
-	 * TODO. Petclinic example was too dependent on the Owner entity, which we dont
-	 * use. To be implemented from scratch.
-	 */
+
+	@Autowired
+	private UserService userService;
+
+	@GetMapping()
+	public String getAll(ModelMap modelMap) {
+		String view = "users/listUsers";
+		Iterable<User> users = userService.findAll();
+		modelMap.addAttribute("users", users);
+		return view;
+	}	
+
 }
