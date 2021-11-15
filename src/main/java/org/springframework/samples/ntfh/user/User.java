@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +22,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
-public class User {
-	@Id
+public class User extends BaseEntity {
 	@NotBlank
 	@Length(min = 4, max = 20)
 	private String username;
@@ -39,10 +39,6 @@ public class User {
 	@Column(columnDefinition = "boolean default false")
 	private boolean isBanned;
 
-	@NotNull
-	@Column(columnDefinition = "boolean default true")
-	private boolean enabled; // Legacy from Petclinic, currently needed for CRUD of users. To be removed
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Authorities> authorities;
+	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	// private Set<Authorities> authorities;
 }

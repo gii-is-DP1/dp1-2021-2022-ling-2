@@ -1,6 +1,6 @@
 -- One admin user, named admin1 with passwor 4dm1n and authority admin
 INSERT INTO users(username,password, email) VALUES ('admin','admin', 'admin@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
+-- INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
 
 -- -- One owner user, named owner1 with passwor 0wn3r
 -- INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
