@@ -30,7 +30,7 @@ public class MarketCard extends BaseEntity implements PhysicalCard {
 
     private String usableBy;
 
-//    private List<CharacterType> usableBy;
+//    private List<CharacterType> usableBy; sql no puede reflejar listas, asi que tendra que guardarse como String
 
 
     @Override
