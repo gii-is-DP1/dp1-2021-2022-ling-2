@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.playableCard;
+package org.springframework.samples.ntfh.marketCard;
 
 import org.springframework.samples.ntfh.interfaces.PlayableCardType;
 
