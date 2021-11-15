@@ -14,6 +14,7 @@ tagdir="/WEB-INF/tags" %>
       })
     </script>
   </jsp:attribute>
+  
   <jsp:body>
     <h2>Game</h2>
     <form:form
@@ -23,7 +24,6 @@ tagdir="/WEB-INF/tags" %>
     >
       <div class="form-group has-feedback">
         <petclinic:inputField label="Name" name="name"/>
-        <petclinic:inputField label="Duration" name="duration"/>
         <petclinic:inputField label="Date" name="date"/>
         <petclinic:inputField label="Start Time" name="startTime"/>
         <petclinic:inputField label="Finish Time" name="finishTime"/>

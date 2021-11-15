@@ -19,7 +19,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "games")
 public class Game extends BaseEntity {
-    //aoa9ucpajddñcakjñcok,a
     // Note: we should consider dd/MM/yyyy HH:mm:ss format since a game can start
     // today and end tomorrow
     // @DateTimeFormat(pattern = "HH/mm/ss")
