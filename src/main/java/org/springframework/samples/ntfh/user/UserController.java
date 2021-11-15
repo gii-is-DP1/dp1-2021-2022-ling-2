@@ -18,7 +18,6 @@ package org.springframework.samples.ntfh.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * @author Juergen Hoeller
@@ -32,7 +31,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping()
+	// Cannot use more than one @GetMapping()
 	public String getAll(ModelMap modelMap) {
 		String view = "users/listUsers";
 		Iterable<User> users = userService.findAll();
