@@ -63,5 +63,21 @@ INSERT INTO scenes(id, type) VALUES (10, 'RUINAS_DE_BRUNMAR');
 INSERT INTO scenes(id, type) VALUES (11, 'YACIMIENTOS_DE_JADE');
 INSERT INTO scenes(id, type) VALUES (12, 'YERMO_DE_CEMENMAR');
 
--- INSERT INTO playable_cards(id, card_type, location) VALUES (1, 'ABILITY_CARD','PILE');
+--INSERT INTO playable_cards(id, card_type, location) VALUES (1, 'ABILITY_CARD','PILE');
+
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (1, 'MARKET', 3, 'DAGA_ELFICA', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (2, 'MARKET', 3, 'DAGA_ELFICA', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (3, 'MARKET', 8, 'POCION_CURATIVA', 'Ranger, Rogue, Warrior');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (4, 'MARKET', 8, 'POCION_CURATIVA', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (5, 'MARKET', 8, 'POCION_CURATIVA', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (6, 'MARKET', 4, 'PIEDRA_DE_AMOLAR', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (7, 'MARKET', 5, 'VIAL_DE_CONJURACION', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (8, 'MARKET', 5, 'VIAL_DE_CONJURACION', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (9, 'MARKET', 3, 'ELIXIR_DE_LA_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (10, 'MARKET', 3, 'ELIXIR_DE_LA_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (11, 'MARKET', 3, 'CAPA_ELFICA', 'Ranger, Wizard');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (12, 'MARKET', 4, 'ARMADURA_DE_PLACAS', 'Warrior');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (13, 'MARKET', 5, 'ALABARDA_ORCA', 'Warrior');
+INSERT INTO market_cards(id, type, price, type, usableBy) VALUES (14, 'MARKET', 5, 'ARCO_COMPUESTO', 'Ranger');
+
 

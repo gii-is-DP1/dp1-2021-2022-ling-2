@@ -2,6 +2,7 @@ package org.springframework.samples.ntfh.marketCard;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -23,11 +24,13 @@ public class MarketCard extends BaseEntity implements PhysicalCard {
     @Enumerated(EnumType.STRING)
     private PlayableCardLocation location;
 
+    @Column(name = "price")
     private Integer price;
 
     @Enumerated(EnumType.STRING)
     private MarketCardEnum name;
 
+    @Column(name = "usableBy")
     private String usableBy;
 
 //    private List<CharacterType> usableBy; sql no puede reflejar listas, asi que tendra que guardarse como String

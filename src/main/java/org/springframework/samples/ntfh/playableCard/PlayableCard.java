@@ -5,10 +5,12 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import org.springframework.samples.ntfh.character.CharacterType;
 import org.springframework.samples.ntfh.interfaces.AbilityCard;
 import org.springframework.samples.ntfh.interfaces.Location;
 import org.springframework.samples.ntfh.interfaces.PhysicalCard;
 import org.springframework.samples.ntfh.interfaces.PlayableCardType;
+import org.springframework.samples.ntfh.marketCard.MarketCardEnum;
 import org.springframework.samples.ntfh.model.BaseEntity;
 import lombok.Getter;
 
@@ -22,6 +24,14 @@ public class PlayableCard extends BaseEntity implements PhysicalCard {
 
  //   @Enumerated(EnumType.STRING)
  //   private AbilityCard cardType; // Enum que englobe las AbilityCard de todos los personajes
+
+    public String switchCharacter(String character) {
+        if(character.matches(CharacterType.RANGER.toString())) return RangerCard.values().toString();
+        else if (character.matches(CharacterType.ROGUE.toString())) return RogueCard.values().toString();
+        else if (character.matches(CharacterType.WARRIOR.toString())) return WarriorCard.values().toString();
+        else if (character.matches(CharacterType.WIZARD.toString())) return WizardCard.values().toString();
+        else return null;
+    }
 
     @Override
     public String getFrontImage() {
