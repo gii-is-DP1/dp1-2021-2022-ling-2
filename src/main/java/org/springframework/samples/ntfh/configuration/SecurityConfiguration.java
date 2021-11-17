@@ -31,17 +31,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
-				.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
-				.antMatchers("/scenes").permitAll().antMatchers("/scenes/**").hasAnyAuthority("admin")
-				.antMatchers("/admin/**").hasAnyAuthority("admin").anyRequest().denyAll();
+		http.authorizeRequests() // antMatchers:
+				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
+				.antMatchers(HttpMethod.POST, "/users/**").permitAll() // Allow to register and login
+				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow to list all users to the admins
+				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
+				.anyRequest().denyAll(); // else, deny
+
 		// Configuración para que funcione la consola de administración
 		// de la BD H2 (deshabilitar las cabeceras de protección contra
 		// ataques de tipo csrf y habilitar los framesets si su contenido
 		// se sirve desde esta misma página.
 
 		// http.csrf().ignoringAntMatchers("/h2-console/**");
-		http.csrf().disable(); // TODO csrf token
+		http.csrf().disable(); // TODO csrf token in JSON for better security
 
 		http.headers().frameOptions().sameOrigin();
 	}
