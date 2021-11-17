@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.samples.ntfh.user.authorities.Authorities;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +44,7 @@ public class User {
 
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
-	private boolean enabled; // Legacy from Petclinic, currently needed for CRUD of users. To be removed
+	private boolean enabled; // If a user gets banned, he/she will be disabled
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore

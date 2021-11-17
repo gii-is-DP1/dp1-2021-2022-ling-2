@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.user;
+package org.springframework.samples.ntfh.user.authorities;
 
 import org.springframework.data.repository.CrudRepository;
 
