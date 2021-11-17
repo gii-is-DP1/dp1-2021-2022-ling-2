@@ -34,16 +34,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
 				.antMatchers("/scenes").permitAll().antMatchers("/scenes/**").hasAnyAuthority("admin")
-				.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/owners/**")
-				.hasAnyAuthority("owner", "admin").antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
-				.formLogin()
-				/* .loginPage("/login") */
-				.failureUrl("/login-error").and().logout().logoutSuccessUrl("/");
+				.antMatchers("/admin/**").hasAnyAuthority("admin").anyRequest().denyAll();
 		// Configuración para que funcione la consola de administración
 		// de la BD H2 (deshabilitar las cabeceras de protección contra
 		// ataques de tipo csrf y habilitar los framesets si su contenido
 		// se sirve desde esta misma página.
-		http.csrf().ignoringAntMatchers("/h2-console/**");
+
+		// http.csrf().ignoringAntMatchers("/h2-console/**");
+		http.csrf().disable(); // TODO csrf token
+
 		http.headers().frameOptions().sameOrigin();
 	}
 
