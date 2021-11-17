@@ -30,7 +30,7 @@ public class MarketCard extends BaseEntity implements PhysicalCard {
     @Enumerated(EnumType.STRING)
     private MarketCardEnum name;
 
-    @Column(name = "usableBy")
+    @Column(name = "usable_by")
     private String usableBy;
 
 //    private List<CharacterType> usableBy; sql no puede reflejar listas, asi que tendra que guardarse como String
