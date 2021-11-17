@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.css";
+import * as ROUTES from "./constants/routes";
 import Home from "./pages/home";
 import Login from "./pages/login";
-import SignUp from "./pages/signup";
 import NotFound from "./pages/not-found";
-import * as ROUTES from "./constants/routes";
-import "./App.css";
+import SignUp from "./pages/signup";
 
 export default function App() {
   return (
