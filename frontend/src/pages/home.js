@@ -1,3 +1,7 @@
+import * as ROUTES from "../constants/routes";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+
 export default function Home() {
   useEffect(() => {
     document.title = "No Time for Heroes";
@@ -5,10 +9,10 @@ export default function Home() {
   return (
     <div className="home">
       <h1>Home</h1>
-      <Link to={ROUTES.SIGN_UP}>
-        <p>Sign up</p>
-      </Link>
-      <Link to={ROUTES.LOG_IN}>
+      <p>
+        <Link to={ROUTES.SIGNUP}>Sign up</Link>
+      </p>
+      <Link to={ROUTES.LOGIN}>
         <p>Log in</p>
       </Link>
     </div>
