@@ -28,11 +28,6 @@ public class AuthoritiesService {
     }
 
     @Transactional
-    public void setUser(User user) {
-        
-    }
-
-    @Transactional
     public void saveAuthorities(String userId, String role) throws DataAccessException {
         Authorities authority = new Authorities();
         Optional<User> user = userService.findUser(userId);
