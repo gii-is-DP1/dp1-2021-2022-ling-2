@@ -14,8 +14,6 @@ tagdir="/WEB-INF/tags" %>
         <thead>
         <tr>
             <th style="width: 150px;">Name</th>
-            <th>Duration</th>
-            <th>Date</th>
             <th>Start Time</th>
             <th>Finish Time</th>
             <th>Comments</th>
@@ -28,12 +26,6 @@ tagdir="/WEB-INF/tags" %>
             <tr>
                 <td>
                     <c:out value="${game.name}"/></a>
-                </td>
-                <td>
-                    <c:out value="${game.duration}"/>
-                </td>
-                <td>
-                    <c:out value="${game.date}"/>
                 </td>
                 <td>
                     <c:out value="${game.startTime}"/>

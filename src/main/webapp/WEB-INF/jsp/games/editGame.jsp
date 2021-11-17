@@ -24,7 +24,6 @@ tagdir="/WEB-INF/tags" %>
     >
       <div class="form-group has-feedback">
         <petclinic:inputField label="Name" name="name"/>
-        <petclinic:inputField label="Date" name="date"/>
         <petclinic:inputField label="Start Time" name="startTime"/>
         <petclinic:inputField label="Finish Time" name="finishTime"/>
         <petclinic:inputField label="Comments" name="comments"/>
