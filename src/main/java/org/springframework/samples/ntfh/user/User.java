@@ -12,6 +12,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.validator.constraints.Length;
 
 import lombok.Getter;
@@ -28,7 +30,7 @@ public class User {
 	private String username;
 
 	@NotBlank
-	@Length(min = 6)
+	@Length(min = 1)
 	private String password;
 
 	@NotNull
@@ -44,5 +46,6 @@ public class User {
 	private boolean enabled; // Legacy from Petclinic, currently needed for CRUD of users. To be removed
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@JsonIgnore
 	private Set<Authorities> authorities;
 }

@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.samples.ntfh.comments.Comment;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
@@ -33,6 +35,7 @@ public class Game extends BaseEntity {
     // The set of comments would be fetched from another table. To be implemented
     // yet.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
+    @JsonIgnore
     private Set<Comment> comments;
 
     private Boolean spectatorsAllowed;
