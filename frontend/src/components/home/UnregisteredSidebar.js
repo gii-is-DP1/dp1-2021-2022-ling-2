@@ -28,15 +28,21 @@ export default function UnregisteredSidebar() {
     }
   }, [data, setUnregisteredUser]);
 
+  // The view will be updated every time a state variable changes
   return (
     <span>
       <h1>Welcome to No Time for Heroes!</h1>
-      <p>
-        You have been assigned a guest account:{" "}
-        {JSON.parse(unregisteredUser).username}. If you want to access all the
-        functionalities, don't forget to <Link to={ROUTES.SIGNUP}>Sign up</Link>{" "}
-        or <Link to={ROUTES.LOGIN}>Log in</Link>
-      </p>
+      {unregisteredUser === "" ? (
+        <p>Loading...</p>
+      ) : (
+        <p>
+          You have been assigned a guest account:{" "}
+          {JSON.parse(unregisteredUser).username}. If you want to access all the
+          functionalities, don't forget to{" "}
+          <Link to={ROUTES.SIGNUP}>Sign up</Link> or{" "}
+          <Link to={ROUTES.LOGIN}>Log in</Link>
+        </p>
+      )}
     </span>
   );
 }
