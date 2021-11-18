@@ -6,6 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+// TODO change to RestController and re-implement the methods to return ResponseEntity<?> with JSON data
 @Controller
 @RequestMapping("/marketCards")
 public class MarketCardController {
