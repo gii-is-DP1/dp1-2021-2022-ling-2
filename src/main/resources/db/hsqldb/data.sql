@@ -65,6 +65,8 @@ INSERT INTO scenes(id, type) VALUES (12, 'YERMO_DE_CEMENMAR');
 
 --INSERT INTO playable_cards(id, card_type, location) VALUES (1, 'ABILITY_CARD','PILE');
 
+-- MARKET no es una propiedad de las cartas. Es una propiedad de la instancia de la carta, cuando se encuentre ya dentro de un juego.
+-- Eso será una tabla diferente que trackee el uso de la carta dentro de la partida (si la tiene alguien, su posición...
 INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (1, 'MARKET', 3, 'DAGA_ELFICA', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (2, 'MARKET', 3, 'DAGA_ELFICA', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (3, 'MARKET', 8, 'POCION_CURATIVA', 'Ranger, Rogue, Warrior');
