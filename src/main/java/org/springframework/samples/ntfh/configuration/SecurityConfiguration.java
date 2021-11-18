@@ -35,6 +35,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
 				.antMatchers(HttpMethod.POST, "/users/**").permitAll() // Allow to register and login
 				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow to list all users to the admins
+				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
+																				// credentials
 				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
 				.anyRequest().denyAll(); // else, deny
 
