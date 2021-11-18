@@ -27,20 +27,16 @@ import lombok.Setter;
 public class User {
 	@Id
 	@NotBlank
-	@Length(min = 4, max = 20)
+	@Length(min = 4, max = 20, message = " The username must be 4-20 characters long")
 	private String username;
 
 	@NotBlank
-	@Length(min = 1)
+	@Length(min = 1, message = "The length of the password must be at least 1")
 	private String password;
 
 	@NotNull
 	@Email(message = "Please provide a valid Email")
 	private String email;
-
-	@NotNull
-	@Column(columnDefinition = "boolean default false")
-	private boolean isBanned;
 
 	@NotNull
 	@Column(columnDefinition = "boolean default true")

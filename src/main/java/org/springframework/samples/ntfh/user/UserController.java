@@ -19,6 +19,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Michael Isvy
  */
 @RestController()
-@RequestMapping("/users")
+@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 	private final UserService userService;
 
@@ -43,15 +44,21 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<User> getAll() {
+	public ResponseEntity<Iterable<User>> getAll() {
+		// untested
 		Iterable<User> users = this.userService.findAll();
-		return new ResponseEntity<>(users.iterator().next(), HttpStatus.OK);
+		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
-	@PostMapping
-	public ResponseEntity<User> create(@Valid @RequestBody User user) {
+	@PostMapping("register")
+	public ResponseEntity<User> register(@Valid @RequestBody User user) {
 		User createdUser = this.userService.saveUser(user);
 		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
 	}
 
+	@PostMapping("login")
+	public ResponseEntity<String> login(@RequestBody User user) {
+		// TODO implement
+		return new ResponseEntity<>("this should return a Bearer token", HttpStatus.OK);
+	}
 }
