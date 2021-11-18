@@ -23,7 +23,7 @@ public class MarketCardService {
     }
 
     @Transactional
-    public Optional<MarketCard> findSceneById(Integer id) {
+    public Optional<MarketCard> findMarketCardById(Integer id) {
         return marketCardRepository.findById(id);
     }
 
