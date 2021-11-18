@@ -24,7 +24,7 @@ public class UnregisteredUserController {
     /**
      * Will be called when a user accesses the application without being logged in
      */
-    @GetMapping
+    @GetMapping // Maybe make this a post? it creates an entry in the DB
     public ResponseEntity<UnregisteredUser> getCredentials() {
         UnregisteredUser unregisteredUser = unregisteredUserService.create();
         return new ResponseEntity<>(unregisteredUser, HttpStatus.OK);
