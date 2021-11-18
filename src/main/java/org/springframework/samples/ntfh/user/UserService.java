@@ -58,12 +58,12 @@ public class UserService {
 		}
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public Optional<User> findUser(String username) {
 		// The username is the id (primary key)
 		return userRepository.findById(username);

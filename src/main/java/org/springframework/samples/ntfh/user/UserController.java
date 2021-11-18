@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author andrsdt
  */
 @RestController()
-@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/users")
 public class UserController {
 	private final UserService userService;
 
