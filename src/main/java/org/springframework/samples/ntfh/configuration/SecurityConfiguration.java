@@ -1,5 +1,7 @@
 package org.springframework.samples.ntfh.configuration;
 
+import java.util.Arrays;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,7 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests() // antMatchers:
+		http.cors() // enable CORS requests
+				.and().authorizeRequests() // antMatchers:
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
 				.antMatchers(HttpMethod.POST, "/users/**").permitAll() // Allow to register and login
 				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow to list all users to the admins
@@ -58,6 +64,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.authoritiesByUsernameQuery("select username, authority " + "from authorities " + "where username = ?")
 				.passwordEncoder(passwordEncoder());
 	}
+
+	/**
+	 * Allowing CORS so our react API on port 3000 can consume it
+	 * 
+	 * @see https://stackoverflow.com/questions/36968963/how-to-configure-cors-in-a-spring-boot-spring-security-application
+	 */
+	// @Bean
+	// CorsConfigurationSource corsConfigurationSource() {
+	// CorsConfiguration configuration = new CorsConfiguration();
+	// configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //
+	// allow calls from react
+	// configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATH",
+	// "DELETE", "OPTIONS"));
+	// UrlBasedCorsConfigurationSource source = new
+	// UrlBasedCorsConfigurationSource();
+	// source.registerCorsConfiguration("/**", configuration);
+	// return source;
+	// }
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
