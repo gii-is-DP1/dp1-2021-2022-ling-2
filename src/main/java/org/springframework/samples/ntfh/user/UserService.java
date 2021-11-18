@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,15 +33,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
 	private UserRepository userRepository;
+	private AuthoritiesService authoritiesService;
 
 	@Autowired
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, AuthoritiesService authoritiesService) {
 		this.userRepository = userRepository;
+		this.authoritiesService = authoritiesService;
 	}
 
 	@Transactional
-	public void saveUser(User user) throws DataAccessException {
-		userRepository.save(user);
+	public User saveUser(User user) throws DataAccessException {
+
+		Optional<User> userWithSameUsername = userRepository.findById(user.getUsername());
+		if (userWithSameUsername.isPresent()) {
+			throw new DataAccessException("This username is already in use") {
+			};
+		}
+		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
+		if (userWithSameEmail.isPresent()) {
+			throw new DataAccessException("This email is already in use") {
+			};
+		} else {
+			user.setEnabled(true);
+			userRepository.save(user);
+			authoritiesService.saveAuthorities(user.getUsername(), "user");
+			return user;
+		}
 	}
 
 	@Transactional
@@ -49,7 +67,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public Optional<User> findUser(String id) {
-		return userRepository.findById(id);
+	public Optional<User> findUser(String username) {
+		// The username is the id (primary key)
+		return userRepository.findById(username);
 	}
 }

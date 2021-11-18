@@ -15,9 +15,17 @@
  */
 package org.springframework.samples.ntfh.user;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Juergen Hoeller
@@ -25,18 +33,32 @@ import org.springframework.ui.ModelMap;
  * @author Arjen Poutsma
  * @author Michael Isvy
  */
-@Controller
+@RestController()
+@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
+	private final UserService userService;
 
 	@Autowired
-	private UserService userService;
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-	// Cannot use more than one @GetMapping()
-	public String getAll(ModelMap modelMap) {
-		String view = "users/listUsers";
-		Iterable<User> users = userService.findAll();
-		modelMap.addAttribute("users", users);
-		return view;
-	}	
+	@GetMapping
+	public ResponseEntity<Iterable<User>> getAll() {
+		// untested
+		Iterable<User> users = this.userService.findAll();
+		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
 
+	@PostMapping("register")
+	public ResponseEntity<User> register(@Valid @RequestBody User user) {
+		User createdUser = this.userService.saveUser(user);
+		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+	}
+
+	@PostMapping("login")
+	public ResponseEntity<String> login(@RequestBody User user) {
+		// TODO implement
+		return new ResponseEntity<>("this should return a Bearer token", HttpStatus.OK);
+	}
 }

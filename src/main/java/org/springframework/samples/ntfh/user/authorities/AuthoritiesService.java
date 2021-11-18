@@ -7,37 +7,38 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.ntfh.user.User;
-import org.springframework.samples.ntfh.user.UserService;
+import org.springframework.samples.ntfh.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthoritiesService {
-    
-    private AuthoritiesRepositories authoritiesRepositories;
-    private UserService userService;
+
+    private AuthoritiesRepository authoritiesRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public AuthoritiesService(AuthoritiesRepositories authoritiesRepositories, UserService userService) {
-        this.authoritiesRepositories = authoritiesRepositories;
-        this.userService = userService;
+    public AuthoritiesService(AuthoritiesRepository authoritiesRepository, UserRepository userRepository) {
+        this.authoritiesRepository = authoritiesRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     public void saveAuthorities(Authorities authorities) throws DataAccessException {
-        authoritiesRepositories.save(authorities);
+        authoritiesRepository.save(authorities);
     }
 
     @Transactional
-    public void saveAuthorities(String userId, String role) throws DataAccessException {
+    public void saveAuthorities(String username, String role) throws DataAccessException {
         Authorities authority = new Authorities();
-        Optional<User> user = userService.findUser(userId);
+        Optional<User> user = userRepository.findById(username);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             authority.setUser(user.get());
             authority.setAuthority(role);
-            authoritiesRepositories.save(authority);
+            authoritiesRepository.save(authority);
         } else {
-            throw new DataAccessException("User '" + user.getClass().getName() + "' not found!") {};
+            throw new DataAccessException("User '" + user.getClass().getName() + "' not found!") {
+            };
         }
     }
 }

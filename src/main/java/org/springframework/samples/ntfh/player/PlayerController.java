@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 
+// TODO change to rest controller and return JSON
 @Controller
 public class PlayerController {
-    
+
     @Autowired
     private PlayerService playerService;
 

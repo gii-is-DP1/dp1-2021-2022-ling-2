@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "authorities")
 public class Authorities extends BaseEntity {
-    
+
     @ManyToOne
     @JoinColumn(name = "username")
     User user;
