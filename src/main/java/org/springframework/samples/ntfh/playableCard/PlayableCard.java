@@ -19,6 +19,10 @@ import lombok.Getter;
 @Table(name = "playable_cards")
 public class PlayableCard extends BaseEntity implements PhysicalCard {
 
+    // TODO esta propiedad no debería estar aquí. Tenemos que hacer una entidad nueva que sea de instancias de
+    // cartas ingame y ahí será donde la carta tenga una posición, un poseedor... Aquí solo se guardan propiedades
+    // generales de la carta, comunes a todas las partidas, y a partir de aquí se crearán las instancias específicas
+    // de las cartas para cada partida
     @Enumerated(EnumType.STRING)
     private PlayableCardLocation location;
 
