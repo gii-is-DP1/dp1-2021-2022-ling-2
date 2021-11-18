@@ -15,17 +15,26 @@
  */
 package org.springframework.samples.ntfh.user;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * @author andrsdt
@@ -54,8 +63,23 @@ public class UserController {
 	}
 
 	@PostMapping("login")
-	public ResponseEntity<String> login(@RequestBody User user) {
-		// TODO implement
-		return new ResponseEntity<>("this should return a Bearer token", HttpStatus.OK);
+	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
+		Map<String, String> map = Map.of("token", getJWTToken(user.getUsername()));
+
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
+
+	private String getJWTToken(String username) {
+		String secretKey = "NoTimeForHeroesSecretKey";
+		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
+
+		String token = Jwts.builder().setId("ntfhJWT").setSubject(username)
+				.claim("authorities",
+						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + 600000))
+				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
+
+		return "Bearer " + token;
 	}
 }
