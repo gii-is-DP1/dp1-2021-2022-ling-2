@@ -11,11 +11,14 @@ import org.springframework.samples.ntfh.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author jstockwell
+ */
 @Getter
 @Setter
 @Entity
-@Table(name="unregisteredUsers")
-public class Unregistered extends BaseEntity {
+@Table(name = "unregisteredUsers")
+public class UnregisteredUser extends BaseEntity {
 
     @NotBlank
     private String username;
