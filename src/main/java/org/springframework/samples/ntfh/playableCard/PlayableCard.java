@@ -24,7 +24,8 @@ public class PlayableCard extends BaseEntity implements PhysicalCard {
 
  //   @Enumerated(EnumType.STRING)
  //   private AbilityCard cardType; // Enum que englobe las AbilityCard de todos los personajes
-
+    
+    // TODO refactorizar
     public String switchCharacter(String character) {
         if(character.matches(CharacterType.RANGER.toString())) return RangerCard.values().toString();
         else if (character.matches(CharacterType.ROGUE.toString())) return RogueCard.values().toString();
