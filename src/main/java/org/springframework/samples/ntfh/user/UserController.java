@@ -28,10 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author Juergen Hoeller
- * @author Ken Krebs
- * @author Arjen Poutsma
- * @author Michael Isvy
+ * @author andrsdt
  */
 @RestController()
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
