@@ -1,9 +1,10 @@
 import axios from "../api/axiosConfig";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import * as ROUTES from "../constants/routes";
 import Homebar from "../components/home/Homebar";
+import userContext from "../context/user";
 
 /**
  *
@@ -12,6 +13,7 @@ import Homebar from "../components/home/Homebar";
  */
 export default function SignUp() {
   const history = useHistory(); // hook
+  const { setToken } = useContext(userContext); // hook
 
   useEffect(() => {
     document.title = "NTFH - Sign up";
@@ -22,11 +24,8 @@ export default function SignUp() {
     try {
       const formData = new FormData(e.target);
       const formDataObj = Object.fromEntries(formData.entries());
-      // submit and await response
       const response = await axios.post("/users/register", formDataObj);
-      // store token in local storage
-      localStorage.setItem("token", response.data.authorization);
-      // redirect to home
+      setToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
       setError(error.message);

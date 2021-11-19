@@ -6,10 +6,10 @@ import UserContext from "../../context/user";
  * @returns {React.Component}
  */
 export default function Sidebar() {
-  const user = useContext(UserContext);
+  const { token } = useContext(UserContext);
   return (
     <div>
-      <h1>Welcome back, {user.username}</h1>
+      <h1>Welcome back, {token}</h1>
     </div>
   );
 }

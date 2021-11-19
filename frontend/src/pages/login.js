@@ -1,10 +1,11 @@
 // import axios from "../api/axiosConfig";
 import axios from "../api/axiosConfig";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
+import userContext from "../context/user";
 
 /**
  *
@@ -12,18 +13,19 @@ import * as ROUTES from "../constants/routes";
  */
 export default function Login() {
   const history = useHistory(); // hook
+  const { setToken } = useContext(userContext); // hook
 
   const [error, setError] = useState("");
-
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData(e.target);
       const formDataObj = Object.fromEntries(formData.entries());
       const response = await axios.post("/users/login", formDataObj);
-      localStorage.setItem("token", response.data.authorization);
+      setToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
+      console.log(error);
       setError(error.message);
     }
   };
@@ -37,7 +39,7 @@ export default function Login() {
       <div>
         <Homebar />
       </div>
-      <h1>Sign up page</h1>
+      <h1>Log in page</h1>
       <p>
         Don't have an account?
         <Link to={ROUTES.SIGNUP}>

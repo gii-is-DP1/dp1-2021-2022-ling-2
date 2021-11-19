@@ -4,14 +4,13 @@ import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 
 export default function Home() {
-  const user = useContext(UserContext);
-  const [unregisteredUser, setUnregisteredUser] = useLocalStorage(
-    "unregisteredUser",
-    null
+  const { token } = useContext(UserContext);
+  const { unregisteredUser, setUnregisteredUser } = useContext(
+    UnregisteredUserContext
   );
+
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -19,6 +18,7 @@ export default function Home() {
       async function fetchData() {
         try {
           const response = await axios.get("/unregistered-users");
+
           setUnregisteredUser(response.data);
         } catch (error) {
           setError(error);
@@ -35,13 +35,7 @@ export default function Home() {
   return (
     <span className="home">
       <h1>Home</h1>
-      {user ? (
-        <Sidebar />
-      ) : (
-        <UnregisteredUserContext.Provider value={unregisteredUser}>
-          <UnregisteredSidebar />
-        </UnregisteredUserContext.Provider>
-      )}
+      {token ? <Sidebar /> : <UnregisteredSidebar />}
     </span>
   );
 }
