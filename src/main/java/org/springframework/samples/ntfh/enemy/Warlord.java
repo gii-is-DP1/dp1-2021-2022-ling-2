@@ -1,46 +1,31 @@
 package org.springframework.samples.ntfh.enemy;
 
-import java.util.Map;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.samples.ntfh.interfaces.Location;
-import org.springframework.samples.ntfh.model.BaseEntity;
-
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "warlords")
-public class Warlord extends BaseEntity implements Enemy {
+public class Warlord extends EnemyEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private WarlordType type;
+    private WarlordTypeEnum warlordTypeEnum;
 
-    @Enumerated(EnumType.STRING)
-    private EnemyLocation location;
+    @NotNull
+    private Integer endurance;
 
-    /**
-     * Derived. Return the endurance of a warlord. Can be obtained by knowing the
-     * WarlordType
-     * 
-     * @author andrsdt
-     * @return Integer value of the warlord's endurance
-     */
-    @Override
-    public Integer getEndurance() {
-        Map<WarlordType, Integer> warlordEndurance = Map.of(WarlordType.GURDRUG, 8, WarlordType.ROGHKILLER, 9,
-                WarlordType.SHRIEKKNIFER, 10);
+    @Transient
+    private String frontImage;
 
-        return warlordEndurance.get(type);
-    }
+    @Transient
+    private String backImage;
 
     /**
      * Derived. Return the route to the front image of a warlord. Can be obtained by
@@ -49,9 +34,8 @@ public class Warlord extends BaseEntity implements Enemy {
      * @author andrsdt
      * @return String route to the card's front image
      */
-    @Override
     public String getFrontImage() {
-        return "/cards/enemies/warlords/" + type.toString().toLowerCase() + ".png";
+        return "/cards/enemies/warlords/" + warlordTypeEnum.toString().toLowerCase() + ".png";
     }
 
     /**
@@ -60,14 +44,7 @@ public class Warlord extends BaseEntity implements Enemy {
      * @author andrsdt
      * @return String route to the card's back image
      */
-    @Override
     public String getBackImage() {
         return "/cards/enemies/warlords/backs/standard.png";
-    }
-
-    @Override
-    public Location getLocation() {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

@@ -1,5 +1,5 @@
 package org.springframework.samples.ntfh.enemy;
 
-public enum HordeModifier {
+public enum HordeModifierTypeEnum {
     MAGIC_ATTACKER, HEALING_CAPABILITIES
 }

@@ -1,7 +1,21 @@
 package org.springframework.samples.ntfh.enemy;
 
-import org.springframework.samples.ntfh.interfaces.EnemyType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
 
-public enum HordeEnemyType implements EnemyType {
-    SLINGER, REGEN, SHAMAN, WARRIOR, MAGE, BERSERKER
+import lombok.Getter;
+
+@Getter
+@Table(name = "horde_enemy_types")
+public class HordeEnemyType {
+    @Enumerated(EnumType.STRING)
+    private HordeEnemyTypeEnum hordeEnemyTypeEnum;
+
+    @Enumerated(EnumType.STRING)
+    private HordeModifierTypeEnum hordeEnemyModifierTypeEnum;
+
+    @Enumerated(EnumType.STRING)
+    private Integer endurance;
+
 }
