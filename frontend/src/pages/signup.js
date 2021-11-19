@@ -3,6 +3,7 @@ import { Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../constants/routes";
 import Homebar from "../components/home/Homebar";
+import { API_BASE_URL } from "../constants/paths";
 
 export default function SignUp() {
   useEffect(() => {
@@ -14,6 +15,16 @@ export default function SignUp() {
     const formData = new FormData(e.target),
     formDataObj = Object.fromEntries(formData.entries())
     console.log(formDataObj)
+    // TODO POST of sign up
+    // fetch(this.props.formAction, {
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(formDataObj)
+    // });
+
+    // this.setState({description: ''});
   }
 
   const [username, setUsername] = useState(document.getElementById("signUpUsername"));
