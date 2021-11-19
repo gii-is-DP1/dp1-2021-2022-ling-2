@@ -6,8 +6,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import org.springframework.samples.ntfh.character.CharacterTypeEnum;
-import org.springframework.samples.ntfh.interfaces.Location;
-import org.springframework.samples.ntfh.interfaces.PhysicalCard;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
