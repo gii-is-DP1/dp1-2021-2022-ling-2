@@ -24,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Mostly used as a facade for all Petclinic controllers Also a placeholder
- * for @Transactional and @Cacheable annotations
- *
- * @author Michael Isvy
+ * @author andrsdt
  */
 @Service
 public class UserService {
@@ -61,12 +58,12 @@ public class UserService {
 		}
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public Optional<User> findUser(String username) {
 		// The username is the id (primary key)
 		return userRepository.findById(username);

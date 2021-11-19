@@ -15,11 +15,14 @@
  */
 package org.springframework.samples.ntfh.user;
 
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,15 +30,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 /**
- * @author Juergen Hoeller
- * @author Ken Krebs
- * @author Arjen Poutsma
- * @author Michael Isvy
+ * @author andrsdt
  */
 @RestController()
-@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/users")
 public class UserController {
+	// TODO JWT tokens can be decrypted to know if the user who is trying to perform
+	// an action is accessing his data or not
 	private final UserService userService;
 
 	@Autowired
@@ -57,8 +62,19 @@ public class UserController {
 	}
 
 	@PostMapping("login")
-	public ResponseEntity<String> login(@RequestBody User user) {
-		// TODO implement
-		return new ResponseEntity<>("this should return a Bearer token", HttpStatus.OK);
+	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
+		Optional<User> foundUserOptional = this.userService.findUser(user.getUsername());
+		if (!foundUserOptional.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} else if (foundUserOptional.get().getPassword().equals(user.getPassword())) {
+			User foundUser = foundUserOptional.get();
+			String token = Jwts.builder().setSubject(foundUser.getUsername())
+					.claim("authorities", foundUser.getAuthorities()).setIssuedAt(new Date())
+					.signWith(SignatureAlgorithm.HS256, "NoTimeForHeroesSecretKey").compact();
+			Map<String, String> tokenMap = Map.of("authorization", "Bearer " + token);
+			return new ResponseEntity<>(tokenMap, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 	}
 }

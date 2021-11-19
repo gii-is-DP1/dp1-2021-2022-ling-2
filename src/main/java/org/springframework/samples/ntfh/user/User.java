@@ -20,6 +20,9 @@ import org.springframework.samples.ntfh.user.authorities.Authorities;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author andrsdt
+ */
 @Getter
 @Setter
 @Entity
@@ -40,7 +43,7 @@ public class User {
 
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
-	private boolean enabled; // If a user gets banned, he/she will be disabled
+	private boolean enabled; // If a user gets banned, he/she will get disabled
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore
