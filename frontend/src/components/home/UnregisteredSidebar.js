@@ -36,9 +36,9 @@ export default function UnregisteredSidebar() {
         <p>Loading...</p>
       ) : (
         <p>
-          You have been assigned a guest account:{" "}
-          {JSON.parse(unregisteredUser).username}. If you want to access all the
-          functionalities, don't forget to{" "}
+          Hello <b>{JSON.parse(unregisteredUser).username}</b>! You have been
+          assigned a guest account. If you want to access all the
+          functionalities of the game, please{" "}
           <Link to={ROUTES.SIGNUP}>Sign up</Link> or{" "}
           <Link to={ROUTES.LOGIN}>Log in</Link>
         </p>
