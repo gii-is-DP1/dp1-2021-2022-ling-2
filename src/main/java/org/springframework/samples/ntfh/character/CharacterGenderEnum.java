@@ -1,5 +1,5 @@
 package org.springframework.samples.ntfh.character;
 
-public enum CharacterVersion {
+public enum CharacterGenderEnum {
     MALE, FEMALE
 }
