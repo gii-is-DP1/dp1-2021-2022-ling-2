@@ -59,9 +59,8 @@ public class UserController {
 
 	@PostMapping("register")
 	public ResponseEntity<Map<String, String>> register(@Valid @RequestBody User user) {
-		User createdUser = this.userService.saveUser(user);
-		String token = generateJWTToken(createdUser);
-		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.CREATED);
+		this.userService.saveUser(user);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("login")

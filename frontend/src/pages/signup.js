@@ -24,8 +24,10 @@ export default function SignUp() {
     try {
       const formData = new FormData(e.target);
       const formDataObj = Object.fromEntries(formData.entries());
-      const response = await axios.post("/users/register", formDataObj);
-      setUserToken(response.data.authorization);
+      await axios.post("/users/register", formDataObj); // register response
+      // we want to auto log in after registering to get the auth token
+      const loginResponse = await axios.post("/users/login", formDataObj);
+      setUserToken(loginResponse.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
       setError(error.message);
