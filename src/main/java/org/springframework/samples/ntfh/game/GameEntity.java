@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import org.springframework.data.annotation.Transient;
 import org.springframework.samples.ntfh.comments.Comment;
 import org.springframework.samples.ntfh.model.NamedEntity;
+import org.springframework.samples.ntfh.scene.SceneType;
 
 import lombok.Getter;
 import lombok.Setter;
