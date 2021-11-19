@@ -1,6 +1,7 @@
 import { createContext } from "react";
 
-const UserContext = createContext(null);
+/**
+ * @see https://es.reactjs.org/docs/context.html
+ */
+export default createContext(null);
 // this context will be used to know if there is a user logged in
-
-export default UserContext;
