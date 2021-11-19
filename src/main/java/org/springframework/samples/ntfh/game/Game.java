@@ -6,10 +6,11 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.samples.ntfh.comments.Comment;
-import org.springframework.samples.ntfh.model.BaseEntity;
+import org.springframework.samples.ntfh.model.NamedEntity;
+import org.springframework.samples.ntfh.scene.SceneType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,32 +18,31 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "games")
-public class Game extends BaseEntity {
-    // Note: we should consider dd/MM/yyyy HH:mm:ss format since a game can start
-    // today and end tomorrow
-    // @DateTimeFormat(pattern = "HH/mm/ss")
+public class Game extends NamedEntity {
+
     private Timestamp startTime;
-
-    // Note: we should consider dd/MM/yyyy HH:mm:ss format since a game can start
-    // today and end tomorrow
-    // @DateTimeFormat(pattern = "HH/mm/ss")
     private Timestamp finishTime;
-
-    // The set of comments would be fetched from another table. To be implemented
-    // yet.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
     private Set<Comment> comments;
+    // Lista de usuarios en el juego [Mirar!!!!!!!]
+    // @OneToMany(cascade = CascadeType.ALL,mappedBy = "game")
+    // private Set<User> players;
 
     private Boolean spectatorsAllowed;
 
-    /**
-     * Derived. Returns the duration of the game in seconds
-     * 
-     * @author andrsdt
-     * @return Long duration of the time in seconds
-     */
+    private Boolean scenariosAllowed;
+
+    // TODO tiene que ser null si !scenariosallowed
+    // Esto hace referencia a una tabla donde estan todos los escenarios
+    private SceneType currentScene;
+
+    @Transient // Indica que es un getter, no queremos que se guarde en la tabla
     public Long getDuration() {
         return finishTime.getTimestamp().getTime() - startTime.getTimestamp().getTime();
+    }
+
+    @Transient
+    public boolean isFinished() {
+        return finishTime != null;
     }
 }

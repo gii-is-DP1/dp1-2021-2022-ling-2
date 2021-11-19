@@ -19,21 +19,21 @@ public class GameService {
         return (int) gameRepo.count();
     }
     
-    public Iterable<GameEntity> findAll(){
+    public Iterable<Game> findAll(){
         return gameRepo.findAll();
     }
 
     @Transactional
-    public Optional<GameEntity> findGameById(int id){
+    public Optional<Game> findGameById(int id){
         return gameRepo.findById(id);
     }
 
     @Transactional
-    public void save(@Valid GameEntity game) {
+    public void save(@Valid Game game) {
         gameRepo.save(game);
     }
 
-    public void delete(GameEntity game) {
+    public void delete(Game game) {
         gameRepo.delete(game);
     }
 
