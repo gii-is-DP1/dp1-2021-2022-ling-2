@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import * as PATHS from "../../constants/paths";
@@ -39,8 +40,13 @@ export default function UnregisteredSidebar() {
           Hello <b>{JSON.parse(unregisteredUser).username}</b>! You have been
           assigned a guest account. If you want to access all the
           functionalities of the game, please{" "}
-          <Link to={ROUTES.SIGNUP}>Sign up</Link> or{" "}
-          <Link to={ROUTES.LOGIN}>Log in</Link>
+          <br></br>
+          <Link to={ROUTES.SIGNUP}>
+            <Button variant="primary">Sign up</Button>
+          </Link>{' '}
+          <Link to={ROUTES.LOGIN}>
+            <Button variant="primary">Log In</Button>
+          </Link>{' '}
         </p>
       )}
     </span>
