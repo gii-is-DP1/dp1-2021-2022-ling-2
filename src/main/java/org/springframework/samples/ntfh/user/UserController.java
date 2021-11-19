@@ -16,17 +16,14 @@
 package org.springframework.samples.ntfh.user;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +39,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @RestController()
 @RequestMapping(value = "/users")
 public class UserController {
+	// TODO JWT tokens can be decrypted to know if the user who is trying to perform
+	// an action is accessing his data or not
 	private final UserService userService;
 
 	@Autowired
@@ -64,22 +63,18 @@ public class UserController {
 
 	@PostMapping("login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-		Map<String, String> map = Map.of("token", getJWTToken(user.getUsername()));
-
-		return new ResponseEntity<>(map, HttpStatus.OK);
-	}
-
-	private String getJWTToken(String username) {
-		String secretKey = "NoTimeForHeroesSecretKey";
-		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
-
-		String token = Jwts.builder().setId("ntfhJWT").setSubject(username)
-				.claim("authorities",
-						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
-				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
-
-		return "Bearer " + token;
+		Optional<User> foundUserOptional = this.userService.findUser(user.getUsername());
+		if (!foundUserOptional.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} else if (foundUserOptional.get().getPassword().equals(user.getPassword())) {
+			User foundUser = foundUserOptional.get();
+			String token = Jwts.builder().setSubject(foundUser.getUsername())
+					.claim("authorities", foundUser.getAuthorities()).setIssuedAt(new Date())
+					.signWith(SignatureAlgorithm.HS256, "NoTimeForHeroesSecretKey").compact();
+			Map<String, String> tokenMap = Map.of("authorization", "Bearer " + token);
+			return new ResponseEntity<>(tokenMap, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 	}
 }
