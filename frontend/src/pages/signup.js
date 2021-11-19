@@ -1,40 +1,45 @@
+import axios from "../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as ROUTES from "../constants/routes";
 import Homebar from "../components/home/Homebar";
-import { API_BASE_URL } from "../constants/paths";
 
+/**
+ *
+ * @author jstockwell
+ * @author andrsdt
+ */
 export default function SignUp() {
+  const history = useHistory(); // hook
+
   useEffect(() => {
     document.title = "NTFH - Sign up";
   });
 
-  const onFormSubmit = e => {
-    e.preventDefault()
-    const formData = new FormData(e.target),
-    formDataObj = Object.fromEntries(formData.entries())
-    console.log(formDataObj)
-    // TODO POST of sign up
-    // fetch(this.props.formAction, {
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(formDataObj)
-    // });
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(e.target);
+      const formDataObj = Object.fromEntries(formData.entries());
+      // submit and await response
+      const response = await axios.post("/users/register", formDataObj);
+      // store token in local storage
+      localStorage.setItem("token", response.data.authorization);
+      // redirect to home
+      history.push(ROUTES.HOME);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
-    // this.setState({description: ''});
-  }
-
-  const [username, setUsername] = useState(document.getElementById("signUpUsername"));
-  const [emailAddress, setEmailAddress] = useState(document.getElementById("formBasicEmail"));
-  const [password, setPassword] = useState(document.getElementById("formBasicPassword"));
   const [error, setError] = useState("");
 
   return (
     <div>
-      <div><Homebar /></div>
+      <div>
+        <Homebar />
+      </div>
       <h1>Sign up page</h1>
       <p>
         {" "}
@@ -43,15 +48,17 @@ export default function SignUp() {
           <Button variant="primary">Log In</Button>
         </Link>
       </p>
-      <br/>
-      <Form onSubmit={onFormSubmit}>
+      <br />
+      {error && <p className="mb-4 text-xs text-primary">{error}</p>}
+      <Form onSubmit={handleRegister}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
-          <Form.Control 
-            type="text" 
-            placeholder="Enter username" 
-            name="username" 
-            required isInvalid
+          <Form.Control
+            type="text"
+            placeholder="Enter username"
+            name="username"
+            required
+            isInvalid
           />
           <Form.Text className="text-muted">
             Make sure it's creative! Have fun with it
@@ -60,30 +67,31 @@ export default function SignUp() {
 
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
-          <Form.Control 
-            type="email" 
-            placeholder="Enter email" 
-            name="email" 
-            required isInvalid
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            name="email"
+            required
+            isInvalid
           />
           <Form.Text className="text-muted">
-          We'll never share your email with anyone else, only Facebook, I'm sure they can keep a secret.
+            We'll never share your email with anyone else, only Facebook, I'm
+            sure they can keep a secret.
           </Form.Text>
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
-          <Form.Control 
-            type="password" 
-            placeholder="Enter password" 
-            name="password" 
-            required isInvalid
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            name="password"
+            required
+            isInvalid
           />
         </Form.Group>
 
-        <Button type="submit">
-          Submit
-        </Button>
+        <Button type="submit">Submit</Button>
       </Form>
     </div>
   );

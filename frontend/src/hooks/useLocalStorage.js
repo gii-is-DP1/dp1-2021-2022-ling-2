@@ -12,8 +12,7 @@ export const useLocalStorage = (key, defaultValue) => {
   const [value, setValue] = useState(() => {
     // Aux function to get the initial value, or the default one if non existing
     const saved = localStorage.getItem(key);
-    const initial = JSON.parse(saved);
-    return initial || defaultValue;
+    return saved || defaultValue;
   });
 
   useEffect(() => {
