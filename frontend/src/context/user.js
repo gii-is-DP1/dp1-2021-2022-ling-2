@@ -1,6 +1,11 @@
 import { createContext } from "react";
-
-const UserContext = createContext(null);
-// this context will be used to know if there is a user logged in
-
-export default UserContext;
+/**
+ * @see https://es.reactjs.org/docs/context.html
+ */
+export default createContext /*{
+  user: {
+    user: tokenParser(localStorage.getItem("token")),
+    token: localStorage.getItem("token"),
+  },
+  setUser: (token) => localStorage.setItem("token", token),
+}*/();

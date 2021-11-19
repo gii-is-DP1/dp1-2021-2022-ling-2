@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * @author andrsdt
  */
 @RestController()
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/users")
 public class UserController {
 	// TODO JWT tokens can be decrypted to know if the user who is trying to perform
@@ -56,9 +58,9 @@ public class UserController {
 	}
 
 	@PostMapping("register")
-	public ResponseEntity<User> register(@Valid @RequestBody User user) {
-		User createdUser = this.userService.saveUser(user);
-		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+	public ResponseEntity<Map<String, String>> register(@Valid @RequestBody User user) {
+		this.userService.saveUser(user);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("login")
@@ -68,13 +70,15 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else if (foundUserOptional.get().getPassword().equals(user.getPassword())) {
 			User foundUser = foundUserOptional.get();
-			String token = Jwts.builder().setSubject(foundUser.getUsername())
-					.claim("authorities", foundUser.getAuthorities()).setIssuedAt(new Date())
-					.signWith(SignatureAlgorithm.HS256, "NoTimeForHeroesSecretKey").compact();
-			Map<String, String> tokenMap = Map.of("authorization", "Bearer " + token);
-			return new ResponseEntity<>(tokenMap, HttpStatus.OK);
+			String token = generateJWTToken(foundUser);
+			return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+	}
+
+	String generateJWTToken(User user) {
+		return Jwts.builder().setSubject(user.getUsername()).claim("authorities", user.getAuthorities())
+				.setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "NoTimeForHeroesSecretKey").compact();
 	}
 }
