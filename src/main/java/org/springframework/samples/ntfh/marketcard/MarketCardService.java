@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.marketCard;
+package org.springframework.samples.ntfh.marketcard;
 
 import java.util.Optional;
 
@@ -29,5 +29,5 @@ public class MarketCardService {
 
     // Only GET methods are available because all cards data will be injected from
     // the data.sql file
-    
+
 }
