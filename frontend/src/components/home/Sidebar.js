@@ -1,15 +1,15 @@
 import { useContext } from "react";
 import UserContext from "../../context/user";
-
+import tokenParser from "../../helpers/tokenParser";
 /**
  * Sidebar of a registered user. Will contain info about friends, etc.
  * @returns {React.Component}
  */
 export default function Sidebar() {
-  const { token } = useContext(UserContext);
+  const { userToken } = useContext(UserContext);
   return (
     <div>
-      <h1>Welcome back, {token}</h1>
+      <h1>Welcome back, {userToken}</h1>
     </div>
   );
 }

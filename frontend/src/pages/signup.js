@@ -13,7 +13,7 @@ import userContext from "../context/user";
  */
 export default function SignUp() {
   const history = useHistory(); // hook
-  const { setToken } = useContext(userContext); // hook
+  const { setUserToken } = useContext(userContext); // hook
 
   useEffect(() => {
     document.title = "NTFH - Sign up";
@@ -25,7 +25,7 @@ export default function SignUp() {
       const formData = new FormData(e.target);
       const formDataObj = Object.fromEntries(formData.entries());
       const response = await axios.post("/users/register", formDataObj);
-      setToken(response.data.authorization);
+      setUserToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
       setError(error.message);

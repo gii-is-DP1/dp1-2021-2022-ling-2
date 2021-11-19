@@ -13,7 +13,7 @@ import userContext from "../context/user";
  */
 export default function Login() {
   const history = useHistory(); // hook
-  const { setToken } = useContext(userContext); // hook
+  const { setUserToken } = useContext(userContext); // hook
 
   const [error, setError] = useState("");
   const handleLogin = async (e) => {
@@ -22,7 +22,7 @@ export default function Login() {
       const formData = new FormData(e.target);
       const formDataObj = Object.fromEntries(formData.entries());
       const response = await axios.post("/users/login", formDataObj);
-      setToken(response.data.authorization);
+      setUserToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
       console.log(error);

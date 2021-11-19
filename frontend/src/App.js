@@ -6,15 +6,20 @@ import Login from "./pages/login";
 import NotFound from "./pages/not-found";
 import SignUp from "./pages/signup";
 import userContext from "./context/user";
-import { useState } from "react";
 import unregisteredUserContext from "./context/unregisteredUser";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 export default function App() {
-  const [token, setToken] = useState(null);
-  const [unregisteredUser, setUnregisteredUser] = useState(null);
+  // TODO Sacar de LocalStorage aquí? y ahí ya paso al provider?
+  // usaria un hook para que cuando cambie el localStorage me re-renderice
+  const [userToken, setUserToken] = useLocalStorage("token", null);
+  const [unregisteredUser, setUnregisteredUser] = useLocalStorage(
+    "unregisteredUser",
+    null
+  );
 
   return (
-    <userContext.Provider value={{ token, setToken }}>
+    <userContext.Provider value={{ userToken, setUserToken }}>
       <unregisteredUserContext.Provider
         value={{ unregisteredUser, setUnregisteredUser }}
       >

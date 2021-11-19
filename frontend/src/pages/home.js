@@ -6,7 +6,7 @@ import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 
 export default function Home() {
-  const { token } = useContext(UserContext);
+  const { userToken } = useContext(UserContext);
   const { unregisteredUser, setUnregisteredUser } = useContext(
     UnregisteredUserContext
   );
@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <span className="home">
       <h1>Home</h1>
-      {token ? <Sidebar /> : <UnregisteredSidebar />}
+      {userToken ? <Sidebar /> : <UnregisteredSidebar />}
     </span>
   );
 }
