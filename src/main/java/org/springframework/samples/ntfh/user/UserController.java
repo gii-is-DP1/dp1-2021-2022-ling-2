@@ -16,14 +16,19 @@
 package org.springframework.samples.ntfh.user;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.h2.util.CurrentTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,8 +85,14 @@ public class UserController {
 	private String generateJWTToken(User user) {
 		String secretKey = "NoTimeForHeroesSecretKey"; // TODO extract to a config file
 		Map<String, String> publicUserData = userService.findUserPublic(user.getUsername());
+		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
 
-		return Jwts.builder().setId("ntfhJWT").setSubject(user.getUsername()).claim("data", publicUserData)
+		return Jwts.builder()
+				// .setId(Long.toString(System.currentTimeMillis())) // use the current system
+				// time with milliseconds precision as unique JTI
+				.setSubject(user.getUsername()).claim("data", publicUserData)
+				.claim("authorities",
+						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
 	}

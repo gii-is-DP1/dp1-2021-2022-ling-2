@@ -77,6 +77,7 @@ public class UserService {
 	 * This method is used to find an user but only return non-sensitive information
 	 * (username, email, authorities)
 	 * 
+	 * @author andrsdt
 	 * @param username the username of the user to find
 	 * @return the user with restricted information
 	 */
@@ -90,7 +91,6 @@ public class UserService {
 			HashMap<String, String> res = new HashMap<>();
 			res.put("username", user.getUsername());
 			res.put("email", user.getEmail());
-			res.put("authorities", user.getAuthorities().toString());
 			return res;
 		} else
 			return Map.of();
