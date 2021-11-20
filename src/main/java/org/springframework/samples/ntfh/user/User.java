@@ -12,11 +12,17 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.validator.constraints.Length;
+import org.springframework.samples.ntfh.user.authorities.Authorities;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author andrsdt
+ */
 @Getter
 @Setter
 @Entity
@@ -24,11 +30,11 @@ import lombok.Setter;
 public class User {
 	@Id
 	@NotBlank
-	@Length(min = 4, max = 20)
+	@Length(min = 4, max = 20, message = " The username must be 4-20 characters long")
 	private String username;
 
 	@NotBlank
-	@Length(min = 6)
+	@Length(min = 1, message = "The length of the password must be at least 1")
 	private String password;
 
 	@NotNull
@@ -36,13 +42,10 @@ public class User {
 	private String email;
 
 	@NotNull
-	@Column(columnDefinition = "boolean default false")
-	private boolean isBanned;
-
-	@NotNull
 	@Column(columnDefinition = "boolean default true")
-	private boolean enabled; // Legacy from Petclinic, currently needed for CRUD of users. To be removed
+	private boolean enabled; // If a user gets banned, he/she will get disabled
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@JsonIgnore
 	private Set<Authorities> authorities;
 }

@@ -8,8 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WarlordService {
+
     @Autowired
     private WarlordRepository warlordRepository;
+
+    @Transactional
+    public Integer warlordCount() {
+        return (int) warlordRepository.count();
+    }
 
     @Transactional
     public Iterable<Warlord> findAll() {
