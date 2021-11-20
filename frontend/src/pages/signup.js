@@ -59,7 +59,6 @@ export default function SignUp() {
             placeholder="Enter username"
             name="username"
             required
-            isInvalid
           />
           <Form.Text className="text-muted">
             Make sure it's creative! Have fun with it
@@ -73,7 +72,6 @@ export default function SignUp() {
             placeholder="Enter email"
             name="email"
             required
-            isInvalid
           />
           <Form.Text className="text-muted">
             We'll never share your email with anyone else, only Facebook, I'm
@@ -88,7 +86,6 @@ export default function SignUp() {
             placeholder="Enter password"
             name="password"
             required
-            isInvalid
           />
         </Form.Group>
 
