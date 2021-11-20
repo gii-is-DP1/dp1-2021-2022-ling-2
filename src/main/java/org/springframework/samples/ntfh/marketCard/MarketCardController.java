@@ -1,25 +1,31 @@
 package org.springframework.samples.ntfh.marketCard;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 // TODO change to RestController and re-implement the methods to return ResponseEntity<?> with JSON data
-@Controller
-@RequestMapping("/marketCards")
+@RestController()
+@RequestMapping(value = "/marketCards")
 public class MarketCardController {
     
-    @Autowired
-    private MarketCardService marketCardService;
+    private final MarketCardService marketCardService;
 
-    @GetMapping()
-    public String getAll(ModelMap modelMap) { // modelmap object contains the data that will be passed to the view
-        String view = "marketCards/listMarketCards";
-        Iterable<MarketCard> marketCards = marketCardService.findAll();
-        modelMap.addAttribute("marketCards", marketCards);
-        return view;
+    @Autowired
+    public MarketCardController(MarketCardService marketCardService) {
+        this.marketCardService = marketCardService;
     }
+
+    @GetMapping
+    public ResponseEntity<Iterable<MarketCard>> getAll() {
+		// untested
+		Iterable<MarketCard> marketCards = this.marketCardService.findAll();
+		return new ResponseEntity<>(marketCards, HttpStatus.OK);
+	}
 
 }
