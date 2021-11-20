@@ -6,7 +6,7 @@ axios.defaults.headers.common["Accept"] = "application/json";
 
 const instance = axios.create({
   headers: {
-    Authorization: localStorage.getItem("token") || null,
+    Authorization: "Bearer " + localStorage.getItem("token") || null,
   },
 });
 
