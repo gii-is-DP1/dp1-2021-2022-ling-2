@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.achievement;
+package org.springframework.samples.ntfh.playablecard;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/achievements")
-public class AchievementController {
+@RequestMapping("/cards")
+public class PlayableCardController {
 
     @Autowired
-    private AchievementService achievementService;
+    private PlayableCardService playableCardService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Achievement>> getAll() {
+    public ResponseEntity<Iterable<PlayableCard>> getAll() {
         // untested
-        Iterable<Achievement> achievements = this.achievementService.findAll();
-        return new ResponseEntity<>(achievements, HttpStatus.OK);
+        Iterable<PlayableCard> playableCards = this.playableCardService.findAll();
+        return new ResponseEntity<>(playableCards, HttpStatus.OK);
     }
 
 }

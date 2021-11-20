@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author andrsdt
  */
 @RestController()
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/unregistered-users")
 public class UnregisteredUserController {
 
@@ -25,7 +26,6 @@ public class UnregisteredUserController {
     /**
      * Will be called when a user accesses the application without being logged in
      */
-    @CrossOrigin // TODO apply this globally. Has to be on all methods
     @GetMapping // Maybe make this a post? it creates an entry in the DB
     public ResponseEntity<UnregisteredUser> getCredentials() {
         UnregisteredUser unregisteredUser = unregisteredUserService.create();
