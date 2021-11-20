@@ -17,7 +17,7 @@ import lombok.Getter;
 public class Scene extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
-    private SceneType type;
+    private SceneTypeEnum sceneTypeEnum;
 
     @Transient
     private String backImage;

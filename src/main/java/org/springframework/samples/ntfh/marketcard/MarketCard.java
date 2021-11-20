@@ -7,7 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -27,9 +29,13 @@ public class MarketCard extends BaseEntity {
     private Integer price;
 
     @Enumerated(EnumType.STRING)
-    private MarketCardEnum name;
+    @Column(name = "market_card_type_enum")
+    private MarketCardTypeEnum marketCardTypeEnum;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "character_types")
+    // Inspiration from PetClinic for this ManyToMany big join (It creates an
+    // association table)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(name = "marketcards_characters", joinColumns = @JoinColumn(name = "market_card_id"), inverseJoinColumns = @JoinColumn(name = "character_id"))
     @JsonIgnore
     private Set<Character> usableBy;
 

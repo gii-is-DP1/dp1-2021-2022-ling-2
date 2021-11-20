@@ -2,6 +2,7 @@ package org.springframework.samples.ntfh.player;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -42,5 +43,6 @@ public class Player extends BaseEntity {
 
     @NotNull
     @ManyToOne(optional = false)
+    @JoinColumn(name = "character_id")
     private Character characterType;
 }

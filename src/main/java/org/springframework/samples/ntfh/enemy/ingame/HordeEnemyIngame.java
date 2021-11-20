@@ -1,5 +1,6 @@
 package org.springframework.samples.ntfh.enemy.ingame;
 
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Table(name = "horde_enemies_ingame")
 public class HordeEnemyIngame extends IngameEntity {
     @ManyToOne(optional = false)
+    @JoinColumn(name = "horde_enemy_id")
     private HordeEnemy hordeEnemy;
 
     @NotNull

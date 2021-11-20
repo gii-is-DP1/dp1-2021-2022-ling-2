@@ -1,12 +1,13 @@
 package org.springframework.samples.ntfh.enemy;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.samples.ntfh.model.EnemyEntity;
 
 import lombok.Getter;
 
@@ -17,9 +18,8 @@ import lombok.Getter;
 @Entity
 @Table(name = "horde_enemies")
 public class HordeEnemy extends EnemyEntity {
-    // FK
-    @OneToMany // TODO mappedBy?
-    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "horde_enemy_type_enum")
     private HordeEnemyType hordeEnemyType;
 
     @NotNull

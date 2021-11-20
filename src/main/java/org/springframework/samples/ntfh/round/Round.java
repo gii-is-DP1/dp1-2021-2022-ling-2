@@ -1,7 +1,7 @@
 package org.springframework.samples.ntfh.round;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -17,13 +17,13 @@ import lombok.Setter;
 @Entity
 public class Round extends BaseEntity {
 
-    @Column(name = "game_id")
     @OneToOne(optional = false)
+    @JoinColumn(name = "game_id")
     private Game game;
 
     private Integer roundNumber;
 
-    @Column(name = "scene_id")
     @ManyToOne(optional = true)
+    @JoinColumn(name = "scene_id")
     private Scene currentScene;
 }

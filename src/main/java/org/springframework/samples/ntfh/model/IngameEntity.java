@@ -1,6 +1,6 @@
 package org.springframework.samples.ntfh.model;
 
-import javax.persistence.Column;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
@@ -19,8 +19,8 @@ import org.springframework.samples.ntfh.interfaces.Location;
 public class IngameEntity extends BaseEntity {
 
     @NotNull
-    @Column(name = "game_id")
     @ManyToOne
+    @JoinColumn(name = "game_id")
     private Game game;
 
     @NotNull
