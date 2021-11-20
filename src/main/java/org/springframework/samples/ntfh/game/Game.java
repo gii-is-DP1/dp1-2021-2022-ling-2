@@ -18,21 +18,27 @@ import org.springframework.samples.ntfh.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author pabrobcam
+ * @author andrsdt
+ */
 @Getter
 @Setter
 @Entity
 @Table(name = "games")
 public class Game extends BaseEntity {
 
+    // Set by the server
     private Timestamp startTime;
 
+    // Set by the server
     private Timestamp finishTime;
 
     @NotNull
     private Boolean spectatorsAllowed;
 
     @NotNull
-    private Integer maxNumberOfPlayers;
+    private Integer maxPlayers;
 
     // TODO hacer la asociacion tambien desde parte de comments? bidireccional?
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
