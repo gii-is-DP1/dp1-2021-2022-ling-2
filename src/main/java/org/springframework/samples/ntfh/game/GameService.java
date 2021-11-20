@@ -29,8 +29,9 @@ public class GameService {
     }
 
     @Transactional
-    public void save(@Valid Game game) {
-        gameRepo.save(game);
+    public Game save(@Valid Game game) {
+        // Return the game created after saving it
+        return gameRepo.save(game);
     }
 
     public void delete(Game game) {

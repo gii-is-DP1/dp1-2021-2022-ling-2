@@ -25,8 +25,6 @@ export default function Home() {
           setUnregisteredUser(response.data);
         } catch (error) {
           setError(error);
-          await new Promise((resolve) => setTimeout(resolve, 5000));
-          // If there is an error, wait 5 seconds before trying again
         }
       }
       fetchData();

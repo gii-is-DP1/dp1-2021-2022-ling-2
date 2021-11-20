@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.h2.util.CurrentTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,14 +83,17 @@ public class UserController {
 	}
 
 	private String generateJWTToken(User user) {
-		String secretKey = "NoTimeForHeroesSecretKey";
+		String secretKey = "NoTimeForHeroesSecretKey"; // TODO extract to a config file
+		Map<String, String> publicUserData = userService.findUserPublic(user.getUsername());
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
 
-		return Jwts.builder().setId("ntfhJWT").setSubject(user.getUsername())
+		return Jwts.builder()
+				// .setId(Long.toString(System.currentTimeMillis())) // use the current system
+				// time with milliseconds precision as unique JTI
+				.setSubject(user.getUsername()).claim("data", publicUserData)
 				.claim("authorities",
 						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
 				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
 	}
 }
