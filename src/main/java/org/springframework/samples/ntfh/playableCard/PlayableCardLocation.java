@@ -13,4 +13,6 @@ public enum PlayableCardLocation {
     /** The card is exiled and cannot be used anymore */
     EXILED,
 
+    MARKET
+
 }

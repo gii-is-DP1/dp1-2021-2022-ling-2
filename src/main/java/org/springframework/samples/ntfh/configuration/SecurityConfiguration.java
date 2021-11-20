@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -31,21 +32,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
-				.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
-				.antMatchers("/scenes").permitAll().antMatchers("/scenes/**").hasAnyAuthority("admin")
-				// TODO adjust the endpoint security with the needed permissions
-				.antMatchers("/games").permitAll().antMatchers("/games/**").hasAnyAuthority("user")
-				.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/owners/**")
-				.hasAnyAuthority("owner", "admin").antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
-				.formLogin()
-				/* .loginPage("/login") */
-				.failureUrl("/login-error").and().logout().logoutSuccessUrl("/");
+		http.cors().and() // enable CORS requests
+				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+				.authorizeRequests() // antMatchers:
+				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
+				.antMatchers(HttpMethod.POST, "/users/**").permitAll() // Allow to register and login
+				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow to list all users to the admins
+				.antMatchers(HttpMethod.GET, "/games/available").permitAll() // Allow everyone to list all games
+				.antMatchers(HttpMethod.POST, "/games/new").hasAnyAuthority("user") // Allow users to create new games
+				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
+				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
+																				// credentials
+				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
+				.anyRequest().denyAll(); // else, deny
+
 		// Configuración para que funcione la consola de administración
 		// de la BD H2 (deshabilitar las cabeceras de protección contra
 		// ataques de tipo csrf y habilitar los framesets si su contenido
 		// se sirve desde esta misma página.
-		http.csrf().ignoringAntMatchers("/h2-console/**");
+
+		// http.csrf().ignoringAntMatchers("/h2-console/**");
+		http.csrf().disable(); // TODO csrf token in JSON for better security
+
 		http.headers().frameOptions().sameOrigin();
 	}
 
@@ -56,6 +64,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.authoritiesByUsernameQuery("select username, authority " + "from authorities " + "where username = ?")
 				.passwordEncoder(passwordEncoder());
 	}
+
+	/**
+	 * Allowing CORS so our react API on port 3000 can consume it
+	 * 
+	 * @see https://stackoverflow.com/questions/36968963/how-to-configure-cors-in-a-spring-boot-spring-security-application
+	 */
+	// @Bean
+	// CorsConfigurationSource corsConfigurationSource() {
+	// CorsConfiguration configuration = new CorsConfiguration();
+	// configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //
+	// allow calls from react
+	// configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATH",
+	// "DELETE", "OPTIONS"));
+	// UrlBasedCorsConfigurationSource source = new
+	// UrlBasedCorsConfigurationSource();
+	// source.registerCorsConfiguration("/**", configuration);
+	// return source;
+	// }
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
