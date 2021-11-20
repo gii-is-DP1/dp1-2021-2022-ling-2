@@ -7,9 +7,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.samples.ntfh.comments.Comment;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
@@ -22,23 +24,42 @@ import lombok.Setter;
 @Table(name = "games")
 public class Game extends BaseEntity {
 
-    // Note: we should consider dd/MM/yyyy HH:mm:ss format since a game can start
-    // today and end tomorrow
-    // @DateTimeFormat(pattern = "HH/mm/ss")
     private Timestamp startTime;
 
-    // Note: we should consider dd/MM/yyyy HH:mm:ss format since a game can start
-    // today and end tomorrow
-    // @DateTimeFormat(pattern = "HH/mm/ss")
     private Timestamp finishTime;
 
-    // The set of comments would be fetched from another table. To be implemented
-    // yet.
+    @NotNull
+    private Boolean spectatorsAllowed;
+
+    @NotNull
+    private Integer maxNumberOfPlayers;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
     @JsonIgnore
     private Set<Comment> comments;
 
-    private Boolean spectatorsAllowed;
+    @Transient
+    private Boolean isStarted;
+
+    @Transient
+    private Boolean isFinished;
+
+    @Transient
+    private Long duration;
+
+    /**
+     * @author andrsdt
+     */
+    public Boolean isStarted() {
+        return startTime != null;
+    }
+
+    /**
+     * @author andrsdt
+     */
+    public Boolean isFinished() {
+        return finishTime != null;
+    }
 
     /**
      * Derived. Returns the duration of the game in seconds
@@ -47,6 +68,7 @@ public class Game extends BaseEntity {
      * @return Long duration of the time in seconds
      */
     public Long getDuration() {
-        return finishTime.getTimestamp().getTime() - startTime.getTimestamp().getTime();
+        Long timeInMilliseconds = finishTime.getTimestamp().getTime() - startTime.getTimestamp().getTime();
+        return timeInMilliseconds / 1000;
     }
 }
