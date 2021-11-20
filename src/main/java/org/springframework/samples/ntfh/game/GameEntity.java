@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Game extends NamedEntity {
+public class GameEntity extends NamedEntity {
 
     private Timestamp startTime;
     private Timestamp finishTime;

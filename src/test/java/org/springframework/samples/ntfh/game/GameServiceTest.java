@@ -10,16 +10,14 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class GameServiceTest {
-
     @Autowired
     private GameService gameService;
-    
 
+    // TODO replace with meaningful tests. This is a placeholder
     @Test
     public void testCountWithInitialData() {
-        Integer count =gameService.gameCount();
+        Integer count = gameService.gameCount();
         assertEquals(count, 0);
     }
-
 
 }

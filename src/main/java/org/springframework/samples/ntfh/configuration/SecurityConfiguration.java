@@ -34,8 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
 				.antMatchers("/scenes").permitAll().antMatchers("/scenes/**").hasAnyAuthority("admin")
-				.antMatchers("/games").permitAll()
-				.antMatchers("/games/**").hasAnyAuthority("admin")
+				// TODO adjust the endpoint security with the needed permissions
+				.antMatchers("/games").permitAll().antMatchers("/games/**").hasAnyAuthority("user")
 				.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/owners/**")
 				.hasAnyAuthority("owner", "admin").antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
 				.formLogin()
