@@ -15,6 +15,8 @@
  */
 package org.springframework.samples.ntfh.user;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +52,9 @@ public class UserService {
 		if (userWithSameEmail.isPresent()) {
 			throw new DataAccessException("This email is already in use") {
 			};
-		} else {
+		} else
+
+		{
 			user.setEnabled(true);
 			userRepository.save(user);
 			authoritiesService.saveAuthorities(user.getUsername(), "user");
@@ -67,5 +71,28 @@ public class UserService {
 	public Optional<User> findUser(String username) {
 		// The username is the id (primary key)
 		return userRepository.findById(username);
+	}
+
+	/**
+	 * This method is used to find an user but only return non-sensitive information
+	 * (username, email, authorities)
+	 * 
+	 * @param username the username of the user to find
+	 * @return the user with restricted information
+	 */
+	@Transactional(readOnly = true)
+	public Map<String, String> findUserPublic(String username) {
+		// The username is the id (primary key)
+		Optional<User> userOptional = userRepository.findById(username);
+		if (userOptional.isPresent()) {
+			User user = userOptional.get();
+
+			HashMap<String, String> res = new HashMap<>();
+			res.put("username", user.getUsername());
+			res.put("email", user.getEmail());
+			res.put("authorities", user.getAuthorities().toString());
+			return res;
+		} else
+			return Map.of();
 	}
 }

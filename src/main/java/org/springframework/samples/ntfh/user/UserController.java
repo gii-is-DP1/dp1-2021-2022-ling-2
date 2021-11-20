@@ -16,18 +16,14 @@
 package org.springframework.samples.ntfh.user;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,14 +78,11 @@ public class UserController {
 	}
 
 	private String generateJWTToken(User user) {
-		String secretKey = "NoTimeForHeroesSecretKey";
-		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
+		String secretKey = "NoTimeForHeroesSecretKey"; // TODO extract to a config file
+		Map<String, String> publicUserData = userService.findUserPublic(user.getUsername());
 
-		return Jwts.builder().setId("ntfhJWT").setSubject(user.getUsername())
-				.claim("authorities",
-						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+		return Jwts.builder().setId("ntfhJWT").setSubject(user.getUsername()).claim("data", publicUserData)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
 				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
 	}
 }
