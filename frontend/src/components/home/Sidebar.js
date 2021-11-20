@@ -10,11 +10,11 @@ export default function Sidebar() {
   const { setUserToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
   return (
-    <div>
-      <h1>Welcome back, {user.username}</h1>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <h1 className="text-white">Welcome back, {user.username}</h1>
       <Button type="submit" onClick={() => setUserToken(null)}>
         Log out
       </Button>
-    </div>
+    </nav>
   );
 }

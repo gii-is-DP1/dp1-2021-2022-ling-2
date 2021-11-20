@@ -45,6 +45,10 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private boolean enabled; // If a user gets banned, he/she will get disabled
 
+	// TODO Commented until I fix the FK issue on Game.java
+	// @OneToOne(mappedBy = "host")
+	// private Game currentGame;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore
 	private Set<Authorities> authorities;

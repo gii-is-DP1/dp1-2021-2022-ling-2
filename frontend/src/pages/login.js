@@ -1,4 +1,3 @@
-// import axios from "../api/axiosConfig";
 import axios from "../api/axiosConfig";
 import { useEffect, useState, useContext } from "react";
 import { Button, Form } from "react-bootstrap";
@@ -10,6 +9,7 @@ import userContext from "../context/user";
 /**
  *
  * @author jstockwell
+ * @author andrsdt
  */
 export default function Login() {
   const history = useHistory(); // hook
@@ -56,7 +56,6 @@ export default function Login() {
             placeholder="Enter username"
             name="username"
             required
-            isInvalid
           />
           <Form.Text className="text-muted">
             Make sure it's creative! Have fun with it
@@ -70,7 +69,6 @@ export default function Login() {
             placeholder="Enter password"
             name="password"
             required
-            isInvalid
           />
         </Form.Group>
 

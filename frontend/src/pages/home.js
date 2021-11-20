@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
+import * as ROUTES from "../constants/routes";
 
 export default function Home() {
   const { userToken } = useContext(UserContext);
@@ -14,11 +16,12 @@ export default function Home() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // make this execute only once
     if (!unregisteredUser) {
+      // if there aren't unregistered user credentials, ask for some
       async function fetchData() {
         try {
           const response = await axios.get("/unregistered-users");
-
           setUnregisteredUser(response.data);
         } catch (error) {
           setError(error);
@@ -26,16 +29,25 @@ export default function Home() {
       }
       fetchData();
     }
-  });
+  }, [unregisteredUser, setUnregisteredUser]);
 
   useEffect(() => {
     document.title = "No Time for Heroes";
   });
 
   return (
-    <span className="home">
+    <span>
       <h1>Home</h1>
-      {userToken ? <Sidebar /> : <UnregisteredSidebar />}
+      {userToken ? (
+        <>
+          <Sidebar />
+          <Link to={ROUTES.CREATE_LOBBY}>Create game</Link>
+          <br />
+        </>
+      ) : (
+        <UnregisteredSidebar />
+      )}
+      <Link to={ROUTES.BROWSE_LOBBIES}>Browse games</Link>
     </span>
   );
 }

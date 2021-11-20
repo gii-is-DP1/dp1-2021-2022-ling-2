@@ -14,36 +14,44 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Transient;
 import org.springframework.samples.ntfh.comments.Comment;
 import org.springframework.samples.ntfh.model.BaseEntity;
+import org.springframework.samples.ntfh.player.Player;
 
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author pabrobcam
+ * @author andrsdt
+ */
 @Getter
 @Setter
 @Entity
 @Table(name = "games")
 public class Game extends BaseEntity {
 
+    @NotNull // Set from Lobby
+    private String name;
+
+    @NotNull // Set by the server to Time.now()
     private Timestamp startTime;
 
+    // Set by the server when the game finished. null meanwhile
     private Timestamp finishTime;
 
-    @NotNull
-    private Boolean spectatorsAllowed;
-
-    @NotNull
-    private Integer maxNumberOfPlayers;
+    @NotNull // Set from Lobby
+    private Boolean hasScenes;
 
     // TODO hacer la asociacion tambien desde parte de comments? bidireccional?
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
     @JsonIgnore
     private Set<Comment> comments;
 
-    @Transient
-    private Boolean isStarted;
+    // Set from Lobby by creating Players instances from users
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Player> players;
 
     @Transient
-    private Boolean isFinished;
+    private Boolean hasFinished;
 
     @Transient
     private Long duration;
@@ -51,14 +59,7 @@ public class Game extends BaseEntity {
     /**
      * @author andrsdt
      */
-    public Boolean isStarted() {
-        return startTime != null;
-    }
-
-    /**
-     * @author andrsdt
-     */
-    public Boolean isFinished() {
+    public Boolean hasFinished() {
         return finishTime != null;
     }
 
@@ -69,6 +70,8 @@ public class Game extends BaseEntity {
      * @return Long duration of the time in seconds
      */
     public Long getDuration() {
+        if (hasFinished == null)
+            return null; // To avoid NullPointerException if the game hasn't finished
         Long timeInMilliseconds = finishTime.getTimestamp().getTime() - startTime.getTimestamp().getTime();
         return timeInMilliseconds / 1000;
     }
