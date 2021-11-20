@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import axios from "../api/axiosConfig";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import axios from "../api/axiosConfig";
+import * as ROUTES from "../constants/routes";
 
 export default function CreateGame() {
   const history = useHistory(); // hook
@@ -20,16 +21,17 @@ export default function CreateGame() {
   const handleCreateGame = async (e) => {
     e.preventDefault();
     try {
-      // const formDataObj = Object.fromEntries(formData.entries());
       const payload = {
         name: gameName,
-        max_players: maxPlayers,
+        maxPlayers: maxPlayers,
         scenes: scenesChecked,
-        spectators: spectatorsChecked,
+        spectatorsAllowed: spectatorsChecked,
       };
-      const response = await axios.post("/games/new", payload);
-      console.log(response);
-      // history.push(ROUTES.GAME);
+      const response = await axios.post("/games/new", payload, {
+        headers: { Authorization: "Bearer " + userToken },
+      });
+      const gameId = response.data.gameId;
+      history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
       console.log(error);
       setError(error.message);

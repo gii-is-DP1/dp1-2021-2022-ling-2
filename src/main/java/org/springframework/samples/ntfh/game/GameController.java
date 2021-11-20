@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author andrsdt
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/games")
@@ -30,9 +33,9 @@ public class GameController {
     }
 
     @PostMapping("new")
-    public ResponseEntity<Map<String, String>> createGame(@Valid @RequestBody Game game) {
+    public ResponseEntity<Map<String, Integer>> createGame(@Valid @RequestBody Game game) {
         // TODO untested
-        gameService.save(game);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Game createdGame = gameService.save(game);
+        return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
     }
 }
