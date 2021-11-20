@@ -16,6 +16,7 @@ export default function Home() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // make this execute only once
     if (!unregisteredUser) {
       // if there aren't unregistered user credentials, ask for some
       async function fetchData() {
@@ -30,7 +31,7 @@ export default function Home() {
       }
       fetchData();
     }
-  });
+  }, [unregisteredUser, setUnregisteredUser]);
 
   useEffect(() => {
     document.title = "No Time for Heroes";
