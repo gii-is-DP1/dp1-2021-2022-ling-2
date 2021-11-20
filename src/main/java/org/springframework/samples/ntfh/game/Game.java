@@ -34,6 +34,7 @@ public class Game extends BaseEntity {
     @NotNull
     private Integer maxNumberOfPlayers;
 
+    // TODO hacer la asociacion tambien desde parte de comments? bidireccional?
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
     @JsonIgnore
     private Set<Comment> comments;
