@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.samples.ntfh.game.Game;
+import org.springframework.samples.ntfh.game.GameEntity;
 import org.springframework.samples.ntfh.model.BaseEntity;
 import org.springframework.samples.ntfh.user.User;
 
@@ -27,7 +27,7 @@ public class Comment extends BaseEntity {
     // Many comments can be made in a game
     @ManyToOne
     @JoinColumn(name = "game_id")
-    private Game game;
+    private GameEntity game;
 
     // Many comments can be made by one user
     @ManyToOne

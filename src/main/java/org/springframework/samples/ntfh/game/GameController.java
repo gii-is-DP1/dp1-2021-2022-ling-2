@@ -1,7 +1,5 @@
 package org.springframework.samples.ntfh.game;
 
-
-
 import java.io.StringReader;
 import java.util.Map;
 import java.util.Optional;
@@ -22,53 +20,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost;3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/games")
 public class GameController {
-    
+
     @Autowired
     private GameService gameService;
 
     @GetMapping()
-    public ResponseEntity<Iterable<Game>> getAll(){
-        Iterable<Game> games=gameService.findAll(); 
-        return new ResponseEntity<>(games,HttpStatus.OK);
+    public ResponseEntity<Iterable<GameEntity>> getAll() {
+        // TODO untested
+        Iterable<GameEntity> games = gameService.findAll();
+        return new ResponseEntity<>(games, HttpStatus.OK);
     }
 
-    @PostMapping("register")
-    public ResponseEntity<Map<String,String>> createGame(@Valid @RequestBody Game game){
+    @PostMapping("new")
+    public ResponseEntity<Map<String, String>> createGame(@Valid @RequestBody GameEntity game) {
+        // TODO untested
         gameService.save(game);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-
-   // @PostMapping(path="/save")
-   // public String saveGame(@Valid Game game, BindingResult result, ModelMap modelMap){
-   //     String view="games/gameList";
-   //     if(result.hasErrors()){
-   //         modelMap.addAttribute("game", game);
-   //         return "games/editGame";
-   //     }else{
-   //         gameService.save(game);
-  //          modelMap.addAttribute("message", "Game successfully saved");
-  //          view= getAll(modelMap);
-   //     }
-   //     return view;
-    //}
-    //HABRIA QUE ELIMINAR ESTOS DOS METODOS?
-    // Y HACER UNO PARA EL JOIN
-    @GetMapping(path="/delete/{gameId}")
-    public ResponseEntity<Map<String,String>> deleteGame(@PathVariable("gameId") int gameId, ModelMap modelMap){
-        String view="games/gameList";
-        Optional<Game> game=gameService.findGameById(gameId);
-        if(game.isPresent()){
-            gameService.delete(game.get());
-            modelMap.addAttribute("message", "Game successfully deleted!");
-        }else{
-            modelMap.addAttribute("message", "Game not found!");
-
-        }
-        return view;
-    }
-
 }
