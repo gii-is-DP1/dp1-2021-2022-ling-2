@@ -57,6 +57,7 @@ public class Game extends BaseEntity {
     /**
      * @author andrsdt
      */
+    // TODO the table shows "null"
     public Boolean isStarted() {
         return startTime != null;
     }

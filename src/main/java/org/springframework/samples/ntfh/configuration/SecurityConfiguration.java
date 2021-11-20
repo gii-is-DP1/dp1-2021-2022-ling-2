@@ -51,7 +51,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// ataques de tipo csrf y habilitar los framesets si su contenido
 		// se sirve desde esta misma página.
 
-		// http.csrf().ignoringAntMatchers("/h2-console/**");
 		http.csrf().disable(); // TODO csrf token in JSON for better security
 
 		http.headers().frameOptions().sameOrigin();
@@ -65,27 +64,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.passwordEncoder(passwordEncoder());
 	}
 
-	/**
-	 * Allowing CORS so our react API on port 3000 can consume it
-	 * 
-	 * @see https://stackoverflow.com/questions/36968963/how-to-configure-cors-in-a-spring-boot-spring-security-application
-	 */
-	// @Bean
-	// CorsConfigurationSource corsConfigurationSource() {
-	// CorsConfiguration configuration = new CorsConfiguration();
-	// configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //
-	// allow calls from react
-	// configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATH",
-	// "DELETE", "OPTIONS"));
-	// UrlBasedCorsConfigurationSource source = new
-	// UrlBasedCorsConfigurationSource();
-	// source.registerCorsConfiguration("/**", configuration);
-	// return source;
-	// }
-
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		PasswordEncoder encoder = NoOpPasswordEncoder.getInstance();
+		// store passwords in plain text
 		return encoder;
 	}
 
