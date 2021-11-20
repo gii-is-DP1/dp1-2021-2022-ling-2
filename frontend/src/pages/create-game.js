@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import axios from "../api/axiosConfig";
+import Homebar from "../components/home/Homebar";
 
 export default function CreateGame() {
   const history = useHistory(); // hook
@@ -42,6 +43,9 @@ export default function CreateGame() {
 
   return (
     <div>
+      <div>
+        <Homebar />
+      </div>
       <h1>Create a new game</h1>
       <Form onSubmit={handleCreateGame}>
         <Form.Group className="mb-2">
