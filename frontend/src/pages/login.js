@@ -9,6 +9,7 @@ import userContext from "../context/user";
 /**
  *
  * @author jstockwell
+ * @author andrsdt
  */
 export default function Login() {
   const history = useHistory(); // hook

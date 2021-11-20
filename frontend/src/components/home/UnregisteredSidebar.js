@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";

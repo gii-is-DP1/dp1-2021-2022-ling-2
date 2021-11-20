@@ -1,18 +1,24 @@
 package org.springframework.samples.ntfh.game;
 
 import java.util.Map;
-
-import javax.validation.Valid;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.ntfh.user.User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 
 /**
  * @author andrsdt
@@ -25,6 +31,10 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
+    /**
+     * @return List of all the games ever played
+     * @author pabrobcam
+     */
     @GetMapping()
     public ResponseEntity<Iterable<Game>> getAll() {
         // TODO untested
@@ -32,8 +42,15 @@ public class GameController {
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
 
+    /**
+     * This endpoint handles the creation of a new game lobby
+     * 
+     * @param game data introduced by the game creator in the form
+     * @return id of the game so the user can be redirected to the lobby
+     * @author andrsdt
+     */
     @PostMapping("new")
-    public ResponseEntity<Map<String, Integer>> createGame(@Valid @RequestBody Game game) {
+    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Game game) {
         // TODO untested
         Game createdGame = gameService.save(game);
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);

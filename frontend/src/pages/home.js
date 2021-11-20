@@ -41,13 +41,13 @@ export default function Home() {
       {userToken ? (
         <>
           <Sidebar />
-          <Link to={ROUTES.CREATE_GAME}>Create game</Link>
+          <Link to={ROUTES.CREATE_LOBBY}>Create game</Link>
           <br />
         </>
       ) : (
         <UnregisteredSidebar />
       )}
-      <Link to={ROUTES.BROWSE_GAMES}>Browse games</Link>
+      <Link to={ROUTES.BROWSE_LOBBIES}>Browse games</Link>
     </span>
   );
 }
