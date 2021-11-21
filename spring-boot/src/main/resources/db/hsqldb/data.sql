@@ -5,6 +5,10 @@ INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
 INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (2,'andres','user');
 
+INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 1', false, false, true, 2);
+INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
+INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
+
 -- INSERT INTO users(username,password,enabled) VALUES ('pabsanval1','idk',TRUE);
 -- INSERT INTO authorities(id,username,authority) VALUES (5,'pabsanval1','owner');
 
