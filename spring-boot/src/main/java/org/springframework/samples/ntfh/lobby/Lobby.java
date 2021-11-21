@@ -56,9 +56,20 @@ public class Lobby extends BaseEntity {
     /**
      * Add a user to the set of users in the lobby
      * 
+     * @author andrsdt
      * @param User user object to add
      */
     public boolean addUser(User user) {
         return this.users.add(user);
+    }
+
+    /**
+     * Remove a user from the set of users in the lobby
+     * 
+     * @author andrsdt
+     * @param User user object to remove
+     */
+    public boolean removeUser(User user) {
+        return this.users.remove(user);
     }
 }
