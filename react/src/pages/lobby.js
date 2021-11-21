@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
-import { ListGroup } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import Errors from "../components/common/Errors";
+import UsersInLobby from "../components/lobby/UsersInLobby";
+import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import { useHistory } from "react-router-dom";
-import * as ROUTES from "../constants/routes";
-import Errors from "../components/common/Errors";
 
 export default function Lobby() {
   // There should be some kind of listener
@@ -26,10 +25,11 @@ export default function Lobby() {
       try {
         const payload = { username: user.username };
         const headers = { Authorization: "Bearer " + userToken };
-        await axios.post(`/lobbies/${lobbyId}/join`, payload, {
+        const response = await axios.post(`/lobbies/${lobbyId}/join`, payload, {
           headers,
         });
       } catch (error) {
+        if (error.response.status === 404) history.push(ROUTES.NOT_FOUND);
         setErrors([...errors, error.message]);
       }
     }
@@ -37,6 +37,7 @@ export default function Lobby() {
   }, []); // Only run once
 
   useEffect(() => {
+    // TODO extract timer to hook
     document.title = "NTFH - Game lobby";
     if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
 
@@ -69,15 +70,7 @@ export default function Lobby() {
           <div>Waiting for people to join</div>
           <div>Players in the lobby: {lobby.users.length}</div>
           <br />
-          <ListGroup>
-            {lobby.users
-              .sort((a, b) =>
-                a.username < b.username ? -1 : a.username > b.username ? 1 : 0
-              ) // arbitrary but consistent order
-              .map((user, idx) => (
-                <ListGroup.Item key={idx}>{user.username}</ListGroup.Item>
-              ))}
-          </ListGroup>
+          <UsersInLobby lobby={lobby} user={user} />
         </>
       )}
       {/* TODO start game button */}

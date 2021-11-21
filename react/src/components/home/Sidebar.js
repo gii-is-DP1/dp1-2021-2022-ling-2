@@ -15,9 +15,11 @@ export default function Sidebar() {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <h1 className="text-white">Welcome back, {user.username}</h1>
       <Link to={ROUTES.PROFILE.replace(":username", user.username)}>
-        <Button type="submit">Profile</Button>
+        <Button className="m-2" type="submit">
+          Profile
+        </Button>
       </Link>
-      <Button type="submit" onClick={() => setUserToken(null)}>
+      <Button className="m-2" type="submit" onClick={() => setUserToken(null)}>
         Log out
       </Button>
     </nav>

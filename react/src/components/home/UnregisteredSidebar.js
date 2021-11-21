@@ -9,7 +9,7 @@ export default function UnregisteredSidebar() {
 
   // The view will be updated every time a state variable changes
   return (
-    <span>
+    <span className="p-2 m-2 mx-auto">
       <h1>Welcome to No Time for Heroes!</h1>
       {!unregisteredUser ? (
         <p>Loading...</p>
@@ -19,10 +19,14 @@ export default function UnregisteredSidebar() {
           guest account. If you want to access all the functionalities of the
           game, please <br></br>
           <Link to={ROUTES.SIGNUP}>
-            <Button variant="primary">Sign up</Button>
+            <Button className="m-2" variant="primary">
+              Sign up
+            </Button>
           </Link>{" "}
           <Link to={ROUTES.LOGIN}>
-            <Button variant="primary">Log In</Button>
+            <Button className="m-2" variant="primary">
+              Log In
+            </Button>
           </Link>{" "}
         </p>
       )}
