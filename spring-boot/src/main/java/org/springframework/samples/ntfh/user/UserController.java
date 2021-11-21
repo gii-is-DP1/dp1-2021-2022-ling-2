@@ -15,19 +15,15 @@
  */
 package org.springframework.samples.ntfh.user;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,9 +33,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * @author andrsdt
@@ -76,7 +69,6 @@ public class UserController {
 		Optional<User> user = this.userService.findUser(username);
 		if (!user.isPresent())
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
 		// TODO create a custom response that only returns the non-sensitive information
 		return new ResponseEntity<>(user.get(), HttpStatus.OK);
 	}
@@ -96,7 +88,12 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 
-		// TODO check if the jwt token is either from the user or an admin
+		Boolean sentByAdmin = TokenUtils.tokenHasAuthorities(token, "admin");
+		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
+		// TODO untested
+		// If the token is not from the user nor an admin, return unauthorized
+		if (!sentBySameUser && !sentByAdmin)
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 		Optional<User> userInDatabaseOptional = this.userService.findUser(user.getUsername());
 		if (!userInDatabaseOptional.isPresent())
@@ -104,7 +101,7 @@ public class UserController {
 		User userInDatabase = userInDatabaseOptional.get();
 
 		// Make sure there are no null values. If the user didn't send them in the form,
-		// they must stay the same as in the database.
+		// they must stay the same as they were in the database.
 		if (user.getPassword() == null)
 			user.setPassword(userInDatabase.getPassword());
 		if (user.getEmail() == null)
@@ -112,8 +109,11 @@ public class UserController {
 
 		userService.updateUser(user);
 
-		// TODO if the one updating was not the admin, return empty body
-		String newToken = generateJWTToken(user);
+		if (sentByAdmin)
+			// Don't return a new token if the one updating the profile is an admin
+			return new ResponseEntity<>(HttpStatus.OK);
+
+		String newToken = TokenUtils.generateJWTToken(user);
 		return new ResponseEntity<>(Map.of("authorization", newToken), HttpStatus.OK);
 	}
 
@@ -130,28 +130,10 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else if (foundUserOptional.get().getPassword().equals(user.getPassword())) {
 			User foundUser = foundUserOptional.get();
-			String token = generateJWTToken(foundUser);
+			String token = TokenUtils.generateJWTToken(foundUser);
 			return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-	}
-
-	/**
-	 * @param user that we want to generate the token for
-	 * @return String token containing user's information
-	 * @author andrsdt
-	 * @see http://javadox.com/io.jsonwebtoken/jjwt/0.4/io/jsonwebtoken/Jwts.html
-	 */
-	private String generateJWTToken(User user) {
-		String secretKey = "NoTimeForHeroesSecretKey"; // TODO extract to a config file
-		Map<String, String> publicUserData = userService.findUserPublic(user.getUsername());
-		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
-
-		return Jwts.builder().setSubject(user.getUsername()).claim("data", publicUserData)
-				.claim("authorities",
-						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
 	}
 }
