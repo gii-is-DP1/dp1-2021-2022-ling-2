@@ -30,6 +30,20 @@ public class LobbyController {
     @Autowired
     private LobbyService lobbyService;
 
+    /** 
+     * This endpoint handles the fetch of all active lobbies
+     * 
+     * @return all active lobbies
+     * @author jstockwell
+    */
+    @GetMapping
+	public ResponseEntity<Iterable<Lobby>> getAll() {
+		// untested
+		Iterable<Lobby> lobbies = this.lobbyService.findAll();
+		return new ResponseEntity<>(lobbies, HttpStatus.OK);
+	}
+
+
     /**
      * This endpoint handles the creation of a new game lobby
      * 

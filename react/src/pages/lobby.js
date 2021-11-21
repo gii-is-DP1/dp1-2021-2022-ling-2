@@ -7,6 +7,7 @@ import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import Homebar from "../components/home/Homebar";
 
 export default function Lobby() {
   // There should be some kind of listener
@@ -79,6 +80,9 @@ export default function Lobby() {
 
   return (
     <>
+      <div>
+        <Homebar />
+      </div>
       {lobby && (
         <>
           <h1>Lobby - {lobby.name}</h1>
