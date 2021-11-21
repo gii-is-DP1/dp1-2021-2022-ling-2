@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import axios from "../api/axiosConfig";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
@@ -43,13 +44,16 @@ export default function Home() {
       {userToken ? (
         <>
           <Sidebar />
-          <Link to={ROUTES.CREATE_LOBBY}>Create game</Link>
-          <br />
+          <Link to={ROUTES.CREATE_LOBBY}>
+            <Button type="submit">Create game</Button>
+          </Link>
         </>
       ) : (
         <UnregisteredSidebar />
       )}
-      <Link to={ROUTES.BROWSE_LOBBIES}>Browse games</Link>
+      <Link to={ROUTES.BROWSE_LOBBIES}>
+        <Button type="submit">Browse games</Button>
+      </Link>
     </span>
   );
 }
