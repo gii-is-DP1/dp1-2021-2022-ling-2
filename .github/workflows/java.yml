@@ -3,7 +3,7 @@ on: [push]
 
 defaults:
   run:
-    working-directory: java/
+    working-directory: ./java
 
 jobs:
   build:
