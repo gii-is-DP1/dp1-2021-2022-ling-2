@@ -69,6 +69,7 @@ public class UserController {
 	 * 
 	 * @param username that we want to fetch from the database
 	 * @return User object with only non-sensitive information
+	 * @author andrsdt
 	 */
 	@GetMapping("{userId}")
 	public ResponseEntity<User> getUser(@PathVariable("userId") String username) {
@@ -88,6 +89,8 @@ public class UserController {
 	 * @param token jwt token of the user or the admin.
 	 * @return token for user's authentication, in case he/she was the one who
 	 *         updated the profile
+	 * @author andrsdt
+	 * 
 	 */
 	@PutMapping()
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
@@ -134,15 +137,18 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * @param user that we want to generate the token for
+	 * @return String token containing user's information
+	 * @author andrsdt
+	 * @see http://javadox.com/io.jsonwebtoken/jjwt/0.4/io/jsonwebtoken/Jwts.html
+	 */
 	private String generateJWTToken(User user) {
 		String secretKey = "NoTimeForHeroesSecretKey"; // TODO extract to a config file
 		Map<String, String> publicUserData = userService.findUserPublic(user.getUsername());
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
 
-		return Jwts.builder()
-				// .setId(Long.toString(System.currentTimeMillis())) // use the current system
-				// time with milliseconds precision as unique JTI
-				.setSubject(user.getUsername()).claim("data", publicUserData)
+		return Jwts.builder().setSubject(user.getUsername()).claim("data", publicUserData)
 				.claim("authorities",
 						grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
