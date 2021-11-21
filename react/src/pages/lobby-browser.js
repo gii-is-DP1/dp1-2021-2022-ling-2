@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Button, Table} from "react-bootstrap";
+import { useHistory, Link } from "react-router-dom";
 import Homebar from "../components/home/Homebar";
+import * as ROUTES from "../constants/routes";
 
 
 export default function LobbyBrowser() {
@@ -28,8 +29,8 @@ export default function LobbyBrowser() {
 
   console.log(lobbyList);
 
-  const lobbyRenderer = () => {
-
+  const refreshPage = () => {
+    window.location.reload();
   };
 
   return (
@@ -38,7 +39,6 @@ export default function LobbyBrowser() {
         <Homebar />
       </div>
       <h1>Lobby Browser</h1>
-      <h3>Implementation details in a comment in the code</h3>
       {/* This should be a table fetching all games (With spectate button) and all lobbies
       (with join button). Each row could be rendered via different components since they will
       have different columns (?), maybe even two tables... we will see, now it doesn't matter */}
@@ -48,11 +48,26 @@ export default function LobbyBrowser() {
             <th>No.Players</th>
             <th>Game Name</th>
             <th>Scenes</th>
-            <th>Spectators</th>
+            <th>
+              <Button type="submit" onClick={() => refreshPage()}>↻</Button>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {lobbyList.forEach()}
+          {lobbyList.map((lobby, idx) => (
+            <tr>
+              <th>{lobby.users.length}/{lobby.maxPlayers}</th>
+              <th>{lobby.name}</th>
+              <th>{lobby.hasScenes ? '✓' : 'X'}</th>
+              <th>
+                <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
+                  <Button type="submit">
+                   {lobby.hasStarted ? "Spectate" : "Join"}
+                  </Button>
+                </Link>
+              </th>
+            </tr>
+          ))}
         </tbody>
       </Table>
       <div id="gameList"></div>

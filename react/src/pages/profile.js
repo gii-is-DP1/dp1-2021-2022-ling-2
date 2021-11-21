@@ -4,6 +4,7 @@ import axios from "../api/axiosConfig";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Button } from "react-bootstrap";
+import Homebar from "../components/home/Homebar";
 
 export default function Profile() {
   const params = useParams(); // hook
@@ -32,6 +33,9 @@ export default function Profile() {
 
   return (
     <>
+      <div>
+        <Homebar />
+      </div>
       <h1>{params.username}'s profile</h1>
       {user.username === params.username && (
         <Button
