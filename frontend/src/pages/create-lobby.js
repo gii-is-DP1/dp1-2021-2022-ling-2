@@ -5,6 +5,7 @@ import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import Homebar from "../components/home/Homebar";
 import Errors from "../components/common/Errors";
 
 export default function CreateLobby() {
@@ -47,6 +48,9 @@ export default function CreateLobby() {
 
   return (
     <div>
+      <div>
+        <Homebar />
+      </div>
       <h1>Create a new game</h1>
       <Errors errors={errors} />
       <Form onSubmit={handleCreateLobby}>
