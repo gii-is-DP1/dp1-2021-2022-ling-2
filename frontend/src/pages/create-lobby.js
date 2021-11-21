@@ -2,9 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import * as ROUTES from "../constants/routes";
+import Errors from "../components/common/Errors";
 
 export default function CreateLobby() {
   const history = useHistory(); // hook
@@ -16,7 +17,7 @@ export default function CreateLobby() {
   const [maxPlayers, setMaxPlayers] = useState(4);
   const [scenesChecked, setScenesChecked] = useState(false);
   const [spectatorsChecked, setSpectatorsChecked] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState([]);
 
   const handleCreateLobby = async (e) => {
     e.preventDefault();
@@ -35,18 +36,19 @@ export default function CreateLobby() {
       const lobbyId = response.data.lobbyId;
       history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error) {
-      console.log(error);
-      setError(error.message);
+      setErrors([...errors, error.message]);
     }
   };
 
   useEffect(() => {
     document.title = "NTFH - Create new lobby";
+    if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
   });
 
   return (
     <div>
       <h1>Create a new game</h1>
+      <Errors errors={errors} />
       <Form onSubmit={handleCreateLobby}>
         <Form.Group className="mb-2">
           <Form.Label>Game name</Form.Label>

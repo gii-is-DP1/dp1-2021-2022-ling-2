@@ -5,14 +5,18 @@ import { useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import { useHistory } from "react-router-dom";
+import * as ROUTES from "../constants/routes";
+import Errors from "../components/common/Errors";
 
 export default function Lobby() {
   // There should be some kind of listener
   // that listens for people to join. Maybe a GET
   // every some seconds or maybe a websocket.
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState([]);
   const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
+  const history = useHistory();
   const { lobbyId } = useParams(); // TODO maybe we should just pass this as a param to the component
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
@@ -22,31 +26,34 @@ export default function Lobby() {
       try {
         const payload = { username: user.username };
         const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.post(`/lobbies/${lobbyId}/join`, payload, {
+        await axios.post(`/lobbies/${lobbyId}/join`, payload, {
           headers,
         });
-        console.log(response);
       } catch (error) {
-        console.log(error);
+        setErrors([...errors, error.message]);
       }
     }
     notifyJoinLobby();
   }, []); // Only run once
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(Date.now()), 1000);
+    document.title = "NTFH - Game lobby";
+    if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
+
+    const interval = setInterval(() => setTime(Date.now()), 1000); // Useful later for fetching lobby users
     return () => {
-      clearInterval(interval); // when the component is unmounted
-    }; // Fetch the users in the lobby from the server to update the state and re-render if needed
+      clearInterval(interval); // when the component is unmounted, clean up to prevent memory leaks
+    };
   }, []); // Update "time" state every second
 
   useEffect(() => {
+    // Fetch the lobby status from the server to update the state and re-render if needed
     async function fetchUsersInLobby() {
       try {
         const response = await axios.get(`/lobbies/${lobbyId}`);
         setLobby(response.data); // current status of the lobby (JSON as string)
       } catch (error) {
-        setError(error);
+        setErrors([...errors, error.message]);
       }
     }
     fetchUsersInLobby();
@@ -57,14 +64,18 @@ export default function Lobby() {
       {lobby && (
         <>
           <h1>Lobby - {lobby.name}</h1>
+          <Errors errors={errors} />
           <div>Waiting for people to join</div>
           <div>Players in the lobby: {lobby.users.length}</div>
           <br />
           <ListGroup>
-            {lobby.users.map((users, idx) => (
-              // TODO fix, los nombres están bailongos (cambian de orden con el rerender)
-              <ListGroup.Item key={idx}>{users.username}</ListGroup.Item>
-            ))}
+            {lobby.users
+              .sort((a, b) =>
+                a.username < b.username ? -1 : a.username > b.username ? 1 : 0
+              ) // arbitrary but consistent order
+              .map((user, idx) => (
+                <ListGroup.Item key={idx}>{user.username}</ListGroup.Item>
+              ))}
           </ListGroup>
         </>
       )}

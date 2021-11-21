@@ -6,6 +6,7 @@ import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 import * as ROUTES from "../constants/routes";
+import Errors from "../components/common/Errors";
 
 export default function Home() {
   const { userToken } = useContext(UserContext);
@@ -13,7 +14,7 @@ export default function Home() {
     UnregisteredUserContext
   );
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
     // make this execute only once
@@ -24,7 +25,7 @@ export default function Home() {
           const response = await axios.get("/unregistered-users");
           setUnregisteredUser(response.data);
         } catch (error) {
-          setError(error);
+          setErrors([...errors, error.message]);
         }
       }
       fetchData();
@@ -38,6 +39,7 @@ export default function Home() {
   return (
     <span>
       <h1>Home</h1>
+      <Errors errors={errors} />
       {userToken ? (
         <>
           <Sidebar />
