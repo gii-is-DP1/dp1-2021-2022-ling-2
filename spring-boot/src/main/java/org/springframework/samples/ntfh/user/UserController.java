@@ -30,8 +30,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,6 +62,56 @@ public class UserController {
 		// untested
 		Iterable<User> users = this.userService.findAll();
 		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
+
+	/**
+	 * Get information about a user. Should only return non-sensitive information
+	 * 
+	 * @param username that we want to fetch from the database
+	 * @return User object with only non-sensitive information
+	 */
+	@GetMapping("{userId}")
+	public ResponseEntity<User> getUser(@PathVariable("userId") String username) {
+		Optional<User> user = this.userService.findUser(username);
+		if (!user.isPresent())
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		// TODO create a custom response that only returns the non-sensitive information
+		return new ResponseEntity<>(user.get(), HttpStatus.OK);
+	}
+
+	/**
+	 * Update The profile of a user. Check before if the authorization token is
+	 * either from the exact user or from any admin.
+	 * 
+	 * @param user  object with the data to be updated with
+	 * @param token jwt token of the user or the admin.
+	 * @return token for user's authentication, in case he/she was the one who
+	 *         updated the profile
+	 */
+	@PutMapping()
+	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
+			@RequestHeader("Authorization") String token) {
+
+		// TODO check if the jwt token is either from the user or an admin
+
+		Optional<User> userInDatabaseOptional = this.userService.findUser(user.getUsername());
+		if (!userInDatabaseOptional.isPresent())
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		User userInDatabase = userInDatabaseOptional.get();
+
+		// Make sure there are no null values. If the user didn't send them in the form,
+		// they must stay the same as in the database.
+		if (user.getPassword() == null)
+			user.setPassword(userInDatabase.getPassword());
+		if (user.getEmail() == null)
+			user.setEmail(userInDatabase.getEmail());
+
+		userService.updateUser(user);
+
+		// TODO if the one updating was not the admin, return empty body
+		String newToken = generateJWTToken(user);
+		return new ResponseEntity<>(Map.of("authorization", newToken), HttpStatus.OK);
 	}
 
 	@PostMapping("register")

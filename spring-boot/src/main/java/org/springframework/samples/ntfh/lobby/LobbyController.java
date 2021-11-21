@@ -109,6 +109,8 @@ public class LobbyController {
             @RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
         // TODO check authentication before. After that, make sure that "username"
         // coincides with token's username.
+
+        // TODO replace ResponseEntity<Lobby> returns with throwing exceptions
         String username = body.get("username");
         Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
         if (!lobbyOptional.isPresent())

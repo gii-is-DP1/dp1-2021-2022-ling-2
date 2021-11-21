@@ -2,6 +2,7 @@ export const HOME = "/";
 export const LOGIN = "/login";
 export const SIGNUP = "/signup";
 export const PROFILE = "/profile/:username";
+export const EDIT_PROFILE = "/profile/:username/edit";
 export const CREATE_LOBBY = "/lobbies/new"; // POST
 export const BROWSE_LOBBIES = "/lobbies"; // GET
 export const GAME = "/games/:gameId";

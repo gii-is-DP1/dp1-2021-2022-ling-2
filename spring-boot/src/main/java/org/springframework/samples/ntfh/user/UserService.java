@@ -37,12 +37,18 @@ public class UserService {
 	@Autowired
 	public UserService(UserRepository userRepository, AuthoritiesService authoritiesService) {
 		// TODO can the constructor ve removed and annotate attributes with 2
-		// autowireds? I
-		// think so
+		// autowireds? I think so
 		this.userRepository = userRepository;
 		this.authoritiesService = authoritiesService;
 	}
 
+	/**
+	 * Create a new user
+	 * 
+	 * @param user
+	 * @return
+	 * @throws DataAccessException
+	 */
 	@Transactional
 	public User saveUser(User user) throws DataAccessException {
 
@@ -55,9 +61,7 @@ public class UserService {
 		if (userWithSameEmail.isPresent()) {
 			throw new DataAccessException("This email is already in use") {
 			};
-		} else
-
-		{
+		} else {
 			user.setEnabled(true);
 			userRepository.save(user);
 			authoritiesService.saveAuthorities(user.getUsername(), "user");
@@ -86,6 +90,8 @@ public class UserService {
 	 */
 	@Transactional(readOnly = true)
 	public Map<String, String> findUserPublic(String username) {
+		// TODO: Delete this method and create a custom JSON builder that receives
+		// a User and returns only non-sensitive information
 		// The username is the id (primary key)
 		Optional<User> userOptional = userRepository.findById(username);
 		if (userOptional.isPresent()) {
@@ -97,5 +103,23 @@ public class UserService {
 			return res;
 		} else
 			return Map.of();
+	}
+
+	/**
+	 * Update a user's information
+	 * 
+	 * @param user
+	 * @return
+	 * @throws DataAccessException
+	 */
+	@Transactional
+	public User updateUser(User user) throws DataAccessException {
+		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
+		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
+			throw new DataAccessException("This email is already in use") {
+			};
+		} else {
+			return userRepository.save(user);
+		}
 	}
 }

@@ -57,6 +57,7 @@ export default function Lobby() {
       }
     }
     fetchUsersInLobby();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time]); // Since "time" state variable is updated every second, we can use it to fetch the lobby users periodically
 
   return (

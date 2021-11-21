@@ -5,12 +5,14 @@ import unregisteredUserContext from "./context/unregisteredUser";
 import userContext from "./context/user";
 import useLocalStorage from "./hooks/useLocalStorage";
 import CreateLobby from "./pages/create-lobby";
-import Lobby from "./pages/lobby";
+import EditProfile from "./pages/edit-profile";
 import Game from "./pages/game";
 import Home from "./pages/home";
+import Lobby from "./pages/lobby";
 import LobbyBrowser from "./pages/lobby-browser";
 import Login from "./pages/login";
 import NotFound from "./pages/not-found";
+import Profile from "./pages/profile";
 import SignUp from "./pages/signup";
 
 export default function App() {
@@ -27,9 +29,11 @@ export default function App() {
       >
         <Router>
           <Switch>
-            <Route exact path={ROUTES.LOGIN} component={Login} />
-            <Route exact path={ROUTES.SIGNUP} component={SignUp} />
             <Route exact path={ROUTES.HOME} component={Home} />
+            <Route exact path={ROUTES.SIGNUP} component={SignUp} />
+            <Route exact path={ROUTES.LOGIN} component={Login} />
+            <Route exact path={ROUTES.PROFILE} component={Profile} />
+            <Route exact path={ROUTES.EDIT_PROFILE} component={EditProfile} />
             <Route exact path={ROUTES.CREATE_LOBBY} component={CreateLobby} />
             <Route
               exact

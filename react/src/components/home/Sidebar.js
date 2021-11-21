@@ -11,14 +11,11 @@ import * as ROUTES from "../../constants/routes";
 export default function Sidebar() {
   const { setUserToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
-  const username = "stockie";
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <h1 className="text-white">Welcome back, {user.username}</h1>
-      <Link to={ROUTES.PROFILE.replace(":username", username)}>
-        <Button type="submit">
-          Profile
-        </Button>
+      <Link to={ROUTES.PROFILE.replace(":username", user.username)}>
+        <Button type="submit">Profile</Button>
       </Link>
       <Button type="submit" onClick={() => setUserToken(null)}>
         Log out
