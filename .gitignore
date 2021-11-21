@@ -119,3 +119,5 @@ packages/react-devtools-timeline/dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+spring-boot/target/*
+react/node_modules
