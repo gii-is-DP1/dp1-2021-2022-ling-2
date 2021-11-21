@@ -39,9 +39,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/users/register").permitAll() // Allow to register
 				.antMatchers(HttpMethod.POST, "/users/login").permitAll() // Allow to login
 				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow to list all users to the admins
+				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin") // Update user's profile
+				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAnyAuthority("user") // Allow users to create new lobbies
-				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId]").hasAnyAuthority("user") // Allow users to update
+				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId}").hasAnyAuthority("user") // Allow users to update
 																							// lobbies
 				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAnyAuthority("user") // Allow users to
 				// create new

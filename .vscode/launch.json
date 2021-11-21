@@ -5,29 +5,25 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Chrome",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Attach to Chrome",
+      "port": 9222,
+      "request": "attach",
+      "type": "pwa-chrome",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "type": "java",
       "name": "Launch NtfhApplication",
       "request": "launch",
       "mainClass": "org.springframework.samples.ntfh.NtfhApplication",
       "projectName": "LIng-2"
-    },
-    {
-      "type": "java",
-      "name": "Debug (Launch)-NtfhApplication<spring-ntfh>",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "org.springframework.samples.ntfh.NtfhApplication",
-      "projectName": "spring-ntfh",
-      "args": ""
-    },
-    {
-      "type": "java",
-      "name": "Debug (Attach)",
-      "request": "attach",
-      "hostName": "localhost",
-      "port": 0
     }
   ]
 }
