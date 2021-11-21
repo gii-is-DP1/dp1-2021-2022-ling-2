@@ -6,7 +6,6 @@ import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import Homebar from "../components/home/Homebar";
-import * as ROUTES from "../constants/routes";
 import Errors from "../components/common/Errors";
 
 export default function CreateLobby() {

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
 import axios from "../api/axiosConfig";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
