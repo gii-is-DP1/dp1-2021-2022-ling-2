@@ -1,9 +1,10 @@
 -- One admin user, named admin with password admin and authority admin
 INSERT INTO users(username,password, email) VALUES ('admin','admin', 'admin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
+INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
 
 INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (2,'andres','user');
+INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
 -- INSERT INTO users(username,password,enabled) VALUES ('pabsanval1','idk',TRUE);
 -- INSERT INTO authorities(id,username,authority) VALUES (5,'pabsanval1','owner');
