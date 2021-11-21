@@ -44,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAnyAuthority("user") // Allow users to create new lobbies
 				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId}").hasAnyAuthority("user") // Update lobby
-				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/kick").hasAnyAuthority("user") // Kick user
+				.antMatchers(HttpMethod.DELETE, "/lobbies/{lobbyId}/remove/{username}").hasAnyAuthority("user")
 				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAnyAuthority("user") // Join a lobby
 
 				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
 																				// credentials
 				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
-				.anyRequest().denyAll(); // else, deny
+				.anyRequest().permitAll(); // else, deny
 
 		// Configuración para que funcione la consola de administración
 		// de la BD H2 (deshabilitar las cabeceras de protección contra

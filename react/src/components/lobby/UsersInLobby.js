@@ -4,15 +4,25 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Errors from "../common/Errors";
 import axios from "../../api/axiosConfig";
+import UserContext from "../../context/user";
+import tokenParser from "../../helpers/tokenParser";
 
 export default function UsersInLobby(props) {
-  const { lobby, user } = props; // destructuring props // TODO in other files too
-  const isHost = user.id === lobby.hostId;
+  const { lobby } = props; // destructuring props // TODO in other files too
+  // user: the one who is logged in
   const [errors, setErrors] = useState([]);
+  const { userToken } = useContext(UserContext);
+  const viewer = tokenParser(useContext(UserContext)); // user who is logged in
+
+  const isHost = (user) => user.username === lobby.host;
+  // craeate arrow function in a variable
 
   async function handleKickUser(username) {
     try {
-      await axios.post(`/lobbies/${lobby.id}/kick`, { username });
+      // axios.delete only has 2 parameters, url and headers)
+      await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
+        headers: { Authorization: "Bearer " + userToken },
+      });
     } catch (error) {
       setErrors([...errors, error.message]);
     }
@@ -27,15 +37,13 @@ export default function UsersInLobby(props) {
           ) // arbitrary but consistent order
           .map((user, idx) => (
             <ListGroup.Item key={idx}>
-              {!isHost && (
-                <Button
-                  className="m-2"
-                  onClick={(user) => handleKickUser(user.username)}
-                >
+              {!isHost(user) && isHost(viewer) && (
+                // show me the kick button over a player only if i'm the host, and also if the player to kick is not me
+                <Button onClick={(e) => handleKickUser(user.username)}>
                   Kick
                 </Button>
               )}
-              {isHost && "👑"} {user.username}
+              {isHost(user) && "👑"} {user.username}
             </ListGroup.Item>
           ))}
       </ListGroup>

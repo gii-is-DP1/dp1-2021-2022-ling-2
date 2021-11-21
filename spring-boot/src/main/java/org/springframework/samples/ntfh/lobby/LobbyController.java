@@ -147,7 +147,7 @@ public class LobbyController {
      */
     @DeleteMapping("{lobbyId}/remove/{username}")
     public ResponseEntity<Lobby> removeUserFromLobby(@PathVariable("lobbyId") Integer lobbyId,
-            @PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
+            @PathVariable("username") String username, @RequestHeader("Authorization") String token) {
 
         Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
         if (!lobbyOptional.isPresent())
