@@ -3,8 +3,6 @@ package org.springframework.samples.ntfh.lobby;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +57,8 @@ public class LobbyController {
         Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
         if (lobbyOptional.isPresent()) {
             Lobby lobby = lobbyOptional.get();
+            // TODO currently returns user's password info. Maybe create a custom JSON
+            // parser to hide sensitive info?
             return new ResponseEntity<>(lobby, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -98,8 +98,8 @@ public class LobbyController {
      *                who wants to join is the one who is logged in
      * @return 200 OK if the game hasn't started yet and there is still space
      * @return 404 NOT FOUND if the lobby doesn't exist
-     * @return 403 FORBIDDEN if the game has already started or there is no room
-     *         left
+     * @return 403 FORBIDDEN if the game has already started, the players is already
+     *         in the game or there is no room left
      * @return 401 UNAUTHORIZED if the user who sent the request is not logged or is
      *         not the one who he/she claims to be (JWT token validation)
      * @author andrsdt
@@ -118,7 +118,7 @@ public class LobbyController {
         if (Boolean.TRUE.equals(lobby.getHasStarted()) || lobby.getUsers().size() == lobby.getMaxPlayers())
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        if (lobbyService.joinLobby(lobbyId, username)) {
+        if (Boolean.TRUE.equals(lobbyService.joinLobby(lobbyId, username))) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
