@@ -1,11 +1,11 @@
-import axios from "../api/axiosConfig";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
-import * as ROUTES from "../constants/routes";
+import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
+import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-
+import Errors from "../components/common/Errors";
 /**
  *
  * @author jstockwell
@@ -30,11 +30,11 @@ export default function SignUp() {
       setUserToken(loginResponse.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
-      setError(error.message);
+      setErrors([...errors, error.message]);
     }
   };
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState([]);
 
   return (
     <div>
@@ -50,7 +50,7 @@ export default function SignUp() {
         </Link>
       </p>
       <br />
-      {error && <p className="mb-4 text-xs text-primary">{error}</p>}
+      <Errors errors={errors} />
       <Form onSubmit={handleRegister}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>
