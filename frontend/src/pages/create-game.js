@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 
