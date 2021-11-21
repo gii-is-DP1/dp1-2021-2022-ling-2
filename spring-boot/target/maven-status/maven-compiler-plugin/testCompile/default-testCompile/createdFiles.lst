@@ -1,0 +1,5 @@
+org\springframework\samples\ntfh\playablecard\PlayableCardServiceTest.class
+org\springframework\samples\ntfh\scene\SceneServiceTest.class
+org\springframework\samples\ntfh\user\UserServiceTest.class
+org\springframework\samples\ntfh\achievement\AchievementServiceTest.class
+org\springframework\samples\ntfh\game\GameServiceTest.class
