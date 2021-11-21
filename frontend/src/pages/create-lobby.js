@@ -2,12 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
+import Errors from "../components/common/Errors";
 
-export default function CreateGame() {
+export default function CreateLobby() {
   const history = useHistory(); // hook
 
   const { userToken } = useContext(userContext); // hook
@@ -17,30 +19,32 @@ export default function CreateGame() {
   const [maxPlayers, setMaxPlayers] = useState(4);
   const [scenesChecked, setScenesChecked] = useState(false);
   const [spectatorsChecked, setSpectatorsChecked] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState([]);
 
-  const handleCreateGame = async (e) => {
+  const handleCreateLobby = async (e) => {
     e.preventDefault();
     try {
       const payload = {
         name: gameName,
         maxPlayers: maxPlayers,
-        scenes: scenesChecked,
+        hasScenes: scenesChecked,
         spectatorsAllowed: spectatorsChecked,
+        host: user.username,
+        players: [user.username],
       };
-      const response = await axios.post("/games/new", payload, {
+      const response = await axios.post("/lobbies", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
-      const gameId = response.data.gameId;
-      history.push(ROUTES.GAME.replace(":gameId", gameId));
+      const lobbyId = response.data.lobbyId;
+      history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error) {
-      console.log(error);
-      setError(error.message);
+      setErrors([...errors, error.message]);
     }
   };
 
   useEffect(() => {
-    document.title = "NTFH - Create new game";
+    document.title = "NTFH - Create new lobby";
+    if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
   });
 
   return (
@@ -49,7 +53,8 @@ export default function CreateGame() {
         <Homebar />
       </div>
       <h1>Create a new game</h1>
-      <Form onSubmit={handleCreateGame}>
+      <Errors errors={errors} />
+      <Form onSubmit={handleCreateLobby}>
         <Form.Group className="mb-2">
           <Form.Label>Game name</Form.Label>
           <Form.Control
@@ -103,7 +108,7 @@ export default function CreateGame() {
           />
         </Form.Group>
         <Button variant="primary" type="submit">
-          Create
+          Create lobby
         </Button>
       </Form>
     </div>

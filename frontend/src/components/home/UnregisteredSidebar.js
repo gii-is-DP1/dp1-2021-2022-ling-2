@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
@@ -6,13 +6,11 @@ import UnregisteredUserContext from "../../context/unregisteredUser";
 
 export default function UnregisteredSidebar() {
   const { unregisteredUser } = useContext(UnregisteredUserContext);
-  const [error, setError] = useState("");
 
   // The view will be updated every time a state variable changes
   return (
     <span>
       <h1>Welcome to No Time for Heroes!</h1>
-      {error && <p className="mb-4 text-xs text-primary">{error}</p>}
       {!unregisteredUser ? (
         <p>Loading...</p>
       ) : (

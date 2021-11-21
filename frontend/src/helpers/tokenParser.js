@@ -6,6 +6,8 @@ import jwtDecode from "jwt-decode";
  * @return Object with email, id and
  */
 const tokenParser = (context) => {
+  // TODO rename to parseToken
+  if (!context.userToken) return null;
   const parsedToken = jwtDecode(context.userToken);
   const data = parsedToken.data;
   data.authorities = parsedToken.authorities;

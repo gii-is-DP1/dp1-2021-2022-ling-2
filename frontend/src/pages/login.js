@@ -5,16 +5,18 @@ import { Link, useHistory } from "react-router-dom";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
+import Errors from "../components/common/Errors";
 
 /**
  *
  * @author jstockwell
+ * @author andrsdt
  */
 export default function Login() {
   const history = useHistory(); // hook
   const { setUserToken } = useContext(userContext); // hook
+  const [errors, setErrors] = useState([]);
 
-  const [error, setError] = useState("");
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -24,8 +26,7 @@ export default function Login() {
       setUserToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
-      console.log(error);
-      setError(error.message);
+      setErrors([...errors, error.message]);
     }
   };
 
@@ -46,7 +47,7 @@ export default function Login() {
         </Link>
       </p>
       <br></br>
-      {error && <p className="mb-4 text-xs text-primary">{error}</p>}
+      <Errors errors={errors} />
       <Form onSubmit={handleLogin}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>

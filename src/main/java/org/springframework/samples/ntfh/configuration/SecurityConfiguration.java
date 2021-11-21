@@ -36,10 +36,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests() // antMatchers:
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
-				.antMatchers(HttpMethod.POST, "/users/**").permitAll() // Allow to register and login
+				.antMatchers(HttpMethod.POST, "/users/register").permitAll() // Allow to register
+				.antMatchers(HttpMethod.POST, "/users/login").permitAll() // Allow to login
 				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow to list all users to the admins
-				.antMatchers(HttpMethod.GET, "/games/available").permitAll() // Allow everyone to list all games
-				.antMatchers(HttpMethod.POST, "/games/new").hasAnyAuthority("user") // Allow users to create new games
+				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
+				.antMatchers(HttpMethod.POST, "/lobbies").hasAnyAuthority("user") // Allow users to create new lobbies
+				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId]").hasAnyAuthority("user") // Allow users to update
+																							// lobbies
+				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAnyAuthority("user") // Allow users to
+				// create new
+				// lobbies
+
+				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
 				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
 																				// credentials

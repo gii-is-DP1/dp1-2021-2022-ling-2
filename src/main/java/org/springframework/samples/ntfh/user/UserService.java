@@ -36,6 +36,9 @@ public class UserService {
 
 	@Autowired
 	public UserService(UserRepository userRepository, AuthoritiesService authoritiesService) {
+		// TODO can the constructor ve removed and annotate attributes with 2
+		// autowireds? I
+		// think so
 		this.userRepository = userRepository;
 		this.authoritiesService = authoritiesService;
 	}
