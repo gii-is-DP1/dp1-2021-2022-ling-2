@@ -88,33 +88,15 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 
+		userService.updateUser(user, token);
+
 		Boolean sentByAdmin = TokenUtils.tokenHasAuthorities(token, "admin");
-		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		// TODO untested
-		// If the token is not from the user nor an admin, return unauthorized
-		if (!sentBySameUser && !sentByAdmin)
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-
-		Optional<User> userInDatabaseOptional = this.userService.findUser(user.getUsername());
-		if (!userInDatabaseOptional.isPresent())
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		User userInDatabase = userInDatabaseOptional.get();
-
-		// Make sure there are no null values. If the user didn't send them in the form,
-		// they must stay the same as they were in the database.
-		if (user.getPassword() == null)
-			user.setPassword(userInDatabase.getPassword());
-		if (user.getEmail() == null)
-			user.setEmail(userInDatabase.getEmail());
-
-		userService.updateUser(user);
-
 		if (sentByAdmin)
 			// Don't return a new token if the one updating the profile is an admin
 			return new ResponseEntity<>(HttpStatus.OK);
 
-		String newToken = TokenUtils.generateJWTToken(user);
-		return new ResponseEntity<>(Map.of("authorization", newToken), HttpStatus.OK);
+		String tokenWithUpdatedData = TokenUtils.generateJWTToken(user);
+		return new ResponseEntity<>(Map.of("authorization", tokenWithUpdatedData), HttpStatus.OK);
 	}
 
 	@PostMapping("register")
