@@ -37,7 +37,7 @@ public class GameController {
      */
     @GetMapping()
     public ResponseEntity<Iterable<Game>> getAll() {
-        // TODO untested
+        // Tested in gameServiceTest
         Iterable<Game> games = gameService.findAll();
         return new ResponseEntity<>(games, HttpStatus.OK);
     }

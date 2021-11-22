@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO change to RestController and re-implement the methods to return ResponseEntity<?> with JSON data
 @RestController()
 @RequestMapping(value = "/marketCards")
 public class MarketCardController {
@@ -21,7 +20,7 @@ public class MarketCardController {
 
     @GetMapping
     public ResponseEntity<Iterable<MarketCard>> getAll() {
-        // untested
+        // tested in MarketCardServiceTest
         Iterable<MarketCard> marketCards = this.marketCardService.findAll();
         return new ResponseEntity<>(marketCards, HttpStatus.OK);
     }
