@@ -6,10 +6,7 @@ INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
 INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
-INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 1', false, false, true, 2);
-INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
-INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
-
+-- TODO missing host?
 INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 1', false, false, true, 2);
 INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
