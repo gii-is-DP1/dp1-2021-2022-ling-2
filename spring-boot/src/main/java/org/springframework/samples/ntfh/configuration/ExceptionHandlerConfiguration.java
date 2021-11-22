@@ -27,6 +27,6 @@ public class ExceptionHandlerConfiguration {
     public ResponseEntity<String> dataAccessExceptionHandler(HttpServletRequest request, DataAccessException ex) {
         // TODO return a proper error response in JSON format so the frontend can handle
         // it easily
-        return new ResponseEntity<>("The data was not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
