@@ -7,10 +7,7 @@ import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import { useHistory } from "react-router-dom";
-import * as ROUTES from "../constants/routes";
 import Homebar from "../components/home/Homebar";
-import Errors from "../components/common/Errors";
 
 export default function Lobby() {
   // There should be some kind of listener
