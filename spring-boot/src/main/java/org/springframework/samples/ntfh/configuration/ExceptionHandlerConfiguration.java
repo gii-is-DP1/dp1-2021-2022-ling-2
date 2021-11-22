@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorContro
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -22,11 +23,19 @@ public class ExceptionHandlerConfiguration {
     @Autowired
     private BasicErrorController errorController;
 
-    // add any exceptions/validations/binding problems
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<String> dataAccessExceptionHandler(HttpServletRequest request, DataAccessException ex) {
         // TODO return a proper error response in JSON format so the frontend can handle
         // it easily
-        return new ResponseEntity<>("The data was not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(NonMatchingTokenException.class)
+    public ResponseEntity<String> nonMatchingTokenExceptionHandler(HttpServletRequest request,
+            NonMatchingTokenException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    // TODO add more custom exceptions here. The structure is the same, the only
+    // thing changing should be the HttpStatus
 }
