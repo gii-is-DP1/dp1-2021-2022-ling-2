@@ -34,6 +34,7 @@ export default function Lobby() {
         setErrors([...errors, error.message]);
       }
     }
+    
     notifyJoinLobby();
   }, []); // Only run once
 

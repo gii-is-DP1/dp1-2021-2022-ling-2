@@ -1,24 +1,16 @@
 package org.springframework.samples.ntfh.game;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.ntfh.user.User;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 
 /**
  * @author andrsdt
@@ -35,7 +27,7 @@ public class GameController {
      * @return List of all the games ever played
      * @author pabrobcam
      */
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<Iterable<Game>> getAll() {
         // TODO untested
         Iterable<Game> games = gameService.findAll();
