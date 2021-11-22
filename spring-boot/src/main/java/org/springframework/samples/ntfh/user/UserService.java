@@ -84,9 +84,9 @@ public class UserService {
 	 * This method is used to find an user but only return non-sensitive information
 	 * (username, email, authorities)
 	 * 
-	 * @author andrsdt
 	 * @param username the username of the user to find
 	 * @return the user with restricted information
+	 * @author andrsdt
 	 */
 	@Transactional(readOnly = true)
 	public Map<String, String> findUserPublic(String username) {
@@ -111,6 +111,7 @@ public class UserService {
 	 * @param user
 	 * @return
 	 * @throws DataAccessException
+	 * @author andrsdt
 	 */
 	@Transactional
 	public User updateUser(User user) throws DataAccessException {

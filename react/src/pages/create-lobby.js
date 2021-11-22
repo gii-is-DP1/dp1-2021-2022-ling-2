@@ -47,7 +47,7 @@ export default function CreateLobby() {
   });
 
   return (
-    <div>
+    <div className="m-4">
       <div>
         <Homebar />
       </div>
@@ -65,9 +65,10 @@ export default function CreateLobby() {
             onChange={(e) => setGameName(e.target.value)}
           />
         </Form.Group>
-        <Form.Group key="inline-radio" className="mb-2">
+        <Form.Group key="inline-radio">
           <Form.Label>Max players</Form.Label>
           <Form.Check
+            className="mx-3"
             inline
             label="2"
             name="maxPlayers"
@@ -106,7 +107,7 @@ export default function CreateLobby() {
             onChange={(e) => setSpectatorsChecked(!spectatorsChecked)}
           />
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button className="mt-3" variant="primary" type="submit">
           Create lobby
         </Button>
       </Form>

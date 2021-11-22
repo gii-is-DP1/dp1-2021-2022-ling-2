@@ -1,13 +1,16 @@
 package org.springframework.samples.ntfh.lobby;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.ntfh.user.User;
+import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 
 /**
  * @author andrsdt
@@ -81,25 +81,21 @@ public class LobbyController {
 
     /**
      * This endpoint will be only accessible for the host of the game (via JWT token
-     * validation) and will allow him/her to kick players, start the game..
+     * validation) and will allow him/her to modify attributes of the game lobby
+     * (unused yet)
      * 
      * @author andrsdt
      */
     @PutMapping("{lobbyId}")
     public ResponseEntity<Lobby> updateLobby(@PathVariable("lobbyId") Integer lobbyId, @RequestBody Lobby lobby,
             @RequestHeader("Authorization") String token) {
-        String tokenWithoutBearer = token.replace("Bearer ", "");
-        JwtParser jwtParser = Jwts.parser();
-        String user = (String) jwtParser.parse(tokenWithoutBearer).getBody(); // .get("user", User.class);
-        System.out.println(user); // TODO validate token or is it done automatically by Spring? I think so
-        User authUser = null; // TODO
-
-        if (!authUser.getUsername().equals(lobby.getHost())) // Only the host can modify the game lobby
+        // TODO {lobbyId} param is redundant. Maybe we rename this endpoint later on
+        String usernameFromToken = TokenUtils.usernameFromToken(token);
+        if (!usernameFromToken.equals(lobby.getHost())) // Only the host can modify the game lobby
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        // return new ResponseEntity<>(gameService.updateLobby(gameId, game),
-        // HttpStatus.OK);
-        return null;
+        Lobby updatedLobby = lobbyService.updateLobby(lobby);
+        return new ResponseEntity<>(updatedLobby, HttpStatus.OK);
     }
 
     /**
@@ -118,25 +114,91 @@ public class LobbyController {
      *         not the one who he/she claims to be (JWT token validation)
      * @author andrsdt
      */
-    @PostMapping("{lobbyId}/join")
+    @PostMapping("{lobbyId}/join") // TODO refactor to "{lobbyId}/add/{username}"
     public ResponseEntity<Lobby> joinLobby(@PathVariable("lobbyId") Integer lobbyId,
             @RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
-        // TODO check authentication before. After that, make sure that "username"
-        // coincides with token's username.
+        // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
+        String usernameFromRequest = body.get("username");
+        String usernameFromToken = TokenUtils.usernameFromToken(token);
+        if (!usernameFromRequest.equals(usernameFromToken)) // TODO untested
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        // TODO replace ResponseEntity<Lobby> returns with throwing exceptions
-        String username = body.get("username");
         Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
         if (!lobbyOptional.isPresent())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         Lobby lobby = lobbyOptional.get();
-        if (Boolean.TRUE.equals(lobby.getHasStarted()) || lobby.getUsers().size() == lobby.getMaxPlayers())
+        if ((lobby.getHasStarted()) || lobby.getUsers().size() == lobby.getMaxPlayers())
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        if (Boolean.TRUE.equals(lobbyService.joinLobby(lobbyId, username))) {
+        Set<String> usernamesInLobby = new HashSet<>();
+        lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
+
+        if (usernamesInLobby.contains(usernameFromRequest))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // The user cannot join if he/she is already in
+
+        if (lobbyService.joinLobby(lobbyId, usernameFromRequest)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
+
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * 
+     * @param lobbyId of the lobby want to remove the user from
+     * @param body    with the username of the who we wanto to kick from the lobby
+     * @param token   of the user who wants to kick someone. Must be the either the
+     *                lobby host or the own user wanting to leave
+     * @return 200 OK if the user was kicked from the lobby
+     * @return 404 NOT FOUND if the lobby doesn't exist
+     * @return 401 UNAUTHORIZED if the user is being requested to be removed from
+     *         the lobby is not logged or is not neither the lobby host or the user
+     *         sending the request (the request was sent by a malicious user)
+     * @return 403 FORBIDDEN if the user is not in the lobby or another error
+     *         happens
+     * @author andrsdt
+     */
+    @DeleteMapping("{lobbyId}/remove/{username}")
+    public ResponseEntity<Lobby> removeUserFromLobby(@PathVariable("lobbyId") Integer lobbyId,
+            @PathVariable("username") String username, @RequestHeader("Authorization") String token) {
+
+        Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
+        if (!lobbyOptional.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Lobby lobby = lobbyOptional.get();
+
+        String usernameFromToken = TokenUtils.usernameFromToken(token);
+        String usernameFromLobbyHost = lobby.getHost();
+
+        Boolean requestByUserLeaving = usernameFromToken.equals(username);
+        Boolean requestByHost = usernameFromToken.equals(usernameFromLobbyHost);
+        if (!requestByHost && !requestByUserLeaving)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        if (lobbyService.removeUserFromLobby(lobbyId, username)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * 
+     * @param lobbyId of the lobby that we want to delete. Will be called
+     *                automatically when the host leaves the lobby.
+     * @param token   of the user who wants to delete the lobby. Must be the host.
+     * @return 200 OK if the lobby has been deleted
+     * @return 403 FORBIDDEN if the user who sent the request is not the host of the
+     *         lobby
+     * @return 404 NOT FOUND if the lobby doesn't exist
+     * @author andrsdt
+     */
+    @DeleteMapping("{lobbyId}")
+    public ResponseEntity<Lobby> deleteLobby(@PathVariable("lobbyId") Integer lobbyId,
+            @RequestHeader("Authorization") String token) {
+
+        return null;
     }
 }

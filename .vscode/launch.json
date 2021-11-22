@@ -5,6 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "Launch TokenUtils",
+      "request": "launch",
+      "mainClass": "org.springframework.samples.ntfh.util.TokenUtils",
+      "projectName": "LIng-2"
+    },
+    {
+      "type": "java",
+      "name": "Launch TokenValidator",
+      "request": "launch",
+      "mainClass": "org.springframework.samples.ntfh.util.TokenValidator",
+      "projectName": "LIng-2"
+    },
+    {
       "name": "Launch Chrome",
       "request": "launch",
       "type": "pwa-chrome",

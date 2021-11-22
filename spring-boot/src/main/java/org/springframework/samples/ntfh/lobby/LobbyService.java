@@ -8,13 +8,11 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
 import org.springframework.stereotype.Service;
 
-/**
- * @author andrsdt
- */
 @Service
 public class LobbyService {
 
@@ -36,15 +34,18 @@ public class LobbyService {
 
     /**
      * 
+     * @author andrsdt
      * @param id of the lobby to be fetched
      * @return Lobby object without sensitive information (users' passwords)
      */
     @Transactional
-    public Optional<Lobby> findLobbyByIdNonSensitive(int id) {
+    public Optional<Lobby> findLobbyByIdNonSensitive(int id) throws DataAccessException {
         // TODO unused. Maybe replace with a custom JSON parser?
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(id);
         if (!lobbyOptional.isPresent())
-            return lobbyOptional;
+            throw new DataAccessException("The lobby does not exist") {
+            };
+
         Lobby lobby = lobbyOptional.get();
 
         // Create a Lobby object without sensitive information
@@ -81,23 +82,29 @@ public class LobbyService {
     /**
      * Adds the given player to the list of players in the lobby.
      * 
+     * @author andrsdt
      * @param lobbyId
      * @param username
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    public Boolean joinLobby(Integer lobbyId, String username) {
+    public Boolean joinLobby(Integer lobbyId, String username) throws DataAccessException {
+        // TODO make this throw more specific (maybe custom)
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
         if (!lobbyOptional.isPresent())
-            return false;
+            throw new DataAccessException("The lobby does not exist") {
+            };
 
         Lobby lobby = lobbyOptional.get();
         if (lobby.getMaxPlayers().equals(lobby.getUsers().size()))
-            return false;
+            throw new DataAccessException("The lobby is full") { // TODO change type of exception
+            };
 
         Optional<User> userOptional = userService.findUser(username);
         if (!userOptional.isPresent())
-            return false;
+            throw new DataAccessException("The user who wants to join the lobby does not exist") {
+            };
+
         User user = userOptional.get();
         lobby.addUser(user);
         lobbyRepository.save(lobby);
@@ -108,13 +115,45 @@ public class LobbyService {
      * Removes the given player from the list of players in the lobby. Either
      * because he/she left or was kicked by the host
      * 
+     * @author andrsdt
      * @param lobbyId
      * @param username
      * @return true if the player was removed, false if there was some problem
      */
     @Transactional
-    public Boolean leaveLobby(Integer lobbyId, String username) {
-        // TODO impelemnt
-        return null;
+    public Boolean removeUserFromLobby(Integer lobbyId, String username) throws DataAccessException {
+        // TODO untested
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
+        if (!lobbyOptional.isPresent())
+            throw new DataAccessException("The lobby does not exist") {
+            };
+
+        Optional<User> userOptional = userService.findUser(username);
+        if (!userOptional.isPresent())
+            throw new DataAccessException("The user that is being removed from the lobby does not exist") {
+            };
+
+        Lobby lobby = lobbyOptional.get();
+        User user = userOptional.get();
+
+        if (lobby.getHost().equals(user.getUsername()))
+            throw new DataAccessException("The host cannot leave the lobby") {
+            };
+
+        lobby.removeUser(user);
+        this.updateLobby(lobby);
+        return true;
+    }
+
+    /**
+     * @author andrsdt
+     * @param lobby
+     * @return
+     */
+    @Transactional
+    public Lobby updateLobby(Lobby lobby) {
+        // TODO check if there are missing attributes in the object? should there be
+        // any?
+        return this.lobbyRepository.save(lobby);
     }
 }
