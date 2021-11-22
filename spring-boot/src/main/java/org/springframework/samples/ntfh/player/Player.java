@@ -1,5 +1,7 @@
 package org.springframework.samples.ntfh.player;
 
+import java.beans.Transient;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,24 +41,23 @@ public class Player extends BaseEntity {
     private Integer wounds;
 
     @NotNull
-    private Integer currentTurnOrder;
-
-    @NotNull
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isLeader;
-
-    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "username")
-    private User user; // User who is this handling player
+    private User user; // User who is handling this player
 
-    @NotNull
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "game_id", referencedColumnName = "id")
-    private Game game; // Game this player played in
-
-    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "character_id", referencedColumnName = "id")
     private Character characterType;
+
+    /**
+     * Derivated from User, who has a "game" column with the game where he/she is
+     * playing in.
+     * 
+     * @author andrsdt
+     * @return game where the player is playing in.
+     */
+    @Transient
+    public Game getGame() {
+        return user.getGame();
+    }
 }
