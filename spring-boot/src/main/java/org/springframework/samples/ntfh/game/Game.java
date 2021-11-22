@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -15,6 +16,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.samples.ntfh.comments.Comment;
 import org.springframework.samples.ntfh.model.BaseEntity;
 import org.springframework.samples.ntfh.player.Player;
+import org.springframework.samples.ntfh.user.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -49,6 +51,10 @@ public class Game extends BaseEntity {
     // Set from Lobby by creating Players instances from users
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Player> players;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private User host;
 
     @Transient
     private Boolean hasFinished;

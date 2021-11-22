@@ -30,19 +30,18 @@ public class LobbyController {
     @Autowired
     private LobbyService lobbyService;
 
-    /** 
+    /**
      * This endpoint handles the fetch of all active lobbies
      * 
      * @return all active lobbies
      * @author jstockwell
-    */
+     */
     @GetMapping
-	public ResponseEntity<Iterable<Lobby>> getAll() {
-		// untested
-		Iterable<Lobby> lobbies = this.lobbyService.findAll();
-		return new ResponseEntity<>(lobbies, HttpStatus.OK);
-	}
-
+    public ResponseEntity<Iterable<Lobby>> getAll() {
+        // untested
+        Iterable<Lobby> lobbies = this.lobbyService.findAll();
+        return new ResponseEntity<>(lobbies, HttpStatus.OK);
+    }
 
     /**
      * This endpoint handles the creation of a new game lobby
@@ -177,7 +176,12 @@ public class LobbyController {
         if (!requestByHost && !requestByUserLeaving)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        if (lobbyService.removeUserFromLobby(lobbyId, username)) {
+        if (requestByHost && usernameFromLobbyHost.equals(username)) {
+            // If the host is the one who wanted to leave, then delete the lobby
+            lobbyService.deleteLobby(lobby);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        if (lobbyService.removeUserFromLobby(lobby, username)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 

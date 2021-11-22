@@ -75,7 +75,7 @@ public class LobbyService {
     }
 
     @Transactional
-    public void delete(Lobby lobby) {
+    public void deleteLobby(Lobby lobby) {
         this.lobbyRepository.delete(lobby);
     }
 
@@ -106,8 +106,8 @@ public class LobbyService {
             };
 
         User user = userOptional.get();
-        lobby.addUser(user);
-        lobbyRepository.save(lobby);
+        user.setLobby(lobby);
+        userService.updateUser(user);
         return true;
     }
 
@@ -121,27 +121,22 @@ public class LobbyService {
      * @return true if the player was removed, false if there was some problem
      */
     @Transactional
-    public Boolean removeUserFromLobby(Integer lobbyId, String username) throws DataAccessException {
+    public Boolean removeUserFromLobby(Lobby lobby, String username) throws DataAccessException {
         // TODO untested
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
-        if (!lobbyOptional.isPresent())
-            throw new DataAccessException("The lobby does not exist") {
-            };
-
         Optional<User> userOptional = userService.findUser(username);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user that is being removed from the lobby does not exist") {
             };
-
-        Lobby lobby = lobbyOptional.get();
         User user = userOptional.get();
 
         if (lobby.getHost().equals(user.getUsername()))
+            // this should be handled by .deleteLobby()
             throw new DataAccessException("The host cannot leave the lobby") {
             };
 
         lobby.removeUser(user);
-        this.updateLobby(lobby);
+        user.setLobby(null);
+        userService.updateUser(user);
         return true;
     }
 

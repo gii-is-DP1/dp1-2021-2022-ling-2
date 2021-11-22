@@ -6,7 +6,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -15,6 +18,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.samples.ntfh.game.Game;
+import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.samples.ntfh.user.authorities.Authorities;
 
 import lombok.Getter;
@@ -46,10 +51,15 @@ public class User {
 	private boolean enabled; // If a user gets banned, he/she will get disabled
 
 	// TODO Commented until I fix the FK issue on Game.java
-	// @OneToOne(mappedBy = "host")
-	// private Game currentGame;
+	@OneToOne(mappedBy = "host")
+	private Game game;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore
 	private Set<Authorities> authorities;
+
+	@ManyToOne
+	@JoinColumn(name = "lobby_id")
+	@JsonIgnore
+	private Lobby lobby;
 }
