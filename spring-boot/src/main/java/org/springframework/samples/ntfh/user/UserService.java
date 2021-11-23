@@ -114,7 +114,8 @@ public class UserService {
 	 * @author andrsdt
 	 */
 	@Transactional
-	public User updateUser(User user) throws DataAccessException {
+	public User updateUser(User user, String jwtToken) throws DataAccessException {
+		// TODO check the logic here and throw NonMatchingTokenException
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
 			throw new DataAccessException("This email is already in use") {
