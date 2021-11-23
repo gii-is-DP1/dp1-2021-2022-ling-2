@@ -4,9 +4,8 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -33,47 +32,22 @@ public class Game extends BaseEntity {
     @NotNull // Set by the server to Time.now()
     private Long startTime; // unix timestamp
 
-    // Set by the server when the game finished. null meanwhile
-    private Long finishTime; // unix timestamp
-
     @NotNull // Set from Lobby
     private Boolean hasScenes;
 
-    // TODO hacer la asociacion tambien desde parte de comments? bidireccional?
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL) // Deleting the game will delete the comments
-    @JsonIgnore
-    private Set<Comment> comments;
-
     // Set from Lobby by creating Players instances from users
-    @ManyToMany // TODO cascade? If we set CascadeType.ALL then deleting the game will delete
-                // the players. It shouldn't be like that.
+    @OneToMany // TODO cascade? If we set CascadeType.ALL then deleting the game will delete
+               // the players. It shouldn't be like that.
     private Set<Player> players;
 
-    @ManyToOne
+    @OneToOne
     private Player leader;
 
-    @ManyToOne
-    private Player winner;
+    // TODO a good idea would be to have a GameHistory entity where finished games
+    // are stored. This way, this class will only be used to refer to the game a
+    // User is currently playing in, and the GameHistory will be an immutable table
+    // whose rows are created with the final results of a game (including players
+    // who were playing on it, finish time and many others that will only matter
+    // once the game has finished)
 
-    /**
-     * @author andrsdt
-     */
-    @Transient
-    public Boolean getHasFinished() {
-        return finishTime != null;
-    }
-
-    /**
-     * Derived. Returns the duration of the game in seconds
-     * 
-     * @author andrsdt
-     * @return Long duration of the time in seconds
-     */
-    @Transient
-    public Long getDuration() {
-        if (finishTime == null)
-            return null; // To avoid NullPointerException if the game hasn't finished
-        Long timeInMilliseconds = finishTime - startTime;
-        return timeInMilliseconds / 1000;
-    }
 }

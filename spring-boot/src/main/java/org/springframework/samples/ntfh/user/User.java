@@ -56,8 +56,8 @@ public class User {
 	@JoinColumn(name = "game")
 	private Game game; // game where the user is currently in
 
-	// TODO The cascade type is yet to be determined
-	@ManyToOne(cascade = CascadeType.ALL)
+	// TODO maybe remove
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "lobby")
 	private Lobby lobby; // lobby where the user is currently in
 
