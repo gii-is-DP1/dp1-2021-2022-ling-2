@@ -19,13 +19,13 @@ public class PlayableCardServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = playableCardService.cardCount();
-        assertEquals(count, 0);
+        assertEquals(0, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(playableCardService.findAll()).size();
-        assertEquals(count, 0);
+        assertEquals(0, count);
     }
 
     @Test

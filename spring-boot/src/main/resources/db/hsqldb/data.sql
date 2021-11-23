@@ -107,6 +107,8 @@ INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (14, 5, 'ARCO_
 
 -- It looks like the @manytomany association table forces us to use (INTEGER, INTEGER) so we would have to consider
 -- both male and female characters for each market card. Quite tedious but it is what it is.
+-- The inserts bellow are represent the classes that can use each card, and they are twiced because the same class 
+-- with different sex represents two classes
 
 -- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (1, 'MARKET', 3, 'DAGA_ELFICA', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (1, 1);
