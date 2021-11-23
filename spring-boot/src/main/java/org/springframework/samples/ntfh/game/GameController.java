@@ -28,7 +28,7 @@ public class GameController {
      * @return List of all the games ever played
      * @author pabrobcam
      */
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<Iterable<Game>> getAll() {
         // TODO untested
         Iterable<Game> games = gameService.findAll();

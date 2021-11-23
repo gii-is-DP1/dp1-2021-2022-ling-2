@@ -4,6 +4,7 @@ import * as ROUTES from "./constants/routes";
 import unregisteredUserContext from "./context/unregisteredUser";
 import userContext from "./context/user";
 import useLocalStorage from "./hooks/useLocalStorage";
+import AdminPage from "./pages/admin-page";
 import CreateLobby from "./pages/create-lobby";
 import EditProfile from "./pages/edit-profile";
 import Game from "./pages/game";
@@ -42,6 +43,7 @@ export default function App() {
             />
             <Route exact path={ROUTES.LOBBY} component={Lobby} />
             <Route exact path={ROUTES.GAME} component={Game} />
+            <Route exact path={ROUTES.ADMIN_PAGE} component={AdminPage} />
             <Route component={NotFound} />
             {/* All routes have "exact" since that means that the path has to match the exact string. If a route is not correct, the fallback is ROUTES.NOT_FOUND since it's the only one without "exact" */}
           </Switch>
