@@ -28,6 +28,7 @@ public class SceneService {
     }
 
     @Transactional
+    //Teniendo en cuenta q son cartas fijas, no deberian poder ser guardadas ni eliminadas no?
     public void save(Scene scene) {
         sceneRepository.save(scene);
     }
