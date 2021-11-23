@@ -2,8 +2,6 @@ package org.springframework.samples.ntfh.player;
 
 import java.beans.Transient;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;

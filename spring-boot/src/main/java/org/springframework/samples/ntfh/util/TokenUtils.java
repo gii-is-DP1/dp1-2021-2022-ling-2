@@ -68,7 +68,11 @@ public class TokenUtils {
         List<String> authorities = Stream.of(commaSeparatedAuthorities.split(",")).map(String::trim)
                 .collect(Collectors.toList());
         JwtParser jwtParser = Jwts.parser().setSigningKey(SECRET.getBytes());
+        // We don´t have to assure that the token was issued with our SECRET KEY because
+        // we have a filter in the API that does it before us on every incoming request
         Claims claims = (Claims) jwtParser.parse(tokenWithoutBearer).getBody();
+
+        @SuppressWarnings("unchecked")
         List<String> tokenAuthorities = (List<String>) claims.get("authorities");
         return tokenAuthorities.stream().anyMatch(authorities::contains); // At least contains 1 of them
     }
@@ -83,6 +87,8 @@ public class TokenUtils {
         String tokenWithoutBearer = token.replace("Bearer ", "").trim();
         JwtParser jwtParser = Jwts.parser().setSigningKey(SECRET.getBytes());
         Claims claims = jwtParser.parseClaimsJws(tokenWithoutBearer).getBody();
+
+        @SuppressWarnings("unchecked")
         Map<String, Object> data = (Map<String, Object>) claims.get("data");
         return (String) data.get("username");
     }
