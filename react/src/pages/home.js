@@ -8,7 +8,6 @@ import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 import * as ROUTES from "../constants/routes";
 import Errors from "../components/common/Errors";
-import "../resources/css/nord.css";
 
 export default function Home() {
   const { userToken } = useContext(UserContext);

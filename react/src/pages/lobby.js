@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import Errors from "../components/common/Errors";
@@ -51,6 +52,24 @@ export default function Lobby() {
   const userInLobby = (_user, _lobby) =>
     _lobby.users.map((u) => u.username).includes(_user.username);
 
+  const createGame = async (e) => {
+    e.preventDefault();
+    try{
+      const payload = {
+        name: lobby.name,
+        startTime: Date.now(),
+        hasScenes: lobby.hasScenes,
+      };
+      const response = await axios.post("/games", payload, {
+        headers: {},
+      });
+      const gameId = response.data.gameId;
+      history.push(ROUTES.GAME.replace(":gameId", gameId));
+    } catch (error) {
+      setErrors([...errors, error.message]);
+    }
+  };
+
   useEffect(() => {
     // We have to notify the server we have joined the lobby
     document.title = "NTFH - Game lobby";
@@ -80,20 +99,97 @@ export default function Lobby() {
 
   return (
     <>
-      <div>
-        <Homebar />
-      </div>
+      <Homebar />
       {lobby && (
-        <>
-          <h1>Lobby - {lobby.name}</h1>
-          <Errors errors={errors} />
-          <div>Waiting for people to join</div>
-          <div>Players in the lobby: {lobby.users.length}</div>
-          <br />
-          <UsersInLobby lobby={lobby} />
-        </>
+        <div>
+          <Row>
+            <Col>
+              <h1>Lobby - {lobby.name}</h1>
+              <Errors errors={errors} />
+              <div>Waiting for people to join</div>
+              <div>Players in the lobby: {lobby.users.length}</div>
+              <br />
+              <UsersInLobby lobby={lobby} />
+              <br />
+            </Col>
+            <Col>
+
+              <Form>
+
+                <Form.Group key="stacked-radio">
+                  <Form.Label>Class</Form.Label> <br />
+                  <Form.Check
+                    className="mx-3"
+                    label="None"
+                    name="class"
+                    type="radio"
+                    onChange={(e) => "setClass(0)"}
+                  />
+                  <Form.Check
+                    className="mx-3"
+                    label="Rogue"
+                    name="class"
+                    type="radio"
+                    onChange={(e) => "setClass(1)"}
+                  />
+                  <Form.Check
+                    className="mx-3"
+                    label="Warrior"
+                    name="class"
+                    type="radio"
+                    defaultChecked
+                    onChange={(e) => "setClass(2)"}
+                  />
+                  <Form.Check
+                    className="mx-3"
+                    label="Wizard"
+                    name="class"
+                    type="radio"
+                    defaultChecked
+                    onChange={(e) => "setClass(3)"}
+                  />
+                  <Form.Check
+                    className="mx-3"
+                    label="Paladin"
+                    name="class"
+                    type="radio"
+                    defaultChecked
+                    onChange={(e) => "setClass(4)"}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-1">
+                  <Form.Label>Gender</Form.Label> <br />
+                  <Form.Check
+                    className="mx-3"
+                    label="Male"
+                    name="gender"
+                    type="radio"
+                    defaultChecked
+                    onChange={(e) => "setVariant(0)"}
+                  />
+                  <Form.Check
+                    className="mx-3"
+                    label="Female"
+                    name="gender"
+                    type="radio"
+                    defaultChecked
+                    onChange={(e) => "setVariant(1)"}
+                  />
+                </Form.Group>
+              </Form>
+            </Col>
+          </Row>
+          {/* TODO start game button */}
+          <Row>
+            {lobby.users.length > 1 &&
+              user.username === lobby.host ?
+              <Button type="submit" onClick={createGame}>
+                Start Game
+              </Button>
+              : ""}
+          </Row>
+        </div>
       )}
-      {/* TODO start game button */}
     </>
   );
 }
