@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.scene;
+package org.springframework.samples.ntfh.enemy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/scenes")
-public class SceneController {
-
+@RequestMapping("/horde_enemies")
+public class HordeEnemyController {
+    
     @Autowired
-    private SceneService sceneService;
+    private HordeEnemyService hordeEnemyService;
 
     @GetMapping()
-    public ResponseEntity<Iterable<Scene>> getAll() {
+    public ResponseEntity<Iterable<HordeEnemy>> getAll() {
         // TODO untested
         // We don't know if this method will be useful later
-        Iterable<Scene> scenes = sceneService.findAll();
-        return new ResponseEntity<>(scenes, HttpStatus.OK);
+        Iterable<HordeEnemy> hordeEnemies = hordeEnemyService.findAll();
+        return new ResponseEntity<>(hordeEnemies, HttpStatus.OK);
     }
 
 }
