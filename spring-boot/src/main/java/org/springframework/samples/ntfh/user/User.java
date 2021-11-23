@@ -39,7 +39,7 @@ public class User {
 	private String username;
 
 	@NotBlank
-	@Length(min = 1, message = "The length of the password must be at least 1")
+	@Length(min = 4, message = "Password must be at least 4 characters long")
 	private String password;
 
 	@NotNull
