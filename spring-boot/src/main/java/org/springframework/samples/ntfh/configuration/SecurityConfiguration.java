@@ -38,7 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
 				.antMatchers(HttpMethod.POST, "/users/register").permitAll() // Allow to register
 				.antMatchers(HttpMethod.POST, "/users/login").permitAll() // Allow to login
-				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow to list all users to the admins
+				// TODO hasAnyAuthority("admin") en getAllUsers
+				.antMatchers(HttpMethod.GET, "/users").permitAll() // Allow to list all users to the admins
 				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin") // Update user's profile
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games

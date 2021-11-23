@@ -26,8 +26,6 @@ export default function LobbyBrowser() {
     fetchLobbies();
   }, []);
 
-  console.log(lobbyList);
-
   const refreshPage = () => {
     window.location.reload();
   };
