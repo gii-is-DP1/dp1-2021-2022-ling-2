@@ -100,22 +100,14 @@ public class UserController {
 	}
 
 	@PostMapping("register")
-	public ResponseEntity<Map<String, String>> register(@Valid @RequestBody User user) {
+	public ResponseEntity<Map<String, String>> register( @RequestBody User user) {
 		this.userService.saveUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-		Optional<User> foundUserOptional = this.userService.findUser(user.getUsername());
-		if (!foundUserOptional.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} else if (foundUserOptional.get().getPassword().equals(user.getPassword())) {
-			User foundUser = foundUserOptional.get();
-			String token = TokenUtils.generateJWTToken(foundUser);
-			return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+		String token=userService.loginUser(user);
+		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
 }

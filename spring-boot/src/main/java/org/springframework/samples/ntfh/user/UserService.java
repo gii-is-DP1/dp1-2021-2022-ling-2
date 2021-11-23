@@ -17,14 +17,14 @@ package org.springframework.samples.ntfh.user;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.MissingFormatArgumentException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.samples.ntfh.exceptions.InvalidValueException;
+import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
-import org.springframework.samples.ntfh.exceptions.*;
 import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
@@ -165,5 +165,16 @@ public class UserService {
 			user.setEmail(userInDatabase.getEmail());
 
 		return userRepository.save(user);
+	}
+	@Transactional
+	public String loginUser(User user) throws DataAccessException, InvalidValueException{
+		Optional<User> foundUserOptional= userRepository.findById(user.getUsername());
+		if(!foundUserOptional.isPresent()){
+			throw new DataAccessException("User not found"){};
+		}
+		if(!foundUserOptional.get().getPassword().equals(user.getPassword())){
+			throw new InvalidValueException("Incorrected password"){};
+		}
+		return TokenUtils.generateJWTToken(foundUserOptional.get());
 	}
 }
