@@ -77,8 +77,11 @@ public class LobbyService {
     }
 
     @Transactional
-    public void delete(Lobby lobby) {
-        this.lobbyRepository.delete(lobby);
+    public void deleteLobby(Lobby lobby) {
+        // make sure to remove all FK refrences to this lobby from the users who were in
+        // the lobby
+        lobby.getUsers().forEach(user -> user.setLobby(null));
+        this.lobbyRepository.deleteById(lobby.getId());
     }
 
     /**
@@ -109,9 +112,17 @@ public class LobbyService {
             };
 
         User user = userOptional.get();
+        if (user.getLobby() != null)
+            throw new DataAccessException(
+                    String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
+            };
+
+        user.setLobby(lobby);
+
         lobby.addUser(user);
         lobbyRepository.save(lobby);
         return true;
+
     }
 
     /**
@@ -124,26 +135,23 @@ public class LobbyService {
      * @return true if the player was removed, false if there was some problem
      */
     @Transactional
-    public Boolean removeUserFromLobby(Integer lobbyId, String username) throws DataAccessException {
+    public Boolean removeUserFromLobby(Lobby lobby, String username) throws DataAccessException {
         // TODO untested
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
-        if (!lobbyOptional.isPresent())
-            throw new DataAccessException("The lobby does not exist") {
-            };
-
         Optional<User> userOptional = userService.findUser(username);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user that is being removed from the lobby does not exist") {
             };
 
-        Lobby lobby = lobbyOptional.get();
         User user = userOptional.get();
 
         if (lobby.getHost().equals(user.getUsername()))
+            // this should be handled by .deleteLobby()
             throw new DataAccessException("The host cannot leave the lobby") {
             };
 
         lobby.removeUser(user);
+        user.setLobby(null);
+
         this.updateLobby(lobby);
         return true;
     }

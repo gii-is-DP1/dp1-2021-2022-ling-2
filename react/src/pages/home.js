@@ -1,22 +1,26 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import Errors from "../components/common/Errors";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
+import * as ROUTES from "../constants/routes";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
-import * as ROUTES from "../constants/routes";
-import Errors from "../components/common/Errors";
+import tokenParser from "../helpers/tokenParser";
 // import "../resources/css/nord.css";
 
 export default function Home() {
   const { userToken } = useContext(UserContext);
+  const user = tokenParser(useContext(UserContext));
   const { unregisteredUser, setUnregisteredUser } = useContext(
     UnregisteredUserContext
   );
 
   const [errors, setErrors] = useState([]);
+
+  const isAdmin = (_user) => _user.authorities.includes("admin");
 
   useEffect(() => {
     // make this execute only once
@@ -55,6 +59,13 @@ export default function Home() {
       <Link to={ROUTES.BROWSE_LOBBIES}>
         <Button type="submit">Browse games</Button>
       </Link>
+      {user && isAdmin(user) ? (
+        <Link to={ROUTES.ADMIN_PAGE}>
+          <Button type="submit">Admin Page</Button>
+        </Link>
+      ) : (
+        ""
+      )}
     </span>
   );
 }

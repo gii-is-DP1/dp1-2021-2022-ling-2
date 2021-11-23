@@ -90,7 +90,7 @@ public class UserController {
 
 		userService.updateUser(user, token);
 
-		Boolean sentByAdmin = TokenUtils.tokenHasAuthorities(token, "admin");
+		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		if (sentByAdmin)
 			// Don't return a new token if the one updating the profile is an admin
 			return new ResponseEntity<>(HttpStatus.OK);

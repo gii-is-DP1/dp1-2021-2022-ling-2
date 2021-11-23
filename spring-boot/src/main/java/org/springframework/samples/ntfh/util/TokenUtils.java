@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.samples.ntfh.user.User;
+import org.springframework.samples.ntfh.user.authorities.Authorities;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
@@ -37,9 +38,14 @@ public class TokenUtils {
         User user = new User();
         user.setUsername(userParam.getUsername());
         user.setEmail(userParam.getEmail());
+
+        Set<Authorities> authorities = userParam.getAuthorities();
         user.setAuthorities(userParam.getAuthorities());
 
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
+        // TODO untested
+        String authoritiesString = authorities.stream().map(Authorities::getAuthority).collect(Collectors.joining(","));
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+                .commaSeparatedStringToAuthorityList(authoritiesString);
 
         // WARNING should user be a JSON? does it work if not?
         return Jwts.builder().setSubject(user.getUsername()).claim("data", user)
@@ -57,14 +63,18 @@ public class TokenUtils {
      * @return true if the token has any at least one of the authorities in the
      *         param
      */
-    public static Boolean tokenHasAuthorities(String token, String commaSeparatedAuthorities) {
+    public static Boolean tokenHasAnyAuthorities(String token, String commaSeparatedAuthorities) {
         String tokenWithoutBearer = token.replace("Bearer ", "").trim();
         List<String> authorities = Stream.of(commaSeparatedAuthorities.split(",")).map(String::trim)
                 .collect(Collectors.toList());
         JwtParser jwtParser = Jwts.parser().setSigningKey(SECRET.getBytes());
+        // We don´t have to assure that the token was issued with our SECRET KEY because
+        // we have a filter in the API that does it before us on every incoming request
         Claims claims = (Claims) jwtParser.parse(tokenWithoutBearer).getBody();
+
+        @SuppressWarnings("unchecked")
         List<String> tokenAuthorities = (List<String>) claims.get("authorities");
-        return tokenAuthorities.containsAll(authorities);
+        return tokenAuthorities.stream().anyMatch(authorities::contains); // At least contains 1 of them
     }
 
     /**
@@ -76,14 +86,15 @@ public class TokenUtils {
     public static String usernameFromToken(String token) {
         String tokenWithoutBearer = token.replace("Bearer ", "").trim();
         JwtParser jwtParser = Jwts.parser().setSigningKey(SECRET.getBytes());
-        // TODO debug, fails here
         Claims claims = jwtParser.parseClaimsJws(tokenWithoutBearer).getBody();
+
+        @SuppressWarnings("unchecked")
         Map<String, Object> data = (Map<String, Object>) claims.get("data");
         return (String) data.get("username");
     }
 
     public static void main(String[] args) {
-        final String TEST_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRyZXMiLCJkYXRhIjp7ImVtYWlsIjoiYW5kcmVzQG1haWwuY29tIiwidXNlcm5hbWUiOiJhbmRyZXMifSwiYXV0aG9yaXRpZXMiOlsidXNlciJdLCJpYXQiOjE2Mzc1MTQyODV9.dYM0lG0FYVX5rtHEwl5vTuYIfHH_baA2cAK6mjpPByo6AYIkewgPagJxys9VxWNi83fxeXVq36KgxreSIQs3OA";
+        final String TEST_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRyZXMiLCJkYXRhIjp7InVzZXJuYW1lIjoiYW5kcmVzIiwicGFzc3dvcmQiOm51bGwsImVtYWlsIjoiYW5kcmVzQG1haWwuY29tIiwiZW5hYmxlZCI6ZmFsc2V9LCJhdXRob3JpdGllcyI6WyJ1c2VyIl0sImlhdCI6MTYzNzYxMjc2NX0.jMJyx_yGsvOS6OD6q2cKhnhkalrryeBiApkCb1fpjIGUUxGbzrNy5I_S-Mcuu3iTne0W3FAvioDAIfT9jB3gVA";
         User testUser = new User();
         testUser.setUsername("andres");
         testUser.setEmail("andres@test.com");
@@ -92,7 +103,7 @@ public class TokenUtils {
         testUser.setAuthorities(Set.of());
         String generatedToken = generateJWTToken(testUser);
         System.out.println(generatedToken);
-        tokenHasAuthorities(generatedToken, "user");
+        tokenHasAnyAuthorities(TEST_TOKEN, "user");
 
         String username = usernameFromToken(generatedToken);
         System.out.println(username);
