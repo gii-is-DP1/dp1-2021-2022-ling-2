@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
 																				// credentials
 				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
-				.anyRequest().permitAll(); // else, deny
+				.anyRequest().denyAll(); // else, deny
 
 		// Configuración para que funcione la consola de administración
 		// de la BD H2 (deshabilitar las cabeceras de protección contra
