@@ -36,6 +36,11 @@ public class ExceptionHandlerConfiguration {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> illegalArgumentExceptionHandler(HttpServletRequest request,
+            IllegalArgumentException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
     // TODO add more custom exceptions here. The structure is the same, the only
     // thing changing should be the HttpStatus
 }

@@ -53,7 +53,7 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User saveUser(User user) throws DataAccessException {
+	public User saveUser(User user) throws DataAccessException, IllegalArgumentException {
 
 		Optional<User> userWithSameUsername = userRepository.findById(user.getUsername());
 		if (userWithSameUsername.isPresent())
@@ -63,6 +63,22 @@ public class UserService {
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 		if (userWithSameEmail.isPresent())
 			throw new DataAccessException("This email is already in use") {
+			};
+
+		if (user.getPassword() == null || user.getPassword().isEmpty())
+			throw new IllegalArgumentException("Password is required") {
+			};
+
+		if (user.getPassword().length() < 4)
+			throw new IllegalArgumentException("Password must be at least 8 characters long") {
+			};
+
+		if (user.getUsername().length() < 4)
+			throw new IllegalArgumentException("Username must be at least 4 characters long") {
+			};
+
+		if (user.getUsername().length() > 20)
+			throw new IllegalArgumentException("Username must be at most 20 characters long") {
 			};
 
 		user.setEnabled(true);
@@ -138,11 +154,8 @@ public class UserService {
 			throw new DataIntegrityViolationException("This email is already in use") {
 			};
 		}
-		// TODO this is already checked in the User entity, do we also need to ckeck it
-		// here or is the exception propagated all the way to the HttpEntity<>()? We
-		// will have to test it
-		if (user.getPassword().length() < 8)
-			throw new DataIntegrityViolationException("Password must be at least 4 characters long") {
+		if (user.getPassword().length() < 4)
+			throw new IllegalArgumentException("Password must be at least 4 characters long") {
 			};
 
 		// Before updating, make sure there are no null values. If the user didn't send

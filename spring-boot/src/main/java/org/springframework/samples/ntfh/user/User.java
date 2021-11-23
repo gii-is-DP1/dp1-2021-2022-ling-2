@@ -35,7 +35,7 @@ import lombok.Setter;
 public class User {
 	@Id
 	@NotBlank
-	@Length(min = 4, max = 20, message = " The username must be 4-20 characters long")
+	@Length(min = 4, max = 20, message = "The username must be 4-20 characters long")
 	private String username;
 
 	@NotBlank
