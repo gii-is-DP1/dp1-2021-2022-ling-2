@@ -28,6 +28,7 @@ public class SceneService {
     }
 
     @Transactional
+    //Si se supone que estan definidas en cartas, no pueden añadirse ni eliminarse nuevas
     public void save(Scene scene) {
         sceneRepository.save(scene);
     }
