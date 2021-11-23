@@ -25,10 +25,4 @@ public class MarketCardServiceTest {
         assertEquals(count, 0);
     }
 
-    @Test
-    public List<MarketCard> testGetAll(){
-        List<MarketCard> res = Lists.newArrayList(marketCardService.findAll());
-        return res;        
-    }
-
 }

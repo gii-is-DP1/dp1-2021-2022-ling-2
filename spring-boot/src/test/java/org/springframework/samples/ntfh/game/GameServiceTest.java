@@ -24,10 +24,4 @@ public class GameServiceTest {
         assertEquals(count, 0);
     }
 
-    @Test
-    public List<Game> testGetAll(){
-        List<Game> res = Lists.newArrayList(gameService.findAll());
-        return res;        
-    }
-
 }

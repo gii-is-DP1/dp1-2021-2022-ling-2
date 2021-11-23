@@ -23,7 +23,7 @@ public class PlayableCardService {
     }
 
     @Transactional
-    public Optional<PlayableCard> findSceneById(Integer id) {
+    public Optional<PlayableCard> findPlayableCardById(Integer id) {
         return cardRepository.findById(id);
     }
 
