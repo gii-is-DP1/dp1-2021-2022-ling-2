@@ -27,12 +27,4 @@ public class SceneService {
         return sceneRepository.findById(id);
     }
 
-    @Transactional
-    public void save(Scene scene) {
-        sceneRepository.save(scene);
-    }
-
-    public void delete(int sceneId) {
-        sceneRepository.deleteById(sceneId);
-    }
 }

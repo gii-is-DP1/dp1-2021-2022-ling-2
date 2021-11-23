@@ -1,7 +1,9 @@
 package org.springframework.samples.ntfh.scene;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,6 +22,18 @@ public class SceneServiceTest {
         // By doing this we will make this test independent of the initial data.
         Integer count = sceneService.sceneCount();
         assertEquals(count, 12);
+    }
+
+    @Test
+    public void testfindAll() {
+        Integer count = Lists.newArrayList(sceneService.findAll()).size();
+        assertEquals(count, 12);
+    }
+
+    @Test
+    public void testfindById() {
+        Scene tester = this.sceneService.findSceneById(8).orElse(null);
+        assertTrue(tester.getSceneTypeEnum().equals(SceneTypeEnum.PORTAL_DE_ULTHAR));
     }
 
 }
