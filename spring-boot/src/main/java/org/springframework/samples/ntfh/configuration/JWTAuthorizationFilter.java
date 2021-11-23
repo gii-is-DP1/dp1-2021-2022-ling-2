@@ -1,9 +1,7 @@
 package org.springframework.samples.ntfh.configuration;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -26,7 +24,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	private final String HEADER = "Authorization";
 	private final String PREFIX = "Bearer ";
-	private final String SECRET = "NoTimeForHeroesSecretKey";
+	private final String SECRET = "VGhpcyBpcyBhIHNlY3JldCBrZXkgZm9yIG91ciBObyBUaW1lIGZvciBIZXJvZXMgZ2FtZS4gWW91IGtub3csIHRoZSBwb2ludCBpcyB0aGF0IHdlIGNhbiB1c2UgdGhpcyB0byB2YWxpZGF0ZSBpZiBhIHRva2VuIGhhcyBiZWVuIGlzc3VlZCBieSB1cyBvciBub3Q=";
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -52,8 +50,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	private Claims validateToken(HttpServletRequest request) {
 		String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
-		Claims res = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
-		return res;
+		return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
 	}
 
 	/**
@@ -64,12 +61,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	private void setUpSpringAuthentication(Claims claims) {
 		@SuppressWarnings("unchecked")
 		List<String> authorities = (List) claims.get("authorities");
-
-		// Map<String, String> data = (Map<String, String>) claims.get("data");
-		// String authoritiesString = data.get("authorities");
-		// List<String> authorities = Arrays
-		// .asList(authoritiesString.substring(1, authoritiesString.length() -
-		// 1).split(","));
 
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
 				authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
