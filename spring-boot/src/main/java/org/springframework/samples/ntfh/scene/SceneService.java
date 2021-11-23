@@ -27,13 +27,4 @@ public class SceneService {
         return sceneRepository.findById(id);
     }
 
-    @Transactional
-    //Si se supone que estan definidas en cartas, no pueden añadirse ni eliminarse nuevas
-    public void save(Scene scene) {
-        sceneRepository.save(scene);
-    }
-
-    public void delete(int sceneId) {
-        sceneRepository.deleteById(sceneId);
-    }
 }
