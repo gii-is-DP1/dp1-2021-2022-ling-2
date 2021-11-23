@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -49,16 +50,22 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private boolean enabled; // If a user gets banned, he/she will get disabled
 
-	// TODO this should be ManyToOne but the cascade type is yet to be determined
+	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "game")
 	private Game game; // game where the user is currently in
 
-	// TODO this should be ManyToOne but the cascade type is yet to be determined
+	// TODO The cascade type is yet to be determined
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "lobby")
 	private Lobby lobby; // lobby where the user is currently in
 
 	@ManyToOne // TODO set appropiate cascade type
-	private Character character; // Character that the user has currently selected. Will be set during a lobby,
-									// and will stay the same during the entire game he/she is playing.
+	@JoinColumn(name = "character")
+	private Character character; // Character that the user has currently
+	// selected. Will be set during a lobby,
+	// and will stay the same during the entire game he/she is playing.
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore
