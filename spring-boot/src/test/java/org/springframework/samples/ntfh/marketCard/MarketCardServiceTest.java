@@ -2,6 +2,8 @@ package org.springframework.samples.ntfh.marketCard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -22,7 +24,13 @@ public class MarketCardServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = marketCardService.marketCardCount();
-        assertEquals(count, 0);
+        assertEquals(count, 14);
     }
+
+    @Test
+    public void testFindAll() {
+    //    Integer count = ArrayList(marketCardService.findAll());
+    }
+
 
 }
