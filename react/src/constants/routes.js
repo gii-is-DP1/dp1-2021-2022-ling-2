@@ -8,3 +8,4 @@ export const BROWSE_LOBBIES = "/lobbies"; // GET
 export const GAME = "/games/:gameId";
 export const LOBBY = "/lobbies/:lobbyId";
 export const NOT_FOUND = "/not-found";
+export const ADMIN_PAGE = "/admin";
