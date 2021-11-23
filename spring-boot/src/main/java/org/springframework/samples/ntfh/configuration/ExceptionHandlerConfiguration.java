@@ -28,9 +28,8 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     private BasicErrorController errorController;
 
     private static ResponseEntity<Object> buildResponseEntity(String message, HttpStatus status) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("message", message);
-        body.put("status", +status.value() + " " + status.name());
+        Map<String, Object> body = Map.of("timestamp", new java.util.Date(), "status", status.value(), "error",
+                status.getReasonPhrase(), "message", message);
         return new ResponseEntity<>(body, status);
     }
 
