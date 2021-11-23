@@ -20,15 +20,11 @@ public class Scene extends BaseEntity {
     private SceneTypeEnum sceneTypeEnum;
 
     @Transient
-    private String backImage;
-
-    @Transient
-    private String frontImage;
-
     public String getFrontImage() {
         return null;
     }
 
+    @Transient
     public String getBackImage() {
         return null;
     }

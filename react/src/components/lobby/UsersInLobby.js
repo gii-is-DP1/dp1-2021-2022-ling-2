@@ -11,7 +11,7 @@ export default function UsersInLobby(props) {
   const [errors, setErrors] = useState([]);
   const viewer = tokenParser(useContext(UserContext)); // user who is logged in
 
-  const isHost = (user) => user.username === lobby.host;
+  const isHost = (user) => user.username === lobby.host.username;
   // craeate arrow function in a variable
 
   return (

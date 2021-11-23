@@ -169,7 +169,7 @@ public class LobbyController {
         Lobby lobby = lobbyOptional.get();
 
         String usernameFromToken = TokenUtils.usernameFromToken(token);
-        String usernameFromLobbyHost = lobby.getHost();
+        String usernameFromLobbyHost = lobby.getHost().getUsername();
 
         Boolean requestByUserLeaving = usernameFromToken.equals(username);
         Boolean requestByHost = usernameFromToken.equals(usernameFromLobbyHost);

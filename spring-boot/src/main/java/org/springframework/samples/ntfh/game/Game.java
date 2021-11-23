@@ -1,10 +1,11 @@
 package org.springframework.samples.ntfh.game;
 
-import java.security.Timestamp;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -31,41 +32,36 @@ import lombok.Setter;
 @Table(name = "games")
 public class Game extends BaseEntity {
 
-    @NotNull // Set from Lobby
-    private String name;
-
     @NotNull // Set by the server to Time.now()
-    private Timestamp startTime;
+    private Long startTime; // unix timestamp
 
     // Set by the server when the game finished. null meanwhile
-    private Timestamp finishTime;
+    private Long finishTime; // unix timestamp
 
     @NotNull // Set from Lobby
     private Boolean hasScenes;
 
     // TODO hacer la asociacion tambien desde parte de comments? bidireccional?
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL) // Deleting the game will delete the comments
     @JsonIgnore
     private Set<Comment> comments;
 
     // Set from Lobby by creating Players instances from users
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany // TODO cascade? If we set CascadeType.ALL then deleting the game will delete
+                // the players. It shouldn't be like that.
     private Set<Player> players;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
-    private User host;
+    @ManyToOne
+    private Player leader;
 
-    @Transient
-    private Boolean hasFinished;
-
-    @Transient
-    private Long duration;
+    @ManyToOne
+    private Player winner;
 
     /**
      * @author andrsdt
      */
-    public Boolean hasFinished() {
+    @Transient
+    public Boolean getHasFinished() {
         return finishTime != null;
     }
 
@@ -75,10 +71,11 @@ public class Game extends BaseEntity {
      * @author andrsdt
      * @return Long duration of the time in seconds
      */
+    @Transient
     public Long getDuration() {
-        if (hasFinished == null)
+        if (finishTime == null)
             return null; // To avoid NullPointerException if the game hasn't finished
-        Long timeInMilliseconds = finishTime.getTimestamp().getTime() - startTime.getTimestamp().getTime();
+        Long timeInMilliseconds = finishTime - startTime;
         return timeInMilliseconds / 1000;
     }
 }

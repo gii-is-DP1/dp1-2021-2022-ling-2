@@ -1,8 +1,5 @@
 package org.springframework.samples.ntfh.achievement;
 
-import java.util.Date;
-import java.util.function.Predicate;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 

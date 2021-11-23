@@ -23,12 +23,6 @@ public class Warlord extends EnemyEntity {
     @NotNull
     private Integer endurance;
 
-    @Transient
-    private String frontImage;
-
-    @Transient
-    private String backImage;
-
     /**
      * Derived. Return the route to the front image of a warlord. Can be obtained by
      * knowing the WarlordType
@@ -36,6 +30,7 @@ public class Warlord extends EnemyEntity {
      * @author andrsdt
      * @return String route to the card's front image
      */
+    @Transient
     public String getFrontImage() {
         return "/cards/enemies/warlords/" + warlordTypeEnum.toString().toLowerCase() + ".png";
     }
@@ -46,6 +41,7 @@ public class Warlord extends EnemyEntity {
      * @author andrsdt
      * @return String route to the card's back image
      */
+    @Transient
     public String getBackImage() {
         return "/cards/enemies/warlords/backs/standard.png";
     }

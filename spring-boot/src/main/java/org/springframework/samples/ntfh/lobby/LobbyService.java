@@ -106,9 +106,17 @@ public class LobbyService {
             };
 
         User user = userOptional.get();
+        if (user.getLobby() != null)
+            throw new DataAccessException(
+                    String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
+            };
+
         user.setLobby(lobby);
-        userService.updateUser(user);
+
+        lobby.addUser(user);
+        lobbyRepository.save(lobby);
         return true;
+
     }
 
     /**
@@ -136,7 +144,12 @@ public class LobbyService {
 
         lobby.removeUser(user);
         user.setLobby(null);
+<<<<<<< HEAD
         userService.updateUser(user);
+=======
+
+        this.updateLobby(lobby);
+>>>>>>> origin/anddurter
         return true;
     }
 

@@ -28,12 +28,6 @@ public class HordeEnemy extends EnemyEntity {
     @NotNull
     private Integer extraGlory;
 
-    @Transient
-    private String backImage;
-
-    @Transient
-    private String frontImage;
-
     /**
      * Derived. Return the route to the image of an enemy. Can be obtained by
      * knowing the HordeEnemyType and, in case of the warrior, also the loot behind
@@ -42,6 +36,7 @@ public class HordeEnemy extends EnemyEntity {
      * @author andrsdt
      * @return route to the card image
      */
+    @Transient
     public String getFrontImage() {
         // WarlordType.GURDRUG -> gurdrug
         HordeEnemyTypeEnum type = hordeEnemyType.getHordeEnemyTypeEnum();
@@ -60,6 +55,7 @@ public class HordeEnemy extends EnemyEntity {
      * @author andrsdt
      * @return String route to the card's back image
      */
+    @Transient
     public String getBackImage() {
         return String.format("/cards/enemies/horde_enemies/backs/%dgold_%dglory.png", gold, extraGlory);
     }

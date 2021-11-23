@@ -18,6 +18,10 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.validator.constraints.Length;
+<<<<<<< HEAD
+=======
+import org.springframework.samples.ntfh.character.Character;
+>>>>>>> origin/anddurter
 import org.springframework.samples.ntfh.game.Game;
 import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.samples.ntfh.user.authorities.Authorities;
@@ -39,7 +43,7 @@ public class User {
 	private String username;
 
 	@NotBlank
-	@Length(min = 1, message = "The length of the password must be at least 1")
+	@Length(min = 4, message = "Password must be at least 4 characters long")
 	private String password;
 
 	@NotNull
@@ -50,9 +54,25 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private boolean enabled; // If a user gets banned, he/she will get disabled
 
-	// TODO Commented until I fix the FK issue on Game.java
-	@OneToOne(mappedBy = "host")
-	private Game game;
+	// TODO the cascade type is yet to be determined
+	// @OneToOne(mappedBy = "host")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "game")
+	@JsonIgnore
+	private Game game; // game where the user is currently in
+
+	// TODO The cascade type is yet to be determined
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "lobby")
+	@JsonIgnore
+	private Lobby lobby; // lobby where the user is currently in
+
+	@ManyToOne // TODO set appropiate cascade type
+	@JoinColumn(name = "character")
+	@JsonIgnore
+	private Character character; // Character that the user has currently
+	// selected. Will be set during a lobby,
+	// and will stay the same during the entire game he/she is playing.
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore
