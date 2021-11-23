@@ -52,9 +52,20 @@ export default function Lobby() {
   const userInLobby = (_user, _lobby) =>
     _lobby.users.map((u) => u.username).includes(_user.username);
 
+    
+  {/* TODO class and variant creation */}
+  const setClass = (i) => {
+    
+  }
+
+  const setVariant = (i) => {
+
+  }
+
   const createGame = async (e) => {
     e.preventDefault();
     try{
+      {/* TODO payload*/}
       const payload = {
         name: lobby.name,
         startTime: Date.now(),
@@ -123,14 +134,14 @@ export default function Lobby() {
                     label="None"
                     name="class"
                     type="radio"
-                    onChange={(e) => "setClass(0)"}
+                    onChange={(e) => setClass(0)}
                   />
                   <Form.Check
                     className="mx-3"
                     label="Rogue"
                     name="class"
                     type="radio"
-                    onChange={(e) => "setClass(1)"}
+                    onChange={(e) => setClass(1)}
                   />
                   <Form.Check
                     className="mx-3"
@@ -138,7 +149,7 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => "setClass(2)"}
+                    onChange={(e) => setClass(2)}
                   />
                   <Form.Check
                     className="mx-3"
@@ -146,7 +157,7 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => "setClass(3)"}
+                    onChange={(e) => setClass(3)}
                   />
                   <Form.Check
                     className="mx-3"
@@ -154,18 +165,18 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => "setClass(4)"}
+                    onChange={(e) => setClass(4)}
                   />
                 </Form.Group>
                 <Form.Group className="mb-1">
-                  <Form.Label>Gender</Form.Label> <br />
+                  <Form.Label>Variant</Form.Label> <br />
                   <Form.Check
                     className="mx-3"
                     label="Male"
                     name="gender"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => "setVariant(0)"}
+                    onChange={(e) => setVariant(0)}
                   />
                   <Form.Check
                     className="mx-3"
@@ -173,7 +184,7 @@ export default function Lobby() {
                     name="gender"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => "setVariant(1)"}
+                    onChange={(e) => setVariant(1)}
                   />
                 </Form.Group>
               </Form>

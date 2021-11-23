@@ -114,7 +114,6 @@ export default function AdminPage() {
                                     history.push(`/profile/${user.username}/edit`)}>
                                     Edit profile
                                 </Button>
-
                             </tr>
                         ))}
                         </tbody>
