@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -18,10 +17,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.validator.constraints.Length;
-<<<<<<< HEAD
-=======
 import org.springframework.samples.ntfh.character.Character;
->>>>>>> origin/anddurter
 import org.springframework.samples.ntfh.game.Game;
 import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.samples.ntfh.user.authorities.Authorities;
@@ -56,13 +52,13 @@ public class User {
 
 	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name = "game")
 	@JsonIgnore
 	private Game game; // game where the user is currently in
 
 	// TODO The cascade type is yet to be determined
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name = "lobby")
 	@JsonIgnore
 	private Lobby lobby; // lobby where the user is currently in
@@ -77,9 +73,4 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore
 	private Set<Authorities> authorities;
-
-	@ManyToOne
-	@JoinColumn(name = "lobby_id")
-	@JsonIgnore
-	private Lobby lobby;
 }

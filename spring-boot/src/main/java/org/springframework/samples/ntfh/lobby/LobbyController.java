@@ -202,7 +202,6 @@ public class LobbyController {
     @DeleteMapping("{lobbyId}")
     public ResponseEntity<Lobby> deleteLobby(@PathVariable("lobbyId") Integer lobbyId,
             @RequestHeader("Authorization") String token) {
-
         return null;
     }
 }

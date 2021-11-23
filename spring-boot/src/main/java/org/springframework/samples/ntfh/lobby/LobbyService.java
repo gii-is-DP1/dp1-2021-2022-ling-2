@@ -76,7 +76,10 @@ public class LobbyService {
 
     @Transactional
     public void deleteLobby(Lobby lobby) {
-        this.lobbyRepository.delete(lobby);
+        // make sure to remove all FK refrences to this lobby from the users who were in
+        // the lobby
+        lobby.getUsers().forEach(user -> user.setLobby(null));
+        this.lobbyRepository.deleteById(lobby.getId());
     }
 
     /**
@@ -135,6 +138,7 @@ public class LobbyService {
         if (!userOptional.isPresent())
             throw new DataAccessException("The user that is being removed from the lobby does not exist") {
             };
+
         User user = userOptional.get();
 
         if (lobby.getHost().equals(user.getUsername()))
@@ -144,12 +148,8 @@ public class LobbyService {
 
         lobby.removeUser(user);
         user.setLobby(null);
-<<<<<<< HEAD
-        userService.updateUser(user);
-=======
 
         this.updateLobby(lobby);
->>>>>>> origin/anddurter
         return true;
     }
 

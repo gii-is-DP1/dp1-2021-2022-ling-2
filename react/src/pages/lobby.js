@@ -102,7 +102,7 @@ export default function Lobby() {
           <h1>Lobby - {lobby.name}</h1>
           <Errors errors={errors} />
           <Button onClick={(e) => handleRemoveUserFromLobby(user.username)}>
-            {lobby.host === user.username ? "Delete" : "Leave"} lobby
+            {lobby.host.username === user.username ? "Delete" : "Leave"} lobby
           </Button>
           <div>Waiting for people to join</div>
           <div>Players in the lobby: {lobby.users.length}</div>

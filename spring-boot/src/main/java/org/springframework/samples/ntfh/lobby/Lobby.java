@@ -52,12 +52,12 @@ public class Lobby extends BaseEntity {
     @OneToMany(mappedBy = "lobby")
     private Set<User> users; // Managed by the server
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "leader", referencedColumnName = "username")
     private User leader; // leader of the game. Currently being chosen by the host
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "host", referencedColumnName = "username")
     private User host;// The host column in the game will only have the host's
     // username
