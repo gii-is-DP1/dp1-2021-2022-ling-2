@@ -88,9 +88,10 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 
-		Boolean sentByAdmin = TokenUtils.tokenHasAuthorities(token, "admin");
+		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		// TODO untested
+		// TODO these validations should be done in the service. We should only consider
+		// the "happy path"
 		// If the token is not from the user nor an admin, return unauthorized
 		if (!sentBySameUser && !sentByAdmin)
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -107,7 +108,7 @@ public class UserController {
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
 
-		userService.updateUser(user);
+		userService.updateUser(user, token);
 
 		if (sentByAdmin)
 			// Don't return a new token if the one updating the profile is an admin
