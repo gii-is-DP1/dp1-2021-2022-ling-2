@@ -54,15 +54,18 @@ public class User {
 	// @OneToOne(mappedBy = "host")
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "game")
+	@JsonIgnore
 	private Game game; // game where the user is currently in
 
 	// TODO The cascade type is yet to be determined
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "lobby")
+	@JsonIgnore
 	private Lobby lobby; // lobby where the user is currently in
 
 	@ManyToOne // TODO set appropiate cascade type
 	@JoinColumn(name = "character")
+	@JsonIgnore
 	private Character character; // Character that the user has currently
 	// selected. Will be set during a lobby,
 	// and will stay the same during the entire game he/she is playing.
