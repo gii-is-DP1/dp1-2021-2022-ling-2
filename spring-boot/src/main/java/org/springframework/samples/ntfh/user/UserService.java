@@ -17,12 +17,14 @@ package org.springframework.samples.ntfh.user;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.MissingFormatArgumentException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
+import org.springframework.samples.ntfh.exceptions.*;
 import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
@@ -53,8 +55,12 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User saveUser(User user) throws DataAccessException {
+	public User saveUser(User user) throws DataAccessException , MissingAttributeException{
 
+		if(user.getUsername().isEmpty()) throw new MissingAttributeException("The username can not be empty"){};
+		if(user.getPassword().isEmpty()) throw new MissingAttributeException("The password can not be empty"){};
+		if(user.getEmail().isEmpty()) throw new MissingAttributeException("The email can not be empty"){};
+		
 		Optional<User> userWithSameUsername = userRepository.findById(user.getUsername());
 		if (userWithSameUsername.isPresent()) {
 			throw new DataAccessException("This username is already in use") {
@@ -122,8 +128,12 @@ public class UserService {
 	 */
 	@Transactional
 	public User updateUser(User user, String token)
-			throws DataAccessException, DataIntegrityViolationException, NonMatchingTokenException {
+			throws DataAccessException, DataIntegrityViolationException, NonMatchingTokenException, MissingAttributeException {
 
+		if(user.getUsername().isEmpty()) throw new MissingAttributeException("The username can not be empty"){};
+		if(user.getPassword().isEmpty()) throw new MissingAttributeException("The password can not be empty"){};
+		if(user.getEmail().isEmpty()) throw new MissingAttributeException("The email can not be empty"){};
+		
 		Boolean sentByAdmin = TokenUtils.tokenHasAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
 		if (!sentBySameUser && !sentByAdmin)
@@ -143,7 +153,7 @@ public class UserService {
 		// TODO this is already checked in the User entity, do we also need to ckeck it
 		// here or is the exception propagated all the way to the HttpEntity<>()? We
 		// will have to test it
-		if (user.getPassword().length() < 8)
+		if (user.getPassword().length() < 4)
 			throw new DataIntegrityViolationException("Password must be at least 4 characters long") {
 			};
 
