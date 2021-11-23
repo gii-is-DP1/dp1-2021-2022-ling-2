@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useHistory, Link } from "react-router-dom";
