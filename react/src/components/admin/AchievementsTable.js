@@ -35,7 +35,9 @@ export default function AchievementsTable() {
           <tr>
             <th>{achievement.name}</th>
             <th>{achievement.description}</th>
-            
+            <th>
+              <Button type="submit" onClick={""}>Edit</Button>
+            </th>
           </tr>
         })}
       </tbody>
