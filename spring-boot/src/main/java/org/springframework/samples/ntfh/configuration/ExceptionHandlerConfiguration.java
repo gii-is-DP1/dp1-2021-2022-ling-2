@@ -10,6 +10,9 @@ import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorContro
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.ntfh.exceptions.InvalidValueException;
+import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
+import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,9 +38,6 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Object> dataAccessExceptionHandler(HttpServletRequest request, DataAccessException ex) {
-        // TODO return a proper error response in JSON format so the frontend can handle
-        // it easily
-
         return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -50,6 +50,23 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> illegalArgumentExceptionHandler(HttpServletRequest request,
             IllegalArgumentException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MaximumLobbyCapacityException.class)
+    public ResponseEntity<Object> maximumLobbyCapacityExceptionHandler(HttpServletRequest request,
+            MaximumLobbyCapacityException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(MissingAttributeException.class)
+    public ResponseEntity<Object> missingAttributeExceptionHandler(HttpServletRequest request,
+            MaximumLobbyCapacityException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidValueException.class)
+    public ResponseEntity<Object> InvalidValueException(HttpServletRequest request, MaximumLobbyCapacityException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
     // TODO add more custom exceptions here. The structure is the same, the only

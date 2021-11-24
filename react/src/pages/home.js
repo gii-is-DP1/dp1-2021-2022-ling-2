@@ -2,23 +2,23 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Errors from "../components/common/Errors";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import * as ROUTES from "../constants/routes";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import ErrorContext from "../context/error";
+
 // import "../resources/css/nord.css";
 
 export default function Home() {
+  const { errors, setErrors } = useContext(ErrorContext); // hook
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
   const { unregisteredUser, setUnregisteredUser } = useContext(
     UnregisteredUserContext
   );
-
-  const [errors, setErrors] = useState([]);
 
   const isAdmin = (_user) => _user.authorities.includes("admin");
 
@@ -31,7 +31,7 @@ export default function Home() {
           const response = await axios.get("/unregistered-users");
           setUnregisteredUser(response.data);
         } catch (error) {
-          setErrors([...errors, error.message]);
+          setErrors([...errors, error.response.data]);
         }
       }
       fetchData();
@@ -45,7 +45,6 @@ export default function Home() {
   return (
     <span>
       <h1>Home</h1>
-      <Errors errors={errors} />
       {userToken ? (
         <>
           <Sidebar />
