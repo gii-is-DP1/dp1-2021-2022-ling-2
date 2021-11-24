@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.playableCard;
+package org.springframework.samples.ntfh.playablecard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,17 +26,6 @@ public class PlayableCardServiceTest {
     public void testfindAll() {
         Integer count = Lists.newArrayList(playableCardService.findAll()).size();
         assertEquals(0, count);
-    }
-
-    @Test
-    public void testfindById() {
-        //TODO
-    }
-
-    @Test
-    public void testfindAll() {
-        Integer count = Lists.newArrayList(playableCardService.findAll()).size();
-        assertEquals(count, 0);
     }
 
     @Test

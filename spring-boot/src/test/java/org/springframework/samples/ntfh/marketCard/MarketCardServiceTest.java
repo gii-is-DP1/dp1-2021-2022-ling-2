@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.marketCard;
+package org.springframework.samples.ntfh.marketcard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
