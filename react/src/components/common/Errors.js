@@ -46,7 +46,7 @@ export default function Errors() {
       {errors.map((errorObj, idx) => (
         <Alert
           key={idx}
-          className="m-2 shadow"
+          className="m-2 p-1 pt-2 pl-2 shadow"
           variant={getColor(errorObj.status)}
           onClose={() => {
             const newErrors = [...errors];
@@ -56,7 +56,10 @@ export default function Errors() {
           dismissible
         >
           <Alert.Heading>{errorObj.error}</Alert.Heading>
-          <p>{errorObj.message}</p>
+          <p>
+            {errorObj.message ??
+              "An error should be here... We are working on it"}
+          </p>
         </Alert>
       ))}
     </div>
