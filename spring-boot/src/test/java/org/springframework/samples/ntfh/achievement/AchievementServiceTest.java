@@ -17,7 +17,7 @@ public class AchievementServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = achievementService.achievementCount();
-        assertEquals(count, 0);
+        assertEquals(0, count);
     }
 
 }
