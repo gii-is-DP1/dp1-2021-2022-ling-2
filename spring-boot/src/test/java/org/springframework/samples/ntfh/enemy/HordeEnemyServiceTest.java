@@ -1,7 +1,6 @@
 package org.springframework.samples.ntfh.enemy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.assertj.core.util.Lists;
 import org.junit.Test;
