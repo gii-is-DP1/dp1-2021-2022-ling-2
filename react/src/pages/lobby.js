@@ -180,7 +180,7 @@ export default function Lobby() {
                   <Form.Label>Class</Form.Label> <br />
                   <Form.Check
                     className="mx-3"
-                    label="None"
+                    label="🌫️ None"
                     name="class"
                     type="radio"
                     defaultChecked
@@ -188,7 +188,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Rogue"
+                    label="🗡️ Rogue"
                     name="class"
                     type="radio"
                     disabled={
@@ -198,7 +198,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Warrior"
+                    label="🛡 Warrior"
                     name="class"
                     type="radio"
                     disabled={
@@ -209,7 +209,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Wizard"
+                    label="🧙 Wizard"
                     name="class"
                     type="radio"
                     disabled={
@@ -220,7 +220,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Ranger"
+                    label="🏹 Ranger"
                     name="class"
                     type="radio"
                     disabled={
@@ -234,7 +234,7 @@ export default function Lobby() {
                   <Form.Label>Variant</Form.Label> <br />
                   <Form.Check
                     className="mx-3"
-                    label="Male"
+                    label="♂ Male"
                     name="gender"
                     type="radio"
                     defaultChecked
@@ -242,7 +242,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Female"
+                    label="♀ Female"
                     name="gender"
                     type="radio"
                     onChange={(e) => setGender("female")}

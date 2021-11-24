@@ -7,7 +7,7 @@ export default function Homebar() {
   return (
     <div>
       <Link to={ROUTES.HOME}>
-        <h1>Home</h1>
+        <h2>🏠 Home</h2>
       </Link>
     </div>
   );
