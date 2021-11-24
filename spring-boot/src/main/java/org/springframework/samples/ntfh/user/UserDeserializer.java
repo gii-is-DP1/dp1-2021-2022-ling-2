@@ -12,12 +12,17 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.ntfh.character.Character;
+import org.springframework.samples.ntfh.character.CharacterService;
 
 @JsonComponent
 public class UserDeserializer extends JsonDeserializer<User> {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CharacterService characterService;
 
     /**
      * @param deserializationContext containing either the user id or the username
@@ -58,18 +63,34 @@ public class UserDeserializer extends JsonDeserializer<User> {
             user.setUsername(node.get("username") == null ? userFromDb.getUsername() : node.get("username").asText());
             user.setEmail(node.get("email") == null ? userFromDb.getEmail() : node.get("email").asText());
 
+            // Set character property
+            if (node.get("character") != null) {
+                Integer characterId = null;
+                if (node.get("character").getNodeType().equals(JsonNodeType.NUMBER)) {
+                    characterId = node.get("character").asInt();
+                } else {
+                    characterId = node.get("character").get("id").asInt();
+                }
+                Optional<Character> characterFromIdOptional = characterService.findCharacterById(characterId);
+                if (characterFromIdOptional.isPresent()) {
+                    Character characterFromId = characterFromIdOptional.get();
+                    user.setCharacter(characterFromId);
+                }
+            }
             // TODO possible point of failure. Currently, if we pass these values as
             // parameters in JSON they won't be considered and their value will be set to
             // the current value on the database. This is due to the effort in parsing
             // custom classes. In case we need this at some point, we would implement
             // parsers that creates objects from the JSON and then sets the values on the
             // object.
-            user.setCharacter(userFromDb.getCharacter());
+
             user.setGame(userFromDb.getGame());
             user.setLobby(userFromDb.getLobby());
 
             return user;
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             throw new IOException(e);
         }
     }

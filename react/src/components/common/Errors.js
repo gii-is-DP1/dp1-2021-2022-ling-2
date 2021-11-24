@@ -43,26 +43,28 @@ export default function Errors() {
 
   return (
     <div className="fixed-top" id="errors-div">
-      {errors.map((errorObj, idx) =>
-        errorObj?.message && (
-          <Alert
-            key={idx}
-            className="m-2 p-1 pt-2 pl-2 shadow"
-            variant={getColor(errorObj.status)}
-            onClose={() => {
-              const newErrors = [...errors];
-              newErrors.pop(errorObj);
-              setErrors(newErrors);
-            }}
-            dismissible
-          >
-            <Alert.Heading>{errorObj.error}</Alert.Heading>
-            <p>
-              {errorObj.message ??
-                "An error should be here... We are working on it"}
-            </p>
-          </Alert>
-        ))}
+      {errors.map(
+        (errorObj, idx) =>
+          errorObj?.message && (
+            <Alert
+              key={idx}
+              className="m-2 p-1 pt-2 pl-2 shadow"
+              variant={getColor(errorObj.status)}
+              onClose={() => {
+                const newErrors = [...errors];
+                newErrors.pop(errorObj);
+                setErrors(newErrors);
+              }}
+              dismissible
+            >
+              <Alert.Heading>{errorObj.error}</Alert.Heading>
+              <p>
+                {errorObj.message ??
+                  "An error should be here... We are working on it"}
+              </p>
+            </Alert>
+          )
+      )}
     </div>
   );
 }

@@ -40,6 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/users/login").permitAll() // Allow to login
 				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow admins to list all the users
 				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin") // Update user's profile
+				.antMatchers(HttpMethod.PUT, "/users/character").hasAnyAuthority("user") // Update user's current
+																							// character
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAnyAuthority("user") // Allow users to create new lobbies
@@ -51,6 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
+				.antMatchers(HttpMethod.POST, "/games").hasAnyAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
 																				// credentials
 				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
