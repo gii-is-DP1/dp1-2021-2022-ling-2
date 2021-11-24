@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Errors from "../components/common/Errors";
 import Homebar from "../components/home/Homebar";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
@@ -128,7 +127,6 @@ export default function Lobby() {
           <Row>
             <Col>
               <h1>Lobby - {lobby.name}</h1>
-              <Errors errors={errors} />
               {/* TODO separate method for deleting game. Currently it's handled in the
                user removal endpoint, it should have its own endpoint and Axios call */}
               <Button onClick={(e) => handleRemoveUserFromLobby(user.username)}>

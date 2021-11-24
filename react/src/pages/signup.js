@@ -5,7 +5,6 @@ import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import Errors from "../components/common/Errors";
 /**
  *
  * @author jstockwell
@@ -50,7 +49,6 @@ export default function SignUp() {
         </Link>
       </p>
       <br />
-      <Errors errors={errors} />
       <Form onSubmit={handleRegister}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>

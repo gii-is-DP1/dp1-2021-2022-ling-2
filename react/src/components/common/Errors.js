@@ -1,7 +1,10 @@
 import PropTypes from "prop-types";
+import { useContext } from "react";
+import ErrorContext from "../../context/error";
 
-export default function Errors(errorsObj) {
-  const errors = [...new Set(errorsObj.errors)];
+export default function Errors() {
+  const { errors, setErrors } = useContext(ErrorContext); // Array of errors
+
   return (
     <div className="errors-div">
       {errors.map((error, index) => (

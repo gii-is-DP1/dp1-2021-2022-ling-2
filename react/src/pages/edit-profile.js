@@ -5,7 +5,7 @@ import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
-import Errors from "../components/common/Errors";
+import errorContext from "../context/error";
 
 /**
  * @author andrsdt
@@ -14,10 +14,10 @@ export default function EditProfile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
+  const { errors, setErrors } = useContext(errorContext); // hook
   const { userToken, setUserToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null); // hook
-  const [errors, setErrors] = useState([]);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      setErrors([...errors, error.data.message]);
+      setErrors([...errors, error.response.data.message]);
       sendToProfile();
     }
   }
@@ -82,7 +82,6 @@ export default function EditProfile() {
     <>
       <h1>Edit your profile</h1>
       <br />
-      <Errors errors={errors} />
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicUsername">
           <Form.Label>Username</Form.Label>

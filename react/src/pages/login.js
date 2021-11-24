@@ -5,7 +5,6 @@ import { Link, useHistory } from "react-router-dom";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import Errors from "../components/common/Errors";
 
 /**
  *
@@ -47,7 +46,6 @@ export default function Login() {
         </Link>
       </p>
       <br></br>
-      <Errors errors={errors} />
       <Form onSubmit={handleLogin}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>

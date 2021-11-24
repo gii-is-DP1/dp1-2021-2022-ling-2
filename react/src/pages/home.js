@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Errors from "../components/common/Errors";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import * as ROUTES from "../constants/routes";
@@ -45,7 +44,6 @@ export default function Home() {
   return (
     <span>
       <h1>Home</h1>
-      <Errors errors={errors} />
       {userToken ? (
         <>
           <Sidebar />
