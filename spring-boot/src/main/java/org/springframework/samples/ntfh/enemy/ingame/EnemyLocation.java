@@ -5,7 +5,7 @@ import org.springframework.samples.ntfh.interfaces.Location;
 /**
  * Applicable for both HordeEnemyIngame and WardlordIngame entities in principle
  */
-public enum EnemyLocation implements Location {
+public enum EnemyLocation {
     /** The enemy is still waiting to fight */
     PILE,
 
