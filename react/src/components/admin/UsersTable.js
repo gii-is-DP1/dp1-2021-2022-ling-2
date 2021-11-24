@@ -17,7 +17,7 @@ export default function UsersTable() {
       const response = await axios.get(`users`, { headers });
       setUserList(response.data);
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   };
 

@@ -34,7 +34,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      setErrors([...errors, error.response.data.message]);
+      setErrors([...errors, error.response.data]);
       sendToProfile();
     }
   }
@@ -59,7 +59,7 @@ export default function EditProfile() {
       setUserToken(response.data.authorization);
       sendToProfile();
     } catch (error) {
-      setErrors([...errors, error.response.data.message]);
+      setErrors([...errors, error.response.data]);
     }
   }
 

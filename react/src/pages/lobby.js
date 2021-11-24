@@ -8,11 +8,13 @@ import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import ErrorContext from "../context/error";
 
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
+
+  const { errors, setErrors } = useContext(ErrorContext); // Array of error objects
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
-  const [errors, setErrors] = useState([]);
   const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
   const { lobbyId } = useParams(); // TODO maybe we should just pass this as a param to the component
@@ -29,11 +31,11 @@ export default function Lobby() {
       setLobby(newLobby);
       return newLobby;
     } catch (error) {
+      setErrors([...errors, error.response.data]);
       if (!error.response.data) {
         history.push(ROUTES.BROWSE_LOBBIES);
         return;
       }
-      setErrors([...errors, error.message]);
     }
   }
 
@@ -45,8 +47,8 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
+      setErrors([...errors, error.response.data]);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
-      setErrors([...errors, error.message]);
     }
   }
 
@@ -57,7 +59,7 @@ export default function Lobby() {
         headers: { Authorization: "Bearer " + userToken },
       });
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   }
 
@@ -88,7 +90,7 @@ export default function Lobby() {
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   };
 

@@ -17,7 +17,7 @@ export default function UsersInLobby(props) {
       <ListGroup className="d-inline-flex p-2">
         {lobby.users
           .sort((a, b) =>
-            a.username < b.username ? -1 : a.username > b.username ? 1 : 0
+            a.username < b.username ? 1 : a.username > b.username ? -1 : 0
           ) // arbitrary but consistent order
           .map((user, idx) => (
             <ListGroup.Item key={idx}>

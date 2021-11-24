@@ -5,7 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-
+import errorContext from "../context/error";
 /**
  *
  * @author jstockwell
@@ -14,7 +14,7 @@ import userContext from "../context/user";
 export default function Login() {
   const history = useHistory(); // hook
   const { setUserToken } = useContext(userContext); // hook
-  const [errors, setErrors] = useState([]);
+  const { errors, setErrors } = useContext(errorContext); // Array of error objects
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ export default function Login() {
       setUserToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   };
 
