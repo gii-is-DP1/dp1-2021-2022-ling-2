@@ -24,6 +24,7 @@ export default function UsersInLobby(props) {
     "wizard",
   ];
   const getCharacterFromId = (id) => {
+    if (id === undefined) return "none";
     return characters[id - 1];
   };
 
@@ -44,8 +45,8 @@ export default function UsersInLobby(props) {
                   Kick
                 </Button>
               )}
-              {isHost(user) && "👑"} {user.username} -{" "}
-              {getCharacterFromId(user.character?.id)}
+              {isHost(user) && "👑"}{" "}
+              {user.username + " — " + getCharacterFromId(user.character?.id)}
             </ListGroup.Item>
           ))}
       </ListGroup>
