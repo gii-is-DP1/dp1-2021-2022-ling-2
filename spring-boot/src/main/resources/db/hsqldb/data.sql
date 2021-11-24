@@ -6,10 +6,9 @@ INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
 INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
--- TODO missing host?
-INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 1', false, false, true, 2);
-INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
-INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
+INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', false, false, true, 2, 'andres');
+-- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
+-- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
 
 -- INSERT INTO users(username,password,enabled) VALUES ('pabsanval1','idk',TRUE);
 -- INSERT INTO authorities(id,username,authority) VALUES (5,'pabsanval1','owner');
@@ -107,8 +106,7 @@ INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (14, 5, 'ARCO_
 
 -- It looks like the @manytomany association table forces us to use (INTEGER, INTEGER) so we would have to consider
 -- both male and female characters for each market card. Quite tedious but it is what it is.
--- The inserts bellow are represent the classes that can use each card, and they are twiced because the same class 
--- with different sex represents two classes
+-- The inserts bellow represent the classes that can use each card, and they are repeated twiced because the same class with different sex represents two classes
 
 -- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (1, 'MARKET', 3, 'DAGA_ELFICA', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (1, 1);

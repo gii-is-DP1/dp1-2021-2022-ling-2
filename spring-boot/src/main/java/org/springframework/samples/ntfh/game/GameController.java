@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,16 +36,16 @@ public class GameController {
     }
 
     /**
-     * This endpoint handles the creation of a new game lobby
+     * This endpoint handles the creation of a new game from a lobby
      * 
-     * @param game data introduced by the game creator in the form
-     * @return id of the game so the user can be redirected to the lobby
+     * @param lobby object with the preferences for the game
+     * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
     @PostMapping("new")
-    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Game game) {
+    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) {
         // TODO untested
-        Game createdGame = gameService.save(game);
+        Game createdGame = gameService.createFromLobby(lobby);
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
     }
 }

@@ -37,7 +37,7 @@ export default function Profile() {
         <Homebar />
       </div>
       <h1>{params.username}'s profile</h1>
-      {user.username === params.username && (
+      {user?.username === params.username && (
         <Button
           variant="primary"
           onClick={() => history.push(`${params.username}/edit`)}

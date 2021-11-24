@@ -11,9 +11,7 @@ import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
 export default function Lobby() {
-  // There should be some kind of listener
-  // that listens for people to join. Maybe a GET
-  // every some seconds or maybe a websocket.
+  const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
   const [errors, setErrors] = useState([]);
   const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
@@ -32,6 +30,10 @@ export default function Lobby() {
       setLobby(newLobby);
       return newLobby;
     } catch (error) {
+      if (!error.response.data) {
+        history.push(ROUTES.BROWSE_LOBBIES);
+        return;
+      }
       setErrors([...errors, error.message]);
     }
   }
@@ -44,7 +46,18 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
-      if (error?.response?.status === 404) history.push(ROUTES.NOT_FOUND);
+      if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
+      setErrors([...errors, error.message]);
+    }
+  }
+
+  async function handleRemoveUserFromLobby(username) {
+    try {
+      // axios.delete only has 2 parameters, url and headers)
+      await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
+        headers: { Authorization: "Bearer " + userToken },
+      });
+    } catch (error) {
       setErrors([...errors, error.message]);
     }
   }
@@ -52,20 +65,19 @@ export default function Lobby() {
   const userInLobby = (_user, _lobby) =>
     _lobby.users.map((u) => u.username).includes(_user.username);
 
-    
-  {/* TODO class and variant creation */}
-  const setClass = (i) => {
-    
+  {
+    /* TODO class and variant creation */
   }
+  const setClass = (i) => {};
 
-  const setVariant = (i) => {
-
-  }
+  const setVariant = (i) => {};
 
   const createGame = async (e) => {
     e.preventDefault();
-    try{
-      {/* TODO payload*/}
+    try {
+      {
+        /* TODO payload*/
+      }
       const payload = {
         name: lobby.name,
         startTime: Date.now(),
@@ -96,7 +108,7 @@ export default function Lobby() {
 
   useEffect(() => {
     // TODO extract timer to hook
-    const interval = setInterval(() => setTime(Date.now()), 3000); // Useful later for fetching lobby users
+    const interval = setInterval(() => setTime(Date.now()), REFRESH_RATE); // Useful later for fetching lobby users
     return () => {
       clearInterval(interval); // when the component is unmounted, clean up to prevent memory leaks
     };
@@ -112,21 +124,28 @@ export default function Lobby() {
     <>
       <Homebar />
       {lobby && (
-        <div>
+        <>
           <Row>
             <Col>
               <h1>Lobby - {lobby.name}</h1>
               <Errors errors={errors} />
+              {/* TODO separate method for deleting game. Currently it's handled in the
+               user removal endpoint, it should have its own endpoint and Axios call */}
+              <Button onClick={(e) => handleRemoveUserFromLobby(user.username)}>
+                {lobby.host.username === user.username ? "Delete" : "Leave"}{" "}
+                lobby
+              </Button>
               <div>Waiting for people to join</div>
               <div>Players in the lobby: {lobby.users.length}</div>
               <br />
-              <UsersInLobby lobby={lobby} />
+              <UsersInLobby
+                lobby={lobby}
+                handleRemoveUserFromLobby={handleRemoveUserFromLobby}
+              />
               <br />
             </Col>
             <Col>
-
               <Form>
-
                 <Form.Group key="stacked-radio">
                   <Form.Label>Class</Form.Label> <br />
                   <Form.Check
@@ -192,14 +211,15 @@ export default function Lobby() {
           </Row>
           {/* TODO start game button */}
           <Row>
-            {lobby.users.length > 1 &&
-              user.username === lobby.host ?
+            {lobby.users.length > 1 && user.username === lobby.host.username ? (
               <Button type="submit" onClick={createGame}>
                 Start Game
               </Button>
-              : ""}
+            ) : (
+              ""
+            )}
           </Row>
-        </div>
+        </>
       )}
     </>
   );

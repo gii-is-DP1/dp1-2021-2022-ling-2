@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
  * @author JStockwell
  */
 @Service
-public class AdminServices {
-    
-    
+public class AdminService {
+
 }

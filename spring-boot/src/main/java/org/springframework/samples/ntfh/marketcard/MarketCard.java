@@ -40,16 +40,12 @@ public class MarketCard extends BaseEntity {
     private Set<Character> usableBy;
 
     @Transient
-    private String backImage;
-
-    @Transient
-    private String frontImage;
-
     public String getFrontImage() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Transient
     public String getBackImage() {
         // TODO Auto-generated method stub
         return null;

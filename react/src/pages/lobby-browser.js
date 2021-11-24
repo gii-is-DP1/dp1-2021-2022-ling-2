@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useHistory, Link } from "react-router-dom";
@@ -13,14 +13,13 @@ export default function LobbyBrowser() {
 
   useEffect(() => {
     // get lobby list
-    const fetchLobbies = async (e) => {
-      e.preventDefault();
+    const fetchLobbies = async () => {
       try {
         const response = await axios.get(`lobbies`);
         setLobbyList(response.data);
       } catch (error) {
         history.push("/not-found");
-        setErrors([...errors, error.message]);
+        setErrors([...errors, error.data.message]);
       }
     };
 
@@ -32,11 +31,12 @@ export default function LobbyBrowser() {
   };
 
   const getLobbyStatus = (lobby) => {
-    const fullLobbyFlag = lobby.hasStarted || (lobby.users.length === lobby.maxPlayers);
+    const fullLobbyFlag =
+      lobby.hasStarted || lobby.users.length === lobby.maxPlayers;
     console.log(fullLobbyFlag);
-    if(fullLobbyFlag && lobby.spectatorsAllowed) {
+    if (fullLobbyFlag && lobby.spectatorsAllowed) {
       return "Spectate";
-    } else if(fullLobbyFlag) {
+    } else if (fullLobbyFlag) {
       return "";
     } else {
       return "Join";
@@ -53,6 +53,7 @@ export default function LobbyBrowser() {
       (with join button). Each row could be rendered via different components since they will
       have different columns (?), maybe even two tables... we will see, now it doesn't matter */}
       <Table bordered hover striped>
+        {/* TODO: Eventually turn this into a proper table or flex container */}
         <thead>
           <tr>
             <th>No.Players</th>
@@ -72,10 +73,12 @@ export default function LobbyBrowser() {
                 {lobby.users.length}/{lobby.maxPlayers}
               </th>
               <th>{lobby.name}</th>
-              <th>{lobby.hasScenes ? "✓" : "X"}</th>
+              <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>
                 <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
-                  {getLobbyStatus(lobby)==="" ? "" : (
+                  {getLobbyStatus(lobby) === "" ? (
+                    ""
+                  ) : (
                     <Button type="submit">{getLobbyStatus(lobby)}</Button>
                   )}
                 </Link>
