@@ -12,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.ntfh.exceptions.InvalidValueException;
 import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
+import org.springframework.samples.ntfh.exceptions.UserAlreadyInLobbyException;
 import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
 import org.springframework.stereotype.Service;
@@ -124,7 +125,7 @@ public class LobbyService {
 
         User user = userOptional.get();
         if (user.getLobby() != null)
-            throw new DataAccessException(
+            throw new UserAlreadyInLobbyException(
                     String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
             };
 
