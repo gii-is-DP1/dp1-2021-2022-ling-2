@@ -80,9 +80,9 @@ export default function Lobby() {
         /* TODO payload*/
       }
       const payload = {
-        name: lobby.name,
         startTime: Date.now(),
         hasScenes: lobby.hasScenes,
+        leader: lobby.host.username,
       };
       const response = await axios.post("/games", payload, {
         headers: {},
@@ -98,13 +98,14 @@ export default function Lobby() {
     // We have to notify the server we have joined the lobby
     document.title = "NTFH - Game lobby";
     if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
-
-    async function firstFetch() {
-      const lobby = await fetchLobbyStatus();
-      // will be only executed if the user is not in the lobby yet
-      if (!userInLobby(user, lobby)) notifyJoinLobby();
-    }
-    firstFetch();
+    else {
+      async function firstFetch() {
+        const lobby = await fetchLobbyStatus();
+        // will be only executed if the user is not in the lobby yet
+        if (!userInLobby(user, lobby)) notifyJoinLobby();
+      }
+      firstFetch();
+    } 
   }, []); // Only run once
 
   useEffect(() => {
@@ -180,7 +181,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Paladin"
+                    label="Ranger"
                     name="class"
                     type="radio"
                     defaultChecked

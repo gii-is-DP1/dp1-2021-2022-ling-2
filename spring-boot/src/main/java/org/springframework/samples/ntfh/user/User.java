@@ -65,7 +65,6 @@ public class User {
 
 	@ManyToOne // TODO set appropiate cascade type
 	@JoinColumn(name = "character")
-	@JsonIgnore
 	private Character character; // Character that the user has currently
 	// selected. Will be set during a lobby,
 	// and will stay the same during the entire game he/she is playing.

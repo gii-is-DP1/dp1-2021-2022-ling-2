@@ -8,9 +8,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.samples.ntfh.model.BaseEntity;
 import org.springframework.samples.ntfh.player.Player;
-import org.springframework.samples.ntfh.user.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,8 @@ public class Game extends BaseEntity {
     // Set from Lobby by creating Players instances from users
     @OneToMany // TODO cascade? If we set CascadeType.ALL then deleting the game will delete
                // the players. It shouldn't be like that.
+               @JsonIgnore
+
     private Set<Player> players;
 
     @OneToOne

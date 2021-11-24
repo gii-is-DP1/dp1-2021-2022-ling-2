@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
-import UserContext from "../../context/user";
 import { Button } from "react-bootstrap";
-import tokenParser from "../../helpers/tokenParser";
+import { Link, useHistory } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
+import UserContext from "../../context/user";
+import tokenParser from "../../helpers/tokenParser";
 /**
  * Sidebar of a registered user. Will contain info about friends, etc.
  * @returns {React.Component}
