@@ -66,16 +66,15 @@ export default function EditProfile() {
   useEffect(() => {
     document.title = `NTFH - Edit profile`;
     // TODO allow admin to edit
-    if (!userToken) history.push(ROUTES.LOGIN); // redirect to login if no token
-
+    if (!userToken) history.push(ROUTES.LOGIN);
+    // redirect to login if no token
     // redirect to profile if user is not the same as the one in the url or if the user is not an admin
-    if (
+    else if (
       loggedUser.username !== params.username &&
       !loggedUser.authorities.includes("admin")
     )
       history.push(ROUTES.PROFILE.replace(":username", params.username));
-
-    fetchUserProfile();
+    else fetchUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 
