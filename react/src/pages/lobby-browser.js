@@ -1,15 +1,16 @@
-import axios from "../api/axiosConfig";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
-import { useHistory, Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
+import errorContext from "../context/error";
 
 export default function LobbyBrowser() {
   const history = useHistory(); // hook
 
+  const { errors, setErrors } = useContext(errorContext); // Array of errors
   const [lobbyList, setLobbyList] = useState([]);
-  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
     // get lobby list
@@ -18,8 +19,8 @@ export default function LobbyBrowser() {
         const response = await axios.get(`lobbies`);
         setLobbyList(response.data);
       } catch (error) {
+        setErrors([...errors, error.response.data]);
         history.push("/not-found");
-        setErrors([...errors, error.data.message]);
       }
     };
 

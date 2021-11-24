@@ -20,10 +20,8 @@ export default function Sidebar() {
 
   return (
     <nav className="navbar navbar-dark bg-dark">
-      <div>
-        <h1 className="text-white">Welcome back, {user.username}</h1>
-      </div>
-      <div>
+      <h1 className="text-white">Welcome back, {user.username}</h1>
+      <span>
         <Link to={ROUTES.PROFILE.replace(":username", user.username)}>
           <Button className="m-2" type="submit">
             Profile
@@ -32,7 +30,7 @@ export default function Sidebar() {
         <Button className="m-2" type="submit" onClick={() => handleLogout()}>
           Log out
         </Button>
-      </div>
+      </span>
     </nav>
   );
 }

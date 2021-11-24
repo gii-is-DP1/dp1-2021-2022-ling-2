@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.ntfh.exceptions.InvalidValueException;
 import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.user.User;
@@ -93,7 +94,7 @@ public class LobbyService {
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    public Boolean joinLobby(Integer lobbyId, String username)
+    public Lobby joinLobby(Integer lobbyId, String usernameRequest, String usernameToken)
             throws DataAccessException, MaximumLobbyCapacityException {
         // TODO make this throw more specific (maybe custom)
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
@@ -104,11 +105,21 @@ public class LobbyService {
         Lobby lobby = lobbyOptional.get();
         if (lobby.getMaxPlayers().equals(lobby.getUsers().size()))
             throw new MaximumLobbyCapacityException("The lobby is full") {
-            }; // TODO change type of exception
+            };
 
-        Optional<User> userOptional = userService.findUser(username);
+        Optional<User> userOptional = userService.findUser(usernameRequest);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user who wants to join the lobby does not exist") {
+            };
+
+        if (!usernameRequest.equals(usernameToken))
+            throw new InvalidValueException("The Token username and the request one does not coindice") {
+            };
+
+        Set<String> usernamesInLobby = new HashSet<>();
+        lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
+        if (usernamesInLobby.contains(usernameRequest))
+            throw new InvalidValueException("The user is already in the lobby") {
             };
 
         User user = userOptional.get();
@@ -120,9 +131,7 @@ public class LobbyService {
         user.setLobby(lobby);
 
         lobby.addUser(user);
-        lobbyRepository.save(lobby);
-        return true;
-
+        return lobbyRepository.save(lobby);
     }
 
     /**
@@ -144,7 +153,7 @@ public class LobbyService {
 
         User user = userOptional.get();
 
-        if (lobby.getHost().equals(user.getUsername()))
+        if (lobby.getHost().getUsername().equals(user.getUsername()))
             // this should be handled by .deleteLobby()
             throw new DataAccessException("The host cannot leave the lobby") {
             };
