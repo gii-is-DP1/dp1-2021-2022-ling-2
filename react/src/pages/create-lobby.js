@@ -37,7 +37,7 @@ export default function CreateLobby() {
       const lobbyId = response.data.lobbyId;
       history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response]);
     }
   };
 
@@ -95,7 +95,7 @@ export default function CreateLobby() {
             name="scenes"
             type="checkbox"
             label="Scenes"
-            onChange={(e) => setSpectatorsChecked(!spectatorsChecked)}
+            onChange={(e) => setScenesChecked(!scenesChecked)}
           />
         </Form.Group>
         <Form.Group className="mb-2">

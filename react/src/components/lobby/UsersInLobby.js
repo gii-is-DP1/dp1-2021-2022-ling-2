@@ -12,6 +12,21 @@ export default function UsersInLobby(props) {
   const isHost = (user) => user.username === lobby.host.username;
   // craeate arrow function in a variable
 
+  // const characters = ["ranger", "rogue", "warrior", "wizard"];
+  const characters = [
+    "ranger",
+    "ranger",
+    "rogue",
+    "rogue",
+    "warrior",
+    "warrior",
+    "wizard",
+    "wizard",
+  ];
+  const getCharacterFromId = (id) => {
+    return characters[id - 1];
+  };
+
   return (
     <>
       <ListGroup className="d-inline-flex p-2">
@@ -29,7 +44,8 @@ export default function UsersInLobby(props) {
                   Kick
                 </Button>
               )}
-              {isHost(user) && "👑"} {user.username}
+              {isHost(user) && "👑"} {user.username} -{" "}
+              {getCharacterFromId(user.character?.id)}
             </ListGroup.Item>
           ))}
       </ListGroup>

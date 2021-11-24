@@ -18,8 +18,6 @@ package org.springframework.samples.ntfh.user;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,14 +98,14 @@ public class UserController {
 	}
 
 	@PostMapping("register")
-	public ResponseEntity<Map<String, String>> register( @RequestBody User user) {
+	public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
 		this.userService.saveUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-		String token=userService.loginUser(user);
+		String token = userService.loginUser(user);
 		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
 }
