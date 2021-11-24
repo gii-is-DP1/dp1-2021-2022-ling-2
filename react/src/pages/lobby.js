@@ -90,10 +90,10 @@ export default function Lobby() {
     e.preventDefault();
     try {
       const payload = {
-        name: lobby.name,
         startTime: Date.now(),
         hasScenes: lobby.hasScenes,
         users: lobby.users,
+        // leader: lobby.host.username,
       };
       const response = await axios.post("/games", payload, {
         headers: { Authorization: "Bearer " + userToken },

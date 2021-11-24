@@ -6,6 +6,9 @@ INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
 INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
+INSERT INTO users(username,password,email) VALUES ('stockie','stockie','stockie@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES (4,'stockie','user');
+
 INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', false, false, true, 2, 'andres');
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
@@ -227,3 +230,8 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (14, 2);
 -- Ejemplo de entidad warlord ingame:
 -- INSERT INTO market_cards_ingame(id, game_id, market_card_id, market_card_location) VALUES (1, 1, 'ROGUE_HAND')
 -- Eso será una tabla diferente que trackee el uso de la carta dentro de la partida (si la tiene alguien, su posición...
+
+
+-- Usuario para el JUnit de la H10
+INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');

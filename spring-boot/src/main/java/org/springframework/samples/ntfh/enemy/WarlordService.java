@@ -3,8 +3,10 @@ package org.springframework.samples.ntfh.enemy;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class WarlordService {
     
     @Autowired
