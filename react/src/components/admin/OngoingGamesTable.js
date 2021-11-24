@@ -1,7 +1,12 @@
+import axios from "../../api/axiosConfig";
+import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 
 export default function OngoingGamesTable() {
-  const gameList = [
+  const [errors, setErrors] = useState([]);
+  const [gameList, setGameList] = useState();
+
+  const placeholderGameList = [
     {
       id: 2,
       name: "Game 2",
@@ -10,16 +15,19 @@ export default function OngoingGamesTable() {
     },
   ];
 
-  // TODO load games from server
-  // const [gameList, setGameList] = useState([]);
-  // const fetchGames = async () => {
-  //   try {
-  //     const response = await axios.get(`games`);
-  //     setGameList(response.data);
-  //   } catch (error) {
-  //     setErrors([...errors, error.message]);
-  //   }
-  // };
+  useEffect(() => {
+    // get lobby list
+    const fetchGames = async () => {
+      try {
+        const response = await axios.get(`games/ongoing`);
+        setGameList(response.data);
+      } catch (error) {
+        setErrors([...errors, error.data.message]);
+      }
+    };
+
+    fetchGames();
+  }, []);
 
   return (
     <Table>
@@ -32,12 +40,12 @@ export default function OngoingGamesTable() {
         </tr>
       </thead>
       <tbody>
-        {gameList.map((game, idx) => (
+        {placeholderGameList.map((game, idx) => (
           <tr>
-            <th>game.id</th>
-            <th>game.name</th>
-            <th>game.start_time</th>
-            <th>game.has_scenes</th>
+            <th>{game.id}</th>
+            <th>{game.name}</th>
+            <th>{game.startTime}</th>
+            <th>{game.hasScenes ? "🟢" : "🔴"}</th>
           </tr>
         ))}
       </tbody>

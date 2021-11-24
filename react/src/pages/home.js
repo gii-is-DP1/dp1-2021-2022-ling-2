@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
@@ -18,6 +18,7 @@ export default function Home() {
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
   const [currentUser, setCurrentUser] = useState();
+  const history = useHistory(); // hook
   const { unregisteredUser, setUnregisteredUser } = useContext(
     UnregisteredUserContext
   );
@@ -26,24 +27,11 @@ export default function Home() {
 
   useEffect(() => {
     document.title = "No Time for Heroes";
-  });
+  }, []);
 
   useEffect(() => {
-    // // User check, getting user from sql
-    // if(user) {
-    //   async function getCurrentUser() {
-    //     try {
-    //       const response = await axios.get(`users/${user.username}`);
-    //       setCurrentUser(response.data);
-    //     } catch (error) {
-    //       setErrors([...errors, error.message]);
-    //     }
-    //   }
-    //   getCurrentUser();
-    // } 
-
     // Unregistered user creation
-    if(!unregisteredUser) {
+    if (!unregisteredUser) {
       // if there aren't unregistered user credentials, ask for some
       async function fetchData() {
         try {
@@ -55,20 +43,13 @@ export default function Home() {
       }
       fetchData();
     }
-  },[unregisteredUser, setUnregisteredUser]);
+  }, [unregisteredUser, setUnregisteredUser]);
 
-  const generateUserButtons = async () => {
-    // TODO create user in lobby logic
-    async function getCurrentUser() {
-      try {
-        const response = await axios.get(`users/${user.username}`);
-        setCurrentUser(response.data);
-      } catch (error) {
-        setErrors([...errors, error.message]);
-      }
-    }
-    console.log(currentUser);
-    if (currentUser.lobby===null) {
+  const generateUserButtons = () => {
+
+    // TODO acutal rejoin game
+    //if (currentUser.lobby === null) {
+    if (true) {
       return (
         <>
           <Link to={ROUTES.CREATE_LOBBY}>
@@ -87,10 +68,8 @@ export default function Home() {
   return (
     <span>
       <h1>Home</h1>
-      <Errors errors={errors} />
 
       {/* TODO Rework all buttons, ask James what the fuck he means */}
-
       {userToken ? <Sidebar /> : <UnregisteredSidebar />}
 
       {/* Buttons */}
@@ -101,20 +80,11 @@ export default function Home() {
       }
 
       {/* Admin Page*/}
-      {
-        user && hasAuthority(user, "admin") ? (
-          <Link to={ROUTES.ADMIN_PAGE}>
-            <Button type="submit">Admin Page</Button>
-      {userToken ? (
-        <>
-          <Sidebar />
-          <Link to={ROUTES.CREATE_LOBBY}>
-            <Button type="submit">Create game</Button>
-          </Link>
-        ) : (
-          ""
-        )
-      }
+      {user && hasAuthority(user, "admin") ? (
+        <Link to={ROUTES.ADMIN_PAGE}>
+          <Button type="submit">Admin Page</Button>
+        </Link>
+      ) : ""}
     </span >
   );
 }
