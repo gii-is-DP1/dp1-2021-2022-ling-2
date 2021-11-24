@@ -36,7 +36,7 @@ public class HordeEnemyServiceTest {
         assertEquals(0, tester.getGold());
         assertEquals(0, tester.getExtraGlory());
         assertEquals(HordeModifierTypeEnum.HEALING_CAPABILITIES, tester.getHordeEnemyType().getHordeEnemyModifierTypeEnum());
-        assertEquals(3, tester.getEndurance());
+        assertEquals(3, tester.getHordeEnemyType().getEndurance());
     }    
 
 }
