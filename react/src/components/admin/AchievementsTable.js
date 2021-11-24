@@ -1,11 +1,44 @@
 import errorContext from "../../context/error";
 import { useContext, useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import axios from "../../api/axiosConfig";
 
 export default function AchievementsTable() {
   const { errors, setErrors } = useContext(errorContext);
   const [achievements, setAchievements] = useState([]);
 
-  return "Achievements Table";
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      try {
+        const response = await axios.get(`achievements`);
+        setAchievements(response.data);
+      } catch (error) {
+        setErrors([...errors, error.response]);
+      }
+    }
+
+    fetchAchievements();
+    console.log(achievements[0].name);
+  }, []);
+
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {achievements.map((achievement, idx) => {
+          <tr>
+            <th>{achievement.name}</th>
+            <th>{achievement.description}</th>
+            
+          </tr>
+        })}
+      </tbody>
+    </Table>
+  );
 }
