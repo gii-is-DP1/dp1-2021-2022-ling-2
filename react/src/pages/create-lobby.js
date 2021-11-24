@@ -43,7 +43,7 @@ export default function CreateLobby() {
 
   useEffect(() => {
     document.title = "NTFH - Create new lobby";
-    if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
+    if (!userToken) history.push(ROUTES.SIGNUP); // Send the user to signup screen if not logged in
   });
 
   return (
