@@ -25,6 +25,7 @@ public class UserDeserializer extends JsonDeserializer<User> {
     @Override
     public User deserialize(final JsonParser jsonParser, final DeserializationContext deserializationContext)
             throws IOException, DataAccessException {
+        // TODO exhaustive testing for considering edge cases
         try {
             // Given a JSON string, parse it into a User object
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
@@ -38,10 +39,15 @@ public class UserDeserializer extends JsonDeserializer<User> {
                 username = node.get("username").asText();
             }
             Optional<User> optionalUserFromUsername = userService.findUser(username);
-            if (!optionalUserFromUsername.isPresent())
-                // If the user is not found either by id or by username:
-                throw new DataAccessException("User not found") {
-                };
+            if (!optionalUserFromUsername.isPresent()) {
+                // If the user is not found either by id or by username, we must be creating a
+                // new user:
+                User user = new User();
+                user.setUsername(node.get("username").asText());
+                user.setEmail(node.get("email").asText());
+                user.setPassword(node.get("password").asText());
+                return user;
+            }
 
             // TODO consider using the Prototype pattern for creating a user clone
             User userFromDb = optionalUserFromUsername.get();
