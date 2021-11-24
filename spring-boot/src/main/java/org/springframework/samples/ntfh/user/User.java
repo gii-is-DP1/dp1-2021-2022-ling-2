@@ -57,8 +57,8 @@ public class User {
 	@JsonIgnore
 	private Game game; // game where the user is currently in
 
-	// TODO The cascade type is yet to be determined
-	@ManyToOne()
+	// TODO maybe remove
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "lobby")
 	@JsonIgnore
 	private Lobby lobby; // lobby where the user is currently in

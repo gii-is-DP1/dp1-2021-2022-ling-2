@@ -41,7 +41,6 @@ public class GameService {
     public Game createFromLobby(@Valid Lobby lobby) {
         Game game = new Game();
         game.setStartTime(System.currentTimeMillis());
-        game.setFinishTime(null);
         game.setHasScenes(lobby.getHasScenes());
 
         Set<User> users = lobby.getUsers();
