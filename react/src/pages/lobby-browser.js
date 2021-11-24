@@ -30,16 +30,21 @@ export default function LobbyBrowser() {
     window.location.reload();
   };
 
-  const getLobbyStatus = (lobby) => {
+  const getJoinStatus = (lobby) => {
     const fullLobbyFlag =
-      lobby.hasStarted || lobby.users.length === lobby.maxPlayers;
-    console.log(fullLobbyFlag);
-    if (fullLobbyFlag && lobby.spectatorsAllowed) {
-      return "Spectate";
-    } else if (fullLobbyFlag) {
-      return "";
+      (lobby.hasStarted || lobby.users.length === lobby.maxPlayers);
+    if (!fullLobbyFlag) {
+      return (<Button type="secondary" active>Join</Button>);
     } else {
-      return "Join";
+      return (<Button type="submit" disabled>Join</Button>);
+    }
+  };
+
+  const getSpectateStatus = (lobby) => {
+    if(lobby.spectatorsAllowed && lobby.hasStarted) {
+      return (<Button type="secondary" active>Spectate</Button>);
+    } else {
+      return (<Button type="secondary" disabled>Spectate</Button>);
     }
   };
 
@@ -76,12 +81,12 @@ export default function LobbyBrowser() {
               <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>
                 <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
-                  {getLobbyStatus(lobby) === "" ? (
-                    ""
-                  ) : (
-                    <Button type="submit">{getLobbyStatus(lobby)}</Button>
-                  )}
+                  {getJoinStatus(lobby)}
                 </Link>
+                &nbsp;
+
+                {/* TODO add game spectate link */}
+                {getSpectateStatus(lobby)}
               </th>
             </tr>
           ))}

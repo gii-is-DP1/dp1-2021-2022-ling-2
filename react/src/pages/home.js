@@ -8,12 +8,13 @@ import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import * as ROUTES from "../constants/routes";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
+import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
-// import "../resources/css/nord.css";
 
 export default function Home() {
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
+  const [currentUser, setCurrentUser] = useState();
   const { unregisteredUser, setUnregisteredUser } = useContext(
     UnregisteredUserContext
   );
@@ -23,8 +24,25 @@ export default function Home() {
   const isAdmin = (_user) => _user.authorities.includes("admin");
 
   useEffect(() => {
-    // make this execute only once
-    if (!unregisteredUser) {
+    document.title = "No Time for Heroes";
+  });
+
+  useEffect(() => {
+    // // User check, getting user from sql
+    // if(user) {
+    //   async function getCurrentUser() {
+    //     try {
+    //       const response = await axios.get(`users/${user.username}`);
+    //       setCurrentUser(response.data);
+    //     } catch (error) {
+    //       setErrors([...errors, error.message]);
+    //     }
+    //   }
+    //   getCurrentUser();
+    // } 
+
+    // Unregistered user creation
+    if(!unregisteredUser) {
       // if there aren't unregistered user credentials, ask for some
       async function fetchData() {
         try {
@@ -36,36 +54,61 @@ export default function Home() {
       }
       fetchData();
     }
-  }, [unregisteredUser, setUnregisteredUser]);
+  },[unregisteredUser, setUnregisteredUser]);
 
-  useEffect(() => {
-    document.title = "No Time for Heroes";
-  });
+  const generateUserButtons = async () => {
+    // TODO create user in lobby logic
+    async function getCurrentUser() {
+      try {
+        const response = await axios.get(`users/${user.username}`);
+        setCurrentUser(response.data);
+      } catch (error) {
+        setErrors([...errors, error.message]);
+      }
+    }
+    console.log(currentUser);
+    if (currentUser.lobby===null) {
+      return (
+        <>
+          <Link to={ROUTES.CREATE_LOBBY}>
+            <Button type="submit">Create Game</Button>
+          </Link>
+          <Link to={ROUTES.BROWSE_LOBBIES}>
+            <Button type="submit">Browse Games</Button>
+          </Link>
+        </>
+      );
+    } else {
+      <Button type="submit">Rejoin Game</Button>
+    }
+  };
 
   return (
     <span>
       <h1>Home</h1>
       <Errors errors={errors} />
-      {userToken ? (
-        <>
-          <Sidebar />
-          <Link to={ROUTES.CREATE_LOBBY}>
-            <Button type="submit">Create game</Button>
+
+      {/* TODO Rework all buttons, ask James what the fuck he means */}
+
+      {userToken ? <Sidebar /> : <UnregisteredSidebar />}
+
+      {/* Buttons */}
+      {!userToken ? (
+        <Link to={ROUTES.BROWSE_LOBBIES}>
+          <Button type="submit">Browse Games</Button>
+        </Link>) : generateUserButtons()
+      }
+
+      {/* Admin Page*/}
+      {
+        user && hasAuthority(user, "admin") ? (
+          <Link to={ROUTES.ADMIN_PAGE}>
+            <Button type="submit">Admin Page</Button>
           </Link>
-        </>
-      ) : (
-        <UnregisteredSidebar />
-      )}
-      <Link to={ROUTES.BROWSE_LOBBIES}>
-        <Button type="submit">Browse games</Button>
-      </Link>
-      {user && isAdmin(user) ? (
-        <Link to={ROUTES.ADMIN_PAGE}>
-          <Button type="submit">Admin Page</Button>
-        </Link>
-      ) : (
-        ""
-      )}
-    </span>
+        ) : (
+          ""
+        )
+      }
+    </span >
   );
 }

@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
-import UserContext from "../../context/user";
 import { Button } from "react-bootstrap";
-import tokenParser from "../../helpers/tokenParser";
+import { Link, useHistory } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
+import UserContext from "../../context/user";
+import tokenParser from "../../helpers/tokenParser";
 /**
  * Sidebar of a registered user. Will contain info about friends, etc.
  * @returns {React.Component}
@@ -20,15 +20,19 @@ export default function Sidebar() {
 
   return (
     <nav className="navbar navbar-dark bg-dark">
-      <h1 className="text-white">Welcome back, {user.username}</h1>
-      <Link to={ROUTES.PROFILE.replace(":username", user.username)}>
-        <Button className="m-2" type="submit">
-          Profile
+      <div>
+        <h1 className="text-white">Welcome back, {user.username}</h1>
+      </div>
+      <div>
+        <Link to={ROUTES.PROFILE.replace(":username", user.username)}>
+          <Button className="m-2" type="submit">
+            Profile
+          </Button>
+        </Link>
+        <Button className="m-2" type="submit" onClick={() => handleLogout()}>
+          Log out
         </Button>
-      </Link>
-      <Button className="m-2" type="submit" onClick={() => handleLogout()}>
-        Log out
-      </Button>
+      </div>
     </nav>
   );
 }
