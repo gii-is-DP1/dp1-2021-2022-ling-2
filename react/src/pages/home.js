@@ -55,6 +55,12 @@ export default function Home() {
       <Link to={ROUTES.BROWSE_LOBBIES}>
         <Button type="submit">Browse games</Button>
       </Link>
+      {/* TODO admin check for button */}
+      {true ? (
+        <Link to={ROUTES.ADMIN_PAGE}>
+          <Button type="submit">Admin Page</Button>
+        </Link>
+      ) : ""}
     </span>
   );
 }

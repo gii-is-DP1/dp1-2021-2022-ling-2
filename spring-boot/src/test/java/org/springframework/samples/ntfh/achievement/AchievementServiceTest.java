@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.game;
+package org.springframework.samples.ntfh.achievement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,14 +9,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-public class GameServiceTest {
-    @Autowired
-    private GameService gameService;
+public class AchievementServiceTest {
 
-    // TODO replace with meaningful tests. This is a placeholder
+    @Autowired
+    private AchievementService achievementService;
+
     @Test
     public void testCountWithInitialData() {
-        Integer count = gameService.gameCount();
+        Integer count = achievementService.achievementCount();
         assertEquals(0, count);
     }
 
