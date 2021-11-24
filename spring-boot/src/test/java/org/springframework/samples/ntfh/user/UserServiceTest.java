@@ -2,9 +2,9 @@ package org.springframework.samples.ntfh.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -41,7 +41,7 @@ public class UserServiceTest {
         String preEmail = user.getEmail();
         String posEmail = preEmail.concat("XYZ");
         user.setEmail(posEmail);
-        this.userService.saveUser(user);
+    //    this.userService.saveUser(user);
         assertEquals(posEmail, user.getEmail());
 
 
