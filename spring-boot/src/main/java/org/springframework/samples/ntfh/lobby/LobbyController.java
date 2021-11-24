@@ -119,28 +119,9 @@ public class LobbyController {
         // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
         String usernameFromRequest = body.get("username");
         String usernameFromToken = TokenUtils.usernameFromToken(token);
-        if (!usernameFromRequest.equals(usernameFromToken)) // TODO untested
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-
-        Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
-        if (!lobbyOptional.isPresent())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        Lobby lobby = lobbyOptional.get();
-        if ((lobby.getHasStarted()) || lobby.getUsers().size() == lobby.getMaxPlayers())
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
-        Set<String> usernamesInLobby = new HashSet<>();
-        lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
-
-        if (usernamesInLobby.contains(usernameFromRequest))
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // The user cannot join if he/she is already in
-
-        if (lobbyService.joinLobby(lobbyId, usernameFromRequest)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        lobbyService.joinLobby(lobbyId, usernameFromRequest, usernameFromToken);
+        return new ResponseEntity<>(HttpStatus.OK);
+        
     }
 
     /**
