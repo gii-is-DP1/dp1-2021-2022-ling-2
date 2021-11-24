@@ -31,11 +31,10 @@ export default function Lobby() {
       setLobby(newLobby);
       return newLobby;
     } catch (error) {
-      setErrors([...errors, error.response.data]);
-      if (!error.response.data) {
-        history.push(ROUTES.BROWSE_LOBBIES);
-        return;
-      }
+      // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
+      setErrors([...errors, error.response]);
+      history.push(ROUTES.BROWSE_LOBBIES);
+      return;
     }
   }
 
@@ -69,6 +68,7 @@ export default function Lobby() {
   {
     /* TODO class and variant creation */
   }
+  // Cmon james this is not how you set a state variable :/
   const setClass = (i) => {};
 
   const setVariant = (i) => {};
