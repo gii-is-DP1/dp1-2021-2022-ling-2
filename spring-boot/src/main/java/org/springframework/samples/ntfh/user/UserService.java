@@ -182,7 +182,7 @@ public class UserService {
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.
-		if (user.getPassword() == null)
+		if (user.getPassword() == null || user.getPassword().equals("null"))
 			user.setPassword(userInDatabase.getPassword());
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());

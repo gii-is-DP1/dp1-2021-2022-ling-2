@@ -82,7 +82,10 @@ public class LobbyService {
     public void deleteLobby(Lobby lobby) {
         // make sure to remove all FK refrences to this lobby from the users who were in
         // the lobby
-        lobby.getUsers().forEach(user -> user.setLobby(null));
+        lobby.getUsers().forEach(user -> {
+            user.setLobby(null);
+            user.setCharacter(null);
+        });
         this.lobbyRepository.deleteById(lobby.getId());
     }
 
