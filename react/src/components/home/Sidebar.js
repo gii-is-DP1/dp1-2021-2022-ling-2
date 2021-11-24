@@ -18,6 +18,18 @@ export default function Sidebar() {
     history.push(ROUTES.HOME);
   };
 
+  const handleShare = () => {
+    const message =
+      "Hey, check out this web app for playing No Time for Heroes! " +
+      window.location.href;
+    // copy to clipboard
+    navigator.clipboard.writeText(message);
+    // show success message
+    alert("Copied to clipboard!");
+    // TODO when the "Errors" component also supports information
+    // messages, show it that way instead
+  };
+
   return (
     <nav className="navbar navbar-dark bg-dark">
       <h1 className="text-white">Welcome back, {user.username}</h1>
@@ -27,8 +39,11 @@ export default function Sidebar() {
             Profile
           </Button>
         </Link>
-        <Button className="m-2" type="submit" onClick={() => handleLogout()}>
+        <Button className="m-2" type="submit" onClick={handleLogout}>
           Log out
+        </Button>
+        <Button className="m-2" type="submit" onClick={handleShare}>
+          Share the game
         </Button>
       </span>
     </nav>
