@@ -13,14 +13,13 @@ export default function LobbyBrowser() {
 
   useEffect(() => {
     // get lobby list
-    const fetchLobbies = async (e) => {
-      e.preventDefault();
+    const fetchLobbies = async () => {
       try {
         const response = await axios.get(`lobbies`);
         setLobbyList(response.data);
       } catch (error) {
         history.push("/not-found");
-        setErrors([...errors, error.message]);
+        setErrors([...errors, error.data.message]);
       }
     };
 
@@ -32,11 +31,12 @@ export default function LobbyBrowser() {
   };
 
   const getLobbyStatus = (lobby) => {
-    const fullLobbyFlag = lobby.hasStarted || (lobby.users.length === lobby.maxPlayers);
+    const fullLobbyFlag =
+      lobby.hasStarted || lobby.users.length === lobby.maxPlayers;
     console.log(fullLobbyFlag);
-    if(fullLobbyFlag && lobby.spectatorsAllowed) {
+    if (fullLobbyFlag && lobby.spectatorsAllowed) {
       return "Spectate";
-    } else if(fullLobbyFlag) {
+    } else if (fullLobbyFlag) {
       return "";
     } else {
       return "Join";
@@ -76,7 +76,9 @@ export default function LobbyBrowser() {
               <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>
                 <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
-                  {getLobbyStatus(lobby)==="" ? "" : (
+                  {getLobbyStatus(lobby) === "" ? (
+                    ""
+                  ) : (
                     <Button type="submit">{getLobbyStatus(lobby)}</Button>
                   )}
                 </Link>
