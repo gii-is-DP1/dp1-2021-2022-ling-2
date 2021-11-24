@@ -2,6 +2,7 @@ import axios from "../../api/axiosConfig";
 import { useEffect, useState, useContext } from "react";
 import { Table } from "react-bootstrap";
 import errorContext from "../../context/error";
+import playerParser from "../../helpers/playerParser";
 
 export default function OngoingGamesTable() {
   const { errors, setErrors } = useContext(errorContext); // Array of errors
@@ -38,14 +39,6 @@ export default function OngoingGamesTable() {
     fetchGames();
   }, []);
 
-  const renderPlayers = (game) => {
-    var solution = "";
-    for(var i in game.players){
-      solution += game.players[i] + ", ";
-    }
-    return solution.substring(0, (solution.length - 2));
-  };
-
   return (
     <Table>
       <thead>
@@ -64,7 +57,7 @@ export default function OngoingGamesTable() {
             <th>{game.startTime}</th>
             <th>{game.hasScenes ? "🟢" : "🔴"}</th>
             <th>{game.leader}</th>
-            <th>{renderPlayers(game)}</th>
+            <th>{playerParser(game.players)}</th>
           </tr>
         ))}
       </tbody>
