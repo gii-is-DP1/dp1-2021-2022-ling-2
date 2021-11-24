@@ -43,15 +43,21 @@ public class Lobby extends BaseEntity {
     @NotNull
     private Integer maxPlayers;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    // TODO if I remove CascadeType.REMOVE then the deleteLobby() method in
+    // LobbyController throws an exception. If I add CascadeType.REMOVE then the
+    // deleteLobby() method in LobbyController works fine but it deletes the users
+    // from the database. Find the solution for this
+    // I want that, whe I delete a lobby, the user rows that were referencing that
+    // lobby change their value to NULL in the lobby_id column
+    @OneToMany(mappedBy = "lobby")
     private Set<User> users; // Managed by the server
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "leader", referencedColumnName = "username")
     private User leader; // leader of the game. Currently being chosen by the host
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "host", referencedColumnName = "username")
     private User host;// The host column in the game will only have the host's
     // username

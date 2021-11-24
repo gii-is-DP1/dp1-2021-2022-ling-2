@@ -35,7 +35,7 @@ import lombok.Setter;
 public class User {
 	@Id
 	@NotBlank
-	@Length(min = 4, max = 20, message = " The username must be 4-20 characters long")
+	@Length(min = 4, max = 20, message = "The username must be 4-20 characters long")
 	private String username;
 
 	@NotBlank
@@ -52,13 +52,13 @@ public class User {
 
 	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name = "game")
 	@JsonIgnore
 	private Game game; // game where the user is currently in
 
 	// TODO The cascade type is yet to be determined
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name = "lobby")
 	@JsonIgnore
 	private Lobby lobby; // lobby where the user is currently in

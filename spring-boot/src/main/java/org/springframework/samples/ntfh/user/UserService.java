@@ -22,6 +22,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.samples.ntfh.util.TokenUtils;
@@ -53,16 +54,42 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User saveUser(User user) throws DataAccessException {
+	public User saveUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
 
 		Optional<User> userWithSameUsername = userRepository.findById(user.getUsername());
 		if (userWithSameUsername.isPresent())
-			throw new DataAccessException("This username is already in use") {
+			throw new DataIntegrityViolationException("This username is already in use") {
 			};
 
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 		if (userWithSameEmail.isPresent())
-			throw new DataAccessException("This email is already in use") {
+			throw new DataIntegrityViolationException("This email is already in use") {
+			};
+
+		if (user.getUsername().isEmpty())
+			throw new IllegalArgumentException("The username can not be empty") {
+			};
+		if (user.getPassword().isEmpty())
+			throw new IllegalArgumentException("The password can not be empty") {
+			};
+		if (user.getEmail().isEmpty())
+			throw new IllegalArgumentException("The email can not be empty") {
+			};
+
+		if (user.getPassword() == null || user.getPassword().isEmpty())
+			throw new IllegalArgumentException("A Password is required") {
+			};
+
+		if (user.getPassword().length() < 4)
+			throw new IllegalArgumentException("Password must be at least 8 characters long") {
+			};
+
+		if (user.getUsername().length() < 4)
+			throw new IllegalArgumentException("Username must be at least 4 characters long") {
+			};
+
+		if (user.getUsername().length() > 20)
+			throw new IllegalArgumentException("Username must be at most 20 characters long") {
 			};
 
 		user.setEnabled(true);
@@ -119,8 +146,18 @@ public class UserService {
 	 */
 	@Transactional
 
-	public User updateUser(User user, String token)
-			throws DataAccessException, DataIntegrityViolationException, NonMatchingTokenException {
+	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
+			NonMatchingTokenException, IllegalArgumentException {
+
+		if (user.getUsername().isEmpty())
+			throw new IllegalArgumentException("The username can not be empty") {
+			};
+		if (user.getPassword().isEmpty())
+			throw new IllegalArgumentException("The password can not be empty") {
+			};
+		if (user.getEmail().isEmpty())
+			throw new IllegalArgumentException("The email can not be empty") {
+			};
 
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
@@ -131,6 +168,7 @@ public class UserService {
 		if (!userInDatabaseOptional.isPresent())
 			throw new DataAccessException("User not found") {
 			};
+
 		User userInDatabase = userInDatabaseOptional.get();
 
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
@@ -138,11 +176,8 @@ public class UserService {
 			throw new DataIntegrityViolationException("This email is already in use") {
 			};
 		}
-		// TODO this is already checked in the User entity, do we also need to ckeck it
-		// here or is the exception propagated all the way to the HttpEntity<>()? We
-		// will have to test it
-		if (user.getPassword().length() < 8)
-			throw new DataIntegrityViolationException("Password must be at least 4 characters long") {
+		if (user.getPassword().length() < 4)
+			throw new IllegalArgumentException("Password must be at least 4 characters long") {
 			};
 
 		// Before updating, make sure there are no null values. If the user didn't send

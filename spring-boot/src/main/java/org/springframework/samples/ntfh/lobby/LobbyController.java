@@ -176,7 +176,12 @@ public class LobbyController {
         if (!requestByHost && !requestByUserLeaving)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        if (lobbyService.removeUserFromLobby(lobbyId, username)) {
+        if (requestByHost && usernameFromLobbyHost.equals(username)) {
+            // If the host is the one who wanted to leave, then delete the lobby
+            lobbyService.deleteLobby(lobby);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        if (lobbyService.removeUserFromLobby(lobby, username)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
@@ -197,7 +202,6 @@ public class LobbyController {
     @DeleteMapping("{lobbyId}")
     public ResponseEntity<Lobby> deleteLobby(@PathVariable("lobbyId") Integer lobbyId,
             @RequestHeader("Authorization") String token) {
-
         return null;
     }
 }

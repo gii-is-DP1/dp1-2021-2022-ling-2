@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useHistory, Link } from "react-router-dom";
@@ -53,6 +53,7 @@ export default function LobbyBrowser() {
       (with join button). Each row could be rendered via different components since they will
       have different columns (?), maybe even two tables... we will see, now it doesn't matter */}
       <Table bordered hover striped>
+        {/* TODO: Eventually turn this into a proper table or flex container */}
         <thead>
           <tr>
             <th>No.Players</th>
@@ -72,7 +73,7 @@ export default function LobbyBrowser() {
                 {lobby.users.length}/{lobby.maxPlayers}
               </th>
               <th>{lobby.name}</th>
-              <th>{lobby.hasScenes ? "✓" : "X"}</th>
+              <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>
                 <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
                   {getLobbyStatus(lobby)==="" ? "" : (
