@@ -15,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.samples.ntfh.character.Character;
@@ -52,15 +53,14 @@ public class User {
 
 	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "game")
 	@JsonIgnore
 	private Game game; // game where the user is currently in
 
-	// TODO maybe remove
-	@ManyToOne(optional = true)
+	@ManyToOne
 	@JoinColumn(name = "lobby")
-	@JsonIgnore
+	@JsonIgnoreProperties({ "users", "host", "leader" })
 	private Lobby lobby; // lobby where the user is currently in
 
 	@ManyToOne // TODO set appropiate cascade type
