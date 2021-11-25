@@ -115,8 +115,7 @@ public class LobbyController {
             @RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
         // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
         String usernameFromRequest = body.get("username");
-        String usernameFromToken = TokenUtils.usernameFromToken(token);
-        lobbyService.joinLobby(lobbyId, usernameFromRequest, usernameFromToken);
+        lobbyService.joinLobby(lobbyId, usernameFromRequest, token);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
