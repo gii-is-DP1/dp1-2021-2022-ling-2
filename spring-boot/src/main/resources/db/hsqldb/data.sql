@@ -36,7 +36,7 @@ INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
 
 INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', null, false, true, 2, 'andres');
 -- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host)  VALUES('test lobby 2', 1, true, true, 4, 'gandalf');
-INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (1, true, 25/11/2021 13:15:12, 14);
+-- INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (1, true, 25/11/2021 13:15:12, 14);
 -- INSERT INTO games(id, name, startTime, has scenes, players, leader) VALUES
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
