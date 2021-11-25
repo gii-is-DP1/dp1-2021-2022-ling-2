@@ -27,13 +27,4 @@ public class AchievementService {
         return achievementRepository.findById(id);
     }
 
-    @Transactional
-    public void save(Achievement achievement) {
-        achievementRepository.save(achievement);
-    }
-
-    public void delete(Integer achievementId) {
-        achievementRepository.deleteById(achievementId);
-    }
-
 }

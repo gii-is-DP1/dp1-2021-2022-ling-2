@@ -1,9 +1,7 @@
 package org.springframework.samples.ntfh.lobby;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,19 +28,18 @@ public class LobbyController {
     @Autowired
     private LobbyService lobbyService;
 
-    /** 
+    /**
      * This endpoint handles the fetch of all active lobbies
      * 
      * @return all active lobbies
      * @author jstockwell
-    */
+     */
     @GetMapping
-	public ResponseEntity<Iterable<Lobby>> getAll() {
-		// untested
-		Iterable<Lobby> lobbies = this.lobbyService.findAll();
-		return new ResponseEntity<>(lobbies, HttpStatus.OK);
-	}
-
+    public ResponseEntity<Iterable<Lobby>> getAll() {
+        // untested
+        Iterable<Lobby> lobbies = this.lobbyService.findAll();
+        return new ResponseEntity<>(lobbies, HttpStatus.OK);
+    }
 
     /**
      * This endpoint handles the creation of a new game lobby
@@ -53,7 +50,6 @@ public class LobbyController {
      */
     @PostMapping()
     public ResponseEntity<Map<String, Integer>> createLobby(@RequestBody Lobby lobby) {
-        lobby.setHasStarted(false); // A new lobby has not started yet as a game
         Lobby createdLobby = lobbyService.save(lobby);
         return new ResponseEntity<>(Map.of("lobbyId", createdLobby.getId()), HttpStatus.CREATED);
     }
@@ -120,28 +116,9 @@ public class LobbyController {
         // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
         String usernameFromRequest = body.get("username");
         String usernameFromToken = TokenUtils.usernameFromToken(token);
-        if (!usernameFromRequest.equals(usernameFromToken)) // TODO untested
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        lobbyService.joinLobby(lobbyId, usernameFromRequest, usernameFromToken);
+        return new ResponseEntity<>(HttpStatus.OK);
 
-        Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
-        if (!lobbyOptional.isPresent())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        Lobby lobby = lobbyOptional.get();
-        if ((lobby.getHasStarted()) || lobby.getUsers().size() == lobby.getMaxPlayers())
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
-        Set<String> usernamesInLobby = new HashSet<>();
-        lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
-
-        if (usernamesInLobby.contains(usernameFromRequest))
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // The user cannot join if he/she is already in
-
-        if (lobbyService.joinLobby(lobbyId, usernameFromRequest)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     /**
@@ -170,14 +147,19 @@ public class LobbyController {
         Lobby lobby = lobbyOptional.get();
 
         String usernameFromToken = TokenUtils.usernameFromToken(token);
-        String usernameFromLobbyHost = lobby.getHost();
+        String usernameFromLobbyHost = lobby.getHost().getUsername();
 
         Boolean requestByUserLeaving = usernameFromToken.equals(username);
         Boolean requestByHost = usernameFromToken.equals(usernameFromLobbyHost);
         if (!requestByHost && !requestByUserLeaving)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        if (lobbyService.removeUserFromLobby(lobbyId, username)) {
+        if (requestByHost && usernameFromLobbyHost.equals(username)) {
+            // If the host is the one who wanted to leave, then delete the lobby
+            lobbyService.deleteLobby(lobby);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        if (lobbyService.removeUserFromLobby(lobby, username)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
@@ -198,7 +180,6 @@ public class LobbyController {
     @DeleteMapping("{lobbyId}")
     public ResponseEntity<Lobby> deleteLobby(@PathVariable("lobbyId") Integer lobbyId,
             @RequestHeader("Authorization") String token) {
-
         return null;
     }
 }

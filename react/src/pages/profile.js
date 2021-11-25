@@ -5,14 +5,15 @@ import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Button } from "react-bootstrap";
 import Homebar from "../components/home/Homebar";
+import errorContext from "../context/error";
 
 export default function Profile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
+  const { errors, setErrors } = useContext(errorContext); // Array of errors
   const user = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null);
-  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
     document.title = `NTFH - ${params.username}'s profile`;
@@ -23,8 +24,8 @@ export default function Profile() {
         const response = await axios.get(`users/${params.username}`);
         setUserProfile(response.data);
       } catch (error) {
+        setErrors([...errors, error.response.data]);
         history.push("/not-found");
-        setErrors([...errors, error.message]);
       }
     };
     fetchUserProfile();
@@ -37,7 +38,7 @@ export default function Profile() {
         <Homebar />
       </div>
       <h1>{params.username}'s profile</h1>
-      {user.username === params.username && (
+      {user?.username === params.username && (
         <Button
           variant="primary"
           onClick={() => history.push(`${params.username}/edit`)}

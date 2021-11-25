@@ -5,7 +5,7 @@ import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
-import Errors from "../components/common/Errors";
+import errorContext from "../context/error";
 
 /**
  * @author andrsdt
@@ -14,26 +14,30 @@ export default function EditProfile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
+  const { errors, setErrors } = useContext(errorContext); // hook
   const { userToken, setUserToken } = useContext(userContext); // hook
-  const user = tokenParser(useContext(userContext)); // hook
-  const [errors, setErrors] = useState([]);
+  const loggedUser = tokenParser(useContext(userContext)); // hook
+  const [userProfile, setUserProfile] = useState(null); // hook
 
-  const [username, setUsername] = useState(user.username);
-  const [email, setEmail] = useState(user.email);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  useEffect(() => {
-    document.title = `NTFH - Edit profile`;
-    // TODO allow admin to edit
-    if (!userToken) history.push(ROUTES.LOGIN); // redirect to login if no token
+  const sendToProfile = () =>
+    history.push(ROUTES.PROFILE.replace(":username", params.username));
 
-    // redirect to profile if user is not the same as the one in the url
-    if (user.username !== params.username)
-      history.push(ROUTES.PROFILE.replace(":username", params.username));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty array means "run only first time the component renders"
+  async function fetchUserProfile() {
+    try {
+      const response = await axios.get(`/users/${params.username}`);
+      setUserProfile(response.data);
+      setUsername(response.data.username);
+      setEmail(response.data.email);
+    } catch (error) {
+      setErrors([...errors, error.response.data]);
+      sendToProfile();
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -53,16 +57,31 @@ export default function EditProfile() {
 
       // Issue a new token with the updated user data
       setUserToken(response.data.authorization);
-      history.push(ROUTES.PROFILE.replace(":username", params.username));
+      sendToProfile();
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   }
+
+  useEffect(() => {
+    document.title = `NTFH - Edit profile`;
+    // TODO allow admin to edit
+    if (!userToken) history.push(ROUTES.LOGIN);
+    // redirect to login if no token
+    // redirect to profile if user is not the same as the one in the url or if the user is not an admin
+    else if (
+      loggedUser.username !== params.username &&
+      !loggedUser.authorities.includes("admin")
+    )
+      history.push(ROUTES.PROFILE.replace(":username", params.username));
+    else fetchUserProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty array means "run only first time the component renders"
+
   return (
     <>
       <h1>Edit your profile</h1>
       <br />
-      <Errors errors={errors} />
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicUsername">
           <Form.Label>Username</Form.Label>
@@ -70,7 +89,7 @@ export default function EditProfile() {
             type="text"
             placeholder="Enter username"
             name="username"
-            defaultValue={user?.username}
+            defaultValue={userProfile?.username}
             disabled
           />
         </Form.Group>
@@ -80,7 +99,7 @@ export default function EditProfile() {
             type="email"
             placeholder="Enter email"
             name="email"
-            defaultValue={user?.email}
+            defaultValue={userProfile?.email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />

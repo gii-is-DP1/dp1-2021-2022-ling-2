@@ -1,49 +1,62 @@
 import { ListGroup } from "react-bootstrap";
-import PropTypes from "prop-types";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Button } from "react-bootstrap";
-import Errors from "../common/Errors";
-import axios from "../../api/axiosConfig";
 import UserContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
+import capitalize from "../../helpers/capitalize";
 
 export default function UsersInLobby(props) {
-  const { lobby } = props; // destructuring props // TODO in other files too
+  const { lobby, handleRemoveUserFromLobby } = props; // destructuring props // TODO in other files too
   // user: the one who is logged in
-  const [errors, setErrors] = useState([]);
-  const { userToken } = useContext(UserContext);
   const viewer = tokenParser(useContext(UserContext)); // user who is logged in
 
-  const isHost = (user) => user.username === lobby.host;
+  const isHost = (user) => user.username === lobby.host.username;
   // craeate arrow function in a variable
 
-  async function handleKickUser(username) {
-    try {
-      // axios.delete only has 2 parameters, url and headers)
-      await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
-        headers: { Authorization: "Bearer " + userToken },
-      });
-    } catch (error) {
-      setErrors([...errors, error.message]);
-    }
-  }
+  // const characters = ["ranger", "rogue", "warrior", "wizard"];
+  const characters = [
+    "ranger",
+    "ranger",
+    "rogue",
+    "rogue",
+    "warrior",
+    "warrior",
+    "wizard",
+    "wizard",
+  ];
+  const getCharacterFromId = (id) => {
+    if (id === undefined) return "none";
+    return characters[id - 1];
+  };
+
+  const getGenderFromId = (id) => {
+    if (id === undefined) return "";
+    return id % 2 ? "♂ " : "♀ ";
+  };
+
   return (
     <>
-      <Errors errors={errors} />
       <ListGroup className="d-inline-flex p-2">
         {lobby.users
           .sort((a, b) =>
-            a.username < b.username ? -1 : a.username > b.username ? 1 : 0
+            a.username < b.username ? 1 : a.username > b.username ? -1 : 0
           ) // arbitrary but consistent order
           .map((user, idx) => (
             <ListGroup.Item key={idx}>
               {!isHost(user) && isHost(viewer) && (
                 // show me the kick button over a player only if i'm the host, and also if the player to kick is not me
-                <Button onClick={(e) => handleKickUser(user.username)}>
-                  Kick
+                <Button
+                  variant="m-0 p-1"
+                  onClick={(e) => handleRemoveUserFromLobby(user.username)}
+                >
+                  ❌
                 </Button>
               )}
-              {isHost(user) && "👑"} {user.username}
+              {isHost(user) && <span className="m-0 p-1">👑</span>}{" "}
+              {user.username +
+                " — " +
+                getGenderFromId(user.character?.id) +
+                capitalize(getCharacterFromId(user.character?.id))}
             </ListGroup.Item>
           ))}
       </ListGroup>

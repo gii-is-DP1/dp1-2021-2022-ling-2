@@ -18,8 +18,6 @@ package org.springframework.samples.ntfh.user;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 	// TODO JWT tokens can be decrypted to know if the user who is trying to perform
 	// an action is accessing his data or not
-	private final UserService userService;
-
 	@Autowired
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
+	private UserService userService;
 
 	@GetMapping
 	public ResponseEntity<Iterable<User>> getAll() {
@@ -88,52 +82,26 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 
-		Boolean sentByAdmin = TokenUtils.tokenHasAuthorities(token, "admin");
-		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		// TODO untested
-		// If the token is not from the user nor an admin, return unauthorized
-		if (!sentBySameUser && !sentByAdmin)
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		userService.updateUser(user, token);
 
-		Optional<User> userInDatabaseOptional = this.userService.findUser(user.getUsername());
-		if (!userInDatabaseOptional.isPresent())
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		User userInDatabase = userInDatabaseOptional.get();
-
-		// Make sure there are no null values. If the user didn't send them in the form,
-		// they must stay the same as they were in the database.
-		if (user.getPassword() == null)
-			user.setPassword(userInDatabase.getPassword());
-		if (user.getEmail() == null)
-			user.setEmail(userInDatabase.getEmail());
-
-		userService.updateUser(user);
-
+		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		if (sentByAdmin)
 			// Don't return a new token if the one updating the profile is an admin
 			return new ResponseEntity<>(HttpStatus.OK);
 
-		String newToken = TokenUtils.generateJWTToken(user);
-		return new ResponseEntity<>(Map.of("authorization", newToken), HttpStatus.OK);
+		String tokenWithUpdatedData = TokenUtils.generateJWTToken(user);
+		return new ResponseEntity<>(Map.of("authorization", tokenWithUpdatedData), HttpStatus.OK);
 	}
 
 	@PostMapping("register")
-	public ResponseEntity<Map<String, String>> register(@Valid @RequestBody User user) {
+	public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
 		this.userService.saveUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-		Optional<User> foundUserOptional = this.userService.findUser(user.getUsername());
-		if (!foundUserOptional.isPresent()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} else if (foundUserOptional.get().getPassword().equals(user.getPassword())) {
-			User foundUser = foundUserOptional.get();
-			String token = TokenUtils.generateJWTToken(foundUser);
-			return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
+		String token = userService.loginUser(user);
+		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
 }

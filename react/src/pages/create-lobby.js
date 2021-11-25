@@ -4,13 +4,14 @@ import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
+import errorContext from "../context/error";
 import tokenParser from "../helpers/tokenParser";
 import Homebar from "../components/home/Homebar";
-import Errors from "../components/common/Errors";
 
 export default function CreateLobby() {
   const history = useHistory(); // hook
 
+  const { errors, setErrors } = useContext(errorContext); // Array of errors
   const { userToken } = useContext(userContext); // hook
   const user = tokenParser(useContext(userContext)); // hook
 
@@ -18,7 +19,6 @@ export default function CreateLobby() {
   const [maxPlayers, setMaxPlayers] = useState(4);
   const [scenesChecked, setScenesChecked] = useState(false);
   const [spectatorsChecked, setSpectatorsChecked] = useState(false);
-  const [errors, setErrors] = useState([]);
 
   const handleCreateLobby = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ export default function CreateLobby() {
       const lobbyId = response.data.lobbyId;
       history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   };
 
@@ -52,7 +52,6 @@ export default function CreateLobby() {
         <Homebar />
       </div>
       <h1>Create a new game</h1>
-      <Errors errors={errors} />
       <Form onSubmit={handleCreateLobby}>
         <Form.Group className="mb-2">
           <Form.Label>Game name</Form.Label>
@@ -96,7 +95,7 @@ export default function CreateLobby() {
             name="scenes"
             type="checkbox"
             label="Scenes"
-            onChange={(e) => setSpectatorsChecked(!spectatorsChecked)}
+            onChange={(e) => setScenesChecked(!scenesChecked)}
           />
         </Form.Group>
         <Form.Group className="mb-2">

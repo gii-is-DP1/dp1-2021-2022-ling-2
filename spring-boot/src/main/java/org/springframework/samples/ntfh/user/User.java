@@ -6,6 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -13,8 +15,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.samples.ntfh.character.Character;
+import org.springframework.samples.ntfh.game.Game;
+import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.samples.ntfh.user.authorities.Authorities;
 
 import lombok.Getter;
@@ -30,11 +36,11 @@ import lombok.Setter;
 public class User {
 	@Id
 	@NotBlank
-	@Length(min = 4, max = 20, message = " The username must be 4-20 characters long")
+	@Length(min = 4, max = 20, message = "The username must be 4-20 characters long")
 	private String username;
 
 	@NotBlank
-	@Length(min = 1, message = "The length of the password must be at least 1")
+	@Length(min = 4, message = "Password must be at least 4 characters long")
 	private String password;
 
 	@NotNull
@@ -45,9 +51,25 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private boolean enabled; // If a user gets banned, he/she will get disabled
 
-	// TODO Commented until I fix the FK issue on Game.java
+	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
-	// private Game currentGame;
+	@ManyToOne
+	@JoinColumn(name = "game")
+	@JsonIgnore
+	private Game game; // game where the user is currently in
+
+	@ManyToOne
+	@JoinColumn(name = "lobby")
+	@JsonIgnoreProperties({ "users", "host", "leader" })
+	private Lobby lobby; // lobby where the user is currently in
+
+	@ManyToOne // TODO set appropiate cascade type
+	@JoinColumn(name = "character")
+	private Character character;
+	// Character that the user has currently selected. Will be set during a lobby,
+	// and will stay the same during the entire game he/she is playing. Useful later
+	// for social interactions (your friends can see the character you are playing
+	// in your current game)
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore

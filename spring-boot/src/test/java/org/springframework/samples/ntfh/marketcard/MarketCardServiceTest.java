@@ -3,13 +3,10 @@ package org.springframework.samples.ntfh.marketcard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.assertj.core.util.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.samples.ntfh.marketcard.MarketCard;
-import org.springframework.samples.ntfh.marketcard.MarketCardService;
-import org.springframework.samples.ntfh.marketcard.MarketCardTypeEnum;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
@@ -23,7 +20,6 @@ public class MarketCardServiceTest {
         Integer count = marketCardService.marketCardCount();
         assertEquals(14, count);
     }
-    
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(marketCardService.findAll()).size();

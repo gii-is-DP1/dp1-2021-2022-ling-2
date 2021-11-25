@@ -9,6 +9,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
+import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
+import org.springframework.samples.ntfh.exceptions.UserAlreadyInLobbyException;
 import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,11 @@ public class LobbyService {
 
     @Autowired
     private UserService userService;
+
+    @Transactional
+    public Integer lobbyCount() {
+        return (int) lobbyRepository.count();
+    }
 
     @Transactional
     public Iterable<Lobby> findAll() {
@@ -52,7 +60,6 @@ public class LobbyService {
         Lobby lobbyNonSensitive = new Lobby();
         lobbyNonSensitive.setId(lobby.getId());
         lobbyNonSensitive.setName(lobby.getName());
-        lobbyNonSensitive.setHasStarted(lobby.getHasStarted());
         lobbyNonSensitive.setHasScenes(lobby.getHasScenes());
         lobbyNonSensitive.setSpectatorsAllowed(lobby.getSpectatorsAllowed());
         lobbyNonSensitive.setMaxPlayers(lobby.getMaxPlayers());
@@ -75,8 +82,14 @@ public class LobbyService {
     }
 
     @Transactional
-    public void delete(Lobby lobby) {
-        this.lobbyRepository.delete(lobby);
+    public void deleteLobby(Lobby lobby) {
+        // make sure to remove all FK refrences to this lobby from the users who were in
+        // the lobby
+        lobby.getUsers().forEach(user -> {
+            user.setLobby(null);
+            user.setCharacter(null);
+        });
+        this.lobbyRepository.deleteById(lobby.getId());
     }
 
     /**
@@ -88,7 +101,8 @@ public class LobbyService {
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    public Boolean joinLobby(Integer lobbyId, String username) throws DataAccessException {
+    public Lobby joinLobby(Integer lobbyId, String usernameRequest, String usernameToken)
+            throws DataAccessException, MaximumLobbyCapacityException {
         // TODO make this throw more specific (maybe custom)
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
         if (!lobbyOptional.isPresent())
@@ -97,18 +111,34 @@ public class LobbyService {
 
         Lobby lobby = lobbyOptional.get();
         if (lobby.getMaxPlayers().equals(lobby.getUsers().size()))
-            throw new DataAccessException("The lobby is full") { // TODO change type of exception
+            throw new MaximumLobbyCapacityException("The lobby is full") {
             };
 
-        Optional<User> userOptional = userService.findUser(username);
+        Optional<User> userOptional = userService.findUser(usernameRequest);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user who wants to join the lobby does not exist") {
             };
 
+        if (!usernameRequest.equals(usernameToken))
+            throw new IllegalArgumentException("The Token username and the request one does not coindice") {
+            };
+
+        Set<String> usernamesInLobby = new HashSet<>();
+        lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
+        if (usernamesInLobby.contains(usernameRequest))
+            throw new IllegalArgumentException("The user is already in the lobby") {
+            };
+
         User user = userOptional.get();
+        if (user.getLobby() != null)
+            throw new UserAlreadyInLobbyException(
+                    String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
+            };
+
+        user.setLobby(lobby);
+
         lobby.addUser(user);
-        lobbyRepository.save(lobby);
-        return true;
+        return lobbyRepository.save(lobby);
     }
 
     /**
@@ -121,26 +151,23 @@ public class LobbyService {
      * @return true if the player was removed, false if there was some problem
      */
     @Transactional
-    public Boolean removeUserFromLobby(Integer lobbyId, String username) throws DataAccessException {
+    public Boolean removeUserFromLobby(Lobby lobby, String username) throws DataAccessException {
         // TODO untested
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
-        if (!lobbyOptional.isPresent())
-            throw new DataAccessException("The lobby does not exist") {
-            };
-
         Optional<User> userOptional = userService.findUser(username);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user that is being removed from the lobby does not exist") {
             };
 
-        Lobby lobby = lobbyOptional.get();
         User user = userOptional.get();
 
-        if (lobby.getHost().equals(user.getUsername()))
+        if (lobby.getHost().getUsername().equals(user.getUsername()))
+            // this should be handled by .deleteLobby()
             throw new DataAccessException("The host cannot leave the lobby") {
             };
 
         lobby.removeUser(user);
+        user.setLobby(null);
+
         this.updateLobby(lobby);
         return true;
     }
@@ -151,9 +178,21 @@ public class LobbyService {
      * @return
      */
     @Transactional
-    public Lobby updateLobby(Lobby lobby) {
+    public Lobby updateLobby(Lobby lobby) throws MissingAttributeException {
         // TODO check if there are missing attributes in the object? should there be
         // any?
+        if (lobby.getName().isEmpty())
+            throw new MissingAttributeException("The name of the lobby cannot be empty") {
+            };
+
+        if (lobby.getHasScenes() == null)
+            throw new MissingAttributeException("The scenes setting must be enable or disable") {
+            };
+
+        if (lobby.getMaxPlayers() == null)
+            throw new MissingAttributeException("The number of max players can not be null") {
+            };
+
         return this.lobbyRepository.save(lobby);
     }
 }
