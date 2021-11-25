@@ -47,7 +47,7 @@ export default function EditAchievement() {
       });
       sendToAdminPage();
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response]);
     }
   }
 

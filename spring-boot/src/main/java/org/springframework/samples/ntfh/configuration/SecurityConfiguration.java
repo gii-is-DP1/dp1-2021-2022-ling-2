@@ -53,6 +53,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/gameHistory").hasAnyAuthority("admin") // Allow admins to list all the
 																						// old games
 				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
+				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are ongoing
+				.antMatchers(HttpMethod.GET, "/lobbies/count").permitAll() // Enables to show how many of the elements in the game browser are open lobbies
+				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games have been played
+				
 				.antMatchers(HttpMethod.PUT, "/achievements").hasAnyAuthority("admin") // Update achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
 																							// achievement

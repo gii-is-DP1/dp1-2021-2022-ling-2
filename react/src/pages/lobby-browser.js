@@ -14,6 +14,9 @@ export default function LobbyBrowser() {
   const { errors, setErrors } = useContext(errorContext); // Array of errors
   const [lobbyList, setLobbyList] = useState([]);
 
+  const [gameCount, setGameCount] = useState(null);
+  const [lobbyCount, setLobbyCount] = useState(null);
+
   useEffect(() => {
     // get lobby list
     const fetchLobbies = async () => {
@@ -21,7 +24,7 @@ export default function LobbyBrowser() {
         const response = await axios.get(`lobbies`);
         setLobbyList(response.data);
       } catch (error) {
-        setErrors([...errors, error.response.data]);
+        setErrors([...errors, error.response]);
         history.push("/not-found");
       }
     };
@@ -32,6 +35,32 @@ export default function LobbyBrowser() {
   const refreshPage = () => {
     window.location.reload();
   };
+
+  useEffect(() =>{
+    const countGames = async () =>{
+      try{
+        const response = await axios.get(`games/count`);
+        setGameCount(response.data);
+      } catch (error) {
+        setErrors([...errors, error.response]);
+      }
+    };
+
+    countGames();
+  }, []);
+
+  useEffect(() =>{
+    const countLobbies = async() =>{
+      try{
+        const response = await axios.get(`lobbies/count`);
+        setLobbyCount(response.data);
+      } catch (error) {
+        setErrors([...errors, error.response]);
+      }
+    };
+
+    countLobbies();
+  }, []);
 
   const renderButtons = (lobby) => {
     if (!lobby.getHasStarted) {
@@ -89,12 +118,14 @@ export default function LobbyBrowser() {
     }
   };
 
+
   return (
     <div>
       <div>
         <Homebar />
       </div>
       <h1>Lobby Browser</h1>
+      <h3>Number of ongoing games: {gameCount} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Number of open lobbies: {lobbyCount-gameCount}</h3>
       {/* This should be a table fetching all games (With spectate button) and all lobbies
       (with join button). Each row could be rendered via different components since they will
       have different columns (?), maybe even two tables... we will see, now it doesn't matter */}
