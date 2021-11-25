@@ -6,6 +6,7 @@ import tokenParser from "../helpers/tokenParser";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
 import errorContext from "../context/error";
+import Homebar from "../components/home/Homebar";
 
 /**
  * @author andrsdt
@@ -79,6 +80,7 @@ export default function EditProfile() {
 
   return (
     <>
+      <Homebar />
       <h1>Edit your profile</h1>
       <br />
       <Form onSubmit={handleSubmit}>

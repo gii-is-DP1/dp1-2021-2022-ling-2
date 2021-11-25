@@ -6,6 +6,7 @@ import userContext from "../context/user";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
 import errorContext from "../context/error";
+import Homebar from "../components/home/Homebar";
 
 export default function EditAchievement() {
     const params = useParams();
@@ -21,8 +22,7 @@ export default function EditAchievement() {
     const sendHome = () => history.push(ROUTES.HOME);
 
     async function fetchAchievement() {
-        console.log(params.achievementId);
-        try{
+        try {
             const response = await axios.get(`/achievements/${params.achievementId}`);
             setAchievement(response.data);
             setName(response.data.name);
@@ -32,20 +32,20 @@ export default function EditAchievement() {
             sendHome();
         }
     }
-    
+
     async function handleSubmit(e) {
         e.preventDefault();
-        try{
+        try {
             const payload = {
                 name,
-                description
+                description,
             };
             const response = await axios.put("/achievements", payload, {
-                headers: { Authorization: "Bearer " + userToken},
+                headers: { Authorization: "Bearer " + userToken },
             });
             sendHome();
         } catch (error) {
-            setErrors([...errors, error.response]);
+            setErrors([...errors, error.response.data]);
         }
     }
 
@@ -59,6 +59,7 @@ export default function EditAchievement() {
 
     return (
         <>
+            <Homebar />
             <h1>Edit achievement</h1>
             <br />
             <Form onSubmit={handleSubmit}>
@@ -69,6 +70,7 @@ export default function EditAchievement() {
                         placeholder="Achievement Name"
                         name="achievementName"
                         defaultValue={achievement?.name}
+                        onChange={(e) => setName(e.target.value)}
                         required
                     />
                 </Form.Group>
@@ -79,6 +81,7 @@ export default function EditAchievement() {
                         placeholder="Achievement Description"
                         name="achievementDescription"
                         defaultValue={achievement?.description}
+                        onChange={(e) => setDescription(e.target.value)}
                         required
                     />
                 </Form.Group>
