@@ -14,10 +14,4 @@ public class AchievementServiceTest {
     @Autowired
     private AchievementService achievementService;
 
-    @Test
-    public void testCountWithInitialData() {
-        Integer count = achievementService.achievementCount();
-        assertEquals(0, count);
-    }
-
 }
