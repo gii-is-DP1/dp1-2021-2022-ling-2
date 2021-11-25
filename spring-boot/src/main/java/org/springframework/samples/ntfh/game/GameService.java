@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.ntfh.lobby.Lobby;
+import org.springframework.samples.ntfh.lobby.LobbyService;
 import org.springframework.samples.ntfh.player.Player;
 import org.springframework.samples.ntfh.player.PlayerService;
 import org.springframework.samples.ntfh.user.User;
@@ -22,6 +23,8 @@ public class GameService {
 
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private LobbyService lobbyService;
 
     @Transactional
     public Integer gameCount() {
@@ -50,6 +53,8 @@ public class GameService {
         game.setPlayers(players);
         game.setLeader(players.iterator().next()); // Random leader
 
+        lobby.setGame(game); // Reference to this game in Lobby
+        lobbyService.save(lobby);
         return gameRepo.save(game);
     }
 
