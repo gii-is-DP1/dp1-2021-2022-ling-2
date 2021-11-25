@@ -52,7 +52,6 @@ public class LobbyController {
      */
     @PostMapping()
     public ResponseEntity<Map<String, Integer>> createLobby(@RequestBody Lobby lobby) {
-        lobby.setHasStarted(false); // A new lobby has not started yet as a game
         Lobby createdLobby = lobbyService.save(lobby);
         return new ResponseEntity<>(Map.of("lobbyId", createdLobby.getId()), HttpStatus.CREATED);
     }
@@ -121,7 +120,7 @@ public class LobbyController {
         String usernameFromToken = TokenUtils.usernameFromToken(token);
         lobbyService.joinLobby(lobbyId, usernameFromRequest, usernameFromToken);
         return new ResponseEntity<>(HttpStatus.OK);
-        
+
     }
 
     /**

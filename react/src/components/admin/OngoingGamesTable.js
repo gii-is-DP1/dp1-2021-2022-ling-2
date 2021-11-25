@@ -14,14 +14,14 @@ export default function OngoingGamesTable() {
       startTime: "2020-04-01T00:00:00Z",
       hasScenes: true,
       players: ["stockie", "andres", "admin"],
-      leader: ["stockie"]
+      leader: ["stockie"],
     },
     {
       id: 4,
       startTime: "2021-11-13T16:52:01Z",
       hasScenes: false,
       players: ["stockie", "andres"],
-      leader: ["andres"]
+      leader: ["andres"],
     },
   ];
 
@@ -52,7 +52,7 @@ export default function OngoingGamesTable() {
       </thead>
       <tbody>
         {placeholderGameList.map((game, idx) => (
-          <tr>
+          <tr key={idx}>
             <th>{game.id}</th>
             <th>{game.startTime}</th>
             <th>{game.hasScenes ? "🟢" : "🔴"}</th>

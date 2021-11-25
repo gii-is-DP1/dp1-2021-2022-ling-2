@@ -18,13 +18,13 @@ export default function GamesHistoryTable() {
         startTime: "2020-04-01T00:00:00Z",
         hasScenes: true,
         players: ["stockie", "andres", "admin"],
-        leader: ["stockie"]
+        leader: ["stockie"],
       },
       finishTime: "2020-04-01T00:45:16Z",
       winner: {
-        username: "stockie"
+        username: "stockie",
       },
-      comments: []
+      comments: [],
     },
   ];
 
@@ -37,7 +37,7 @@ export default function GamesHistoryTable() {
       } catch (error) {
         setErrors([...errors, error.response]);
       }
-    }
+    };
 
     fetchGameHistory();
   }, []);
@@ -57,7 +57,7 @@ export default function GamesHistoryTable() {
       </thead>
       <tbody>
         {placeholderGameHistory.map((gameHistory, idx) => (
-          <tr>
+          <tr key={idx}>
             <th>{gameHistory.id}</th>
             <th>gameHistory.duration</th>
             <th>{gameHistory.game.startTime}</th>

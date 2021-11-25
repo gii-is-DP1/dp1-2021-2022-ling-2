@@ -35,7 +35,7 @@ export default function UsersTable() {
       </thead>
       <tbody>
         {userList.map((user, idx) => (
-          <tr>
+          <tr key={idx}>
             <th>{user.username}</th>
             <th>{user.email}</th>
             <th>{user.enabled ? "🟢" : "🔴"}</th>

@@ -40,9 +40,16 @@ export default function Lobby() {
     try {
       const response = await axios.get(`/lobbies/${lobbyId}`);
       const newLobby = response.data;
-      if (lobby && !userInLobby(user, newLobby))
+      if (lobby && !userInLobby(user, newLobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
         history.push(ROUTES.BROWSE_LOBBIES);
+        return;
+      }
+      if (lobby && lobby.game) {
+        // If the lobby I am trying to join has already started, redirect me to the game
+        history.push(ROUTES.GAME.replace(":gameId", lobby.game.id));
+        return;
+      }
       setLobby(newLobby);
       setFullLobby(newLobby.maxPlayers === newLobby.users.length);
       const takenCharacters = newLobby.users.map((_user) =>
@@ -180,7 +187,7 @@ export default function Lobby() {
                   <Form.Label>Class</Form.Label> <br />
                   <Form.Check
                     className="mx-3"
-                    label="None"
+                    label="🌫️ None"
                     name="class"
                     type="radio"
                     defaultChecked
@@ -188,7 +195,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Rogue"
+                    label="🗡️ Rogue"
                     name="class"
                     type="radio"
                     disabled={
@@ -198,7 +205,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Warrior"
+                    label="🛡 Warrior"
                     name="class"
                     type="radio"
                     disabled={
@@ -209,7 +216,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Wizard"
+                    label="🧙 Wizard"
                     name="class"
                     type="radio"
                     disabled={
@@ -220,7 +227,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Ranger"
+                    label="🏹 Ranger"
                     name="class"
                     type="radio"
                     disabled={
@@ -234,7 +241,7 @@ export default function Lobby() {
                   <Form.Label>Variant</Form.Label> <br />
                   <Form.Check
                     className="mx-3"
-                    label="Male"
+                    label="♂ Male"
                     name="gender"
                     type="radio"
                     defaultChecked
@@ -242,7 +249,7 @@ export default function Lobby() {
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Female"
+                    label="♀ Female"
                     name="gender"
                     type="radio"
                     onChange={(e) => setGender("female")}
