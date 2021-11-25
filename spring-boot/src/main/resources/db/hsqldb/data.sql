@@ -30,7 +30,8 @@ INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
 
 
 
-INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', false, false, true, 2, 'andres');
+INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players, host)  VALUES ('test lobby 1', false, false, true, 2, 'andres');
+INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players, host)  VALUES('test lobby 2', true, true,true, 4, 'gandalf');
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
 
