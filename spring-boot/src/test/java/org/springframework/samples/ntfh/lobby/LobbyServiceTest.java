@@ -2,9 +2,6 @@ package org.springframework.samples.ntfh.lobby;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -15,7 +12,6 @@ import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.samples.ntfh.lobby.LobbyRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class LobbyServiceTest {
@@ -25,19 +21,17 @@ public class LobbyServiceTest {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private LobbyRepository lobbyRepository;
 
     @Test
     public void testCountWithInitialData() {
         Integer count = lobbyService.lobbyCount();
-        assertEquals(2, count);
+        assertEquals(1, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
-        assertEquals(2, count);
+        assertEquals(1, count);
     }
 
     @Test
@@ -71,7 +65,7 @@ public class LobbyServiceTest {
         tester.setMaxPlayers(4);
         tester.setHost(userService.findUser("andres").get());
         lobbyService.save(tester);
-        assertEquals(3, lobbyService.findLobbyById(tester.getId()).get().getId());
+        assertEquals(2, lobbyService.findLobbyById(tester.getId()).get().getId());
     }
 
     @Test
@@ -92,19 +86,18 @@ public class LobbyServiceTest {
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
         assertEquals(true, lobbyService.findLobbyById(1).get().getUsers().contains(requester));
     }
-
-    @Test
-    public void testH14E1(){
-        List<Lobby> lobbiesServiceList= new ArrayList<>();
-        lobbyService.findAll().forEach(x->lobbiesServiceList.add(x));
-        Integer playersLobby1Sevice=lobbiesServiceList.get(0).getUsers().size();
-        
-        List<Lobby> lobbiesRepositoryList = new ArrayList<>();
-        lobbyRepository.findAll().forEach(x->lobbiesRepositoryList.add(x));
-        Integer playersLobby1Repo=lobbiesRepositoryList.get(0).getUsers().size();
-        
-        assertEquals(playersLobby1Repo, playersLobby1Sevice);
-    }
-
+    /*
+     * TODO
+     * 
+     * @Test public void testRemoveUserFromLobby() {
+     * 
+     * }
+     * 
+     * TODO
+     * 
+     * @Test public void testUpdateLobby() {
+     * 
+     * }
+     */
 
 }
