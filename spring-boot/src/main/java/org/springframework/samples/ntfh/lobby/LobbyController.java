@@ -48,7 +48,7 @@ public class LobbyController {
      * @return id of the game so the user can be redirected to the lobby
      * @author andrsdt
      */
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Map<String, Integer>> createLobby(@RequestBody Lobby lobby) {
         Lobby createdLobby = lobbyService.save(lobby);
         return new ResponseEntity<>(Map.of("lobbyId", createdLobby.getId()), HttpStatus.CREATED);
