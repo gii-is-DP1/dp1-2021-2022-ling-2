@@ -57,7 +57,7 @@ public class UserServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(userService.findAll()).size();
-        assertEquals(4, count);
+        assertEquals(13, count);
     }
 
     @Test
