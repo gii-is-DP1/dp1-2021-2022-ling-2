@@ -27,6 +27,7 @@ public class Character extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CharacterGenderEnum characterGenderEnum;
 
+    // TODO lazy load
     @ManyToMany(mappedBy = "usableBy")
     private Set<MarketCard> availableMarketCards;
 }

@@ -41,12 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 	// TODO JWT tokens can be decrypted to know if the user who is trying to perform
 	// an action is accessing his data or not
-	private final UserService userService;
-
 	@Autowired
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
+	private UserService userService;
 
 	@GetMapping
 	public ResponseEntity<Iterable<User>> getAll() {

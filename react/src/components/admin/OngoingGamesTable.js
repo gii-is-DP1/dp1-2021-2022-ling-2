@@ -32,7 +32,7 @@ export default function OngoingGamesTable() {
         const response = await axios.get(`games`);
         setGameList(response.data);
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
       }
     };
 
