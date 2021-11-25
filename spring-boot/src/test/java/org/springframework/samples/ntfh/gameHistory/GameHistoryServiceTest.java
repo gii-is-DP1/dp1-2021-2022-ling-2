@@ -20,7 +20,7 @@ public class GameHistoryServiceTest {
     
     @Test
     public void testCountWithInitialData() {
-        Integer count = gameHistoryService.gameHistoryCount();
+        Integer count = gameHistoryService.count();
         assertEquals(0, count);
     }
 }
