@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.player;
+package org.springframework.samples.ntfh.spectator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,19 +8,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// TODO change to rest controller and return JSON
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/players")
-public class PlayerController {
+@RequestMapping("/spectators")
+public class SpectatorController {
 
     @Autowired
-    private PlayerService playerService;
+    private SpectatorService spectatorService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Player>> getAll() {
+    public ResponseEntity<Iterable<Spectator>> getAll() {
         // untested
-        Iterable<Player> players = this.playerService.findAll();
-        return new ResponseEntity<>(players, HttpStatus.OK);
+        Iterable<Spectator> spectators = this.spectatorService.findAll();
+        return new ResponseEntity<>(spectators, HttpStatus.OK);
     }
 
 }

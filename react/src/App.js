@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
+import Errors from "./components/common/Errors";
 import * as ROUTES from "./constants/routes";
+import errorContext from "./context/error";
 import unregisteredUserContext from "./context/unregisteredUser";
 import userContext from "./context/user";
-import errorContext from "./context/error";
 import useLocalStorage from "./hooks/useLocalStorage";
 import AdminPage from "./pages/admin-page";
 import CreateLobby from "./pages/create-lobby";
+import EditAchievement from "./pages/edit-achievement";
 import EditProfile from "./pages/edit-profile";
 import Game from "./pages/game";
 import Home from "./pages/home";
@@ -16,8 +19,7 @@ import Login from "./pages/login";
 import NotFound from "./pages/not-found";
 import Profile from "./pages/profile";
 import SignUp from "./pages/signup";
-import { useState } from "react";
-import Errors from "./components/common/Errors";
+import Statistics from "./pages/statistics";
 
 export default function App() {
   const [userToken, setUserToken] = useLocalStorage("token", null);
@@ -41,7 +43,9 @@ export default function App() {
               <Route exact path={ROUTES.LOGIN} component={Login} />
               <Route exact path={ROUTES.PROFILE} component={Profile} />
               <Route exact path={ROUTES.EDIT_PROFILE} component={EditProfile} />
+              <Route exact path={ROUTES.EDIT_ACHIEVEMENT} component={EditAchievement} />
               <Route exact path={ROUTES.CREATE_LOBBY} component={CreateLobby} />
+              <Route exact path={ROUTES.STATISTICS} component={Statistics} />
               <Route
                 exact
                 path={ROUTES.BROWSE_LOBBIES}

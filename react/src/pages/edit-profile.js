@@ -6,6 +6,7 @@ import tokenParser from "../helpers/tokenParser";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
 import errorContext from "../context/error";
+import Homebar from "../components/home/Homebar";
 
 /**
  * @author andrsdt
@@ -34,7 +35,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response]);
       sendToProfile();
     }
   }
@@ -65,7 +66,6 @@ export default function EditProfile() {
 
   useEffect(() => {
     document.title = `NTFH - Edit profile`;
-    // TODO allow admin to edit
     if (!userToken) history.push(ROUTES.LOGIN);
     // redirect to login if no token
     // redirect to profile if user is not the same as the one in the url or if the user is not an admin
@@ -80,6 +80,7 @@ export default function EditProfile() {
 
   return (
     <>
+      <Homebar />
       <h1>Edit your profile</h1>
       <br />
       <Form onSubmit={handleSubmit}>

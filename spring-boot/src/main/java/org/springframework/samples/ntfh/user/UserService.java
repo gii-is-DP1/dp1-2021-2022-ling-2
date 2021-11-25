@@ -149,13 +149,13 @@ public class UserService {
 			NonMatchingTokenException, IllegalArgumentException {
 
 		if (user.getUsername().isEmpty())
-			throw new IllegalArgumentException("The username can not be empty") {
+			throw new IllegalArgumentException("The username cannot be empty") {
 			};
 		if (user.getPassword().isEmpty())
-			throw new IllegalArgumentException("The password can not be empty") {
+			throw new IllegalArgumentException("The password cannot be empty") {
 			};
 		if (user.getEmail().isEmpty())
-			throw new IllegalArgumentException("The email can not be empty") {
+			throw new IllegalArgumentException("The email cannot be empty") {
 			};
 
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
