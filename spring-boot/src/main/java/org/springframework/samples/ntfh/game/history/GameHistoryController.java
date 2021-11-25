@@ -24,4 +24,10 @@ public class GameHistoryController {
         Iterable<GameHistory> gameHistory = gameHistoryService.findAll();
         return new ResponseEntity<>(gameHistory, HttpStatus.OK);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getCount(){
+        Integer gameHistoryCount = gameHistoryService.gameHistoryCount();
+        return new ResponseEntity<>(gameHistoryCount, HttpStatus.OK);
+    }
 }

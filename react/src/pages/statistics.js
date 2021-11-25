@@ -1,10 +1,13 @@
 import Homebar from "../components/home/Homebar";
 import { Table, Col, Row } from "react-bootstrap";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import errorContext from "../context/error";
 
 export default function Statistics() {
+    const { errors, setErrors } = useContext(errorContext); // Array of errors
     const [gameHistoryList, setGameHistoryList] = useState([]);
-    const [gameHistoryCount, setGameHistoryCount] = useState("");
+    const [gameHistoryCount, setGameHistoryCount] = useState(null);
 
     const placeholderGameHistory = [
         {
@@ -18,7 +21,7 @@ export default function Statistics() {
             },
             finishTime: "2020-04-01T00:45:16Z",
             winner: {
-                username: "stockie",
+                username: "admin",
             },
             comments: [],
         },
@@ -33,15 +36,25 @@ export default function Statistics() {
             },
             finishTime: "2020-04-01T00:45:16Z",
             winner: {
-                username: "stockie",
+                username: "andres",
             },
             comments: [],
         },
     ];
 
     useEffect(() => {
+        const countGamesHistory = async () => {
+            try{
+                const response = await axios.get(`gameHistory/count`)
+                setGameHistoryCount(response.data);
+            } catch {
+                setErrors([...errors, error.response]);
+            }
 
-    })
+        };
+
+        countGamesHistory();
+    },[]);
 
     return (
         <>
@@ -50,7 +63,7 @@ export default function Statistics() {
             <Table>
                 <Col>
                     <Row>
-                        Total Games Played: { }
+                        Total Games Played: {gameHistoryCount}
                     </Row>
                 </Col>
             </Table>
