@@ -17,7 +17,7 @@ public class GameServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(0, count);
+        assertEquals(2, count);
     }
 
 }
