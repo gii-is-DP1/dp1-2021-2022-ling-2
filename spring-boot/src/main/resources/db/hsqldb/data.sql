@@ -281,26 +281,12 @@ UPDATE lobbies SET game = 1 WHERE id = 1;
 INSERT INTO games_players(game_id, players_id) VALUES (1, 1);
 INSERT INTO games_players(game_id, players_id) VALUES (1, 2);
 
--- Games
-INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players, host) VALUES (1, 'andres with pablo', null, true, true, 2, 'andres');
-
-UPDATE users SET lobby = 1 WHERE username = 'pablo';
-UPDATE users SET lobby = 1 WHERE username = 'andres';
-
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (1, 0, 0, 0, 0, 8, 'pablo');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (2, 0, 0, 0, 0, 1, 'andres');
-INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (1, true, 1637867168863, 1);
-
-UPDATE lobbies SET game = 1 WHERE id = 1;
-
-INSERT INTO games_players(game_id, players_id) VALUES (1, 1);
-INSERT INTO games_players(game_id, players_id) VALUES (1, 2);
-
+-- Also, set the game attribute in each user to reference the game they are in now
 UPDATE users SET game = 1 WHERE username = 'pablo';
 UPDATE users SET game = 1 WHERE username = 'andres';
 
 
-
+-- Games
 INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players, host) VALUES (2,'Lord of the rings', null, false, true, 4, 'gandalf');
 
 UPDATE users SET lobby = 2 WHERE username = 'gandalf';
@@ -325,21 +311,4 @@ UPDATE users SET game = 2 WHERE username = 'gandalf';
 UPDATE users SET game = 2 WHERE username = 'frodo';
 UPDATE users SET game = 2 WHERE username = 'legolas';
 UPDATE users SET game = 2 WHERE username = 'aragorn';
--- INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES( 1, 0, 0, 0, 0, 1, 'andres');
--- INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES (2, 0 ,0, 0, 0 ,3,'stockie');
--- INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (1, true, 1637854607, 2);
--- INSERT INTO games_players(game_id,players_id) values (1,1);
--- INSERT INTO games_players(game_id,players_id) values (1,2);
--- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host, leader) VALUES ('test lobby 1', 1, false, true, 2, 'andres', 'andres');
 
-
--- INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES( 3, 0, 0, 0, 0, 1, 'frodo');
--- INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES (4, 0 ,0, 0, 0 ,3,'gandalf');
--- INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES( 5, 0, 0, 0, 0, 5, 'legolas');
--- INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES (6, 0 ,0, 0, 0 ,7,'aragorn');
--- INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (2, true, 1637854607, 4);
--- INSERT INTO games_players(game_id,players_id) values (2,3);
--- INSERT INTO games_players(game_id,players_id) values (2,4);
--- INSERT INTO games_players(game_id,players_id) values (2,5);
--- INSERT INTO games_players(game_id,players_id) values (2,6);
--- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host, leader) VALUES ('lord of the rings', 1, true, true, 4, 'gandalf', 'frodo');
