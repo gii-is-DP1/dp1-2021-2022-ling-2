@@ -20,7 +20,6 @@ public class MarketCardServiceTest {
         Integer count = marketCardService.marketCardCount();
         assertEquals(14, count);
     }
-
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(marketCardService.findAll()).size();
