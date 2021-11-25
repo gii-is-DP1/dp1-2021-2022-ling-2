@@ -15,6 +15,7 @@ export default function LobbyBrowser() {
   const [lobbyList, setLobbyList] = useState([]);
 
   const [gameCount, setGameCount] = useState(null);
+  const [lobbyCount, setLobbyCount] = useState(null);
 
   useEffect(() => {
     // get lobby list
@@ -46,6 +47,19 @@ export default function LobbyBrowser() {
     };
 
     countGames();
+  }, []);
+
+  useEffect(() =>{
+    const countLobbies = async() =>{
+      try{
+        const response = await axios.get(`lobbies/count`);
+        setLobbyCount(response.data);
+      } catch (error) {
+        setErrors([...errors, error.response]);
+      }
+    };
+
+    countLobbies();
   }, []);
 
   const renderButtons = (lobby) => {
@@ -111,7 +125,7 @@ export default function LobbyBrowser() {
         <Homebar />
       </div>
       <h1>Lobby Browser</h1>
-      <h3>Number of ongoing games: {gameCount}</h3>
+      <h3>Number of ongoing games: {gameCount} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Number of open lobbies: {lobbyCount-gameCount}</h3>
       {/* This should be a table fetching all games (With spectate button) and all lobbies
       (with join button). Each row could be rendered via different components since they will
       have different columns (?), maybe even two tables... we will see, now it doesn't matter */}
