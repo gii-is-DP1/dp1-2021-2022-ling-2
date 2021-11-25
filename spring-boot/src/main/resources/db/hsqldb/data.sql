@@ -2,18 +2,42 @@
 INSERT INTO users(username,password, email) VALUES ('admin','admin', 'admin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
 INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
-
 INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
-INSERT INTO users(username,password,email) VALUES ('stockie','stockie','stockie@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (4,'stockie','user');
+INSERT INTO users(username,password,email) VALUES ('pablo','pablo', 'pablo@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(4, 'pablo','admin');
+INSERT INTO authorities(id,username,authority) VALUES(5, 'pablo','user');
+INSERT INTO users(username,password,email) VALUES ('stockie','stockie', 'stockie@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(6, 'stockie','user');
+INSERT INTO users(username,password,email) VALUES ('alejandro','alejandro', 'alex@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(7, 'alejandro','user');
+INSERT INTO users(username,password,email) VALUES ('merlin','merlin', 'merlin@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(8, 'merlin','user');
+INSERT INTO users(username,password,email) VALUES ('legolas','legolas', 'legolas@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(9, 'legolas','user');
+INSERT INTO users(username,password,email) VALUES ('gandalf','gandalf', 'gandalf@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(10, 'gandalf','user');
+INSERT INTO users(username,password,email) VALUES ('frodo','frodo', 'frodo@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(11, 'frodo','user');
+INSERT INTO users(username,password,email) VALUES ('dalinar','dalinar', 'dalinar@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(12, 'dalinar','user');
+INSERT INTO users(username,password,email) VALUES ('aragorn','aragorn', 'aragorn@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(13, 'aragorn','user');
+INSERT INTO users(username,password,email) VALUES ('ezio','ezio', 'ezio@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
+
+
+
 
 -- Usuario para el JUnit de la H10
 INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
 
 INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', null, false, true, 2, 'andres');
+-- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host)  VALUES('test lobby 2', 1, true, true, 4, 'gandalf');
+-- INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (1, true, 25/11/2021 13:15:12, 14);
+-- INSERT INTO games(id, name, startTime, has scenes, players, leader) VALUES
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
 

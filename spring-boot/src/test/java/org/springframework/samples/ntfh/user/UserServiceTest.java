@@ -22,12 +22,16 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
-    public void testPH3E1() {
-        List<User> l = new ArrayList<>();
-        userService.findAll().forEach(x -> l.add(x));
-        assertEquals(4, l.size());
+    public void testPH3E1(){
+        List<User> PetitionUsers = new ArrayList<>();
+        List<User> RepositoryUsers = new ArrayList<>();
+        userService.findAll().forEach(x->PetitionUsers.add(x));
+        userRepository.findAll().forEach(y->RepositoryUsers.add(y));
+        assertEquals(RepositoryUsers.size(), PetitionUsers.size());
     }
 
     /**
@@ -53,7 +57,7 @@ public class UserServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(userService.findAll()).size();
-        assertEquals(4, count);
+        assertEquals(13, count);
     }
 
     @Test
