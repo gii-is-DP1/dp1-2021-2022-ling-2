@@ -42,6 +42,8 @@ INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, hos
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
 
 INSERT INTO achievements(name, description) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light');
+INSERT INTO achievements(name, description) VALUES ('Newcomer', 'Play your first game');
+INSERT INTO achievements(name, description) VALUES ('Avid player', 'Win 5 games of No Time for Heroes');
 
 INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (1, 'RANGER','MALE');
 INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (2, 'RANGER','FEMALE');
