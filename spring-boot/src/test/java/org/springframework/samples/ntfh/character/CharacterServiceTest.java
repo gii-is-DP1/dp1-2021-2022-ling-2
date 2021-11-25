@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.game;
+package org.springframework.samples.ntfh.character;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,15 +9,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-public class GameServiceTest {
-    
+public class CharacterServiceTest {
+
     @Autowired
-    private GameService gameService;
+    private CharacterService characterService;
 
     @Test
-    public void testCountWithInitialData() {
-        Integer count = gameService.gameCount();
-        assertEquals(2, count);
+    public void testfindById() {
+        Character tester = this.characterService.findCharacterById(2).get();
+        assertEquals(CharacterTypeEnum.RANGER, tester.getCharacterTypeEnum());
+        assertEquals(CharacterGenderEnum.FEMALE, tester.getCharacterGenderEnum());
     }
-
+    
 }
