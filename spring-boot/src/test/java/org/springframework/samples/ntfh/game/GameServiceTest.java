@@ -30,7 +30,7 @@ public class GameServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(1, count);
+        assertEquals(2, count);
     }
 
     @Disabled

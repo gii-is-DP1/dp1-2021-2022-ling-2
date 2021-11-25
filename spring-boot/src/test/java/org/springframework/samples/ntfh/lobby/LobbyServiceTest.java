@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +21,7 @@ import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.samples.ntfh.lobby.LobbyRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class LobbyServiceTest {
@@ -122,6 +125,18 @@ public class LobbyServiceTest {
         assertEquals(false, lobbyTester.getUsers().contains(requester));
     }
 
+    @Test
+    public void testH14E1(){
+        List<Lobby> lobbiesServiceList= new ArrayList<>();
+        lobbyService.findAll().forEach(x->lobbiesServiceList.add(x));
+        Integer playersLobby1Sevice=lobbiesServiceList.get(0).getUsers().size();
+        
+        List<Lobby> lobbiesRepositoryList = new ArrayList<>();
+        lobbyRepository.findAll().forEach(x->lobbiesRepositoryList.add(x));
+        Integer playersLobby1Repo=lobbiesRepositoryList.get(0).getUsers().size();
+        
+        assertEquals(playersLobby1Repo, playersLobby1Sevice);
+    }
 
 
 }
