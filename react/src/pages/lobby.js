@@ -40,9 +40,16 @@ export default function Lobby() {
     try {
       const response = await axios.get(`/lobbies/${lobbyId}`);
       const newLobby = response.data;
-      if (lobby && !userInLobby(user, newLobby))
+      if (lobby && !userInLobby(user, newLobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
         history.push(ROUTES.BROWSE_LOBBIES);
+        return;
+      }
+      if (lobby && lobby.game) {
+        // If the lobby I am trying to join has already started, redirect me to the game
+        history.push(ROUTES.GAME.replace(":gameId", lobby.game.id));
+        return;
+      }
       setLobby(newLobby);
       setFullLobby(newLobby.maxPlayers === newLobby.users.length);
       const takenCharacters = newLobby.users.map((_user) =>

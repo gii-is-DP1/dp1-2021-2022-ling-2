@@ -56,7 +56,6 @@ public class LobbyService {
         Lobby lobbyNonSensitive = new Lobby();
         lobbyNonSensitive.setId(lobby.getId());
         lobbyNonSensitive.setName(lobby.getName());
-        lobbyNonSensitive.setHasStarted(lobby.getHasStarted());
         lobbyNonSensitive.setHasScenes(lobby.getHasScenes());
         lobbyNonSensitive.setSpectatorsAllowed(lobby.getSpectatorsAllowed());
         lobbyNonSensitive.setMaxPlayers(lobby.getMaxPlayers());
