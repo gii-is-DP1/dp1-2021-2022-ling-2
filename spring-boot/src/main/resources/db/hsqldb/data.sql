@@ -6,6 +6,9 @@ INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
 INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
+INSERT INTO users(username,password,email) VALUES ('stockie','stockie','stockie@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES (4,'stockie','user');
+
 INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', false, false, true, 2, 'andres');
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
@@ -106,6 +109,7 @@ INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (14, 5, 'ARCO_
 
 -- It looks like the @manytomany association table forces us to use (INTEGER, INTEGER) so we would have to consider
 -- both male and female characters for each market card. Quite tedious but it is what it is.
+-- The inserts bellow represent the classes that can use each card, and they are repeated twiced because the same class with different sex represents two classes
 
 -- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (1, 'MARKET', 3, 'DAGA_ELFICA', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (1, 1);
@@ -226,3 +230,8 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (14, 2);
 -- Ejemplo de entidad warlord ingame:
 -- INSERT INTO market_cards_ingame(id, game_id, market_card_id, market_card_location) VALUES (1, 1, 'ROGUE_HAND')
 -- Eso será una tabla diferente que trackee el uso de la carta dentro de la partida (si la tiene alguien, su posición...
+
+
+-- Usuario para el JUnit de la H10
+INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');

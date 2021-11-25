@@ -1,38 +1,70 @@
+import { useContext, useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
+import UserContext from "../../context/user";
+import axios from "../../api/axiosConfig";
+import errorContext from "../../context/error";
+import playerParser from "../../helpers/playerParser";
 
 export default function GamesHistoryTable() {
-  const gameList = [
+  const { errors, setErrors } = useContext(errorContext); // Array of errors
+  const [gamesHistory, setGameHistory] = useState([]);
+  const { userToken } = useContext(UserContext);
+
+  const placeholderGameHistory = [
     {
       id: 1,
-      name: "Game 1",
-      duration: "00:45:16",
-      startTime: "2020-04-01T00:00:00Z",
+      game: {
+        id: 2,
+        startTime: "2020-04-01T00:00:00Z",
+        hasScenes: true,
+        players: ["stockie", "andres", "admin"],
+        leader: ["stockie"],
+      },
       finishTime: "2020-04-01T00:45:16Z",
-      hasScenes: true,
+      winner: {
+        username: "stockie",
+      },
+      comments: [],
     },
   ];
+
+  useEffect(() => {
+    const fetchGameHistory = async () => {
+      try {
+        const headers = { Authorization: "Bearer " + userToken };
+        const response = await axios.get(`gameHistory`, { headers });
+        setGameHistory(response.data);
+      } catch (error) {
+        setErrors([...errors, error.response]);
+      }
+    };
+
+    fetchGameHistory();
+  }, []);
 
   return (
     <Table>
       <thead>
         <tr>
           <th>id</th>
-          <th>name</th>
           <th>duration</th>
           <th>start_time</th>
           <th>finish_time</th>
           <th>has_scenes</th>
+          <th>winner</th>
+          <th>players</th>
         </tr>
       </thead>
       <tbody>
-        {gameList.map((game, idx) => (
-          <tr>
-            <th>game.id</th>
-            <th>game.name</th>
-            <th>game.duration</th>
-            <th>game.start_time</th>
-            <th>game.finish_time</th>
-            <th>game.has_scenes</th>
+        {placeholderGameHistory.map((gameHistory, idx) => (
+          <tr key={idx}>
+            <th>{gameHistory.id}</th>
+            <th>gameHistory.duration</th>
+            <th>{gameHistory.game.startTime}</th>
+            <th>{gameHistory.finishTime}</th>
+            <th>{gameHistory.game.hasScenes ? "🟢" : "🔴"}</th>
+            <th>{gameHistory.winner.username}</th>
+            <th>{playerParser(gameHistory.game.players)}</th>
           </tr>
         ))}
       </tbody>

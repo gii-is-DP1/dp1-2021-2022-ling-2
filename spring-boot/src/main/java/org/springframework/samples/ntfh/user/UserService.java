@@ -22,7 +22,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
+import org.springframework.samples.ntfh.exceptions.InvalidValueException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.samples.ntfh.util.TokenUtils;
@@ -182,11 +182,25 @@ public class UserService {
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.
-		if (user.getPassword() == null)
+		if (user.getPassword() == null || user.getPassword().equals("null"))
 			user.setPassword(userInDatabase.getPassword());
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
 
 		return userRepository.save(user);
+	}
+
+	@Transactional
+	public String loginUser(User user) throws DataAccessException, InvalidValueException {
+		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
+		if (!foundUserOptional.isPresent()) {
+			throw new DataAccessException("User not found") {
+			};
+		}
+		if (!foundUserOptional.get().getPassword().equals(user.getPassword())) {
+			throw new InvalidValueException("Incorrect password") {
+			};
+		}
+		return TokenUtils.generateJWTToken(foundUserOptional.get());
 	}
 }

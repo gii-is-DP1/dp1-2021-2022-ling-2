@@ -1,12 +1,11 @@
 import axios from "../api/axiosConfig";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import Errors from "../components/common/Errors";
-
+import errorContext from "../context/error";
 /**
  *
  * @author jstockwell
@@ -15,7 +14,7 @@ import Errors from "../components/common/Errors";
 export default function Login() {
   const history = useHistory(); // hook
   const { setUserToken } = useContext(userContext); // hook
-  const [errors, setErrors] = useState([]);
+  const { errors, setErrors } = useContext(errorContext); // Array of error objects
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,7 +25,7 @@ export default function Login() {
       setUserToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   };
 
@@ -47,7 +46,6 @@ export default function Login() {
         </Link>
       </p>
       <br></br>
-      <Errors errors={errors} />
       <Form onSubmit={handleLogin}>
         <Form.Group className="mb-3">
           <Form.Label>Username</Form.Label>

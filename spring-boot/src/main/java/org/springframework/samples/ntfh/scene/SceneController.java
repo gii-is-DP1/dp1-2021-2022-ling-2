@@ -18,7 +18,8 @@ public class SceneController {
     public ResponseEntity<Iterable<Scene>> getAll() {
         // TODO untested
         // We don't know if this method will be useful later
-        Iterable<Scene> games = sceneService.findAll();
-        return new ResponseEntity<>(games, HttpStatus.OK);
+        Iterable<Scene> scenes = sceneService.findAll();
+        return new ResponseEntity<>(scenes, HttpStatus.OK);
     }
+
 }

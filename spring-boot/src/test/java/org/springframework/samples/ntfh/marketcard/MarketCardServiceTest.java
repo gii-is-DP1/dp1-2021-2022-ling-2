@@ -1,7 +1,6 @@
 package org.springframework.samples.ntfh.marketcard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -19,20 +18,20 @@ public class MarketCardServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = marketCardService.marketCardCount();
-        assertEquals(count, 14);
+        assertEquals(14, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(marketCardService.findAll()).size();
-        assertEquals(count, 14);
+        assertEquals(14, count);
     }
 
     @Test
     public void testfindById() {
         MarketCard tester = this.marketCardService.findMarketCardById(6).orElse(null);
-        assertTrue(tester.getMarketCardTypeEnum().equals(MarketCardTypeEnum.PIEDRA_DE_AMOLAR));
-        assertTrue(tester.getPrice().equals(4));
+        assertEquals(MarketCardTypeEnum.PIEDRA_DE_AMOLAR, tester.getMarketCardTypeEnum());
+        assertEquals(4, tester.getPrice());
     }
 
 }
