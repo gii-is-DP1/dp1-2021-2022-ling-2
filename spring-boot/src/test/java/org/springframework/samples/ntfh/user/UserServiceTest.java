@@ -2,6 +2,10 @@ package org.springframework.samples.ntfh.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,23 +40,66 @@ public class UserServiceTest {
     }
 */
     @Test
+    public void testSaveUser() {
+        User user4testing = new User();
+        user4testing.setUsername("antonio");
+        user4testing.setPassword("antonio");
+        user4testing.setEmail("antonio@mail.com");
+        userService.saveUser(user4testing);
+        assertEquals("antonio", userService.findUser(user4testing.getUsername()).orElse(null).getUsername());
+    }
+
+    @Test
+    public void testfindAll() {
+        Integer count = Lists.newArrayList(userService.findAll()).size();
+        assertEquals(4, count);
+    }
+
+    @Test
+    public void testfindById() {
+        User tester = this.userService.findUser("stockie").orElse(null);
+        assertEquals("stockie", tester.getPassword());
+        assertEquals("stockie@mail.com", tester.getEmail());
+    }
+    
+    @Test
+    public void testFindUserPublic() {
+  //      Map<String, String> user = userService.findUserPublic("andres");
+        HashMap<String, String> user = new HashMap<>();
+        user.put("username", userService.findUserPublic("andres").get("username"));
+        user.put("email", userService.findUserPublic("andres").get("email"));
+        assertEquals("andres", user.get("username"));
+        assertEquals("andres@mail.com", user.get("email"));
+    }
+
+    @Test
     public void testUpdateUser() {
         User user = this.userService.findUser("alex").orElse(null);
         String preEmail = user.getEmail();
         String posEmail = preEmail.concat("XYZ");
         user.setEmail(posEmail);
-    //    this.userService.saveUser(user);
         assertEquals(posEmail, user.getEmail());
-
-
-        /** 
-        User user4testing = createUserForTesting();
-        String userToken = tokenGen();
-        user4testing.setUsername("ale");
-        userService.updateUser(user4testing, userToken);
-        assertEquals("ale", user4testing.getUsername());
-        */
     }
+/*
+TODO
+    @Test
+    public void testUpdateUserV2() {
+        User user = this.userService.findUser("alex").orElse(null);
+        String token = TokenUtils.generateJWTToken(user);
+        User user4testing = new User();
+        user4testing.setUsername("alex");
+        user4testing.setPassword("alex1");
+        user4testing.setEmail("alex@mail.com");
+        userService.saveUser(user4testing);
+    }
+*/
+/*
+TODO
+    @Test
+    public void testLoginUser() {
+
+    }
+*/
 
    // @AfterAll
     //Deletear todo lo generado
