@@ -23,6 +23,7 @@ public class GameService {
 
     @Autowired
     private PlayerService playerService;
+
     @Autowired
     private LobbyService lobbyService;
 
@@ -53,9 +54,13 @@ public class GameService {
         game.setPlayers(players);
         game.setLeader(players.iterator().next()); // Random leader
 
-        lobby.setGame(game); // Reference to this game in Lobby
+        Game savedGame = gameRepo.save(game);
+
+        // Once the game is in the database, we update the lobby with a FK to it
+        lobby.setGame(game);
         lobbyService.save(lobby);
-        return gameRepo.save(game);
+
+        return savedGame;
     }
 
     @Transactional

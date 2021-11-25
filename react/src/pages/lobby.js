@@ -59,7 +59,7 @@ export default function Lobby() {
       return newLobby;
     } catch (error) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
       history.push(ROUTES.BROWSE_LOBBIES);
       return;
     }
@@ -73,7 +73,7 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
     }
   }
@@ -86,7 +86,7 @@ export default function Lobby() {
       });
       if (username === lobby.host.username) history.push(ROUTES.BROWSE_LOBBIES);
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
     }
   }
 
@@ -96,12 +96,7 @@ export default function Lobby() {
   const createGame = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        startTime: Date.now(),
-        hasScenes: lobby.hasScenes,
-        users: lobby.users,
-        // leader: lobby.host.username,
-      };
+      const payload = lobby;
       const response = await axios.post("/games", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
@@ -115,7 +110,6 @@ export default function Lobby() {
   useEffect(() => {
     // We have to notify the server we have joined the lobby
     document.title = "NTFH - Game lobby";
-    if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
 
     async function firstFetch() {
       const lobby = await fetchLobbyStatus();
@@ -148,7 +142,7 @@ export default function Lobby() {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
       }
     }
     updateUserCharacter();

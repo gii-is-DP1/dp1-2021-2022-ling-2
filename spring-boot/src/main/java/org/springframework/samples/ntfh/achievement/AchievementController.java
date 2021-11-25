@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/achievements")
 public class AchievementController {
-
     @Autowired
     private AchievementService achievementService;
 
