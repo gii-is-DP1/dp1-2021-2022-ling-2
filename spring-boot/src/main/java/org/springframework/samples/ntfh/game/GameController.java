@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,5 +48,11 @@ public class GameController {
         // TODO untested
         Game createdGame = gameService.createFromLobby(lobby);
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{gameId}")
+    public ResponseEntity<Game> getGame(@PathVariable("gameId") Integer gameId) {
+        Game game = gameService.findGameById(gameId);
+        return new ResponseEntity<>(game, HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package org.springframework.samples.ntfh.lobby;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.UserAlreadyInLobbyException;
 import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
+import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -97,13 +99,13 @@ public class LobbyService {
      * 
      * @author andrsdt
      * @param lobbyId
-     * @param username
+     * @param usernameFromRequest username that will be added to the lobby
+     * @param token               JWT token sent by the client
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    public Lobby joinLobby(Integer lobbyId, String usernameRequest, String usernameToken)
+    public Lobby joinLobby(Integer lobbyId, String usernameFromRequest, String token)
             throws DataAccessException, MaximumLobbyCapacityException {
-        // TODO make this throw more specific (maybe custom)
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
         if (!lobbyOptional.isPresent())
             throw new DataAccessException("The lobby does not exist") {
@@ -114,18 +116,18 @@ public class LobbyService {
             throw new MaximumLobbyCapacityException("The lobby is full") {
             };
 
-        Optional<User> userOptional = userService.findUser(usernameRequest);
+        Optional<User> userOptional = userService.findUser(usernameFromRequest);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user who wants to join the lobby does not exist") {
             };
 
-        if (!usernameRequest.equals(usernameToken))
+        String usernameFromToken = TokenUtils.usernameFromToken(token);
+        if (!usernameFromRequest.equals(usernameFromToken))
             throw new IllegalArgumentException("The Token username and the request one does not coindice") {
             };
 
-        Set<String> usernamesInLobby = new HashSet<>();
-        lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
-        if (usernamesInLobby.contains(usernameRequest))
+        Boolean userInLobby = lobby.getUsers().stream().anyMatch(u -> u.getUsername().equals(usernameFromRequest));
+        if (userInLobby)
             throw new IllegalArgumentException("The user is already in the lobby") {
             };
 
