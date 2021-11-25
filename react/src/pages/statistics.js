@@ -1,11 +1,11 @@
 import Homebar from "../components/home/Homebar";
 import { Table, Col, Row } from "react-bootstrap";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect, useContext } from "react";
 import errorContext from "../context/error";
+import axios from "../api/axiosConfig";
 
 export default function Statistics() {
-    const { errors, setErrors } = useContext(errorContext); // Array of errors
+    const { errors, setErrors } = useContext(errorContext);
     const [gameHistoryList, setGameHistoryList] = useState([]);
     const [gameHistoryCount, setGameHistoryCount] = useState(null);
 
@@ -43,30 +43,30 @@ export default function Statistics() {
     ];
 
     useEffect(() => {
-        const countGamesHistory = async () => {
-            try{
-                const response = await axios.get(`gameHistory/count`)
+        const fetchGameHistoryCount = async () => {
+            try {
+                const response = await axios.get(`gameHistory/count`);
                 setGameHistoryCount(response.data);
-            } catch {
-                setErrors([...errors, error.response]);
+            } catch (error) {
+                setErrors([...errors,error.response]);
             }
+        }
 
-        };
-
-        countGamesHistory();
-    },[]);
+        // fetchGameHistoryCount();
+        setGameHistoryCount(placeholderGameHistory.length);
+    },[])
 
     return (
-        <>
+        <div>
             <Homebar />
             <h1>Statistics</h1>
             <Table>
                 <Col>
                     <Row>
-                        Total Games Played: {gameHistoryCount}
+                        <h2>Total Games Played: { gameHistoryCount }</h2>
                     </Row>
                 </Col>
             </Table>
-        </>
+        </div>
     );
 }

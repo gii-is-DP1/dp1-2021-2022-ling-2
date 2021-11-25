@@ -2,41 +2,48 @@
 INSERT INTO users(username,password, email) VALUES ('admin','admin', 'admin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
 INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
-INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
 INSERT INTO users(username,password,email) VALUES ('pablo','pablo', 'pablo@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(4, 'pablo','admin');
 INSERT INTO authorities(id,username,authority) VALUES(5, 'pablo','user');
+
+INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
+
 INSERT INTO users(username,password,email) VALUES ('stockie','stockie', 'stockie@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(6, 'stockie','user');
+
 INSERT INTO users(username,password,email) VALUES ('alejandro','alejandro', 'alex@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(7, 'alejandro','user');
+
 INSERT INTO users(username,password,email) VALUES ('merlin','merlin', 'merlin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(8, 'merlin','user');
+
 INSERT INTO users(username,password,email) VALUES ('legolas','legolas', 'legolas@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(9, 'legolas','user');
+
 INSERT INTO users(username,password,email) VALUES ('gandalf','gandalf', 'gandalf@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(10, 'gandalf','user');
+
 INSERT INTO users(username,password,email) VALUES ('frodo','frodo', 'frodo@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(11, 'frodo','user');
+
 INSERT INTO users(username,password,email) VALUES ('dalinar','dalinar', 'dalinar@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(12, 'dalinar','user');
+
 INSERT INTO users(username,password,email) VALUES ('aragorn','aragorn', 'aragorn@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(13, 'aragorn','user');
+
 INSERT INTO users(username,password,email) VALUES ('ezio','ezio', 'ezio@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
 
-
-
-
+-- TODO users for JUnit tests should not be created in the database, but in the Junit tests and then deleted
 -- Usuario para el JUnit de la H10
 INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
 
-INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', null, false, true, 2, 'andres');
+
 -- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host)  VALUES('test lobby 2', 1, true, true, 4, 'gandalf');
--- INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (1, true, 25/11/2021 13:15:12, 14);
 -- INSERT INTO games(id, name, startTime, has scenes, players, leader) VALUES
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
@@ -254,3 +261,26 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (14, 2);
 -- INSERT INTO market_cards_ingame(id, game_id, market_card_id, market_card_location) VALUES (1, 1, 'ROGUE_HAND')
 -- Eso será una tabla diferente que trackee el uso de la carta dentro de la partida (si la tiene alguien, su posición...
 
+-- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
+
+-- Create the initial lobby
+INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players, host, leader) VALUES (1, 'andres with pablo', null, true, true, 2, 'andres', 'andres');
+-- add the users to the lobby
+UPDATE users SET lobby = 1 WHERE username = 'pablo';
+UPDATE users SET lobby = 1 WHERE username = 'andres';
+
+-- create the players instances and then a game
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (1, 0, 0, 0, 0, 8, 'pablo');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (2, 0, 0, 0, 0, 1, 'andres');
+INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (1, true, 1637867168863, 1);
+
+-- Once the game is created, the lobby references the game
+UPDATE lobbies SET game = 1 WHERE id = 1;
+
+-- Add the players to the game
+INSERT INTO games_players(game_id, players_id) VALUES (1, 1);
+INSERT INTO games_players(game_id, players_id) VALUES (1, 2);
+
+-- Also, set the game attribute in each user to reference the game they are in now
+UPDATE users SET game = 1 WHERE username = 'pablo';
+UPDATE users SET game = 1 WHERE username = 'andres';

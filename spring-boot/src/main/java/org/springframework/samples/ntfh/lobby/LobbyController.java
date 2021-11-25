@@ -48,7 +48,7 @@ public class LobbyController {
      * @return id of the game so the user can be redirected to the lobby
      * @author andrsdt
      */
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Map<String, Integer>> createLobby(@RequestBody Lobby lobby) {
         Lobby createdLobby = lobbyService.save(lobby);
         return new ResponseEntity<>(Map.of("lobbyId", createdLobby.getId()), HttpStatus.CREATED);
@@ -121,8 +121,7 @@ public class LobbyController {
             @RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
         // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
         String usernameFromRequest = body.get("username");
-        String usernameFromToken = TokenUtils.usernameFromToken(token);
-        lobbyService.joinLobby(lobbyId, usernameFromRequest, usernameFromToken);
+        lobbyService.joinLobby(lobbyId, usernameFromRequest, token);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
