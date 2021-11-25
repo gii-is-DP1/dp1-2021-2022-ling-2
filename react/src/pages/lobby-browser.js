@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import UserContext from "../context/user";
 import Homebar from "../components/home/Homebar";
@@ -14,19 +14,80 @@ export default function LobbyBrowser() {
   const { errors, setErrors } = useContext(errorContext); // Array of errors
   const [lobbyList, setLobbyList] = useState([]);
 
-  const fetchLobbies = async () => {
-    try {
-      const response = await axios.get(`lobbies`);
-      setLobbyList(response.data);
-    } catch (error) {
-      setErrors([...errors, error.response.data]);
-      history.push("/not-found");
+  useEffect(() => {
+    // get lobby list
+    const fetchLobbies = async () => {
+      try {
+        const response = await axios.get(`lobbies`);
+        setLobbyList(response.data);
+      } catch (error) {
+        setErrors([...errors, error.response.data]);
+        history.push("/not-found");
+      }
+    };
+
+    fetchLobbies();
+  }, []);
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
+
+  const renderButtons = (lobby) => {
+    if (!lobby.getHasStarted) {
+      return getJoinStatus(lobby);
+    } else {
+      return getSpectateStatus(lobby);
+    }
+  }
+
+  const getJoinStatus = (lobby) => {
+    const fullLobbyFlag = lobby.users.length === lobby.maxPlayers;
+    if (!fullLobbyFlag) {
+      if (!(userToken === null)) {
+        return (
+          <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
+            <Button type="secondary" active>
+              Join
+            </Button>
+          </Link>
+        );
+      } else {
+        return (
+          <Link to={ROUTES.LOGIN}>
+            <Button type="secondary" active>
+              Join
+            </Button>
+          </Link>
+        );
+
+      }
+    } else {
+      return (
+        <Button type="submit" disabled>
+          Join
+        </Button>
+      );
     }
   };
 
-  useEffect(() => {
-    fetchLobbies();
-  }, []);
+  const getSpectateStatus = (lobby) => {
+    if (lobby.spectatorsAllowed) {
+      return (
+        <Link to={ROUTES.GAME.replace(":gameId", lobby.game.id)}>
+          <Button type="secondary" active>
+            Spectate
+          </Button>
+        </Link>
+      );
+    } else {
+      return (
+        <Button type="secondary" disabled>
+          Spectate
+        </Button>
+      );
+    }
+  };
 
   return (
     <div>
@@ -46,7 +107,7 @@ export default function LobbyBrowser() {
             <th>Scenes</th>
             <th>Spectators</th>
             <th>
-              <Button type="submit" onClick={fetchLobbies}>
+              <Button type="submit" onClick={() => refreshPage()}>
                 ↻
               </Button>
             </th>
@@ -62,33 +123,7 @@ export default function LobbyBrowser() {
               <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>{lobby.spectatorsAllowed ? "🟢" : "🔴"}</th>
               <th>
-                {lobby.game ? ( // If the game has started
-                  <Button
-                    // type="secondary"
-                    disabled={!lobby.spectatorsAllowed}
-                    onClick={(e) =>
-                      history.push(
-                        ROUTES.GAME.replace(":gameId", lobby.game.id)
-                      )
-                    }
-                  >
-                    Spectate
-                  </Button>
-                ) : (
-                  <Button
-                    type="secondary"
-                    disabled={lobby.users.length === lobby.maxPlayers}
-                    onClick={(e) => {
-                      userToken
-                        ? history.push(
-                            ROUTES.LOBBY.replace(":lobbyId", lobby.id)
-                          )
-                        : history.push(ROUTES.SIGNUP);
-                    }}
-                  >
-                    Join
-                  </Button>
-                )}
+                {renderButtons(lobby)}
               </th>
             </tr>
           ))}

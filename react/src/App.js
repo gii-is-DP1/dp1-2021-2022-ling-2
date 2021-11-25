@@ -19,6 +19,7 @@ import Login from "./pages/login";
 import NotFound from "./pages/not-found";
 import Profile from "./pages/profile";
 import SignUp from "./pages/signup";
+import Statistics from "./pages/statistics";
 
 export default function App() {
   const [userToken, setUserToken] = useLocalStorage("token", null);
@@ -44,6 +45,7 @@ export default function App() {
               <Route exact path={ROUTES.EDIT_PROFILE} component={EditProfile} />
               <Route exact path={ROUTES.EDIT_ACHIEVEMENT} component={EditAchievement} />
               <Route exact path={ROUTES.CREATE_LOBBY} component={CreateLobby} />
+              <Route exact path={ROUTES.STATISTICS} component={Statistics} />
               <Route
                 exact
                 path={ROUTES.BROWSE_LOBBIES}
