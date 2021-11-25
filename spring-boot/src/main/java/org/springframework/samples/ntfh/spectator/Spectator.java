@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.player.spectator;
+package org.springframework.samples.ntfh.spectator;
 
 import java.util.Date;
 

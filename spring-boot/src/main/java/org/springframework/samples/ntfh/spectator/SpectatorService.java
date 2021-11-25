@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.player.spectator;
+package org.springframework.samples.ntfh.spectator;
 
 import java.util.Optional;
 
@@ -10,13 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SpectatorService {
-    
-    private SpectatorRepository spectatorRepository;
 
     @Autowired
-    public SpectatorService(SpectatorRepository spectatorRepository) {
-        this.spectatorRepository = spectatorRepository;
-    }
+    private SpectatorRepository spectatorRepository;
 
     @Transactional
     public void saveSpectator(Spectator spectator) throws DataAccessException {
@@ -24,10 +20,9 @@ public class SpectatorService {
     }
 
     @Transactional
-	public Iterable<Spectator> findAll() {
-		return spectatorRepository.findAll();
-	}
-
+    public Iterable<Spectator> findAll() {
+        return spectatorRepository.findAll();
+    }
 
     @Transactional
     public Optional<Spectator> findSpectator(String id) {
