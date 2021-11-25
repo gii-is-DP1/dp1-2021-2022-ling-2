@@ -22,7 +22,7 @@ public class UserServiceTest {
     public void testPH3E1() {
         List<User> l = new ArrayList<>();
         userService.findAll().forEach(x -> l.add(x));
-        assertEquals(2, l.size());
+        assertEquals(4, l.size());
     }
 
     /**
