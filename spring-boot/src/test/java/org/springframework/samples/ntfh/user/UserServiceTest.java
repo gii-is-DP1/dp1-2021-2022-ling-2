@@ -19,29 +19,13 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
-    // @Autowired
-    // private UserController userController;
+
 
     @Test
     public void testPH3E1(){
-        // User user= new User();
-        // user.setUsername("andres");
-        // user.setPassword("andres");
-        // userController.login(user);
         List<User> l = new ArrayList<>();
         userService.findAll().forEach(x->l.add(x));
         assertEquals(2, l.size());
     }
-
-    // public Void voidNH3E1(){
-    //     User user= new User();
-    //     user.setUsername("andres");
-    //     user.setPassword("andres");
-    //     userController.login(user);
-    //     List<User> l = new ArrayList<>();
-    //     userService.findAll().forEach(l.add(x)->);
-    // }
-
-
 
 }
