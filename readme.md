@@ -35,5 +35,16 @@ From here on out, the spring-boot proyect will be located at localhost:8080/api,
 To access the console follow this image:
 ![console-tutorial](/spring-boot/src/main/resources/static/resources/images/consola_db.png)
 
+### Reactj
+Now, for the visual part! Similar to spring-boot, we navigate to the react directory:
+```
+cd ./react/
+```
+Now we execute the service with the appropiate nodejs command:
+```
+npm start
+```
+From now on, our application will be located at localhost:3000. Enjoy!
+
 ## Other work!
 Link to tutorial and full game: https://youtu.be/T72qEQxI5pA
