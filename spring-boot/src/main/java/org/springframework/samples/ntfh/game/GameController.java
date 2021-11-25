@@ -48,4 +48,12 @@ public class GameController {
         Game createdGame = gameService.createFromLobby(lobby);
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
     }
+
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getCount(){
+        Integer count = gameService.gameCount();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    
 }

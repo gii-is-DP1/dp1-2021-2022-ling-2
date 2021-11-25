@@ -50,7 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAnyAuthority("user") // Join a lobby
 				.antMatchers(HttpMethod.GET, "/gameHistory").hasAnyAuthority("admin") // Allow admins to list all the old games
 				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
-
+				.antMatchers(HttpMethod.GET, "/games/count").permitAll()
+				
 				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
 				.antMatchers(HttpMethod.POST, "/games").hasAnyAuthority("user") // Allow users to create new games
