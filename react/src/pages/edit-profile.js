@@ -60,7 +60,7 @@ export default function EditProfile() {
       setUserToken(response.data.authorization);
       sendToProfile();
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response]);
     }
   }
 
