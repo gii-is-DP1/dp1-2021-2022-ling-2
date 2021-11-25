@@ -17,7 +17,7 @@ public class GameHistoryService {
     }
 
     @Transactional
-    public Integer gameHistoryCount() {
+    public Integer count() {
         return (int) gameHistoryRepository.count();
     }
 }
