@@ -21,7 +21,6 @@ import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.samples.ntfh.lobby.LobbyRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class LobbyServiceTest {
