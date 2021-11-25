@@ -15,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.samples.ntfh.character.Character;
@@ -52,23 +53,23 @@ public class User {
 
 	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "game")
 	@JsonIgnore
 	private Game game; // game where the user is currently in
 
-	// TODO The cascade type is yet to be determined
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "lobby")
-	@JsonIgnore
+	@JsonIgnoreProperties({ "users", "host", "leader" })
 	private Lobby lobby; // lobby where the user is currently in
 
 	@ManyToOne // TODO set appropiate cascade type
 	@JoinColumn(name = "character")
-	@JsonIgnore
-	private Character character; // Character that the user has currently
-	// selected. Will be set during a lobby,
-	// and will stay the same during the entire game he/she is playing.
+	private Character character;
+	// Character that the user has currently selected. Will be set during a lobby,
+	// and will stay the same during the entire game he/she is playing. Useful later
+	// for social interactions (your friends can see the character you are playing
+	// in your current game)
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnore

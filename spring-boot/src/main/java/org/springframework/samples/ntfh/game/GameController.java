@@ -42,7 +42,7 @@ public class GameController {
      * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
-    @PostMapping("new")
+    @PostMapping
     public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) {
         // TODO untested
         Game createdGame = gameService.createFromLobby(lobby);

@@ -5,7 +5,7 @@ import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
-import Errors from "../components/common/Errors";
+import errorContext from "../context/error";
 
 /**
  * @author andrsdt
@@ -14,10 +14,10 @@ export default function EditProfile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
+  const { errors, setErrors } = useContext(errorContext); // hook
   const { userToken, setUserToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null); // hook
-  const [errors, setErrors] = useState([]);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
       sendToProfile();
     }
   }
@@ -59,23 +59,22 @@ export default function EditProfile() {
       setUserToken(response.data.authorization);
       sendToProfile();
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response.data]);
     }
   }
 
   useEffect(() => {
     document.title = `NTFH - Edit profile`;
     // TODO allow admin to edit
-    if (!userToken) history.push(ROUTES.LOGIN); // redirect to login if no token
-
+    if (!userToken) history.push(ROUTES.LOGIN);
+    // redirect to login if no token
     // redirect to profile if user is not the same as the one in the url or if the user is not an admin
-    if (
+    else if (
       loggedUser.username !== params.username &&
       !loggedUser.authorities.includes("admin")
     )
       history.push(ROUTES.PROFILE.replace(":username", params.username));
-
-    fetchUserProfile();
+    else fetchUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 
@@ -83,7 +82,6 @@ export default function EditProfile() {
     <>
       <h1>Edit your profile</h1>
       <br />
-      <Errors errors={errors} />
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicUsername">
           <Form.Label>Username</Form.Label>
