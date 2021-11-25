@@ -21,5 +21,4 @@ public class Achievement extends NamedEntity {
 
     @NotNull
     private String description;
-
 }
