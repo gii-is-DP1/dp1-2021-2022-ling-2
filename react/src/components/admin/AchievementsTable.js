@@ -32,19 +32,22 @@ export default function AchievementsTable() {
       </thead>
       <tbody>
         {achievements.map((achievement, idx) => (
-          <tr>
-            <th>
-              {achievement.name}
-            </th>
+          <tr key={idx}>
+            <th>{achievement.name}</th>
             <th>{achievement.description}</th>
             <th>
-              <Link to={ROUTES.EDIT_ACHIEVEMENT.replace(":achievementId", achievement.id)}>
+              <Link
+                to={ROUTES.EDIT_ACHIEVEMENT.replace(
+                  ":achievementId",
+                  achievement.id
+                )}
+              >
                 <Button type="submit">Edit</Button>
               </Link>
             </th>
           </tr>
         ))}
       </tbody>
-    </Table >
+    </Table>
   );
 }

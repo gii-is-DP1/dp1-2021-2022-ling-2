@@ -34,7 +34,20 @@ public class AchievementService {
     @Transactional
     public Achievement updateAchievement(Achievement achievement, String token) throws DataAccessException,
             DataIntegrityViolationException, NonMatchingTokenException, IllegalArgumentException {
-        
+
+        // If we are sending a petition with a non-existing id, we throw an exception.
+        // We always have to send an id because we are always editing existing
+        // achievements.
+        Optional<Achievement> sameIdOptional = achievementRepository.findById(achievement.getId());
+        if (!sameIdOptional.isPresent()) {
+            throw new IllegalArgumentException("Achievement not found in the system.");
+        }
+
+        Optional<Achievement> sameNameOptional = achievementRepository.findOptionalByName(achievement.getName());
+        if (sameNameOptional.isPresent() && !(sameNameOptional.get().getId().equals(achievement.getId()))) {
+            throw new IllegalArgumentException("There is already an achievement with the same name.");
+        }
+
         if (achievement.getName().isEmpty()) {
             throw new IllegalArgumentException("The name cannot be empty.");
         }
@@ -43,7 +56,7 @@ public class AchievementService {
             throw new IllegalArgumentException("The description cannot be empty.");
         }
 
-        if(!TokenUtils.tokenHasAnyAuthorities(token, "admin")) {
+        if (!TokenUtils.tokenHasAnyAuthorities(token, "admin")) {
             throw new NonMatchingTokenException("Only admins can edit achievements.");
         }
 
