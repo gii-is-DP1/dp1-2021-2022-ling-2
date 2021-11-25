@@ -3,6 +3,7 @@ package org.springframework.samples.ntfh.lobby;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,24 +25,25 @@ public class LobbyServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = lobbyService.lobbyCount();
-        assertEquals(1, count);
+        assertEquals(2, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
-        assertEquals(1, count);
+        assertEquals(2, count);
     }
 
     @Test
     public void testFindById() {
         Lobby tester = this.lobbyService.findLobbyById(1).orElse(null);
         assertEquals("test lobby 1", tester.getName());
-        assertEquals(null, tester.getGame());
+        assertEquals(1, tester.getGame().getId());
         assertEquals(false, tester.getHasScenes());
         assertEquals(true, tester.getSpectatorsAllowed());
         assertEquals(2, tester.getMaxPlayers());
         assertEquals(userService.findUser("andres").get(), tester.getHost());
+        assertEquals(userService.findUser("andres").get(), tester.getLeader());
     }
 
     @Test
@@ -63,7 +65,7 @@ public class LobbyServiceTest {
         tester.setMaxPlayers(4);
         tester.setHost(userService.findUser("andres").get());
         lobbyService.save(tester);
-        assertEquals(2, lobbyService.findLobbyById(tester.getId()).get().getId());
+        assertEquals(3, lobbyService.findLobbyById(tester.getId()).get().getId());
     }
 
     @Test
@@ -72,8 +74,9 @@ public class LobbyServiceTest {
         lobbyService.deleteLobby(tester);
         assertEquals(null, lobbyService.findLobbyById(tester.getId()).orElse(null));
     }
-/*
-TODO
+
+//TODO
+    @Disabled
     @Test
     public void testJoinToLobby() {
         Integer lobbyTesterId = lobbyService.findLobbyById(1).get().getId();
@@ -83,7 +86,7 @@ TODO
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
         assertEquals(true, lobbyService.findLobbyById(1).get().getUsers().contains(requester));
     }
-
+/*
 TODO
     @Test
     public void testRemoveUserFromLobby() {
