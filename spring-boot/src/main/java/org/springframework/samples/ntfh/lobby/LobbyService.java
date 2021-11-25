@@ -9,7 +9,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.ntfh.exceptions.InvalidValueException;
 import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.UserAlreadyInLobbyException;
@@ -121,13 +120,13 @@ public class LobbyService {
             };
 
         if (!usernameRequest.equals(usernameToken))
-            throw new InvalidValueException("The Token username and the request one does not coindice") {
+            throw new IllegalArgumentException("The Token username and the request one does not coindice") {
             };
 
         Set<String> usernamesInLobby = new HashSet<>();
         lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
         if (usernamesInLobby.contains(usernameRequest))
-            throw new InvalidValueException("The user is already in the lobby") {
+            throw new IllegalArgumentException("The user is already in the lobby") {
             };
 
         User user = userOptional.get();

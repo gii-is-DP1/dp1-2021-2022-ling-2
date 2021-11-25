@@ -37,7 +37,7 @@ export default function CreateLobby() {
       const lobbyId = response.data.lobbyId;
       history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
     }
   };
 

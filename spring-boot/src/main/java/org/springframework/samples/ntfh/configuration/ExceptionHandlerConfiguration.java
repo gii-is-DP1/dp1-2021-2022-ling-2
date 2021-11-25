@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.ntfh.exceptions.InvalidValueException;
 import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
@@ -41,6 +41,12 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
         return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> dataIntegrityViolationExceptionHandler(HttpServletRequest request,
+            DataIntegrityViolationException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(NonMatchingTokenException.class)
     public ResponseEntity<Object> nonMatchingTokenExceptionHandler(HttpServletRequest request,
             NonMatchingTokenException ex) {
@@ -68,11 +74,6 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     @ExceptionHandler(MissingAttributeException.class)
     public ResponseEntity<Object> missingAttributeExceptionHandler(HttpServletRequest request,
             MaximumLobbyCapacityException ex) {
-        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidValueException.class)
-    public ResponseEntity<Object> invalidValueExceptionHandler(HttpServletRequest request, InvalidValueException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
