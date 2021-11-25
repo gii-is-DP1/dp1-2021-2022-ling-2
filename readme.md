@@ -46,5 +46,10 @@ npm start
 ```
 From now on, our application will be located at localhost:3000. Enjoy!
 
+## Tools used
+To assist and streamline the development process, we've decided to use these tools:
+- [Postman](https://www.postman.com/): A simple to use collaborative API REST request sender
+- [Github Actions](https://github.com/features/actions): Compiles projects from a github repository to ensure no compiling errors get through a pull request
+
 ## Other work!
 Link to tutorial and full game: https://youtu.be/T72qEQxI5pA
