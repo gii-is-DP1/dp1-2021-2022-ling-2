@@ -42,12 +42,12 @@ public class UserServiceTest {
      */
     @Test
     public void testSaveUser() {
-        User user4testing = new User();
-        user4testing.setUsername("antonio");
-        user4testing.setPassword("antonio");
-        user4testing.setEmail("antonio@mail.com");
-        userService.saveUser(user4testing);
-        assertEquals("antonio", userService.findUser(user4testing.getUsername()).orElse(null).getUsername());
+        User tester = new User();
+        tester.setUsername("antonio");
+        tester.setPassword("antonio");
+        tester.setEmail("antonio@mail.com");
+        userService.saveUser(tester);
+        assertEquals("antonio", userService.findUser(tester.getUsername()).orElse(null).getUsername());
     }
 
     @Test
