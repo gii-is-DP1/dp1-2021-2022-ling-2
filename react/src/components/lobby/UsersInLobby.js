@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Button } from "react-bootstrap";
 import UserContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
+import capitalize from "../../helpers/capitalize";
 
 export default function UsersInLobby(props) {
   const { lobby, handleRemoveUserFromLobby } = props; // destructuring props // TODO in other files too
@@ -24,7 +25,13 @@ export default function UsersInLobby(props) {
     "wizard",
   ];
   const getCharacterFromId = (id) => {
+    if (id === undefined) return "none";
     return characters[id - 1];
+  };
+
+  const getGenderFromId = (id) => {
+    if (id === undefined) return "";
+    return id % 2 ? "♂ " : "♀ ";
   };
 
   return (
@@ -39,13 +46,17 @@ export default function UsersInLobby(props) {
               {!isHost(user) && isHost(viewer) && (
                 // show me the kick button over a player only if i'm the host, and also if the player to kick is not me
                 <Button
+                  variant="m-0 p-1"
                   onClick={(e) => handleRemoveUserFromLobby(user.username)}
                 >
-                  Kick
+                  ❌
                 </Button>
               )}
-              {isHost(user) && "👑"} {user.username} -{" "}
-              {getCharacterFromId(user.character?.id)}
+              {isHost(user) && <span className="m-0 p-1">👑</span>}{" "}
+              {user.username +
+                " — " +
+                getGenderFromId(user.character?.id) +
+                capitalize(getCharacterFromId(user.character?.id))}
             </ListGroup.Item>
           ))}
       </ListGroup>

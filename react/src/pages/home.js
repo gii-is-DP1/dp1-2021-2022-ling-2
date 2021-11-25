@@ -5,11 +5,11 @@ import axios from "../api/axiosConfig";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import * as ROUTES from "../constants/routes";
+import ErrorContext from "../context/error";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
-import ErrorContext from "../context/error";
 
 // import "../resources/css/nord.css";
 
@@ -25,6 +25,24 @@ export default function Home() {
 
   const isAdmin = (_user) => _user.authorities.includes("admin");
 
+  async function fetchUnregisteredData() {
+    try {
+      const response = await axios.get("/unregistered-users");
+      setUnregisteredUser(response.data);
+    } catch (error) {
+      setErrors([...errors, error.response.data]);
+    }
+  }
+
+  async function fetchUserData() {
+    try {
+      const response = await axios.get(`/users/${user.username}`);
+      setCurrentUser(response.data);
+    } catch (error) {
+      setErrors([...errors, error.response.data]);
+    }
+  }
+
   useEffect(() => {
     document.title = "No Time for Heroes";
   }, []);
@@ -33,36 +51,33 @@ export default function Home() {
     // Unregistered user creation
     if (!unregisteredUser) {
       // if there aren't unregistered user credentials, ask for some
-      async function fetchData() {
-        try {
-          const response = await axios.get("/unregistered-users");
-          setUnregisteredUser(response.data);
-        } catch (error) {
-          setErrors([...errors, error.response.data]);
-        }
-      }
-      fetchData();
+      fetchUnregisteredData();
     }
-  }, [unregisteredUser, setUnregisteredUser]);
+    if (userToken) {
+      // if there are user credentials, fetch his info
+      fetchUserData();
+    }
+  }, []);
 
   const generateUserButtons = () => {
-
-    // TODO acutal rejoin game
-    //if (currentUser.lobby === null) {
-    if (true) {
-      return (
-        <>
-          <Link to={ROUTES.CREATE_LOBBY}>
-            <Button type="submit">Create Game</Button>
+    return (
+      <>
+        {currentUser?.lobby ? (
+          <Link to={ROUTES.LOBBY.replace(":lobbyId", currentUser?.lobby.id)}>
+            <Button type="submit">Rejoin Game</Button>
           </Link>
-          <Link to={ROUTES.BROWSE_LOBBIES}>
-            <Button type="submit">Browse Games</Button>
-          </Link>
-        </>
-      );
-    } else {
-      <Button type="submit">Rejoin Game</Button>
-    }
+        ) : (
+          <>
+            <Link to={ROUTES.CREATE_LOBBY}>
+              <Button type="submit">Create Game</Button>
+            </Link>
+            <Link to={ROUTES.BROWSE_LOBBIES}>
+              <Button type="submit">Browse Games</Button>
+            </Link>
+          </>
+        )}
+      </>
+    );
   };
 
   return (
@@ -76,15 +91,19 @@ export default function Home() {
       {!userToken ? (
         <Link to={ROUTES.BROWSE_LOBBIES}>
           <Button type="submit">Browse Games</Button>
-        </Link>) : generateUserButtons()
-      }
+        </Link>
+      ) : (
+        generateUserButtons()
+      )}
 
       {/* Admin Page*/}
       {user && hasAuthority(user, "admin") ? (
         <Link to={ROUTES.ADMIN_PAGE}>
           <Button type="submit">Admin Page</Button>
         </Link>
-      ) : ""}
-    </span >
+      ) : (
+        ""
+      )}
+    </span>
   );
 }
