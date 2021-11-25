@@ -31,13 +31,13 @@ public class LobbyServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = lobbyService.lobbyCount();
-        assertEquals(1, count);
+        assertEquals(2, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
-        assertEquals(1, count);
+        assertEquals(2, count);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class LobbyServiceTest {
         tester.setMaxPlayers(4);
         tester.setHost(userService.findUser("andres").get());
         lobbyService.save(tester);
-        assertEquals(2, lobbyService.findLobbyById(tester.getId()).get().getId());
+        assertEquals(3, lobbyService.findLobbyById(tester.getId()).get().getId());
     }
 
     @Test
