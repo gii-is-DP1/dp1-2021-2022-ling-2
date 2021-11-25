@@ -34,9 +34,9 @@ INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
 INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
 
-
-
+INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', null, false, true, 2, 'andres');
 -- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host)  VALUES('test lobby 2', 1, true, true, 4, 'gandalf');
+-- INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (1, true, 25/11/2021 13:15:12, 14);
 -- INSERT INTO games(id, name, startTime, has scenes, players, leader) VALUES
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
@@ -254,23 +254,3 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (14, 2);
 -- INSERT INTO market_cards_ingame(id, game_id, market_card_id, market_card_location) VALUES (1, 1, 'ROGUE_HAND')
 -- Eso será una tabla diferente que trackee el uso de la carta dentro de la partida (si la tiene alguien, su posición...
 
-
--- Games
-INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES( 1, 0, 0, 0, 0, 1, 'andres');
-INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES (2, 0 ,0, 0, 0 ,3,'stockie');
-INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (1, true, 1637854607, 2);
-INSERT INTO games_players(game_id,players_id) values (1,1);
-INSERT INTO games_players(game_id,players_id) values (1,2);
-INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host, leader) VALUES ('test lobby 1', 1, false, true, 2, 'andres', 'andres');
-
-
-INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES( 3, 0, 0, 0, 0, 1, 'frodo');
-INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES (4, 0 ,0, 0, 0 ,3,'gandalf');
-INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES( 5, 0, 0, 0, 0, 5, 'legolas');
-INSERT INTO players(Id, glory, gold, kills, wounds, character_id, user_id) VALUES (6, 0 ,0, 0, 0 ,7,'aragorn');
-INSERT INTO games (id,has_scenes, Start_Time, leader_id) VALUES (2, true, 1637854607, 4);
-INSERT INTO games_players(game_id,players_id) values (2,3);
-INSERT INTO games_players(game_id,players_id) values (2,4);
-INSERT INTO games_players(game_id,players_id) values (2,5);
-INSERT INTO games_players(game_id,players_id) values (2,6);
-INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host, leader) VALUES ('lord of the rings', 1, true, true, 4, 'gandalf', 'frodo');

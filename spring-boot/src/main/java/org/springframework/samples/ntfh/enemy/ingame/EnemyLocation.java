@@ -1,5 +1,7 @@
 package org.springframework.samples.ntfh.enemy.ingame;
 
+import org.springframework.samples.ntfh.interfaces.Location;
+
 /**
  * Applicable for both HordeEnemyIngame and WardlordIngame entities in principle
  */
