@@ -43,19 +43,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.PUT, "/users/character").hasAnyAuthority("user") // Update user's current
 																							// character
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
-				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll() // Everyone can see a user's match history
+				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll() // Everyone can see a user's match
+																					// history
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAnyAuthority("user") // Allow users to create new lobbies
 				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId}").hasAnyAuthority("user") // Update lobby
 				.antMatchers(HttpMethod.DELETE, "/lobbies/{lobbyId}/remove/{username}").hasAnyAuthority("user")
 				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAnyAuthority("user") // Join a lobby
-				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the old games
+				.antMatchers(HttpMethod.GET, "/gameHistory").hasAnyAuthority("admin") // Allow admins to list all the
+																						// old games
 				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
 				.antMatchers(HttpMethod.PUT, "/achievements").hasAnyAuthority("admin") // Update achievement
-				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an achievement
-				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an achievement
+				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
+																							// achievement
+				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
+																							// achievement
 				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
+				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
 				.antMatchers(HttpMethod.POST, "/games").hasAnyAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
 																				// credentials

@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.samples.ntfh.lobby.LobbyService;
 import org.springframework.samples.ntfh.player.Player;
@@ -37,8 +38,12 @@ public class GameService {
     }
 
     @Transactional
-    public Optional<Game> findGameById(int id) {
-        return gameRepo.findById(id);
+    public Game findGameById(int id) throws DataAccessException {
+        Optional<Game> game = gameRepo.findById(id);
+        if (!game.isPresent())
+            throw new DataAccessException("Game with id " + id + " was not found") {
+            };
+        return game.get();
     }
 
     @Transactional
