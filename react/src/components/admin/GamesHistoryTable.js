@@ -35,7 +35,7 @@ export default function GamesHistoryTable() {
         const response = await axios.get(`gameHistory`, { headers });
         setGameHistory(response.data);
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
       }
     };
 
