@@ -19,13 +19,17 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Test
     public void testPH3E1(){
-        List<User> l = new ArrayList<>();
-        userService.findAll().forEach(x->l.add(x));
-        assertEquals(2, l.size());
+        List<User> PetitionUsers = new ArrayList<>();
+        List<User> RepositoryUsers = new ArrayList<>();
+        userService.findAll().forEach(x->PetitionUsers.add(x));
+        userRepository.findAll().forEach(y->RepositoryUsers.add(y));
+        assertEquals(RepositoryUsers.size(), PetitionUsers.size());
     }
 
 }
