@@ -115,7 +115,6 @@ export default function Lobby() {
   useEffect(() => {
     // We have to notify the server we have joined the lobby
     document.title = "NTFH - Game lobby";
-    if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
 
     async function firstFetch() {
       const lobby = await fetchLobbyStatus();

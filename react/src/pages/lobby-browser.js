@@ -2,12 +2,14 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import UserContext from "../context/user";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import errorContext from "../context/error";
 
 export default function LobbyBrowser() {
   const history = useHistory(); // hook
+  const { userToken } = useContext(UserContext);
 
   const { errors, setErrors } = useContext(errorContext); // Array of errors
   const [lobbyList, setLobbyList] = useState([]);
@@ -31,15 +33,35 @@ export default function LobbyBrowser() {
     window.location.reload();
   };
 
+  const renderButtons = (lobby) => {
+    if (!lobby.getHasStarted) {
+      return getJoinStatus(lobby);
+    } else {
+      return getSpectateStatus(lobby);
+    }
+  }
+
   const getJoinStatus = (lobby) => {
-    const fullLobbyFlag =
-      lobby.hasStarted || lobby.users.length === lobby.maxPlayers;
+    const fullLobbyFlag = lobby.users.length === lobby.maxPlayers;
     if (!fullLobbyFlag) {
-      return (
-        <Button type="secondary" active>
-          Join
-        </Button>
-      );
+      if (!(userToken === null)) {
+        return (
+          <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
+            <Button type="secondary" active>
+              Join
+            </Button>
+          </Link>
+        );
+      } else {
+        return (
+          <Link to={ROUTES.LOGIN}>
+            <Button type="secondary" active>
+              Join
+            </Button>
+          </Link>
+        );
+
+      }
     } else {
       return (
         <Button type="submit" disabled>
@@ -50,11 +72,13 @@ export default function LobbyBrowser() {
   };
 
   const getSpectateStatus = (lobby) => {
-    if (lobby.spectatorsAllowed && lobby.hasStarted) {
+    if (lobby.spectatorsAllowed) {
       return (
-        <Button type="secondary" active>
-          Spectate
-        </Button>
+        <Link to={ROUTES.GAME.replace(":gameId", lobby.game.id)}>
+          <Button type="secondary" active>
+            Spectate
+          </Button>
+        </Link>
       );
     } else {
       return (
@@ -99,12 +123,7 @@ export default function LobbyBrowser() {
               <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>{lobby.spectatorsAllowed ? "🟢" : "🔴"}</th>
               <th>
-                <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
-                  {getJoinStatus(lobby)}
-                </Link>
-                &nbsp;
-                {/* TODO add game spectate link */}
-                {getSpectateStatus(lobby)}
+                {renderButtons(lobby)}
               </th>
             </tr>
           ))}
