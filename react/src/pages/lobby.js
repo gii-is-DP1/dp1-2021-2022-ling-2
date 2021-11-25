@@ -93,6 +93,13 @@ export default function Lobby() {
   const userInLobby = (_user, _lobby) =>
     _lobby.users.map((u) => u.username).includes(_user.username);
 
+  const hasUnselectedCharacters = () => {
+    return (
+      characters.filter((character) => !charactersTaken.includes(character))
+        .length > 0
+    );
+  };
+
   const createGame = async (e) => {
     e.preventDefault();
     try {
@@ -112,9 +119,9 @@ export default function Lobby() {
     document.title = "NTFH - Game lobby";
 
     async function firstFetch() {
-      const lobby = await fetchLobbyStatus();
+      const _lobby = await fetchLobbyStatus();
       // will be only executed if the user is not in the lobby yet
-      if (lobby && !userInLobby(user, lobby)) notifyJoinLobby();
+      if (_lobby && !userInLobby(user, _lobby)) notifyJoinLobby();
     }
     firstFetch();
   }, []); // Only run once
@@ -254,7 +261,12 @@ export default function Lobby() {
           </Row>
           <Row>
             {lobby.users.length > 1 && user.username === lobby.host.username ? (
-              <Button type="submit" classType="mx-auto" onClick={createGame}>
+              <Button
+                type="submit"
+                classType="mx-auto"
+                onClick={createGame}
+                disabled={hasUnselectedCharacters}
+              >
                 Start Game
               </Button>
             ) : (
