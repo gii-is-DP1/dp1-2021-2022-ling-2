@@ -104,6 +104,10 @@ export default function Home() {
       ) : (
         ""
       )}
+
+      <Link to={ROUTES.STATISTICS}>
+        <Button type="submit">Statistics</Button>
+      </Link>
     </span>
   );
 }

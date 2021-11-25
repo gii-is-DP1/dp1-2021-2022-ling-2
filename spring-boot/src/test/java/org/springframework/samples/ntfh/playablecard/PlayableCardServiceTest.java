@@ -3,6 +3,7 @@ package org.springframework.samples.ntfh.playablecard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -27,6 +28,7 @@ public class PlayableCardServiceTest {
         assertEquals(0, count);
     }
 
+    @Disabled
     @Test
     public void testfindById() {
         // TODO

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
@@ -86,7 +87,6 @@ public class UserServiceTest {
         assertEquals(posEmail, user.getEmail());
     }
 /*
-TODO
     @Test
     public void testUpdateUserV2() {
         User user = this.userService.findUser("alex").orElse(null);
@@ -95,11 +95,13 @@ TODO
         user4testing.setUsername("alex");
         user4testing.setPassword("alex1");
         user4testing.setEmail("alex@mail.com");
-        userService.saveUser(user4testing);
+   //     userService.saveUser(user4testing);
+        userService.updateUser(user4testing, token);
+        assertEquals("alex1", userService.findUser("alex").get().getPassword());
     }
 */
 /*
-TODO
+TODO: test negativo assertthrow de q lance error
     @Test
     public void testLoginUser() {
 
