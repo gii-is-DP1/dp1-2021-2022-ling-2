@@ -75,8 +75,7 @@ public class LobbyServiceTest {
         assertEquals(null, lobbyService.findLobbyById(tester.getId()).orElse(null));
     }
 
-//TODO
-    @Disabled
+//TODO comentar la linea chunga y testear para usar testCreatefromLobby()
     @Test
     public void testJoinToLobby() {
         Integer lobbyTesterId = lobbyService.findLobbyById(1).get().getId();
@@ -86,19 +85,19 @@ public class LobbyServiceTest {
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
         assertEquals(true, lobbyService.findLobbyById(1).get().getUsers().contains(requester));
     }
-/*
-TODO
+
     @Test
     public void testRemoveUserFromLobby() {
-
+        Lobby lobbyTester = lobbyService.findLobbyById(1).get();
+        Integer lobbyTesterId = lobbyTester.getId();
+        User requester = userService.findUser("alex").get();
+        String requesterString = requester.getUsername();
+        String reqToken = TokenUtils.generateJWTToken(requester);
+        lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
+        lobbyService.removeUserFromLobby(lobbyTester, requesterString);
+        assertEquals(false, lobbyTester.getUsers().contains(requester));
     }
 
-TODO
-    @Test
-    public void testUpdateLobby() {
-
-    }
-*/
 
 
     
