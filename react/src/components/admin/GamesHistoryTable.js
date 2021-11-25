@@ -26,6 +26,21 @@ export default function GamesHistoryTable() {
       },
       comments: [],
     },
+    {
+      id: 2,
+      game: {
+        id: 3,
+        startTime: "2020-04-01T00:00:00Z",
+        hasScenes: true,
+        players: ["stockie", "andres"],
+        leader: ["stockie"],
+      },
+      finishTime: "2020-04-01T00:45:16Z",
+      winner: {
+        username: "stockie",
+      },
+      comments: [],
+    },
   ];
 
   useEffect(() => {
