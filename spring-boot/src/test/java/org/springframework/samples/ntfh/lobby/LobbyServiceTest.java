@@ -32,6 +32,9 @@ public class LobbyServiceTest {
     @Autowired
     protected UserService userService;
 
+    @Autowired
+    private LobbyRepository lobbyRepository;
+
     protected Lobby lobbyTester;
 
     @BeforeEach
