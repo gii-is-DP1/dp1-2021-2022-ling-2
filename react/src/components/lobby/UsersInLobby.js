@@ -30,7 +30,7 @@ export default function UsersInLobby(props) {
   };
 
   const getGenderFromId = (id) => {
-    if (id === undefined) return "none";
+    if (id === undefined) return "";
     return id % 2 ? "♂ " : "♀ ";
   };
 
