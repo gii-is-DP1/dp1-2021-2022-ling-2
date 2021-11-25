@@ -21,6 +21,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.ntfh.game.history.GameHistory;
+import org.springframework.samples.ntfh.game.history.GameHistoryRepository;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +45,8 @@ public class UserController {
 	// an action is accessing his data or not
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private GameHistoryRepository gameHistoryRepository;
 
 	@GetMapping
 	public ResponseEntity<Iterable<User>> getAll() {
@@ -104,4 +108,11 @@ public class UserController {
 		String token = userService.loginUser(user);
 		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
+
+	// TODO make this work
+	@GetMapping("{userId}/history")
+    public ResponseEntity<Iterable<GameHistory>> getfindByUser(@PathVariable("userId") String username) {
+        Iterable<GameHistory> gameHistory = this.gameHistoryRepository.findByGamePlayersContaining(username);
+        return new ResponseEntity<>(gameHistory, HttpStatus.OK);
+    }
 }
