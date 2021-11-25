@@ -34,7 +34,7 @@ public class AchievementService {
     @Transactional
     public Achievement updateAchievement(Achievement achievement, String token) throws DataAccessException,
             DataIntegrityViolationException, NonMatchingTokenException, IllegalArgumentException {
-        
+
         if (achievement.getName().isEmpty()) {
             throw new IllegalArgumentException("The name cannot be empty.");
         }
@@ -43,7 +43,7 @@ public class AchievementService {
             throw new IllegalArgumentException("The description cannot be empty.");
         }
 
-        if(TokenUtils.tokenHasAnyAuthorities(token, "admin")) {
+        if (!TokenUtils.tokenHasAnyAuthorities(token, "admin")) {
             throw new NonMatchingTokenException("Only admins can edit achievements.");
         }
 
