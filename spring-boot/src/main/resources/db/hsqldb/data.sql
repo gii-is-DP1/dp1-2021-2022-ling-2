@@ -9,6 +9,9 @@ INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 INSERT INTO users(username,password,email) VALUES ('stockie','stockie','stockie@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (4,'stockie','user');
 
+-- Usuario para el JUnit de la H10
+INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
 
 INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host) VALUES ('test lobby 1', null, false, true, 2, 'andres');
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
