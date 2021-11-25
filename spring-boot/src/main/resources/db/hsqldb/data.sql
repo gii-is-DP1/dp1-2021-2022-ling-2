@@ -264,7 +264,7 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (14, 2);
 -- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
 
 -- Create the initial lobby
-INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players, host) VALUES (1, 'andres with pablo', null, true, true, 2, 'andres');
+INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players, host, leader) VALUES (1, 'andres with pablo', null, true, true, 2, 'andres', 'andres');
 -- add the users to the lobby
 UPDATE users SET lobby = 1 WHERE username = 'pablo';
 UPDATE users SET lobby = 1 WHERE username = 'andres';
