@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { Table,Button } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import axios from "../../api/axiosConfig";
+import * as ROUTES from "../../constants/routes";
 import errorContext from "../../context/error";
 
 export default function AchievementsTable() {
@@ -20,11 +22,6 @@ export default function AchievementsTable() {
     fetchAchievements();
   }, []);
 
-  const editAchievement = (id) => {
-    return null;
-  };
-
-  
   return (
     <Table>
       <thead>
@@ -34,18 +31,20 @@ export default function AchievementsTable() {
         </tr>
       </thead>
       <tbody>
-          {achievements.map((achievement, idx) => (
-            <tr>
-              <th>
-                {achievement.name}
-              </th>
-              <th>{achievement.description}</th>
-              <th>
-                <Button type="submit" onClick={() => editAchievement(achievement.id)}>Edit</Button>
-              </th>
-            </tr>
-          ))}
+        {achievements.map((achievement, idx) => (
+          <tr>
+            <th>
+              {achievement.name}
+            </th>
+            <th>{achievement.description}</th>
+            <th>
+              <Link to={ROUTES.EDIT_ACHIEVEMENT.replace(":achievementId", achievement.id)}>
+                <Button type="submit">Edit</Button>
+              </Link>
+            </th>
+          </tr>
+        ))}
       </tbody>
-    </Table>
+    </Table >
   );
 }

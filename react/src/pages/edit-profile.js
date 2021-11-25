@@ -34,7 +34,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response]);
       sendToProfile();
     }
   }
@@ -65,7 +65,6 @@ export default function EditProfile() {
 
   useEffect(() => {
     document.title = `NTFH - Edit profile`;
-    // TODO allow admin to edit
     if (!userToken) history.push(ROUTES.LOGIN);
     // redirect to login if no token
     // redirect to profile if user is not the same as the one in the url or if the user is not an admin
