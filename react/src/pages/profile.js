@@ -2,11 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import Homebar from "../components/home/Homebar";
 import errorContext from "../context/error";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import GamesHistoryTable from "../components/admin/GamesHistoryTable";
+import * as ROUTES from "../constants/routes";
 
 export default function Profile() {
   const params = useParams(); // hook
@@ -25,7 +26,7 @@ export default function Profile() {
         const headers = { Authorization: "Bearer " + userToken };
         const response = await axios.get(`gameHistory`, { headers });
 
-        gamesHistory(response.data);
+        setGamesHistory(response.data);
       } catch (error) {
         setErrors([...errors, error.response]);
       }
@@ -54,8 +55,15 @@ export default function Profile() {
   {
     /* TODO Replace with a backend filter */
   }
-  const filterByUsername = (list, username) =>
-    list.filter((gameHistory) => gameHistory.game.players.includes(username));
+
+  const userInPlayerList = (list, username) => {
+    return list.some((player) => player.user.username === username);
+  };
+
+  const filterByUsername = (list) =>
+    list.filter((gameHistory) =>
+      userInPlayerList(gameHistory.game.players, user.username)
+    );
 
   return (
     <>
@@ -74,6 +82,12 @@ export default function Profile() {
             ) : (
               <p>Loading...</p>
             )}
+            <Button
+              variant="warning"
+              onClick={() => history.push(ROUTES.ACHIEVEMENTS)}
+            >
+              All achievements
+            </Button>
           </Col>
           <Col>
             <Row>
