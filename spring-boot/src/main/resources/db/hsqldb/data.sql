@@ -327,4 +327,8 @@ INSERT INTO games_players(game_id, players_id) VALUES (3, 8);
 -- Also, set the game attribute in each user to reference the game they are in now
 UPDATE users SET game = 3 WHERE username = 'stockie';
 UPDATE users SET game = 3 WHERE username = 'alejandro';
+
 INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 1637882596427);
+-- Set that the users are not in a game anymore
+UPDATE users set game = null WHERE username = 'stockie';
+UPDATE users set game = null WHERE username = 'alejandro';
