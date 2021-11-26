@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.samples.ntfh.character.CharacterService;
 import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.samples.ntfh.lobby.LobbyService;
 import org.springframework.samples.ntfh.player.Player;
@@ -46,52 +47,57 @@ public class GameServiceTest {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private CharacterService characterService;
+
     protected Game gameTester;
 
     protected Lobby lobbyTester;
 
-    // @BeforeEach
-    // public void init() {
-    //     Set<User> users = new HashSet<>();
-    //     users.add(userService.findUser("alex").get());
+    @BeforeEach
+    public void init() {
+        Set<User> users = new HashSet<>();
+        users.add(userService.findUser("alex").get());
 
-    //     lobbyTester = new Lobby();
-    //     lobbyTester.setName("init");
-    //     lobbyTester.setHasScenes(true);
-    //     lobbyTester.setSpectatorsAllowed(false);
-    //     lobbyTester.setMaxPlayers(4);
-    //     lobbyTester.setUsers(users);
-    //     lobbyTester.setHost(userService.findUser("alex").get());
-    //     lobbyTester.setLeader(userService.findUser("alex").get());
-    //     lobbyService.save(lobbyTester);
+        lobbyTester = new Lobby();
+        lobbyTester.setName("init");
+        lobbyTester.setHasScenes(true);
+        lobbyTester.setSpectatorsAllowed(false);
+        lobbyTester.setMaxPlayers(4);
+        lobbyTester.setUsers(users);
+        lobbyTester.setHost(userService.findUser("alex").get());
+        lobbyTester.setLeader(userService.findUser("alex").get());
+        lobbyService.save(lobbyTester);
 
-    //     Set<Player> players = new HashSet<>();
-    //     User user = userService.findUser("alex").get();
-    //     Player player = playerService.createFromUser(user, lobbyTester);
-    //     players.add(player);
+        Set<Player> players = new HashSet<>();
+        User user = userService.findUser("alex").get();
+        user.setCharacter(characterService.findCharacterById(2).get());
+        Player player = playerService.createFromUser(user, lobbyTester);
+        players.add(player);
 
-    //     gameTester = new Game();
-    //     gameTester.setStartTime(Long.valueOf(1637854607));
-    //     gameTester.setHasScenes(true);
-    //     gameTester.setPlayers(players);
-    //     gameTester.setLeader(Lists.newArrayList(players).get(0));
-    // }
+        gameTester = new Game();
+        gameTester.setStartTime(System.currentTimeMillis());
+        gameTester.setHasScenes(true);
+        gameTester.setPlayers(players);
+        gameTester.setLeader(Lists.newArrayList(players).get(0));
+        gameService.save(gameTester);
+    }
 
-    // @AfterEach
-    // public void teardown() {
-    //     if (!gameService.findGameById(gameTester.getId()).equals(null)) gameService.delete(gameTester);
-    // }
+    @AfterEach
+    public void teardown() {
+        if (gameService.findGameById(gameTester.getId()).isPresent()) gameService.delete(gameTester);
+    }
 
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(3, count);
+        assertEquals(4, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
-        assertEquals(3, count);
+        assertEquals(4, count);
     }
 
     @Test
@@ -109,27 +115,27 @@ public class GameServiceTest {
 
     @Test
     public void testfindById() {
-        Game tester = this.gameService.findGameById(1);
+        Game tester = this.gameService.findGameById(1).get();
         assertEquals(true, tester.getHasScenes());
         assertEquals(1, tester.getLeader().getId());
     }
 
-    @Disabled
     @Test
     public void testCreatefromLobby() {
-        Lobby lobbyTest = lobbyService.findLobbyById(1).get();
-
-        Game tester = this.gameService.createFromLobby(lobbyTest);
-        
-        Integer lobbyTesterId = lobbyService.findLobbyById(1).get().getId();
-        User requester = userService.findUser("alex").get();
-        String requesterString = requester.getUsername();
-        String reqToken = TokenUtils.generateJWTToken(requester);
-        lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
-
-        assertEquals(3, tester.getId());
+        Game tester = gameService.createFromLobby(lobbyTester);
+        assertEquals(gameRepository.findById(tester.getId()).get().getId(), tester.getId());
     }
 
+    @Test
+    public void testSaveGame() {
+//      Test made in the init
+        assertEquals(gameRepository.findById(gameTester.getId()).get().getId(), gameTester.getId());
+    }
 
+    @Test 
+    public void testDeleteGame() {
+        gameService.delete(gameTester);
+        assertEquals(null, gameService.findGameById(gameTester.getId()).orElse(null));
+    }
 
 }

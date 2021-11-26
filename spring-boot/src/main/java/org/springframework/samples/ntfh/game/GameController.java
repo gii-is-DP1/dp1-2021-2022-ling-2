@@ -1,6 +1,7 @@
 package org.springframework.samples.ntfh.game;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,9 +58,21 @@ public class GameController {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
     
+    // @GetMapping("/{gameId}")
+    // public ResponseEntity<Game> getGame(@PathVariable("gameId") Integer gameId) {
+    //     Game game = gameService.findGameById(gameId).get();
+    //     return new ResponseEntity<>(game, HttpStatus.OK);
+    // }
+
     @GetMapping("/{gameId}")
     public ResponseEntity<Game> getGame(@PathVariable("gameId") Integer gameId) {
-        Game game = gameService.findGameById(gameId);
-        return new ResponseEntity<>(game, HttpStatus.OK);
+        Optional<Game> gameOptional = gameService.findGameById(gameId);
+        if(gameOptional.isPresent()) {
+            Game game = gameOptional.get();
+            return new ResponseEntity<>(game, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
 }
