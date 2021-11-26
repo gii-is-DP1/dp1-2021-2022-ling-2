@@ -26,7 +26,7 @@ export default function GamesHistoryTable(props) {
             <th>{timeParser(gameHistory?.game?.startTime)}</th>
             <th>{timeParser(gameHistory?.finishTime)}</th>
             <th>{gameHistory?.game?.hasScenes ? "🟢" : "🔴"}</th>
-            <th>{gameHistory?.winner?.username}</th>
+            <th>{gameHistory?.winner?.user?.username}</th>
             <th>{playerParser(gameHistory?.game?.players)}</th>
           </tr>
         ))}
