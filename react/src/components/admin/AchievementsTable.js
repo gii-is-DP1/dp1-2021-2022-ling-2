@@ -47,7 +47,7 @@ export default function AchievementsTable() {
                   achievement.id
                 )}
               >
-                {isAdmin(user) && <Button type="submit">Edit</Button>}
+                {user && isAdmin(user) && <Button type="submit">Edit</Button>}
               </Link>
             </th>
           </tr>
