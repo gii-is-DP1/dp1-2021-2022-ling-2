@@ -25,6 +25,6 @@ public class GameHistoryServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(gameHistoryService.findAll()).size();
-        assertEquals(0, count);
+        assertEquals(1, count);
     }
 }
