@@ -31,7 +31,7 @@ public class PlayerService {
     }
 
     @Transactional
-    public Optional<Player> findPlayer(String id) {
+    public Optional<Player> findPlayer(Integer id) {
         return playerRepository.findById(id);
     }
 
