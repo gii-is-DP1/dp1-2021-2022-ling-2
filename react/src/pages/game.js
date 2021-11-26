@@ -49,7 +49,7 @@ export default function Game() {
   return (
     <>
       {isSpectator() && <SpectatorToast />}
-      <h1>This is game {gameId}</h1>;
+      <h1>This is game {gameId}</h1>
     </>
   );
 }
