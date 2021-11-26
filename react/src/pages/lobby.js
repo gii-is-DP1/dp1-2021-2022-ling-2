@@ -93,13 +93,6 @@ export default function Lobby() {
   const userInLobby = (_user, _lobby) =>
     _lobby.users.map((u) => u.username).includes(_user.username);
 
-  const hasUnselectedCharacters = () => {
-    return (
-      characters.filter((character) => !charactersTaken.includes(character))
-        .length > 0
-    );
-  };
-
   const createGame = async (e) => {
     e.preventDefault();
     try {
@@ -261,12 +254,7 @@ export default function Lobby() {
           </Row>
           <Row>
             {lobby.users.length > 1 && user.username === lobby.host.username ? (
-              <Button
-                type="submit"
-                classType="mx-auto"
-                onClick={createGame}
-                disabled={hasUnselectedCharacters}
-              >
+              <Button type="submit" classType="mx-auto" onClick={createGame}>
                 Start Game
               </Button>
             ) : (
