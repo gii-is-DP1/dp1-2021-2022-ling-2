@@ -1,53 +1,35 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Table, Alert } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { useHistory } from "react-router";
 import axios from "../../api/axiosConfig";
 import ErrorContext from "../../context/error";
 import UserContext from "../../context/user";
-import hasAuthority from "../../helpers/hasAuthority";
+import tokenParser from "../../helpers/tokenParser";
 
 export default function UsersTable() {
   const history = useHistory();
   const { userToken } = useContext(UserContext);
+  const loggedUser = tokenParser(useContext(UserContext));
   const { errors, setErrors } = useContext(ErrorContext); // Array of errors
   const [userList, setUserList] = useState([]);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [enabled, setIsEnabled] = useState(null);
 
-  const renderBan = (user) => {
-    var status = "";
-    if (user.enabled) status = "Ban";
-    else status = "Unban";
+  const isAdmin = (_user) => _user.authorities.includes("admin");
 
-    return (
-      <Button onClick={changeBanStatus(user)}>{status}</Button>
-    );
-  }
-
-  const changeBanStatus = async (user) => {
-    setUsername(user.username);
-    setEmail(user.email);
-    setIsEnabled(!user.enabled);
+  const handleToggleBan = async (_user) => {
+    const payload = {
+      username: _user.username,
+      email: _user.email,
+      enabled: !_user.enabled,
+    };
     try {
-      const payload = {
-        username,
-        email,
-        enabled
-      };
-      const response = await axios.put("/users", payload, {
+      await axios.put("/users", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
       // Add popup message "the user {user} has been banned"
-      return (
-        <Alert variant="danger">
-          The user {username} has been banned
-        </Alert>
-      );
     } catch (error) {
       setErrors([...errors, error.response]);
     }
-  }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -72,21 +54,23 @@ export default function UsersTable() {
         </tr>
       </thead>
       <tbody>
-        {userList.map((user, idx) => (
+        {userList.map((_user, idx) => (
           <tr key={idx}>
-            <th>{user.username}</th>
-            <th>{user.email}</th>
-            <th>{user.enabled ? "🟢" : "🔴"}</th>
+            <th>{_user.username}</th>
+            <th>{_user.email}</th>
+            <th>{_user.enabled ? "🟢" : "🔴"}</th>
             <th>
-              {renderBan(user)}
+              {isAdmin(loggedUser) && (
+                <Button onClick={() => handleToggleBan(_user)}>Ban</Button>
+              )}
               &nbsp;
               <Button
                 variant="primary"
-                onClick={() => history.push(`/profile/${user.username}/edit`)}>
+                onClick={() => history.push(`/profile/${_user.username}/edit`)}
+              >
                 Edit profile
               </Button>
             </th>
-
           </tr>
         ))}
       </tbody>
