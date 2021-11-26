@@ -53,19 +53,20 @@ public class LobbyServiceTest {
 
     @AfterEach
     public void teardown() {
-        if (lobbyService.findLobbyById(lobbyTester.getId()).isPresent()) lobbyService.deleteLobby(lobbyTester);
+        if (lobbyService.findLobbyById(lobbyTester.getId()).isPresent())
+            lobbyService.deleteLobby(lobbyTester);
     }
 
     @Test
     public void testCountWithInitialData() {
         Integer count = lobbyService.lobbyCount();
-        assertEquals(2, count);
+        assertEquals(4, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
-        assertEquals(2, count);
+        assertEquals(4, count);
     }
 
     @Test
@@ -93,7 +94,7 @@ public class LobbyServiceTest {
     @Disabled
     @Test
     public void testSave() {
-//      Test made in the init
+        // Test made in the init
         assertEquals(2, lobbyTester.getId());
     }
 
@@ -128,17 +129,16 @@ public class LobbyServiceTest {
     }
 
     @Test
-    public void testH14E1(){
-        List<Lobby> lobbiesServiceList= new ArrayList<>();
-        lobbyService.findAll().forEach(x->lobbiesServiceList.add(x));
-        Integer playersLobby1Sevice=lobbiesServiceList.get(0).getUsers().size();
-        
+    public void testH14E1() {
+        List<Lobby> lobbiesServiceList = new ArrayList<>();
+        lobbyService.findAll().forEach(x -> lobbiesServiceList.add(x));
+        Integer playersLobby1Sevice = lobbiesServiceList.get(0).getUsers().size();
+
         List<Lobby> lobbiesRepositoryList = new ArrayList<>();
-        lobbyRepository.findAll().forEach(x->lobbiesRepositoryList.add(x));
-        Integer playersLobby1Repo=lobbiesRepositoryList.get(0).getUsers().size();
-        
+        lobbyRepository.findAll().forEach(x -> lobbiesRepositoryList.add(x));
+        Integer playersLobby1Repo = lobbiesRepositoryList.get(0).getUsers().size();
+
         assertEquals(playersLobby1Repo, playersLobby1Sevice);
     }
-
 
 }

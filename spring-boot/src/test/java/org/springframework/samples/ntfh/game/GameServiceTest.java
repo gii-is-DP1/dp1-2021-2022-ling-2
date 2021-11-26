@@ -20,7 +20,7 @@ public class GameServiceTest {
 
     @Autowired
     private GameService gameService;
-    
+
     @Autowired
     private LobbyService lobbyService;
 
@@ -30,7 +30,7 @@ public class GameServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(1, count);
+        assertEquals(3, count);
     }
 
     @Disabled
@@ -55,7 +55,7 @@ public class GameServiceTest {
         Lobby lobbyTest = lobbyService.findLobbyById(1).get();
 
         Game tester = this.gameService.createFromLobby(lobbyTest);
-        
+
         Integer lobbyTesterId = lobbyService.findLobbyById(1).get().getId();
         User requester = userService.findUser("alex").get();
         String requesterString = requester.getUsername();
@@ -64,7 +64,5 @@ public class GameServiceTest {
 
         assertEquals(3, tester.getId());
     }
-
-
 
 }

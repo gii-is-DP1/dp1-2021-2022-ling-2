@@ -2,90 +2,38 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import Homebar from "../components/home/Homebar";
 import errorContext from "../context/error";
 import userContext from "../context/user";
-import playerParser from "../helpers/playerParser";
 import tokenParser from "../helpers/tokenParser";
+import * as ROUTES from "../constants/routes";
 
 export default function Profile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
   const { errors, setErrors } = useContext(errorContext); // Array of errors
+  const { userToken } = useContext(userContext);
   const user = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null);
-  const [gameHistoryList, setGameHistoryList] = useState([]);
-  const userGameHistory = useState([]);
+  const [gamesHistory, setGamesHistory] = useState([]);
 
-  const placeholderGameHistory = [
-    {
-      id: 1,
-      game: {
-        id: 2,
-        startTime: "2020-04-01T00:00:00Z",
-        hasScenes: true,
-        players: ["stockie", "andres", "admin"],
-        leader: ["stockie"],
-      },
-      finishTime: "2020-04-01T00:45:16Z",
-      winner: {
-        username: "stockie",
-      },
-      comments: [],
-    },
-    {
-      id: 2,
-      game: {
-        id: 3,
-        startTime: "2020-04-01T00:00:00Z",
-        hasScenes: true,
-        players: ["stockie", "andres"],
-        leader: ["stockie"],
-      },
-      finishTime: "2020-04-01T00:45:16Z",
-      winner: {
-        username: "stockie",
-      },
-      comments: [],
-    },
-    {
-      id: 2,
-      game: {
-        id: 2,
-        startTime: "2020-04-01T00:00:00Z",
-        hasScenes: true,
-        players: ["stockie", "andres", "admin"],
-        leader: ["stockie"],
-      },
-      finishTime: "2020-04-01T00:45:16Z",
-      winner: {
-        username: "stockie",
-      },
-      comments: [],
-    },
-  ];
+  useEffect(() => {
+    const fetchGameHistory = async () => {
+      try {
+        // TODO remove auth if not needed
+        const headers = { Authorization: "Bearer " + userToken };
+        const response = await axios.get(`gameHistory`, { headers });
 
-  const renderGameHistory = (gameHistory) => {
-    return (
-      <tr>
-        <th>{gameHistory.id}</th>
-        <th>gameHistory.duration</th>
-        <th>{gameHistory.game.startTime}</th>
-        <th>{gameHistory.finishTime}</th>
-        <th>{gameHistory.game.hasScenes ? "🟢" : "🔴"}</th>
-        <th>{gameHistory.winner.username}</th>
-        <th>{playerParser(gameHistory.game.players)}</th>
-      </tr>
-    );
-  }
+        setGamesHistory(response.data);
+      } catch (error) {
+        setErrors([...errors, error.response.data]);
+      }
+    };
 
-  {/* TODO Replace with a backend filter */ }
-  const generateUserGameHistory = (gameHistoryList) => {
-    gameHistoryList.map((gameHistory, idx) => (
-      gameHistory.game.players.includes(user.username) ? userGameHistory.push(gameHistory) : null
-    ));
-  }
+    fetchGameHistory();
+  }, []);
 
   useEffect(() => {
     document.title = `NTFH - ${params.username}'s profile`;
@@ -96,7 +44,7 @@ export default function Profile() {
         const response = await axios.get(`users/${params.username}`);
         setUserProfile(response.data);
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
         history.push("/not-found");
       }
     };
@@ -104,18 +52,18 @@ export default function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 
-  useEffect(() => {
-    const fetchGameHistory = async () => {
-      try {
-        const response = await axios.get(`gameHistory`);
-        setGameHistoryList(response.data);
-      } catch (error) {
-        setErrors([...errors, error.response.data]);
-      }
-    };
+  {
+    /* TODO Replace with a backend filter */
+  }
 
-    fetchGameHistory();
-  }, []);
+  const userInPlayerList = (list, username) => {
+    return list.some((player) => player.user.username === username);
+  };
+
+  const filterByUsername = (list) =>
+    list.filter((gameHistory) =>
+      userInPlayerList(gameHistory.game.players, user.username)
+    );
 
   return (
     <>
@@ -134,37 +82,19 @@ export default function Profile() {
             ) : (
               <p>Loading...</p>
             )}
+            <Button
+              variant="warning"
+              onClick={() => history.push(ROUTES.ACHIEVEMENTS)}
+            >
+              All achievements
+            </Button>
           </Col>
           <Col>
             <Row>
-              <h2>Match history: {userGameHistory.length}</h2>
+              <h2>Games played: {filterByUsername(gamesHistory).length}</h2>
             </Row>
             <Row>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>duration</th>
-                    <th>start_time</th>
-                    <th>finish_time</th>
-                    <th>has_scenes</th>
-                    <th>winner</th>
-                    <th>players</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {userGameHistory.map((gameHistory, idx) => {
-                    <tr key={idx}>
-                      <th>{gameHistory.id}</th>
-                      <th>gameHistory.duration</th>
-                      <th>{gameHistory.game.startTime}</th>
-                      <th>{gameHistory.finishTime}</th>
-                      <th>{gameHistory.game.hasScenes ? "🟢" : "🔴"}</th>
-                      <th>{gameHistory.winner.username}</th>
-                      <th>{playerParser(gameHistory.game.players)}</th>
-                    </tr>
-                  })}
-                </tbody>
-              </Table>
+              <GamesHistoryTable data={filterByUsername(gamesHistory)} />
             </Row>
           </Col>
         </Row>

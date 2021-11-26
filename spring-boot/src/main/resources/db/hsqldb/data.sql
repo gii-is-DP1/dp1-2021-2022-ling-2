@@ -48,9 +48,9 @@ INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
 -- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
 
-INSERT INTO achievements(name, description) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light');
-INSERT INTO achievements(name, description) VALUES ('Newcomer', 'Play your first game');
-INSERT INTO achievements(name, description) VALUES ('Avid player', 'Win 5 games of No Time for Heroes');
+INSERT INTO achievements(name, description, type) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light', 'CREATE_ACCOUNT');
+INSERT INTO achievements(name, description, type) VALUES ('Newcomer', 'Play your first game', 'PLAY_1_GAME');
+INSERT INTO achievements(name, description, type) VALUES ('Avid player', 'Win 5 games of No Time for Heroes', 'WIN_5_GAMES');
 
 INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (1, 'RANGER','MALE');
 INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (2, 'RANGER','FEMALE');
@@ -262,25 +262,73 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (14, 2);
 -- Eso será una tabla diferente que trackee el uso de la carta dentro de la partida (si la tiene alguien, su posición...
 
 -- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
-
 -- Create the initial lobby
 INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players, host, leader) VALUES (1, 'andres with pablo', null, true, true, 2, 'andres', 'andres');
 -- add the users to the lobby
 UPDATE users SET lobby = 1 WHERE username = 'pablo';
 UPDATE users SET lobby = 1 WHERE username = 'andres';
-
 -- create the players instances and then a game
 INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (1, 0, 0, 0, 0, 8, 'pablo');
 INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (2, 0, 0, 0, 0, 1, 'andres');
 INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (1, true, 1637867168863, 1);
-
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 1 WHERE id = 1;
-
 -- Add the players to the game
 INSERT INTO games_players(game_id, players_id) VALUES (1, 1);
 INSERT INTO games_players(game_id, players_id) VALUES (1, 2);
-
 -- Also, set the game attribute in each user to reference the game they are in now
 UPDATE users SET game = 1 WHERE username = 'pablo';
 UPDATE users SET game = 1 WHERE username = 'andres';
+
+-- CREATE A GAME FROM A LOBBY WITH 4 PLAYERS
+-- Create the initial lobby
+INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players, host) VALUES (2,'Lord of the rings', null, false, true, 4, 'gandalf');
+-- add the users to the lobby
+UPDATE users SET lobby = 2 WHERE username = 'gandalf';
+UPDATE users SET lobby = 2 WHERE username = 'frodo';
+UPDATE users SET lobby = 2 WHERE username = 'legolas';
+UPDATE users SET lobby = 2 WHERE username = 'aragorn';
+-- create the players instances and then a game
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (3, 0, 0, 0, 0, 1, 'frodo');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (4, 0 ,0, 0, 0 ,3, 'gandalf');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (5, 0, 0, 0, 0, 5, 'legolas');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (6, 0 ,0, 0, 0 ,7, 'aragorn');
+INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (2, true, 1637881111234, 3);
+-- Once the game is created, the lobby references the game
+UPDATE lobbies SET game = 2 WHERE id = 2;
+-- Add the players to the game
+INSERT INTO games_players(game_id, players_id) VALUES (2, 3);
+INSERT INTO games_players(game_id, players_id) VALUES (2, 4);
+INSERT INTO games_players(game_id, players_id) VALUES (2, 5);
+INSERT INTO games_players(game_id, players_id) VALUES (2, 6);
+-- Also, set the game attribute in each user to reference the game they are in now
+UPDATE users SET game = 2 WHERE username = 'gandalf';
+UPDATE users SET game = 2 WHERE username = 'frodo';
+UPDATE users SET game = 2 WHERE username = 'legolas';
+UPDATE users SET game = 2 WHERE username = 'aragorn';
+
+
+-- CREATE A GAME HISTORY FROM A LOBBY WITH 3 PLAYERS
+-- CREATE A GAME FROM A LOBBY WITH 4 PLAYERS
+-- Create the initial lobby
+INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players, host) VALUES (3,'LING 2', null, true, false, 3, 'stockie');
+-- add the users to the lobby
+UPDATE users SET lobby = 3 WHERE username = 'stockie';
+UPDATE users SET lobby = 3 WHERE username = 'alejandro';
+-- create the players instances and then a game
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (7, 0, 0, 0, 0, 2, 'stockie');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (8, 0 ,0, 0, 0 ,4, 'alejandro');
+INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (3, true, 1637881111234, 3);
+-- Once the game is created, the lobby references the game
+UPDATE lobbies SET game = 3 WHERE id = 3;
+-- Add the players to the game
+INSERT INTO games_players(game_id, players_id) VALUES (3, 7);
+INSERT INTO games_players(game_id, players_id) VALUES (3, 8);
+-- Also, set the game attribute in each user to reference the game they are in now
+UPDATE users SET game = 3 WHERE username = 'stockie';
+UPDATE users SET game = 3 WHERE username = 'alejandro';
+
+INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 1637882596427);
+-- Set that the users are not in a game anymore
+UPDATE users set game = null WHERE username = 'stockie';
+UPDATE users set game = null WHERE username = 'alejandro';

@@ -59,7 +59,7 @@ export default function Lobby() {
       return newLobby;
     } catch (error) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
       history.push(ROUTES.BROWSE_LOBBIES);
       return;
     }
@@ -73,7 +73,7 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
     }
   }
@@ -86,12 +86,19 @@ export default function Lobby() {
       });
       if (username === lobby.host.username) history.push(ROUTES.BROWSE_LOBBIES);
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
     }
   }
 
   const userInLobby = (_user, _lobby) =>
     _lobby.users.map((u) => u.username).includes(_user.username);
+
+  const hasUnselectedCharacters = () => {
+    return (
+      characters.filter((character) => !charactersTaken.includes(character))
+        .length > 0
+    );
+  };
 
   const createGame = async (e) => {
     e.preventDefault();
@@ -103,7 +110,7 @@ export default function Lobby() {
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
     }
   };
 
@@ -112,9 +119,9 @@ export default function Lobby() {
     document.title = "NTFH - Game lobby";
 
     async function firstFetch() {
-      const lobby = await fetchLobbyStatus();
+      const _lobby = await fetchLobbyStatus();
       // will be only executed if the user is not in the lobby yet
-      if (lobby && !userInLobby(user, lobby)) notifyJoinLobby();
+      if (_lobby && !userInLobby(user, _lobby)) notifyJoinLobby();
     }
     firstFetch();
   }, []); // Only run once
@@ -142,7 +149,7 @@ export default function Lobby() {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
       }
     }
     updateUserCharacter();
@@ -254,7 +261,12 @@ export default function Lobby() {
           </Row>
           <Row>
             {lobby.users.length > 1 && user.username === lobby.host.username ? (
-              <Button type="submit" classType="mx-auto" onClick={createGame}>
+              <Button
+                type="submit"
+                classType="mx-auto"
+                onClick={createGame}
+                disabled={hasUnselectedCharacters}
+              >
                 Start Game
               </Button>
             ) : (
