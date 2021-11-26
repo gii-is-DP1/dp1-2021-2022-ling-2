@@ -21,17 +21,17 @@ export default function Statistics() {
         fetchGameHistoryCount();
     },[])
 
-    return (
-        <div>
-            <Homebar />
-            <h1>Statistics</h1>
-            <Table>
-                <Col>
-                    <Row>
-                        <h2>Total Games Played: { gameHistoryCount }</h2>
-                    </Row>
-                </Col>
-            </Table>
-        </div>
-    );
+  return (
+    <div>
+      <Homebar />
+      <h1>Statistics</h1>
+      <Table>
+        <Col>
+          <Row>
+            <h2>Total Games Played: {gameHistoryCount}</h2>
+          </Row>
+        </Col>
+      </Table>
+    </div>
+  );
 }

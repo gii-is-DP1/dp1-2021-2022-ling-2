@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/gameHistory")
 public class GameHistoryController {
-    
+
     @Autowired
     private GameHistoryService gameHistoryService;
 
@@ -23,7 +23,7 @@ public class GameHistoryController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Integer> getCount(){
+    public ResponseEntity<Integer> getCount() {
         Integer gameHistoryCount = gameHistoryService.count();
         return new ResponseEntity<>(gameHistoryCount, HttpStatus.OK);
     }

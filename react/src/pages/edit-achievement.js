@@ -29,7 +29,7 @@ export default function EditAchievement() {
       setName(response.data.name);
       setDescription(response.data.description);
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
       sendToAdminPage();
     }
   }
@@ -47,7 +47,7 @@ export default function EditAchievement() {
       });
       sendToAdminPage();
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
     }
   }
 

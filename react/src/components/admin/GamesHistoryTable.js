@@ -1,5 +1,6 @@
 import { Table } from "react-bootstrap";
 import playerParser from "../../helpers/playerParser";
+import timeParser from "../../helpers/timeParser";
 
 export default function GamesHistoryTable(props) {
   const { data } = props;
@@ -22,8 +23,8 @@ export default function GamesHistoryTable(props) {
           <tr key={idx}>
             <th>{gameHistory?.id}</th>
             <th>{gameHistory?.duration}</th>
-            <th>{gameHistory?.game?.startTime}</th>
-            <th>{gameHistory?.finishTime}</th>
+            <th>{timeParser(gameHistory?.game?.startTime)}</th>
+            <th>{timeParser(gameHistory?.finishTime)}</th>
             <th>{gameHistory?.game?.hasScenes ? "🟢" : "🔴"}</th>
             <th>{gameHistory?.winner?.username}</th>
             <th>{playerParser(gameHistory?.game?.players)}</th>
