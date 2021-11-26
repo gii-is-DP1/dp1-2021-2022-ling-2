@@ -59,7 +59,7 @@ export default function Lobby() {
       return newLobby;
     } catch (error) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
       history.push(ROUTES.BROWSE_LOBBIES);
       return;
     }
@@ -73,7 +73,7 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
     }
   }
@@ -86,7 +86,7 @@ export default function Lobby() {
       });
       if (username === lobby.host.username) history.push(ROUTES.BROWSE_LOBBIES);
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
     }
   }
 
@@ -110,7 +110,7 @@ export default function Lobby() {
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setErrors([...errors, error.response.data]);
     }
   };
 
@@ -149,7 +149,7 @@ export default function Lobby() {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
       }
     }
     updateUserCharacter();

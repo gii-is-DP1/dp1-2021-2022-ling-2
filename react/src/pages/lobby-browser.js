@@ -24,7 +24,7 @@ export default function LobbyBrowser() {
         const response = await axios.get(`lobbies`);
         setLobbyList(response.data);
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
         history.push("/not-found");
       }
     };
@@ -36,26 +36,26 @@ export default function LobbyBrowser() {
     window.location.reload();
   };
 
-  useEffect(() =>{
-    const countGames = async () =>{
-      try{
+  useEffect(() => {
+    const countGames = async () => {
+      try {
         const response = await axios.get(`games/count`);
         setGameCount(response.data);
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
       }
     };
 
     countGames();
   }, []);
 
-  useEffect(() =>{
-    const countLobbies = async() =>{
-      try{
+  useEffect(() => {
+    const countLobbies = async () => {
+      try {
         const response = await axios.get(`lobbies/count`);
         setLobbyCount(response.data);
       } catch (error) {
-        setErrors([...errors, error.response]);
+        setErrors([...errors, error.response.data]);
       }
     };
 
@@ -68,7 +68,7 @@ export default function LobbyBrowser() {
     } else {
       return getSpectateStatus(lobby);
     }
-  }
+  };
 
   const getJoinStatus = (lobby) => {
     const fullLobbyFlag = lobby.users.length === lobby.maxPlayers;
@@ -89,7 +89,6 @@ export default function LobbyBrowser() {
             </Button>
           </Link>
         );
-
       }
     } else {
       return (
@@ -118,14 +117,16 @@ export default function LobbyBrowser() {
     }
   };
 
-
   return (
     <div>
       <div>
         <Homebar />
       </div>
       <h1>Lobby Browser</h1>
-      <h3>Number of ongoing games: {gameCount} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Number of open lobbies: {lobbyCount-gameCount}</h3>
+      <h3>
+        Number of ongoing games: {gameCount} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        &nbsp; &nbsp; Number of open lobbies: {lobbyCount - gameCount}
+      </h3>
       {/* This should be a table fetching all games (With spectate button) and all lobbies
       (with join button). Each row could be rendered via different components since they will
       have different columns (?), maybe even two tables... we will see, now it doesn't matter */}
@@ -153,9 +154,7 @@ export default function LobbyBrowser() {
               <th>{lobby.name}</th>
               <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>{lobby.spectatorsAllowed ? "🟢" : "🔴"}</th>
-              <th>
-                {renderButtons(lobby)}
-              </th>
+              <th>{renderButtons(lobby)}</th>
             </tr>
           ))}
         </tbody>
