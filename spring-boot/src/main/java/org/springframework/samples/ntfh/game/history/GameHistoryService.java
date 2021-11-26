@@ -15,4 +15,9 @@ public class GameHistoryService {
     public Iterable<GameHistory> findAll() {
         return gameHistoryRepository.findAll();
     }
+
+    @Transactional
+    public Integer count() {
+        return (int) gameHistoryRepository.count();
+    }
 }

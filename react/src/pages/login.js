@@ -25,7 +25,7 @@ export default function Login() {
       setUserToken(response.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response]);
     }
   };
 

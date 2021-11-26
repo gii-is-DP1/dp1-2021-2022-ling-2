@@ -54,6 +54,12 @@ public class LobbyController {
         return new ResponseEntity<>(Map.of("lobbyId", createdLobby.getId()), HttpStatus.CREATED);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getCount(){
+        Integer count = lobbyService.lobbyCount();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
     /**
      * This endpoint will be pinged every few seconds by the client to check if
      * someone has joined the lobby or if the game has been started by the host

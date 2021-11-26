@@ -15,12 +15,16 @@ public class GameHistoryController {
 
     @Autowired
     private GameHistoryService gameHistoryService;
-    @Autowired
-    private GameHistoryRepository gameHistoryRepository;
 
     @GetMapping
     public ResponseEntity<Iterable<GameHistory>> getAll() {
         Iterable<GameHistory> gameHistory = gameHistoryService.findAll();
         return new ResponseEntity<>(gameHistory, HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getCount() {
+        Integer gameHistoryCount = gameHistoryService.count();
+        return new ResponseEntity<>(gameHistoryCount, HttpStatus.OK);
     }
 }

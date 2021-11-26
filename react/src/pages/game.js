@@ -36,7 +36,7 @@ export default function Game() {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response]);
     }
   };
 

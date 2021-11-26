@@ -7,7 +7,7 @@ import axios from "../api/axiosConfig";
 export default function Statistics() {
     const { errors, setErrors } = useContext(errorContext);
     const [gameHistoryList, setGameHistoryList] = useState([]);
-    const [gameHistoryCount, setGameHistoryCount] = useState("");
+    const [gameHistoryCount, setGameHistoryCount] = useState(null);
 
     const placeholderGameHistory = [
         {
@@ -21,7 +21,7 @@ export default function Statistics() {
             },
             finishTime: "2020-04-01T00:45:16Z",
             winner: {
-                username: "stockie",
+                username: "admin",
             },
             comments: [],
         },
@@ -36,7 +36,7 @@ export default function Statistics() {
             },
             finishTime: "2020-04-01T00:45:16Z",
             winner: {
-                username: "stockie",
+                username: "andres",
             },
             comments: [],
         },
