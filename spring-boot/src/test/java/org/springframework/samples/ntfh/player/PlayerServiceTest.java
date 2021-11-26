@@ -63,7 +63,7 @@ public class PlayerServiceTest {
         playerService.savePlayer(tester);
         //assertEquals(1, playerService.findPlayer(tester.getId()).get().getGlory());
         //assertEquals(9, playerService.findPlayer(tester.getId()).get().getId());
-        assertEquals(9, player);
+        assertEquals(9, playerService.findPlayer(tester.getId()).get().getId());
         playerRepository.deleteById(tester.getId());
     }
 
