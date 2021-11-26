@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import UserContext from "../context/user";
 import Homebar from "../components/home/Homebar";
@@ -14,108 +14,19 @@ export default function LobbyBrowser() {
   const { errors, setErrors } = useContext(errorContext); // Array of errors
   const [lobbyList, setLobbyList] = useState([]);
 
-  const [gameCount, setGameCount] = useState(null);
-  const [lobbyCount, setLobbyCount] = useState(null);
+  const fetchLobbies = async () => {
+    try {
+      const response = await axios.get(`lobbies`);
+      setLobbyList(response.data);
+    } catch (error) {
+      setErrors([...errors, error.response?.data]);
+      history.push("/not-found");
+    }
+  };
 
   useEffect(() => {
-    // get lobby list
-    const fetchLobbies = async () => {
-      try {
-        const response = await axios.get(`lobbies`);
-        setLobbyList(response.data);
-      } catch (error) {
-        setErrors([...errors, error.response.data]);
-        history.push("/not-found");
-      }
-    };
-
     fetchLobbies();
   }, []);
-
-  const refreshPage = () => {
-    window.location.reload();
-  };
-
-  useEffect(() => {
-    const countGames = async () => {
-      try {
-        const response = await axios.get(`games/count`);
-        setGameCount(response.data);
-      } catch (error) {
-        setErrors([...errors, error.response.data]);
-      }
-    };
-
-    countGames();
-  }, []);
-
-  useEffect(() => {
-    const countLobbies = async () => {
-      try {
-        const response = await axios.get(`lobbies/count`);
-        setLobbyCount(response.data);
-      } catch (error) {
-        setErrors([...errors, error.response.data]);
-      }
-    };
-
-    countLobbies();
-  }, []);
-
-  const renderButtons = (lobby) => {
-    if (!lobby.getHasStarted) {
-      return getJoinStatus(lobby);
-    } else {
-      return getSpectateStatus(lobby);
-    }
-  };
-
-  const getJoinStatus = (lobby) => {
-    const fullLobbyFlag = lobby.users.length === lobby.maxPlayers;
-    if (!fullLobbyFlag) {
-      if (!(userToken === null)) {
-        return (
-          <Link to={ROUTES.LOBBY.replace(":lobbyId", lobby.id)}>
-            <Button type="secondary" active>
-              Join
-            </Button>
-          </Link>
-        );
-      } else {
-        return (
-          <Link to={ROUTES.LOGIN}>
-            <Button type="secondary" active>
-              Join
-            </Button>
-          </Link>
-        );
-      }
-    } else {
-      return (
-        <Button type="submit" disabled>
-          Join
-        </Button>
-      );
-    }
-  };
-
-  const getSpectateStatus = (lobby) => {
-    if (lobby.spectatorsAllowed) {
-      return (
-        <Link to={ROUTES.GAME.replace(":gameId", lobby.game.id)}>
-          <Button type="secondary" active>
-            Spectate
-          </Button>
-        </Link>
-      );
-    } else {
-      return (
-        <Button type="secondary" disabled>
-          Spectate
-        </Button>
-      );
-    }
-  };
 
   return (
     <div>
@@ -123,10 +34,6 @@ export default function LobbyBrowser() {
         <Homebar />
       </div>
       <h1>Lobby Browser</h1>
-      <h3>
-        Number of ongoing games: {gameCount} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        &nbsp; &nbsp; Number of open lobbies: {lobbyCount - gameCount}
-      </h3>
       {/* This should be a table fetching all games (With spectate button) and all lobbies
       (with join button). Each row could be rendered via different components since they will
       have different columns (?), maybe even two tables... we will see, now it doesn't matter */}
@@ -139,7 +46,7 @@ export default function LobbyBrowser() {
             <th>Scenes</th>
             <th>Spectators</th>
             <th>
-              <Button type="submit" onClick={() => refreshPage()}>
+              <Button type="submit" onClick={fetchLobbies}>
                 ↻
               </Button>
             </th>
@@ -154,7 +61,35 @@ export default function LobbyBrowser() {
               <th>{lobby.name}</th>
               <th>{lobby.hasScenes ? "🟢" : "🔴"}</th>
               <th>{lobby.spectatorsAllowed ? "🟢" : "🔴"}</th>
-              <th>{renderButtons(lobby)}</th>
+              <th>
+                {lobby.game ? ( // If the game has started
+                  <Button
+                    // type="secondary"
+                    disabled={!lobby.spectatorsAllowed}
+                    onClick={(e) =>
+                      history.push(
+                        ROUTES.GAME.replace(":gameId", lobby.game.id)
+                      )
+                    }
+                  >
+                    Spectate
+                  </Button>
+                ) : (
+                  <Button
+                    type="secondary"
+                    disabled={lobby.users.length === lobby.maxPlayers}
+                    onClick={(e) => {
+                      userToken
+                        ? history.push(
+                            ROUTES.LOBBY.replace(":lobbyId", lobby.id)
+                          )
+                        : history.push(ROUTES.SIGNUP);
+                    }}
+                  >
+                    Join
+                  </Button>
+                )}
+              </th>
             </tr>
           ))}
         </tbody>

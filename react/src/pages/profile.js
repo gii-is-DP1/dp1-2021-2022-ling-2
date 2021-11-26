@@ -28,7 +28,7 @@ export default function Profile() {
 
         setGamesHistory(response.data);
       } catch (error) {
-        setErrors([...errors, error.response.data]);
+        setErrors([...errors, error.response?.data]);
       }
     };
 
@@ -44,7 +44,7 @@ export default function Profile() {
         const response = await axios.get(`users/${params.username}`);
         setUserProfile(response.data);
       } catch (error) {
-        setErrors([...errors, error.response.data]);
+        setErrors([...errors, error.response?.data]);
         history.push("/not-found");
       }
     };

@@ -31,7 +31,7 @@ export default function AdminPage() {
 
         gamesHistory(response.data);
       } catch (error) {
-        setErrors([...errors, error.response.data]);
+        setErrors([...errors, error.response?.data]);
       }
     };
     fetchGameHistory();

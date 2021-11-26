@@ -30,7 +30,7 @@ export default function Home() {
       const response = await axios.get("/unregistered-users");
       setUnregisteredUser(response.data);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response?.data]);
     }
   }
 
@@ -39,7 +39,7 @@ export default function Home() {
       const response = await axios.get(`/users/${user.username}`);
       setCurrentUser(response.data);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error.response?.data]);
     }
   }
 

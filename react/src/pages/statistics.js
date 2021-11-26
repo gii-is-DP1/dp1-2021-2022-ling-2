@@ -48,7 +48,7 @@ export default function Statistics() {
         const response = await axios.get(`gameHistory/count`);
         setGameHistoryCount(response.data);
       } catch (error) {
-        setErrors([...errors, error.response.data]);
+        setErrors([...errors, error.response?.data]);
       }
     };
 
