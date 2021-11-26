@@ -13,7 +13,7 @@ INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 INSERT INTO users(username,password,email) VALUES ('stockie','stockie', 'stockie@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(6, 'stockie','user');
 
-INSERT INTO users(username,password,email) VALUES ('alejandro','alejandro', 'alex@mail.com');
+INSERT INTO users(username,password,email) VALUES ('alejandro','alejandro', 'alejandro@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(7, 'alejandro','user');
 
 INSERT INTO users(username,password,email) VALUES ('merlin','merlin', 'merlin@mail.com');
