@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,20 +27,21 @@ import org.springframework.stereotype.Service;
 public class LobbyServiceTest {
 
     @Autowired
-    protected LobbyService lobbyService;
+    private LobbyService lobbyService;
 
     @Autowired
-    protected UserService userService;
+    private UserService userService;
 
     @Autowired
     private LobbyRepository lobbyRepository;
 
-    protected Lobby lobbyTester;
+    private Lobby lobbyTester;
 
     @BeforeEach
     public void init() {
         Set<User> users = new HashSet<>();
         users.add(userService.findUser("alex").get());
+
         lobbyTester = new Lobby();
         lobbyTester.setName("init");
         lobbyTester.setHasScenes(true);
@@ -91,14 +93,16 @@ public class LobbyServiceTest {
         assertEquals(2, tester.getMaxPlayers());
     }
 
-    @Disabled
+  // H7
+  // Un user no crea el lobby en si, sino que a traves del botón de crear una partida tiene acceso a la creación, por lo tanto la 
+  // creación de un lobby es ya de por si este test
     @Test
     public void testSave() {
-        // Test made in the init
-        assertEquals(2, lobbyTester.getId());
-    }
+//      Test made in the init
+        assertEquals(lobbyRepository.findById(lobbyTester.getId()).get().getId(), lobbyTester.getId());
 
-    @Test
+    }
+    @Test 
     public void testDeleteLobby() {
         lobbyService.deleteLobby(lobbyTester);
         assertEquals(null, lobbyService.findLobbyById(lobbyTester.getId()).orElse(null));
@@ -114,17 +118,14 @@ public class LobbyServiceTest {
         assertEquals(true, lobbyService.findLobbyById(lobbyTesterId).get().getUsers().contains(requester));
     }
 
-    @Disabled
     @Test
-    public void testRemoveUserFromLobby() {
-        Lobby lobbyTester = lobbyService.findLobbyById(1).get();
+    public void testRemoveUserFromLobby() {  
         Integer lobbyTesterId = lobbyTester.getId();
-        User requester = userService.findUser("alex").get();
+        User requester = userService.findUser("merlin").get();
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
         lobbyService.removeUserFromLobby(lobbyTester, requesterString);
-
         assertEquals(false, lobbyTester.getUsers().contains(requester));
     }
 
