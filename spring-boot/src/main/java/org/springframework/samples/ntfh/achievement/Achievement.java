@@ -1,7 +1,12 @@
 package org.springframework.samples.ntfh.achievement;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.samples.ntfh.model.NamedEntity;
 
@@ -18,4 +23,11 @@ public class Achievement extends NamedEntity {
     // private Predicate<Object> achievementCondition;
     // This can't be stored as a predicate here because it can't be stored in a db.
 
+    @NotNull
+    private String description;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @JsonIgnore // This is for internal handling
+    private AchievementType type;
 }

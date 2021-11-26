@@ -1,5 +1,6 @@
 package org.springframework.samples.ntfh.lobby;
 
+import java.beans.Transient;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -7,9 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.samples.ntfh.game.Game;
 import org.springframework.samples.ntfh.model.BaseEntity;
 import org.springframework.samples.ntfh.user.User;
 
@@ -31,8 +36,12 @@ public class Lobby extends BaseEntity {
     @NotNull
     private String name;
 
-    @NotNull // default to false. Mustn't be passed in the JSON body, only set by the server
-    private Boolean hasStarted;
+    // TODO replace with game. Initially to null, eventually to the game that has
+    // been created from that lobby
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "game")
+    @JsonIgnoreProperties(value = { "players", "leader" })
+    private Game game;
 
     @NotNull
     private Boolean hasScenes;
@@ -84,5 +93,10 @@ public class Lobby extends BaseEntity {
      */
     public boolean removeUser(User user) {
         return this.users.remove(user);
+    }
+
+    @Transient
+    public boolean getHasStarted() {
+        return this.game != null;
     }
 }

@@ -3,38 +3,65 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Errors from "../components/common/Errors";
 import Homebar from "../components/home/Homebar";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
+import ErrorContext from "../context/error";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
+
+  const { errors, setErrors } = useContext(ErrorContext); // Array of error objects
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
-  const [errors, setErrors] = useState([]);
   const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
   const { lobbyId } = useParams(); // TODO maybe we should just pass this as a param to the component
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
+  const [character, setCharacter] = useState("none");
+  const [gender, setGender] = useState("male");
+  const [fullLobby, setFullLobby] = useState(false);
+  const [charactersTaken, setCharactersTaken] = useState([]);
+
+  const characters = ["ranger", "rogue", "warrior", "wizard"];
+  const genders = ["male", "female"];
+
+  const getCharacterId = () => {
+    if (character === "none") return null;
+    return 1 + 2 * characters.indexOf(character) + genders.indexOf(gender);
+    // Input: warrior, female
+    // Output: 3+ 1  = 4 (id Of female warrior in the DB is 4)
+    // This is a temporal solution to be refactored in the future
+  };
 
   async function fetchLobbyStatus() {
     try {
       const response = await axios.get(`/lobbies/${lobbyId}`);
       const newLobby = response.data;
-      if (lobby && userInLobby(user, lobby) && !userInLobby(user, newLobby))
+      if (lobby && !userInLobby(user, newLobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
-        history.push(ROUTES.BROWSE_LOBBIES);
-      setLobby(newLobby);
-      return newLobby;
-    } catch (error) {
-      if (!error.response.data) {
         history.push(ROUTES.BROWSE_LOBBIES);
         return;
       }
-      setErrors([...errors, error.message]);
+      if (lobby && lobby.game) {
+        // If the lobby I am trying to join has already started, redirect me to the game
+        history.push(ROUTES.GAME.replace(":gameId", lobby.game.id));
+        return;
+      }
+      setLobby(newLobby);
+      setFullLobby(newLobby.maxPlayers === newLobby.users.length);
+      const takenCharacters = newLobby.users.map((_user) =>
+        _user.character?.characterTypeEnum?.toLowerCase()
+      );
+      setCharactersTaken(takenCharacters);
+      return newLobby;
+    } catch (error) {
+      // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
+      setErrors([...errors, error.response?.data]);
+      history.push(ROUTES.BROWSE_LOBBIES);
+      return;
     }
   }
 
@@ -46,8 +73,8 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
+      setErrors([...errors, error.response?.data]);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
-      setErrors([...errors, error.message]);
     }
   }
 
@@ -57,51 +84,37 @@ export default function Lobby() {
       await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
         headers: { Authorization: "Bearer " + userToken },
       });
+      if (username === lobby.host.username) history.push(ROUTES.BROWSE_LOBBIES);
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response?.data]);
     }
   }
 
   const userInLobby = (_user, _lobby) =>
     _lobby.users.map((u) => u.username).includes(_user.username);
 
-  {
-    /* TODO class and variant creation */
-  }
-  const setClass = (i) => {};
-
-  const setVariant = (i) => {};
-
   const createGame = async (e) => {
     e.preventDefault();
     try {
-      {
-        /* TODO payload*/
-      }
-      const payload = {
-        name: lobby.name,
-        startTime: Date.now(),
-        hasScenes: lobby.hasScenes,
-      };
+      const payload = lobby;
       const response = await axios.post("/games", payload, {
-        headers: {},
+        headers: { Authorization: "Bearer " + userToken },
       });
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response?.data]);
     }
   };
 
   useEffect(() => {
     // We have to notify the server we have joined the lobby
     document.title = "NTFH - Game lobby";
-    if (!userToken) history.push(ROUTES.LOGIN); // Send the user to login screen if not logged in
 
     async function firstFetch() {
-      const lobby = await fetchLobbyStatus();
+      const _lobby = await fetchLobbyStatus();
       // will be only executed if the user is not in the lobby yet
-      if (!userInLobby(user, lobby)) notifyJoinLobby();
+      if (_lobby && !userInLobby(user, _lobby)) notifyJoinLobby();
     }
     firstFetch();
   }, []); // Only run once
@@ -120,6 +133,21 @@ export default function Lobby() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time]); // Since "time" state variable is updated every second, we can use it to fetch the lobby users periodically
 
+  useEffect(() => {
+    async function updateUserCharacter() {
+      try {
+        user.character = getCharacterId();
+        const payload = { ...user };
+        const response = await axios.put(`/users`, payload, {
+          headers: { Authorization: "Bearer " + userToken },
+        });
+      } catch (error) {
+        setErrors([...errors, error.response?.data]);
+      }
+    }
+    updateUserCharacter();
+  }, [character, gender]);
+
   return (
     <>
       <Homebar />
@@ -128,15 +156,18 @@ export default function Lobby() {
           <Row>
             <Col>
               <h1>Lobby - {lobby.name}</h1>
-              <Errors errors={errors} />
               {/* TODO separate method for deleting game. Currently it's handled in the
                user removal endpoint, it should have its own endpoint and Axios call */}
               <Button onClick={(e) => handleRemoveUserFromLobby(user.username)}>
                 {lobby.host.username === user.username ? "Delete" : "Leave"}{" "}
                 lobby
               </Button>
-              <div>Waiting for people to join</div>
-              <div>Players in the lobby: {lobby.users.length}</div>
+              <div>
+                {fullLobby ? "The room is full" : "Waiting for people to join"}
+              </div>
+              <div>
+                Players in the lobby: {lobby.users.length}/{lobby.maxPlayers}
+              </div>
               <br />
               <UsersInLobby
                 lobby={lobby}
@@ -150,69 +181,80 @@ export default function Lobby() {
                   <Form.Label>Class</Form.Label> <br />
                   <Form.Check
                     className="mx-3"
-                    label="None"
-                    name="class"
-                    type="radio"
-                    onChange={(e) => setClass(0)}
-                  />
-                  <Form.Check
-                    className="mx-3"
-                    label="Rogue"
-                    name="class"
-                    type="radio"
-                    onChange={(e) => setClass(1)}
-                  />
-                  <Form.Check
-                    className="mx-3"
-                    label="Warrior"
+                    label="🌫️ None"
                     name="class"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => setClass(2)}
+                    onChange={(e) => setCharacter(null)}
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Wizard"
+                    label="🗡️ Rogue"
                     name="class"
                     type="radio"
-                    defaultChecked
-                    onChange={(e) => setClass(3)}
+                    disabled={
+                      charactersTaken.includes("rogue") || character === "rogue"
+                    }
+                    onChange={(e) => setCharacter("rogue")}
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Paladin"
+                    label="🛡 Warrior"
                     name="class"
                     type="radio"
-                    defaultChecked
-                    onChange={(e) => setClass(4)}
+                    disabled={
+                      charactersTaken.includes("warrior") ||
+                      character === "warrior"
+                    }
+                    onChange={(e) => setCharacter("warrior")}
+                  />
+                  <Form.Check
+                    className="mx-3"
+                    label="🧙 Wizard"
+                    name="class"
+                    type="radio"
+                    disabled={
+                      charactersTaken.includes("wizard") ||
+                      character === "wizard"
+                    }
+                    onChange={(e) => setCharacter("wizard")}
+                  />
+                  <Form.Check
+                    className="mx-3"
+                    label="🏹 Ranger"
+                    name="class"
+                    type="radio"
+                    disabled={
+                      charactersTaken.includes("ranger") ||
+                      character === "ranger"
+                    }
+                    onChange={(e) => setCharacter("ranger")}
                   />
                 </Form.Group>
                 <Form.Group className="mb-1">
                   <Form.Label>Variant</Form.Label> <br />
                   <Form.Check
                     className="mx-3"
-                    label="Male"
+                    label="♂ Male"
                     name="gender"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => setVariant(0)}
+                    onChange={(e) => setGender("male")}
                   />
                   <Form.Check
                     className="mx-3"
-                    label="Female"
+                    label="♀ Female"
                     name="gender"
                     type="radio"
-                    defaultChecked
-                    onChange={(e) => setVariant(1)}
+                    onChange={(e) => setGender("female")}
                   />
                 </Form.Group>
               </Form>
             </Col>
           </Row>
-          {/* TODO start game button */}
           <Row>
             {lobby.users.length > 1 && user.username === lobby.host.username ? (
-              <Button type="submit" onClick={createGame}>
+              <Button type="submit" classType="mx-auto" onClick={createGame}>
                 Start Game
               </Button>
             ) : (

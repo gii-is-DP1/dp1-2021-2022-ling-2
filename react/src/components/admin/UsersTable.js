@@ -3,11 +3,12 @@ import { Button, Table } from "react-bootstrap";
 import { useHistory } from "react-router";
 import UserContext from "../../context/user";
 import axios from "../../api/axiosConfig";
+import ErrorContext from "../../context/error";
 
 export default function UsersTable() {
   const history = useHistory();
   const { userToken } = useContext(UserContext);
-  const [errors, setErrors] = useState([]);
+  const { errors, setErrors } = useContext(ErrorContext); // Array of errors
   const [userList, setUserList] = useState([]);
 
   const fetchUsers = async () => {
@@ -16,7 +17,7 @@ export default function UsersTable() {
       const response = await axios.get(`users`, { headers });
       setUserList(response.data);
     } catch (error) {
-      setErrors([...errors, error.message]);
+      setErrors([...errors, error.response?.data]);
     }
   };
 
@@ -34,7 +35,7 @@ export default function UsersTable() {
       </thead>
       <tbody>
         {userList.map((user, idx) => (
-          <tr>
+          <tr key={idx}>
             <th>{user.username}</th>
             <th>{user.email}</th>
             <th>{user.enabled ? "🟢" : "🔴"}</th>

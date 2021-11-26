@@ -8,7 +8,9 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.ntfh.lobby.Lobby;
+import org.springframework.samples.ntfh.lobby.LobbyService;
 import org.springframework.samples.ntfh.player.Player;
 import org.springframework.samples.ntfh.player.PlayerService;
 import org.springframework.samples.ntfh.user.User;
@@ -23,6 +25,9 @@ public class GameService {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private LobbyService lobbyService;
+
     @Transactional
     public Integer gameCount() {
         return (int) gameRepo.count();
@@ -33,8 +38,12 @@ public class GameService {
     }
 
     @Transactional
-    public Optional<Game> findGameById(int id) {
-        return gameRepo.findById(id);
+    public Game findGameById(int id) throws DataAccessException {
+        Optional<Game> game = gameRepo.findById(id);
+        if (!game.isPresent())
+            throw new DataAccessException("Game with id " + id + " was not found") {
+            };
+        return game.get();
     }
 
     @Transactional
@@ -50,7 +59,13 @@ public class GameService {
         game.setPlayers(players);
         game.setLeader(players.iterator().next()); // Random leader
 
-        return gameRepo.save(game);
+        Game savedGame = gameRepo.save(game);
+
+        // Once the game is in the database, we update the lobby with a FK to it
+        lobby.setGame(game);
+        lobbyService.save(lobby);
+
+        return savedGame;
     }
 
     @Transactional

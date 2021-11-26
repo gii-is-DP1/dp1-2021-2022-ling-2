@@ -3,17 +3,19 @@ package org.springframework.samples.ntfh.lobby;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.ntfh.exceptions.InvalidValueException;
 import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
+import org.springframework.samples.ntfh.exceptions.UserAlreadyInLobbyException;
 import org.springframework.samples.ntfh.user.User;
 import org.springframework.samples.ntfh.user.UserService;
+import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +26,11 @@ public class LobbyService {
 
     @Autowired
     private UserService userService;
+
+    @Transactional
+    public Integer lobbyCount() {
+        return (int) lobbyRepository.count();
+    }
 
     @Transactional
     public Iterable<Lobby> findAll() {
@@ -55,7 +62,6 @@ public class LobbyService {
         Lobby lobbyNonSensitive = new Lobby();
         lobbyNonSensitive.setId(lobby.getId());
         lobbyNonSensitive.setName(lobby.getName());
-        lobbyNonSensitive.setHasStarted(lobby.getHasStarted());
         lobbyNonSensitive.setHasScenes(lobby.getHasScenes());
         lobbyNonSensitive.setSpectatorsAllowed(lobby.getSpectatorsAllowed());
         lobbyNonSensitive.setMaxPlayers(lobby.getMaxPlayers());
@@ -81,7 +87,10 @@ public class LobbyService {
     public void deleteLobby(Lobby lobby) {
         // make sure to remove all FK refrences to this lobby from the users who were in
         // the lobby
-        lobby.getUsers().forEach(user -> user.setLobby(null));
+        lobby.getUsers().forEach(user -> {
+            user.setLobby(null);
+            user.setCharacter(null);
+        });
         this.lobbyRepository.deleteById(lobby.getId());
     }
 
@@ -90,13 +99,13 @@ public class LobbyService {
      * 
      * @author andrsdt
      * @param lobbyId
-     * @param username
+     * @param usernameFromRequest username that will be added to the lobby
+     * @param token               JWT token sent by the client
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    public Lobby joinLobby(Integer lobbyId, String usernameRequest, String usernameToken)
+    public Lobby joinLobby(Integer lobbyId, String usernameFromRequest, String token)
             throws DataAccessException, MaximumLobbyCapacityException {
-        // TODO make this throw more specific (maybe custom)
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
         if (!lobbyOptional.isPresent())
             throw new DataAccessException("The lobby does not exist") {
@@ -107,24 +116,24 @@ public class LobbyService {
             throw new MaximumLobbyCapacityException("The lobby is full") {
             };
 
-        Optional<User> userOptional = userService.findUser(usernameRequest);
+        Optional<User> userOptional = userService.findUser(usernameFromRequest);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user who wants to join the lobby does not exist") {
             };
 
-        if (!usernameRequest.equals(usernameToken))
-            throw new InvalidValueException("The Token username and the request one does not coindice") {
+        String usernameFromToken = TokenUtils.usernameFromToken(token);
+        if (!usernameFromRequest.equals(usernameFromToken))
+            throw new IllegalArgumentException("The Token username and the request one does not coindice") {
             };
 
-        Set<String> usernamesInLobby = new HashSet<>();
-        lobby.getUsers().forEach(user -> usernamesInLobby.add(user.getUsername()));
-        if (usernamesInLobby.contains(usernameRequest))
-            throw new InvalidValueException("The user is already in the lobby") {
+        Boolean userInLobby = lobby.getUsers().stream().anyMatch(u -> u.getUsername().equals(usernameFromRequest));
+        if (userInLobby)
+            throw new IllegalArgumentException("The user is already in the lobby") {
             };
 
         User user = userOptional.get();
         if (user.getLobby() != null)
-            throw new DataAccessException(
+            throw new UserAlreadyInLobbyException(
                     String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
             };
 

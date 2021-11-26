@@ -1,6 +1,5 @@
 package org.springframework.samples.ntfh.configuration;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,12 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.ntfh.exceptions.InvalidValueException;
 import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
+import org.springframework.samples.ntfh.exceptions.UserAlreadyInLobbyException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -41,6 +41,12 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
         return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> dataIntegrityViolationExceptionHandler(HttpServletRequest request,
+            DataIntegrityViolationException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(NonMatchingTokenException.class)
     public ResponseEntity<Object> nonMatchingTokenExceptionHandler(HttpServletRequest request,
             NonMatchingTokenException ex) {
@@ -59,16 +65,18 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
         return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(UserAlreadyInLobbyException.class)
+    public ResponseEntity<Object> userAlreadyInLobbyExceptionHandler(HttpServletRequest request,
+            UserAlreadyInLobbyException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(MissingAttributeException.class)
     public ResponseEntity<Object> missingAttributeExceptionHandler(HttpServletRequest request,
             MaximumLobbyCapacityException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InvalidValueException.class)
-    public ResponseEntity<Object> InvalidValueException(HttpServletRequest request, MaximumLobbyCapacityException ex) {
-        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
     // TODO add more custom exceptions here. The structure is the same, the only
     // thing changing should be the HttpStatus
 }

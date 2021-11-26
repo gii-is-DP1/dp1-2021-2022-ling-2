@@ -1,38 +1,33 @@
 import { Table } from "react-bootstrap";
+import playerParser from "../../helpers/playerParser";
+import timeParser from "../../helpers/timeParser";
 
-export default function GamesHistoryTable() {
-  const gameList = [
-    {
-      id: 1,
-      name: "Game 1",
-      duration: "00:45:16",
-      startTime: "2020-04-01T00:00:00Z",
-      finishTime: "2020-04-01T00:45:16Z",
-      hasScenes: true,
-    },
-  ];
+export default function GamesHistoryTable(props) {
+  const { data } = props;
 
   return (
     <Table>
       <thead>
         <tr>
           <th>id</th>
-          <th>name</th>
           <th>duration</th>
           <th>start_time</th>
           <th>finish_time</th>
           <th>has_scenes</th>
+          <th>winner</th>
+          <th>players</th>
         </tr>
       </thead>
       <tbody>
-        {gameList.map((game, idx) => (
-          <tr>
-            <th>game.id</th>
-            <th>game.name</th>
-            <th>game.duration</th>
-            <th>game.start_time</th>
-            <th>game.finish_time</th>
-            <th>game.has_scenes</th>
+        {data.map((gameHistory, idx) => (
+          <tr key={idx}>
+            <th>{gameHistory?.id}</th>
+            <th>{gameHistory?.duration}</th>
+            <th>{timeParser(gameHistory?.game?.startTime)}</th>
+            <th>{timeParser(gameHistory?.finishTime)}</th>
+            <th>{gameHistory?.game?.hasScenes ? "🟢" : "🔴"}</th>
+            <th>{gameHistory?.winner?.user?.username}</th>
+            <th>{playerParser(gameHistory?.game?.players)}</th>
           </tr>
         ))}
       </tbody>

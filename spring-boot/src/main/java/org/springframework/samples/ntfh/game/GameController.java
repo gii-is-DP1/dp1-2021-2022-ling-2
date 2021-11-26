@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,10 +43,23 @@ public class GameController {
      * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
-    @PostMapping("new")
+    @PostMapping
     public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) {
         // TODO untested
         Game createdGame = gameService.createFromLobby(lobby);
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getCount(){
+        Integer count = gameService.gameCount();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+    
+    @GetMapping("/{gameId}")
+    public ResponseEntity<Game> getGame(@PathVariable("gameId") Integer gameId) {
+        Game game = gameService.findGameById(gameId);
+        return new ResponseEntity<>(game, HttpStatus.OK);
     }
 }

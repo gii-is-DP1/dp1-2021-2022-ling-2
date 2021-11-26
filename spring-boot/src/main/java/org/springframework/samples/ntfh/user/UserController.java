@@ -18,11 +18,11 @@ package org.springframework.samples.ntfh.user;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.ntfh.game.history.GameHistory;
+import org.springframework.samples.ntfh.game.history.GameHistoryRepository;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,12 +43,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 	// TODO JWT tokens can be decrypted to know if the user who is trying to perform
 	// an action is accessing his data or not
-	private final UserService userService;
-
 	@Autowired
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
+	private UserService userService;
+	@Autowired
+	private GameHistoryRepository gameHistoryRepository;
 
 	@GetMapping
 	public ResponseEntity<Iterable<User>> getAll() {
@@ -100,14 +98,21 @@ public class UserController {
 	}
 
 	@PostMapping("register")
-	public ResponseEntity<Map<String, String>> register( @RequestBody User user) {
+	public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
 		this.userService.saveUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-		String token=userService.loginUser(user);
+		String token = userService.loginUser(user);
 		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
+
+	// TODO make this work
+	@GetMapping("{userId}/history")
+    public ResponseEntity<Iterable<GameHistory>> getfindByUser(@PathVariable("userId") String username) {
+        Iterable<GameHistory> gameHistory = this.gameHistoryRepository.findByGamePlayersContaining(username);
+        return new ResponseEntity<>(gameHistory, HttpStatus.OK);
+    }
 }

@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.game;
+package org.springframework.samples.ntfh.game.history;
 
 import java.util.Set;
 
@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.data.annotation.Transient;
 import org.springframework.samples.ntfh.comments.Comment;
+import org.springframework.samples.ntfh.game.Game;
 import org.springframework.samples.ntfh.model.BaseEntity;
 import org.springframework.samples.ntfh.player.Player;
 
