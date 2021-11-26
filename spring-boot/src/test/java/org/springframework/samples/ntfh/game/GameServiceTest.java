@@ -65,6 +65,4 @@ public class GameServiceTest {
         assertEquals(3, tester.getId());
     }
 
-
-
 }
