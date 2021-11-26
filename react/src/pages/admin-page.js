@@ -29,9 +29,9 @@ export default function AdminPage() {
         const headers = { Authorization: "Bearer " + userToken };
         const response = await axios.get(`gameHistory`, { headers });
 
-        gamesHistory(response.data);
+        setGamesHistory(response.data);
       } catch (error) {
-        setErrors([...errors, error.response.data]);
+        setErrors([...errors, error.response?.data]);
       }
     };
     fetchGameHistory();

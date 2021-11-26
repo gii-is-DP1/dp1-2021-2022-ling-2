@@ -19,15 +19,15 @@ export default function Game() {
   const history = useHistory();
 
   const isSpectator = () =>
-    !userToken || (user && user.lobby.game.id !== parseInt(gameId));
+    !userToken || (user && user?.lobby?.game?.id !== parseInt(gameId));
 
   const fetchGame = async () => {
     try {
       const response = await axios.get(`/games/${gameId}`);
       setGame(response.data);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
-      if (error.response.status === 404) history.push(ROUTES.HOME);
+      setErrors([...errors, error.response?.data]);
+      if (error.response?.status === 404) history.push(ROUTES.HOME);
     }
   };
 
@@ -36,7 +36,7 @@ export default function Game() {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
     } catch (error) {
-      setErrors([...errors, error.response.data]);
+      setErrors([...errors, error?.response?.data]);
     }
   };
 

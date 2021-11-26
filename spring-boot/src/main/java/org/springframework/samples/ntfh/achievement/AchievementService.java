@@ -31,7 +31,6 @@ public class AchievementService {
         return achievementRepository.findById(id);
     }
 
-    @Transactional
     public Achievement updateAchievement(Achievement achievement, String token) throws DataAccessException,
             DataIntegrityViolationException, NonMatchingTokenException, IllegalArgumentException {
 
@@ -60,6 +59,7 @@ public class AchievementService {
             throw new NonMatchingTokenException("Only admins can edit achievements.");
         }
 
+        achievement.setType(sameIdOptional.get().getType());
         return achievementRepository.save(achievement);
     }
 
