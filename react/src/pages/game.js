@@ -27,7 +27,7 @@ export default function Game() {
       setGame(response.data);
     } catch (error) {
       setErrors([...errors, error.response?.data]);
-      if (error.response.status === 404) history.push(ROUTES.HOME);
+      if (error.response?.status === 404) history.push(ROUTES.HOME);
     }
   };
 
