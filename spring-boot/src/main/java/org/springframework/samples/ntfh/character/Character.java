@@ -9,6 +9,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.samples.ntfh.marketcard.MarketCard;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
@@ -29,5 +31,6 @@ public class Character extends BaseEntity {
 
     // TODO lazy load
     @ManyToMany(mappedBy = "usableBy")
+    @JsonIgnore
     private Set<MarketCard> availableMarketCards;
 }
