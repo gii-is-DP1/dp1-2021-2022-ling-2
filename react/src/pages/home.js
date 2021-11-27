@@ -11,8 +11,6 @@ import UserContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
 
-// import "../resources/css/nord.css";
-
 export default function Home() {
   const { errors, setErrors } = useContext(ErrorContext); // hook
   const { userToken } = useContext(UserContext);
@@ -23,7 +21,7 @@ export default function Home() {
     UnregisteredUserContext
   );
 
-  async function fetchUnregisteredData() {
+  async function fetchUnregisteredUserData() {
     try {
       const response = await axios.get("/unregistered-users");
       setUnregisteredUser(response.data);
@@ -41,6 +39,10 @@ export default function Home() {
     }
   }
 
+  const userInLobby = () => currentUser?.lobby;
+
+  const userInGame = () => currentUser?.lobby?.game;
+
   useEffect(() => {
     document.title = "No Time for Heroes";
   }, []);
@@ -49,34 +51,13 @@ export default function Home() {
     // Unregistered user creation
     if (!unregisteredUser) {
       // if there aren't unregistered user credentials, ask for some
-      fetchUnregisteredData();
+      fetchUnregisteredUserData();
     }
     if (userToken) {
       // if there are user credentials, fetch his info
       fetchUserData();
     }
   }, []);
-
-  const generateUserButtons = () => {
-    return (
-      <>
-        {currentUser?.lobby ? (
-          <Link to={ROUTES.LOBBY.replace(":lobbyId", currentUser?.lobby.id)}>
-            <Button type="submit">Rejoin Game</Button>
-          </Link>
-        ) : (
-          <>
-            <Link to={ROUTES.CREATE_LOBBY}>
-              <Button type="submit">Create Game</Button>
-            </Link>
-            <Link to={ROUTES.BROWSE_LOBBIES}>
-              <Button type="submit">Browse Games</Button>
-            </Link>
-          </>
-        )}
-      </>
-    );
-  };
 
   return (
     <span>
@@ -86,23 +67,31 @@ export default function Home() {
       {userToken ? <Sidebar /> : <UnregisteredSidebar />}
 
       {/* Buttons */}
-      {!userToken ? (
-        <Link to={ROUTES.BROWSE_LOBBIES}>
-          <Button type="submit">Browse Games</Button>
-        </Link>
-      ) : (
-        generateUserButtons()
+      {user && !userInLobby() && (
+        <>
+          <Link to={ROUTES.BROWSE_LOBBIES}>
+            <Button type="submit">Browse Games</Button>
+          </Link>
+          <Link to={ROUTES.CREATE_LOBBY}>
+            <Button type="submit">Create lobby</Button>
+          </Link>
+        </>
       )}
-
-      {/* Admin Page*/}
-      {user && hasAuthority(user, "admin") ? (
+      {userInLobby() && !userInGame() && (
+        <Link to={ROUTES.LOBBY.replace(":lobbyId", currentUser?.lobby?.id)}>
+          <Button type="submit">Rejoin Lobby</Button>
+        </Link>
+      )}
+      {userInGame() && (
+        <Link to={ROUTES.GAME.replace(":gameId", currentUser?.lobby?.game?.id)}>
+          <Button type="submit">Rejoin Game</Button>
+        </Link>
+      )}
+      {hasAuthority(user, "admin") && (
         <Link to={ROUTES.ADMIN_PAGE}>
           <Button type="submit">Admin Page</Button>
         </Link>
-      ) : (
-        ""
       )}
-
       <Link to={ROUTES.STATISTICS}>
         <Button type="submit">Statistics</Button>
       </Link>
