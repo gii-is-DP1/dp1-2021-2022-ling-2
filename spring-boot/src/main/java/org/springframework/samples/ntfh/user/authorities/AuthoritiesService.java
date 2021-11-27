@@ -1,6 +1,7 @@
 package org.springframework.samples.ntfh.user.authorities;
 
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -20,6 +21,10 @@ public class AuthoritiesService {
     public AuthoritiesService(AuthoritiesRepository authoritiesRepository, UserRepository userRepository) {
         this.authoritiesRepository = authoritiesRepository;
         this.userRepository = userRepository;
+    }
+
+    public Set<Authorities> getAuthorities(User user) {
+        return this.authoritiesRepository.findByUser(user);
     }
 
     @Transactional
