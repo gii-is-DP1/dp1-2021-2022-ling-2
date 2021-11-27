@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.samples.ntfh.character.Character;
@@ -41,6 +43,7 @@ public class User {
 
 	@NotBlank
 	@Length(min = 4, message = "Password must be at least 4 characters long")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
 	@NotNull

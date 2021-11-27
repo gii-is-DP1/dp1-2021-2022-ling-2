@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.ntfh.exceptions.BannedUserException;
 import org.springframework.samples.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.samples.ntfh.exceptions.MissingAttributeException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
@@ -62,6 +63,12 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     @ExceptionHandler(MaximumLobbyCapacityException.class)
     public ResponseEntity<Object> maximumLobbyCapacityExceptionHandler(HttpServletRequest request,
             MaximumLobbyCapacityException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BannedUserException.class)
+    public ResponseEntity<Object> bannedUserExceptionHandler(HttpServletRequest request,
+            BannedUserException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 

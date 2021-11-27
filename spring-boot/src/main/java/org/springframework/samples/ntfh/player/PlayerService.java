@@ -54,8 +54,9 @@ public class PlayerService {
         // TODO exception if there is no user to associate with the player (should
         // this happen?)
         player.setUser(user);
-        // TODO exception if the user hasn't selected a character in the lobby (should
-        // have)
+        if (user.getCharacter() == null) {
+            throw new IllegalArgumentException("User " + user.getUsername() + " has not selected a character");
+        }
         player.setCharacterType(user.getCharacter());
         return playerRepository.save(player);
     }

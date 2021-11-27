@@ -20,7 +20,7 @@ export default function Lobby() {
   const { lobbyId } = useParams(); // TODO maybe we should just pass this as a param to the component
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
-  const [character, setCharacter] = useState("none");
+  const [character, setCharacter] = useState(null);
   const [gender, setGender] = useState("male");
   const [fullLobby, setFullLobby] = useState(false);
   const [charactersTaken, setCharactersTaken] = useState([]);
@@ -29,7 +29,7 @@ export default function Lobby() {
   const genders = ["male", "female"];
 
   const getCharacterId = () => {
-    if (character === "none") return null;
+    if (character === null) return null;
     return 1 + 2 * characters.indexOf(character) + genders.indexOf(gender);
     // Input: warrior, female
     // Output: 3+ 1  = 4 (id Of female warrior in the DB is 4)
@@ -138,7 +138,7 @@ export default function Lobby() {
       try {
         user.character = getCharacterId();
         const payload = { ...user };
-        const response = await axios.put(`/users`, payload, {
+        const response = await axios.put(`/users/character`, payload, {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {

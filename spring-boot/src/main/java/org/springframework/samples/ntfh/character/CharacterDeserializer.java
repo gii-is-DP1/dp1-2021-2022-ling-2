@@ -1,4 +1,4 @@
-package org.springframework.samples.ntfh.user;
+package org.springframework.samples.ntfh.character;
 
 import java.io.IOException;
 
@@ -17,13 +17,39 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.ntfh.character.CharacterService;
+import org.springframework.samples.ntfh.user.User;
+
+// @JsonComponent
+// public class CharacterDeserializer extends JsonDeserializer<Character> {
+
+//     @Autowired
+//     private CharacterService characterService;
+
+//     /**
+//      * @param deserializationContext with the id of the character to deserialize
+//      */
+//     @Override
+//     public Character deserialize(final JsonParser jp, final DeserializationContext ctxt)
+//             throws IOException, DataAccessException {
+//         // TODO add default deserializer for Character object, in case we need it
+//         ObjectCodec oc = jp.getCodec();
+//         JsonNode node = oc.readTree(jp);
+//         if (node.getNodeType() == JsonNodeType.NUMBER) {
+//             Integer characterId = node.asInt();
+//             Optional<Character> characterOptional = characterService.findCharacterById(characterId);
+//             if (characterOptional.isPresent()) {
+//                 return characterOptional.get();
+//             } else {
+//                 throw new IllegalArgumentException("Character with id " + characterId + " does not exist");
+//             }
+//         } else {
+//             throw new IllegalArgumentException("Cannot deserialize character");
+//         }
+//     }
+// }
 
 @JsonComponent
-public class UserDeserializer extends JsonDeserializer<User> {
-
-    @Autowired
-    private UserService userService;
+public class CharacterDeserializer extends JsonDeserializer<Character> {
 
     @Autowired
     private CharacterService characterService;
@@ -32,13 +58,13 @@ public class UserDeserializer extends JsonDeserializer<User> {
      * @param deserializationContext containing either the user id or the username
      */
     @Override
-    public User deserialize(final JsonParser jp, final DeserializationContext ctxt)
+    public Character deserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, DataAccessException {
 
         ObjectCodec oc = jp.getCodec();
         JsonNode node = oc.readTree(jp);
         DeserializationConfig config = ctxt.getConfig();
-        JavaType type = TypeFactory.defaultInstance().constructType(User.class);
+        JavaType type = TypeFactory.defaultInstance().constructType(Character.class);
         JsonDeserializer<Object> defaultDeserializer = BeanDeserializerFactory.instance.buildBeanDeserializer(ctxt,
                 type, config.introspect(type));
 
@@ -55,17 +81,16 @@ public class UserDeserializer extends JsonDeserializer<User> {
             }
 
             // Try to use the default deserializer
-            return (User) defaultDeserializer.deserialize(treeParser, ctxt);
+            return (Character) defaultDeserializer.deserialize(treeParser, ctxt);
         } catch (Exception e) {
             // If the default deserializer fails, try to deserialize it manually:
-            // If the user id is present, use it to retrieve the user
-            if (node.getNodeType() == JsonNodeType.STRING) {
-                String username = node.textValue();
-                return userService.findUser(username).get();
+            // If the id is present, deserialize by it
+            if (node.getNodeType() == JsonNodeType.NUMBER) {
+                Integer characterId = node.intValue();
+                return characterService.findCharacterById(characterId).get();
             } else {
-                throw new IllegalArgumentException("Cannot deserialize user");
+                throw new IllegalArgumentException("Cannot deserialize character");
             }
         }
     }
-
 }

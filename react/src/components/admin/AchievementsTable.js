@@ -6,6 +6,7 @@ import * as ROUTES from "../../constants/routes";
 import errorContext from "../../context/error";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
+import hasAuthority from "../../helpers/hasAuthority";
 
 export default function AchievementsTable() {
   const { errors, setErrors } = useContext(errorContext);
@@ -24,8 +25,6 @@ export default function AchievementsTable() {
 
     fetchAchievements();
   }, []);
-
-  const isAdmin = (_user) => _user.authorities.includes("admin");
 
   return (
     <Table>
@@ -47,7 +46,9 @@ export default function AchievementsTable() {
                   achievement.id
                 )}
               >
-                {user && isAdmin(user) && <Button type="submit">Edit</Button>}
+                {hasAuthority(user, "admin") && (
+                  <Button type="submit">Edit</Button>
+                )}
               </Link>
             </th>
           </tr>
