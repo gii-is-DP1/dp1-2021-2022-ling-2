@@ -24,6 +24,7 @@ export default function UsersTable() {
       await axios.put("/users", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
+      fetchUsers();
       // Add popup message "the user {user} has been banned"
     } catch (error) {
       setPopups([...popups, error.response]);

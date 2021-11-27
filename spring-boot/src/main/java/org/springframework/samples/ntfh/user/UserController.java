@@ -45,6 +45,7 @@ public class UserController {
 	// an action is accessing his data or not
 	@Autowired
 	private UserService userService;
+
 	@Autowired
 	private GameHistoryRepository gameHistoryRepository;
 
@@ -86,9 +87,12 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 
-		userService.updateUser(user, token);
-
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
+		if (user.isEnabled() || !user.isEnabled()) {
+			userService.banUser(user);
+		} else {
+			userService.updateUser(user, token);
+		}
 		if (sentByAdmin)
 			// Don't return a new token if the one updating the profile is an admin
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -109,10 +113,17 @@ public class UserController {
 		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
 
+	@PutMapping("character")
+	public ResponseEntity<Map<String, String>> setCharacter(@RequestBody User user,
+			@RequestHeader("Authorization") String token) {
+		userService.setCharacter(user.getUsername(), user.getCharacter());
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	// TODO make this work
 	@GetMapping("{userId}/history")
-    public ResponseEntity<Iterable<GameHistory>> getfindByUser(@PathVariable("userId") String username) {
-        Iterable<GameHistory> gameHistory = this.gameHistoryRepository.findByGamePlayersContaining(username);
-        return new ResponseEntity<>(gameHistory, HttpStatus.OK);
-    }
+	public ResponseEntity<Iterable<GameHistory>> getfindByUser(@PathVariable("userId") String username) {
+		Iterable<GameHistory> gameHistory = this.gameHistoryRepository.findByGamePlayersContaining(username);
+		return new ResponseEntity<>(gameHistory, HttpStatus.OK);
+	}
 }
