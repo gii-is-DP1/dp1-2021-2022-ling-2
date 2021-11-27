@@ -17,12 +17,15 @@ package org.springframework.samples.ntfh.user;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.ntfh.game.history.GameHistory;
 import org.springframework.samples.ntfh.game.history.GameHistoryRepository;
+import org.springframework.samples.ntfh.user.authorities.Authorities;
+import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +48,9 @@ public class UserController {
 	// an action is accessing his data or not
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AuthoritiesService authoritiesService;
 
 	@Autowired
 	private GameHistoryRepository gameHistoryRepository;
@@ -87,16 +93,19 @@ public class UserController {
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 
-		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
-		if (user.isEnabled() || !user.isEnabled()) {
+		if (user.getEnabled() != null) {
 			userService.banUser(user);
 		} else {
 			userService.updateUser(user, token);
 		}
-		if (sentByAdmin)
-			// Don't return a new token if the one updating the profile is an admin
+		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
+		Boolean editingAdminProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
+		if (sentByAdmin && !editingAdminProfile)
+			// Don't return a new token if an admin is editing another user's profile
 			return new ResponseEntity<>(HttpStatus.OK);
 
+		Set<Authorities> authorities = authoritiesService.getAuthorities(user);
+		user.setAuthorities(authorities);
 		String tokenWithUpdatedData = TokenUtils.generateJWTToken(user);
 		return new ResponseEntity<>(Map.of("authorization", tokenWithUpdatedData), HttpStatus.OK);
 	}
@@ -121,6 +130,7 @@ public class UserController {
 	}
 
 	// TODO make this work
+	// TODO use service instead of repository
 	@GetMapping("{userId}/history")
 	public ResponseEntity<Iterable<GameHistory>> getfindByUser(@PathVariable("userId") String username) {
 		Iterable<GameHistory> gameHistory = this.gameHistoryRepository.findByGamePlayersContaining(username);
