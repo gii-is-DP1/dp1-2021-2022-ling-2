@@ -5,13 +5,13 @@ import tokenParser from "../helpers/tokenParser";
 import userContext from "../context/user";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
-import errorContext from "../context/error";
+import popupContext from "../context/popup";
 import Homebar from "../components/home/Homebar";
 
 export default function EditAchievement() {
   const params = useParams();
   const history = useHistory();
-  const { errors, setErrors } = useContext(errorContext);
+  const { popups, setPopups } = useContext(popupContext);
   const { userToken, setUserToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
 
@@ -29,7 +29,7 @@ export default function EditAchievement() {
       setName(response.data.name);
       setDescription(response.data.description);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
       sendToAdminPage();
     }
   }
@@ -47,7 +47,7 @@ export default function EditAchievement() {
       });
       sendToAdminPage();
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   }
 

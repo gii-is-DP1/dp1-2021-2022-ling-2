@@ -5,7 +5,7 @@ import axios from "../api/axiosConfig";
 import Sidebar from "../components/home/Sidebar";
 import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
 import * as ROUTES from "../constants/routes";
-import ErrorContext from "../context/error";
+import popupContext from "../context/popup";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
@@ -14,7 +14,7 @@ import tokenParser from "../helpers/tokenParser";
 // import "../resources/css/nord.css";
 
 export default function Home() {
-  const { errors, setErrors } = useContext(ErrorContext); // hook
+  const { popups, setPopups } = useContext(popupContext); // hook
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
   const [currentUser, setCurrentUser] = useState();
@@ -28,7 +28,7 @@ export default function Home() {
       const response = await axios.get("/unregistered-users");
       setUnregisteredUser(response.data);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   }
 
@@ -37,7 +37,7 @@ export default function Home() {
       const response = await axios.get(`/users/${user.username}`);
       setCurrentUser(response.data);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   }
 

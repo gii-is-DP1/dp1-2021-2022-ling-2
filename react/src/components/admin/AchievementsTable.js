@@ -3,13 +3,13 @@ import { Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "../../api/axiosConfig";
 import * as ROUTES from "../../constants/routes";
-import errorContext from "../../context/error";
+import popupContext from "../../context/popup";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
 import hasAuthority from "../../helpers/hasAuthority";
 
 export default function AchievementsTable() {
-  const { errors, setErrors } = useContext(errorContext);
+  const { popups, setPopups } = useContext(popupContext);
   const [achievements, setAchievements] = useState([]);
   const user = tokenParser(useContext(userContext));
 
@@ -19,7 +19,7 @@ export default function AchievementsTable() {
         const response = await axios.get(`achievements`);
         setAchievements(response.data);
       } catch (error) {
-        setErrors([...errors, error.response?.data]);
+        setPopups([...popups, error.response?.data]);
       }
     };
 

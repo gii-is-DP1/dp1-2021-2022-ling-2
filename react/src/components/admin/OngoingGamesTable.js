@@ -1,12 +1,12 @@
 import axios from "../../api/axiosConfig";
 import { useEffect, useState, useContext } from "react";
 import { Table } from "react-bootstrap";
-import errorContext from "../../context/error";
+import popupContext from "../../context/popup";
 import playerParser from "../../helpers/playerParser";
 import timeParser from "../../helpers/timeParser";
 
 export default function OngoingGamesTable() {
-  const { errors, setErrors } = useContext(errorContext); // Array of errors
+  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const [gameList, setGameList] = useState([]);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function OngoingGamesTable() {
         const response = await axios.get(`games`);
         setGameList(response.data);
       } catch (error) {
-        setErrors([...errors, error.response?.data]);
+        setPopups([...popups, error.response?.data]);
       }
     };
 

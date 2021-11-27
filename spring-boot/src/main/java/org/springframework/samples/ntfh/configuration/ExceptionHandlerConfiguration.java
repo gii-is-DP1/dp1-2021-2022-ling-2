@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandler {
+
     @Autowired
     private BasicErrorController errorController;
 

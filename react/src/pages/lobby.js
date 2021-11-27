@@ -6,14 +6,14 @@ import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
-import ErrorContext from "../context/error";
+import popupContext from "../context/popup";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
 
-  const { errors, setErrors } = useContext(ErrorContext); // Array of error objects
+  const { popups, setPopups } = useContext(popupContext); // Array of error objects
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
   const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
@@ -59,7 +59,7 @@ export default function Lobby() {
       return newLobby;
     } catch (error) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
       history.push(ROUTES.BROWSE_LOBBIES);
       return;
     }
@@ -73,7 +73,7 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
     }
   }
@@ -86,7 +86,7 @@ export default function Lobby() {
       });
       if (username === lobby.host.username) history.push(ROUTES.BROWSE_LOBBIES);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   }
 
@@ -103,7 +103,7 @@ export default function Lobby() {
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   };
 
@@ -142,7 +142,7 @@ export default function Lobby() {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {
-        setErrors([...errors, error.response?.data]);
+        setPopups([...popups, error.response?.data]);
       }
     }
     updateUserCharacter();

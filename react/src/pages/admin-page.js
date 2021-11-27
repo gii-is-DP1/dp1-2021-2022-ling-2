@@ -8,7 +8,7 @@ import OngoingGamesTable from "../components/admin/OngoingGamesTable";
 import UsersTable from "../components/admin/UsersTable";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
-import errorContext from "../context/error";
+import popupContext from "../context/popup";
 import userContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
@@ -19,7 +19,7 @@ export default function AdminPage() {
   const { userToken } = useContext(userContext);
   const [currentTable, setCurrentTable] = useState("games");
   const [gamesHistory, setGamesHistory] = useState([]);
-  const { errors, setErrors } = useContext(errorContext);
+  const { popups, setPopups } = useContext(popupContext);
 
   useEffect(() => {
     const fetchGameHistory = async () => {
@@ -31,7 +31,7 @@ export default function AdminPage() {
 
         setGamesHistory(response.data);
       } catch (error) {
-        setErrors([...errors, error.response?.data]);
+        setPopups([...popups, error.response?.data]);
       }
     };
     fetchGameHistory();

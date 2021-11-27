@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useHistory } from "react-router";
 import axios from "../../api/axiosConfig";
-import ErrorContext from "../../context/error";
+import popupContext from "../../context/popup";
 import UserContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
 import hasAuthority from "../../helpers/hasAuthority";
@@ -11,7 +11,7 @@ export default function UsersTable() {
   const history = useHistory();
   const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
-  const { errors, setErrors } = useContext(ErrorContext); // Array of errors
+  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const [userList, setUserList] = useState([]);
 
   const handleToggleBan = async (_user) => {
@@ -26,7 +26,7 @@ export default function UsersTable() {
       });
       // Add popup message "the user {user} has been banned"
     } catch (error) {
-      setErrors([...errors, error.response]);
+      setPopups([...popups, error.response]);
     }
   };
 
@@ -36,7 +36,7 @@ export default function UsersTable() {
       const response = await axios.get(`users`, { headers });
       setUserList(response.data);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   };
 
