@@ -23,8 +23,6 @@ export default function Home() {
     UnregisteredUserContext
   );
 
-  const isAdmin = (_user) => _user.authorities.includes("admin");
-
   async function fetchUnregisteredData() {
     try {
       const response = await axios.get("/unregistered-users");

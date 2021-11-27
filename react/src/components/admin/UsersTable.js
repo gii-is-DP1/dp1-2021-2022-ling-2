@@ -5,6 +5,7 @@ import axios from "../../api/axiosConfig";
 import ErrorContext from "../../context/error";
 import UserContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
+import hasAuthority from "../../helpers/hasAuthority";
 
 export default function UsersTable() {
   const history = useHistory();
@@ -12,8 +13,6 @@ export default function UsersTable() {
   const loggedUser = tokenParser(useContext(UserContext));
   const { errors, setErrors } = useContext(ErrorContext); // Array of errors
   const [userList, setUserList] = useState([]);
-
-  const isAdmin = (_user) => _user.authorities.includes("admin");
 
   const handleToggleBan = async (_user) => {
     const payload = {
@@ -60,7 +59,7 @@ export default function UsersTable() {
             <th>{_user.email}</th>
             <th>{_user.enabled ? "🟢" : "🔴"}</th>
             <th>
-              {isAdmin(loggedUser) && (
+              {hasAuthority(loggedUser, "admin") && (
                 <Button onClick={() => handleToggleBan(_user)}>Ban</Button>
               )}
               &nbsp;
