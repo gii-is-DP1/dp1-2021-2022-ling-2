@@ -1,12 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import AchievementsTable from "../components/admin/AchievementsTable";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import OngoingGamesTable from "../components/admin/OngoingGamesTable";
 import UsersTable from "../components/admin/UsersTable";
-import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import popupContext from "../context/popup";
 import userContext from "../context/user";
@@ -17,7 +16,7 @@ export default function AdminPage() {
   const history = useHistory();
   const user = tokenParser(useContext(userContext));
   const { userToken } = useContext(userContext);
-  const [currentTable, setCurrentTable] = useState("games");
+  const [currentTable, setCurrentTable] = useState("ongoingGames");
   const [gamesHistory, setGamesHistory] = useState([]);
   const { popups, setPopups } = useContext(popupContext);
 
@@ -43,51 +42,56 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <span>
-      <Homebar />
-
-      <Container>
-        <Row>
-          {/* Buttons Column */}
-          <Col>
-            <Button
-              type="submit"
-              onClick={() => setCurrentTable("ongoingGames")}
-            >
-              Ongoing games
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              type="submit"
-              onClick={() => setCurrentTable("gamesHistory")}
-            >
-              Game history
-            </Button>
-          </Col>
-          <Col>
-            <Button type="submit" onClick={() => setCurrentTable("users")}>
-              Users
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              type="submit"
-              onClick={() => setCurrentTable("achievements")}
-            >
-              Achievements
-            </Button>
-          </Col>
-        </Row>
-        <Row>
+    <div className="flex flex-col h-screen bg-wood p-8">
+      <span className="text-center pb-8">
+        <Link to={ROUTES.ADMIN_PAGE}>
+          <button type="submit" className="btn-ntfh">
+            <p className="text-5xl text-gradient-ntfh">Admin Tools</p>
+          </button>
+        </Link>
+      </span>
+      <span className="flex flex-row flex-1 justify-between">
+        <div class="flex flex-col w-1/4 max-w-1/5 justify-center gap-y-4">
+          {/* 4 botones de seleccionar tabla */}
+          <button
+            type="submit"
+            className="btn-ntfh"
+            onClick={() => setCurrentTable("ongoingGames")}
+          >
+            <p className="text-gradient-ntfh">Ongoing games</p>
+          </button>
+          <button
+            type="submit"
+            className="btn-ntfh"
+            onClick={() => setCurrentTable("gamesHistory")}
+          >
+            <p className="text-gradient-ntfh">Game history</p>
+          </button>
+          <button
+            type="submit"
+            className="btn-ntfh"
+            onClick={() => setCurrentTable("users")}
+          >
+            <p className="text-gradient-ntfh">Users</p>
+          </button>
+          <button
+            type="submit"
+            className="btn-ntfh"
+            onClick={() => setCurrentTable("achievements")}
+          >
+            <p className="text-gradient-ntfh">Achievements</p>
+          </button>
+        </div>
+        <div class="flex flex-col w-3/4 items-center justify-center pl-12">
+          {/* Tabla seleccionada */}
           {currentTable === "ongoingGames" && <OngoingGamesTable />}
           {currentTable === "gamesHistory" && (
             <GamesHistoryTable data={gamesHistory} />
           )}
           {currentTable === "users" && <UsersTable />}
           {currentTable === "achievements" && <AchievementsTable />}
-        </Row>
-      </Container>
-    </span>
+        </div>
+      </span>
+    </div>
   );
 }
