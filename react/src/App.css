@@ -44,3 +44,27 @@
 .text-gradient-ntfh {
   @apply bg-gradient-to-t from-yellow-900 to-yellow-300 text-transparent bg-clip-text;
 }
+
+.text-table-th {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider;
+}
+
+.text-table-td {
+  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-100;
+}
+
+.btn {
+  @apply font-bold py-2 px-4 rounded;
+}
+.btn-blue {
+  @apply bg-blue-700 text-white;
+}
+.btn-blue:hover {
+  @apply bg-blue-500;
+}
+.btn-red {
+  @apply bg-red-700 text-white;
+}
+.btn-red:hover {
+  @apply bg-red-500;
+}
