@@ -6,14 +6,13 @@ import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
-import popupContext from "../context/popup";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import toast from "react-hot-toast";
 
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
 
-  const { popups, setPopups } = useContext(popupContext); // Array of error objects
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
   const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
@@ -42,11 +41,13 @@ export default function Lobby() {
       const newLobby = response.data;
       if (lobby && !userInLobby(user, newLobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
+        toast("You have been kicked from the lobby");
         history.push(ROUTES.BROWSE_LOBBIES);
         return;
       }
       if (lobby && lobby.game) {
         // If the lobby I am trying to join has already started, redirect me to the game
+        toast.error("This game has already started");
         history.push(ROUTES.GAME.replace(":gameId", lobby.game.id));
         return;
       }
@@ -59,7 +60,7 @@ export default function Lobby() {
       return newLobby;
     } catch (error) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
       history.push(ROUTES.BROWSE_LOBBIES);
       return;
     }
@@ -73,7 +74,7 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
     }
   }
@@ -84,9 +85,12 @@ export default function Lobby() {
       await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
         headers: { Authorization: "Bearer " + userToken },
       });
-      if (username === lobby.host.username) history.push(ROUTES.BROWSE_LOBBIES);
+      if (username === lobby.host.username) {
+        toast.message("Lobby deleted successfully");
+        history.push(ROUTES.BROWSE_LOBBIES);
+      }
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
     }
   }
 
@@ -103,7 +107,7 @@ export default function Lobby() {
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
     }
   };
 
@@ -142,7 +146,7 @@ export default function Lobby() {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response?.data);
       }
     }
     updateUserCharacter();

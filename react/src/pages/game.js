@@ -1,12 +1,10 @@
-import { useContext } from "react";
-import { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import UserContext from "../context/user";
-import popupContext from "../context/popup";
-import SpectatorToast from "../components/game/SpectatorToast";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import tokenParser from "../helpers/tokenParser";
 import * as ROUTES from "../constants/routes";
+import UserContext from "../context/user";
+import tokenParser from "../helpers/tokenParser";
 
 export default function Game() {
   // route for /games/gameId
@@ -15,7 +13,6 @@ export default function Game() {
   const loggedUser = tokenParser(useContext(UserContext));
   const [game, setGame] = useState(null);
   const [user, setUser] = useState(null);
-  const { popups, setPopups } = useContext(popupContext); // Array of error objects
   const history = useHistory();
 
   const isSpectator = () =>
@@ -26,7 +23,7 @@ export default function Game() {
       const response = await axios.get(`/games/${gameId}`);
       setGame(response.data);
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
       if (error.response?.status === 404) history.push(ROUTES.HOME);
     }
   };
@@ -36,19 +33,28 @@ export default function Game() {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
     } catch (error) {
-      setPopups([...popups, error?.response?.data]);
+      toast.error(error.response?.data);
     }
   };
 
   useEffect(() => {
     // fetch game info on page load
     fetchGame();
-    if (!isSpectator()) fetchUser();
+    if (!isSpectator()) {
+      fetchUser();
+    } else {
+      // if user is spectator, render a toast
+      toast("Spectator", {
+        position: "top-right",
+        duration: Infinity,
+        icon: "👁️",
+        id: "Spectator",
+      });
+    }
   }, []);
 
   return (
     <>
-      {isSpectator() && <SpectatorToast />}
       <h1>This is game {gameId}</h1>
     </>
   );

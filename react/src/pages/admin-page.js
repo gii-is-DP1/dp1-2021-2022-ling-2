@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import axios from "../api/axiosConfig";
@@ -7,7 +8,6 @@ import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import OngoingGamesTable from "../components/admin/OngoingGamesTable";
 import UsersTable from "../components/admin/UsersTable";
 import * as ROUTES from "../constants/routes";
-import popupContext from "../context/popup";
 import userContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
@@ -18,7 +18,6 @@ export default function AdminPage() {
   const { userToken } = useContext(userContext);
   const [currentTable, setCurrentTable] = useState("ongoingGames");
   const [gamesHistory, setGamesHistory] = useState([]);
-  const { popups, setPopups } = useContext(popupContext);
 
   useEffect(() => {
     const fetchGameHistory = async () => {
@@ -27,10 +26,9 @@ export default function AdminPage() {
         // TODO remove auth if not needed
         const headers = { Authorization: "Bearer " + userToken };
         const response = await axios.get(`gameHistory`, { headers });
-
         setGamesHistory(response.data);
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response?.data);
       }
     };
     fetchGameHistory();
@@ -38,7 +36,10 @@ export default function AdminPage() {
 
   useEffect(() => {
     document.title = "NTFH - Admin panel";
-    if (!hasAuthority(user, "admin")) history.push(ROUTES.LOGIN);
+    if (!hasAuthority(user, "admin")) {
+      toast.error("You must be an admin to access this page");
+      history.push(ROUTES.LOGIN);
+    }
   }, []);
 
   return (

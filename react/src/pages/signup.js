@@ -5,7 +5,7 @@ import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import popupContext from "../context/popup";
+import toast from "react-hot-toast";
 
 /**
  *
@@ -15,7 +15,6 @@ import popupContext from "../context/popup";
 export default function SignUp() {
   const history = useHistory(); // hook
   const { setUserToken } = useContext(userContext); // hook
-  const { popups, setPopups } = useContext(popupContext); // Array of errors
 
   useEffect(() => {
     document.title = "NTFH - Sign up";
@@ -30,9 +29,10 @@ export default function SignUp() {
       // we want to auto log in after registering to get the auth token
       const loginResponse = await axios.post("/users/login", formDataObj);
       setUserToken(loginResponse.data.authorization);
+      toast.success("Successfully registered!");
       history.push(ROUTES.HOME);
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
     }
   };
 

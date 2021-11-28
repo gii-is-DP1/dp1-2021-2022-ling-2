@@ -1,15 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "../../api/axiosConfig";
 import * as ROUTES from "../../constants/routes";
-import popupContext from "../../context/popup";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
-import hasAuthority from "../../helpers/hasAuthority";
+import toast from "react-hot-toast";
 
 export default function AchievementsTable() {
-  const { popups, setPopups } = useContext(popupContext);
   const [achievements, setAchievements] = useState([]);
   const user = tokenParser(useContext(userContext));
 
@@ -19,7 +16,7 @@ export default function AchievementsTable() {
         const response = await axios.get(`achievements`);
         setAchievements(response.data);
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response?.data);
       }
     };
 

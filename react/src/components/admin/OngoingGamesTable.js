@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../../api/axiosConfig";
-import popupContext from "../../context/popup";
 import playerParser from "../../helpers/playerParser";
 import timeParser from "../../helpers/timeParser";
+import toast from "react-hot-toast";
 
 export default function OngoingGamesTable() {
-  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const [gameList, setGameList] = useState([]);
 
   useEffect(() => {
@@ -15,7 +14,7 @@ export default function OngoingGamesTable() {
         const response = await axios.get(`games`);
         setGameList(response.data);
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response.data.message);
       }
     };
 

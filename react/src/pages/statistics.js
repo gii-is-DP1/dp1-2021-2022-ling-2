@@ -1,11 +1,10 @@
 import Homebar from "../components/home/Homebar";
 import { Table, Col, Row } from "react-bootstrap";
 import { useState, useEffect, useContext } from "react";
-import popupContext from "../context/popup";
 import axios from "../api/axiosConfig";
+import toast from "react-hot-toast";
 
 export default function Statistics() {
-  const { popups, setPopups } = useContext(popupContext);
   const [gamesHistory, setGamesHistory] = useState(null);
 
   useEffect(() => {
@@ -14,7 +13,7 @@ export default function Statistics() {
         const response = await axios.get(`gameHistory`);
         setGamesHistory(response.data);
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response?.data);
       }
     };
 

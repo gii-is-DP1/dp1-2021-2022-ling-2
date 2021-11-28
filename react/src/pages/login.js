@@ -5,7 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import popupContext from "../context/popup";
+import toast from "react-hot-toast";
 /**
  *
  * @author jstockwell
@@ -14,7 +14,6 @@ import popupContext from "../context/popup";
 export default function Login() {
   const history = useHistory(); // hook
   const { setUserToken } = useContext(userContext); // hook
-  const { popups, setPopups } = useContext(popupContext); // Array of error objects
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,9 +22,10 @@ export default function Login() {
       const formDataObj = Object.fromEntries(formData.entries());
       const response = await axios.post("/users/login", formDataObj);
       setUserToken(response.data.authorization);
+      toast.success("Logged in successfully");
       history.push(ROUTES.HOME);
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response.data.message);
     }
   };
 
