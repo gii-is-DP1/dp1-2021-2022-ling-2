@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import * as ROUTES from "../constants/routes";
-import userContext from "../context/user";
-import popupContext from "../context/popup";
-import tokenParser from "../helpers/tokenParser";
 import Homebar from "../components/home/Homebar";
+import * as ROUTES from "../constants/routes";
+import popupContext from "../context/popup";
+import userContext from "../context/user";
+import tokenParser from "../helpers/tokenParser";
 
 export default function CreateLobby() {
   const history = useHistory(); // hook
@@ -47,69 +47,79 @@ export default function CreateLobby() {
   });
 
   return (
-    <div className="m-4">
-      <div>
-        <Homebar />
+    <div className="flex flex-col h-screen items-center p-6 bg-wood bg-repeat">
+      <div className="flex-none btn-ntfh text-5xl">
+        <p className="text-gradient-ntfh">Create game</p>
       </div>
-      <h1>Create a new game</h1>
-      <Form onSubmit={handleCreateLobby}>
-        <Form.Group className="mb-2">
-          <Form.Label>Game name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder={gameName}
-            defaultValue={gameName}
-            name="name"
-            required
-            onChange={(e) => setGameName(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group key="inline-radio">
-          <Form.Label>Max players</Form.Label>
-          <Form.Check
-            className="mx-3"
-            inline
-            label="2"
-            name="maxPlayers"
-            type="radio"
-            onChange={(e) => setMaxPlayers(2)}
-          />
-          <Form.Check
-            inline
-            label="3"
-            name="maxPlayers"
-            type="radio"
-            onChange={(e) => setMaxPlayers(3)}
-          />
-          <Form.Check
-            inline
-            label="4"
-            name="maxPlayers"
-            type="radio"
-            defaultChecked
-            onChange={(e) => setMaxPlayers(4)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-1">
-          <Form.Check
-            name="scenes"
-            type="checkbox"
-            label="Scenes"
-            onChange={(e) => setScenesChecked(!scenesChecked)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-2">
-          <Form.Check
-            name="spectatorsAllowed"
-            type="checkbox"
-            label="Spectators"
-            onChange={(e) => setSpectatorsChecked(!spectatorsChecked)}
-          />
-        </Form.Group>
-        <Button className="mt-3" variant="primary" type="submit">
-          Create lobby
-        </Button>
-      </Form>
+      <div className="bg-felt w-2/3 lg:w-1/2 2xl:w-1/3 my-16 rounded-3xl border-20 border-gray-900 p-8">
+        <div className="flex flex-col items-center space-y-8">
+          <div className="flex flex-col w-full">
+            {/* game name and text input field */}
+            <p className="font-bold text-3xl text-center mb-2">Game name</p>
+            <input
+              className="p-3 rounded-xl border-4 border-black"
+              defaultValue={gameName}
+              placeholder={gameName}
+              onChange={(e) => setGameName(e.target.value)}
+            ></input>
+          </div>
+          <span className="flex flex-row items-baseline space-x-4">
+            {/* number of players and selector of 3 */}
+            <p className={"font-bold text-xl"}>Max players</p>
+            <button
+              className={`btn-radio-ntfh ${
+                maxPlayers === 2 && "bg-green-600 text-white"
+              }`}
+              onClick={() => setMaxPlayers(2)}
+            >
+              2
+            </button>
+
+            <button
+              className={`btn-radio-ntfh ${
+                maxPlayers === 3 && "bg-green-600 text-white"
+              }`}
+              onClick={() => setMaxPlayers(3)}
+            >
+              3
+            </button>
+            <button
+              className={`btn-radio-ntfh ${
+                maxPlayers === 4 && "bg-green-600 text-white"
+              }`}
+              onClick={() => setMaxPlayers(4)}
+            >
+              4
+            </button>
+          </span>
+          <span className="flex flex-row items-baseline space-x-4">
+            {/* scenes and checkbox */}
+            <p className="font-bold text-xl">Scenes</p>
+            <button
+              id="checkScenes"
+              className={"btn-checkbox-ntfh"}
+              onClick={(e) => setScenesChecked(!scenesChecked)}
+            >
+              {scenesChecked ? "✔️" : "❌"}
+            </button>
+          </span>
+          <span className="flex flex-row items-baseline space-x-4">
+            {/* spectators and checkbox */}
+            <p className="font-bold text-xl">Spectators</p>
+            <button
+              id="checkSpectators"
+              className="btn-checkbox-ntfh"
+              onClick={(e) => setSpectatorsChecked(!spectatorsChecked)}
+            >
+              {spectatorsChecked ? "✔️" : "❌"}
+            </button>
+          </span>
+          {/* start game button */}
+          <button className="btn-ntfh" onClick={handleCreateLobby}>
+            <p className="text-gradient-ntfh">Create lobby</p>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
