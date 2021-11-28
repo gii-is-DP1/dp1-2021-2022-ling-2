@@ -42,7 +42,7 @@ cd ./react/
 ```
 Now we execute the service with the appropiate nodejs command:
 ```
-npm start
+npm run start
 ```
 From now on, our application will be located at localhost:3000. Enjoy!
 
