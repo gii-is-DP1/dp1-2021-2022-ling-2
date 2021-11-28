@@ -90,18 +90,18 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center flex-auto gap-y-2">
           {/* Buttons */}
           {user && !userInLobby() && (
-            <>
-              <Link to={ROUTES.CREATE_LOBBY}>
-                <button type="submit" className="btn-ntfh">
-                  <p className="text-gradient-ntfh">Create Lobby</p>
-                </button>
-              </Link>
-              <Link to={ROUTES.BROWSE_LOBBIES}>
-                <button type="submit" className="btn-ntfh">
-                  <p className="text-gradient-ntfh">Browse Games</p>
-                </button>
-              </Link>
-            </>
+            <Link to={ROUTES.CREATE_LOBBY}>
+              <button type="submit" className="btn-ntfh">
+                <p className="text-gradient-ntfh">Create Lobby</p>
+              </button>
+            </Link>
+          )}
+          {!userInLobby() && (
+            <Link to={ROUTES.BROWSE_LOBBIES}>
+              <button type="submit" className="btn-ntfh">
+                <p className="text-gradient-ntfh">Browse Games</p>
+              </button>
+            </Link>
           )}
           {userInLobby() && !userInGame() && (
             <Link to={ROUTES.LOBBY.replace(":lobbyId", currentUser?.lobby?.id)}>
