@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
+import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import Homebar from "../components/home/Homebar";
+import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import { Button, Form } from "react-bootstrap";
-import * as ROUTES from "../constants/routes";
-import popupContext from "../context/popup";
-import Homebar from "../components/home/Homebar";
 
 /**
  * @author andrsdt
@@ -15,7 +15,6 @@ export default function EditProfile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
-  const { popups, setPopups } = useContext(popupContext); // hook
   const { userToken, setUserToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null); // hook
@@ -35,7 +34,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
       sendToProfile();
     }
   }
@@ -43,8 +42,10 @@ export default function EditProfile() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      if (password !== confirmPassword)
-        throw new Error("Passwords do not match");
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
 
       const payload = {
         username,
@@ -58,23 +59,28 @@ export default function EditProfile() {
 
       // Issue a new token with the updated user data
       setUserToken(response.data.authorization);
+      toast.success("Profile edited successfully");
       sendToProfile();
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
     }
   }
 
   useEffect(() => {
     document.title = `NTFH - Edit profile`;
-    if (!userToken) history.push(ROUTES.LOGIN);
+    if (!userToken) {
+      toast.error("You must be logged in to edit your profile");
+      history.push(ROUTES.LOGIN);
+    }
     // redirect to login if no token
     // redirect to profile if user is not the same as the one in the url or if the user is not an admin
     else if (
       loggedUser.username !== params.username &&
       !loggedUser.authorities.includes("admin")
-    )
+    ) {
+      toast.error("You can't edit another user's profile");
       history.push(ROUTES.PROFILE.replace(":username", params.username));
-    else fetchUserProfile();
+    } else fetchUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 

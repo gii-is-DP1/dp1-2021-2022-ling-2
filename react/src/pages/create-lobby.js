@@ -1,17 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
-import popupContext from "../context/popup";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import toast from "react-hot-toast";
 
 export default function CreateLobby() {
   const history = useHistory(); // hook
 
-  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const { userToken } = useContext(userContext); // hook
   const user = tokenParser(useContext(userContext)); // hook
 
@@ -35,15 +32,19 @@ export default function CreateLobby() {
         headers: { Authorization: "Bearer " + userToken },
       });
       const lobbyId = response.data.lobbyId;
+      toast.success("Lobby created successfully");
       history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
     }
   };
 
   useEffect(() => {
     document.title = "NTFH - Create new lobby";
-    if (!userToken) history.push(ROUTES.SIGNUP); // Send the user to signup screen if not logged in
+    if (!userToken) {
+      toast.error("You must be registered to create a lobby");
+      history.push(ROUTES.SIGNUP); // Send the user to signup screen if not logged in
+    }
   });
 
   return (

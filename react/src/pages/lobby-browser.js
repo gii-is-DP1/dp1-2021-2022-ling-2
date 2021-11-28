@@ -5,13 +5,12 @@ import axios from "../api/axiosConfig";
 import UserContext from "../context/user";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
-import popupContext from "../context/popup";
+import toast from "react-hot-toast";
 
 export default function LobbyBrowser() {
   const history = useHistory(); // hook
   const { userToken } = useContext(UserContext);
 
-  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const [lobbyList, setLobbyList] = useState([]);
 
   const fetchLobbies = async () => {
@@ -19,7 +18,7 @@ export default function LobbyBrowser() {
       const response = await axios.get(`lobbies`);
       setLobbyList(response.data);
     } catch (error) {
-      setPopups([...popups, error.response?.data]);
+      toast.error(error.response?.data);
       history.push("/not-found");
     }
   };

@@ -3,14 +3,13 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import * as IMAGES from "../constants/images";
 import * as ROUTES from "../constants/routes";
-import popupContext from "../context/popup";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
+import toast from "react-hot-toast";
 
 export default function Home() {
-  const { popups, setPopups } = useContext(popupContext); // hook
   const { userToken, setUserToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
   const [currentUser, setCurrentUser] = useState();
@@ -23,18 +22,14 @@ export default function Home() {
     try {
       const response = await axios.get("/unregistered-users");
       setUnregisteredUser(response.data);
-    } catch (error) {
-      setPopups([...popups, error.response?.data]);
-    }
+    } catch (error) {}
   }
 
   async function fetchUserData() {
     try {
       const response = await axios.get(`/users/${user.username}`);
       setCurrentUser(response.data);
-    } catch (error) {
-      setPopups([...popups, error.response?.data]);
-    }
+    } catch (error) {}
   }
 
   const userInLobby = () => currentUser?.lobby;
@@ -43,7 +38,18 @@ export default function Home() {
 
   const handleLogout = () => {
     setUserToken(null);
+    toast.success("Logged out successfully");
     history.push(ROUTES.HOME);
+  };
+
+  const handleShare = () => {
+    const message =
+      "Hey, check out this web app for playing No Time for Heroes! " +
+      window.location.href;
+    // copy to clipboard
+    navigator.clipboard.writeText(message);
+    // show success message
+    toast("Copied to clipboard", { icon: "📋" });
   };
 
   useEffect(() => {
@@ -66,7 +72,7 @@ export default function Home() {
     <div className="flex flex-row h-screen p-2 bg-wood">
       <div className="flex-none w-1/4 flex flex-col justify-between">
         {/* Left column (statistics, ranking, share)*/}
-        <div class="flex flex-col">
+        <div className="flex flex-col">
           <Link to={ROUTES.STATISTICS}>
             <button type="submit" className="btn-ntfh mb-2">
               <p className="text-gradient-ntfh">Statistics</p>
@@ -76,9 +82,9 @@ export default function Home() {
             <p className="text-gradient-ntfh">Ranking</p>
           </Link>
         </div>
-        <Link to="" className="btn-ntfh w-min">
+        <button className="btn-ntfh w-min" onClick={handleShare}>
           <p className="text-gradient-ntfh">Share!</p>
-        </Link>
+        </button>
       </div>
       <div className="flex-1 w-1/2 flex flex-col items-center justify-center my-6">
         {/* Center column (logo, browse/join/admin buttons) */}

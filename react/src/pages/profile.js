@@ -4,16 +4,15 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import Homebar from "../components/home/Homebar";
-import popupContext from "../context/popup";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import * as ROUTES from "../constants/routes";
+import toast from "react-hot-toast";
 
 export default function Profile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
-  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const { userToken } = useContext(userContext);
   const user = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null);
@@ -28,7 +27,7 @@ export default function Profile() {
 
         setGamesHistory(response.data);
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response?.data);
       }
     };
 
@@ -44,7 +43,7 @@ export default function Profile() {
         const response = await axios.get(`users/${params.username}`);
         setUserProfile(response.data);
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response?.data);
         history.push("/not-found");
       }
     };
