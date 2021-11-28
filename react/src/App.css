@@ -68,3 +68,15 @@
 .btn-red:hover {
   @apply bg-red-500;
 }
+
+.border-20 {
+  border-width: 20px;
+}
+
+.btn-radio-ntfh {
+  @apply px-4 py-2 bg-white rounded-2xl border-4 border-black text-2xl;
+}
+
+.btn-checkbox-ntfh {
+  @apply px-1 py-1 bg-white rounded-2xl border-4 border-black text-3xl;
+}

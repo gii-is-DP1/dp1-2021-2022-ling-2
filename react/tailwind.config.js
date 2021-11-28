@@ -7,6 +7,7 @@ module.exports = {
         // TODO this should be in /public/ folder
         wood: "url('images/backgrounds/wood.png')",
         green: "url('images/backgrounds/green.png')",
+        felt: "url('images/backgrounds/felt.png')",
       },
     },
   },
