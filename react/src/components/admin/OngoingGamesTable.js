@@ -1,6 +1,5 @@
+import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axiosConfig";
-import { useEffect, useState, useContext } from "react";
-import { Table } from "react-bootstrap";
 import popupContext from "../../context/popup";
 import playerParser from "../../helpers/playerParser";
 import timeParser from "../../helpers/timeParser";
@@ -24,27 +23,53 @@ export default function OngoingGamesTable() {
   }, []);
 
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>start_time</th>
-          <th>has_scenes</th>
-          <th>leader</th>
-          <th>players</th>
-        </tr>
-      </thead>
-      <tbody>
-        {gameList.map((game, idx) => (
-          <tr key={idx}>
-            <th>{game.id}</th>
-            <th>{timeParser(game.startTime)}</th>
-            <th>{game.hasScenes ? "🟢" : "🔴"}</th>
-            <th>{game.leader.user.username}</th>
-            <th>{playerParser(game.players)}</th>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+    <div className="flex flex-col w-full">
+      <div className="overflow-x-auto">
+        <div className="py-2 align-middle inline-block min-w-full">
+          <div className="shadow overflow-hidden border-b border-gray-900 rounded-xl">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-800">
+                <tr>
+                  <th scope="col" className="text-table-th">
+                    Id
+                  </th>
+                  <th scope="col" className="text-table-th">
+                    Start time
+                  </th>
+                  <th scope="col" className="text-table-th">
+                    Scenes
+                  </th>
+                  <th scope="col" className="text-table-th">
+                    Leader
+                  </th>
+                  <th scope="col" className="text-table-th">
+                    Players
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-gray-900 divide-y divide-gray-200">
+                {gameList.map((game) => (
+                  <tr key={game.id}>
+                    <td className="text-table-td">{game.id}</td>
+                    <td className="text-table-td">
+                      {timeParser(game.startTime)}
+                    </td>
+                    <td className="text-table-td">
+                      {game.hasScenes ? "🟢" : "🔴"}
+                    </td>
+                    <td className="text-table-td">
+                      {game.leader.user.username}
+                    </td>
+                    <td className="text-table-td">
+                      {playerParser(game.players)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

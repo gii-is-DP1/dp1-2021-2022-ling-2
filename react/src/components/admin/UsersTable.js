@@ -4,8 +4,8 @@ import { useHistory } from "react-router";
 import axios from "../../api/axiosConfig";
 import popupContext from "../../context/popup";
 import UserContext from "../../context/user";
-import tokenParser from "../../helpers/tokenParser";
 import hasAuthority from "../../helpers/hasAuthority";
+import tokenParser from "../../helpers/tokenParser";
 
 export default function UsersTable() {
   const history = useHistory();
@@ -43,7 +43,7 @@ export default function UsersTable() {
 
   useEffect(() => fetchUsers(), []);
 
-  return (
+  const html = (
     <Table>
       <thead>
         <tr>
@@ -63,7 +63,6 @@ export default function UsersTable() {
               {hasAuthority(loggedUser, "admin") && (
                 <Button onClick={() => handleToggleBan(_user)}>Ban</Button>
               )}
-              &nbsp;
               <Button
                 variant="primary"
                 onClick={() => history.push(`/profile/${_user.username}/edit`)}
@@ -75,5 +74,63 @@ export default function UsersTable() {
         ))}
       </tbody>
     </Table>
+  );
+
+  return (
+    <div className="flex flex-col w-full">
+      <div className="overflow-x-auto">
+        <div className="py-2 align-middle inline-block min-w-full">
+          <div className="shadow overflow-hidden border-b border-gray-900 rounded-xl">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-800">
+                <tr>
+                  <th scope="col" className="text-table-th">
+                    Username
+                  </th>
+                  <th scope="col" className="text-table-th">
+                    Email
+                  </th>
+                  <th scope="col" className="text-table-th">
+                    Enabled
+                  </th>
+                  <th scope="col" className="text-table-th">
+                    Modify
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-gray-900 divide-y divide-gray-200">
+                {userList.map((user) => (
+                  <tr key={user.username}>
+                    <td className="text-table-td">{user.username}</td>
+                    <td className="text-table-td">{user.email}</td>
+                    <td className="text-table-td">
+                      {user.enabled ? "🟢" : "🔴"}
+                    </td>
+                    <td className="space-x-4">
+                      {hasAuthority(loggedUser, "admin") && (
+                        <button
+                          className="btn btn-red"
+                          onClick={() => handleToggleBan(user)}
+                        >
+                          Ban
+                        </button>
+                      )}
+                      <button
+                        className="btn btn-blue"
+                        onClick={() =>
+                          history.push(`/profile/${user.username}/edit`)
+                        }
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
