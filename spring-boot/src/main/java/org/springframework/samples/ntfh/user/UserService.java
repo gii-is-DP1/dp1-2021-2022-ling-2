@@ -146,15 +146,11 @@ public class UserService {
 	 * @author andrsdt
 	 */
 	@Transactional
-
 	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
 			NonMatchingTokenException, IllegalArgumentException {
 
 		if (user.getUsername().isEmpty())
 			throw new IllegalArgumentException("The username cannot be empty") {
-			};
-		if (user.getPassword().isEmpty())
-			throw new IllegalArgumentException("The password cannot be empty") {
 			};
 		if (user.getEmail().isEmpty())
 			throw new IllegalArgumentException("The email cannot be empty") {
@@ -177,7 +173,7 @@ public class UserService {
 			throw new DataIntegrityViolationException("This email is already in use") {
 			};
 		}
-		if (user.getPassword().length() < 4)
+		if (user.getPassword() != null && user.getPassword().length() < 4)
 			throw new IllegalArgumentException("Password must be at least 4 characters long") {
 			};
 
@@ -187,7 +183,9 @@ public class UserService {
 			user.setPassword(userInDatabase.getPassword());
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
-
+		if (user.getEnabled() == null) {
+			user.setEnabled(userInDatabase.getEnabled());
+		}
 		return userRepository.save(user);
 	}
 
@@ -199,7 +197,7 @@ public class UserService {
 			};
 		}
 		User userInDB = foundUserOptional.get();
-		if (!userInDB.isEnabled()) {
+		if (!userInDB.getEnabled()) {
 			throw new BannedUserException("This user has been banned") {
 			};
 		}
@@ -231,7 +229,7 @@ public class UserService {
 			};
 		}
 		User userInDB = foundUserOptional.get();
-		userInDB.setEnabled(user.isEnabled());
+		userInDB.setEnabled(user.getEnabled());
 		return user;
 	}
 }

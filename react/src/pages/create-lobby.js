@@ -4,14 +4,14 @@ import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import errorContext from "../context/error";
+import popupContext from "../context/popup";
 import tokenParser from "../helpers/tokenParser";
 import Homebar from "../components/home/Homebar";
 
 export default function CreateLobby() {
   const history = useHistory(); // hook
 
-  const { errors, setErrors } = useContext(errorContext); // Array of errors
+  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const { userToken } = useContext(userContext); // hook
   const user = tokenParser(useContext(userContext)); // hook
 
@@ -37,7 +37,7 @@ export default function CreateLobby() {
       const lobbyId = response.data.lobbyId;
       history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   };
 

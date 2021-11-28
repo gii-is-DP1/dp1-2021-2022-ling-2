@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import Errors from "./components/common/Errors";
+import Popups from "./components/common/Popups";
 import * as ROUTES from "./constants/routes";
-import errorContext from "./context/error";
+import popupContext from "./context/popup";
 import unregisteredUserContext from "./context/unregisteredUser";
 import userContext from "./context/user";
 import useLocalStorage from "./hooks/useLocalStorage";
@@ -28,15 +28,15 @@ export default function App() {
     "unregisteredUser",
     null
   );
-  const [errors, setErrors] = useState([]);
+  const [popups, setPopups] = useState([]);
 
   return (
-    <errorContext.Provider value={{ errors, setErrors }}>
+    <popupContext.Provider value={{ popups, setPopups }}>
       <userContext.Provider value={{ userToken, setUserToken }}>
         <unregisteredUserContext.Provider
           value={{ unregisteredUser, setUnregisteredUser }}
         >
-          <Errors />
+          <Popups />
           <Router>
             <Switch>
               <Route exact path={ROUTES.HOME} component={Home} />
@@ -70,6 +70,6 @@ export default function App() {
           </Router>
         </unregisteredUserContext.Provider>
       </userContext.Provider>
-    </errorContext.Provider>
+    </popupContext.Provider>
   );
 }

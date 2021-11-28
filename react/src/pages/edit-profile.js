@@ -5,7 +5,7 @@ import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
-import errorContext from "../context/error";
+import popupContext from "../context/popup";
 import Homebar from "../components/home/Homebar";
 
 /**
@@ -15,7 +15,7 @@ export default function EditProfile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
-  const { errors, setErrors } = useContext(errorContext); // hook
+  const { popups, setPopups } = useContext(popupContext); // hook
   const { userToken, setUserToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null); // hook
@@ -35,7 +35,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
       sendToProfile();
     }
   }
@@ -60,7 +60,7 @@ export default function EditProfile() {
       setUserToken(response.data.authorization);
       sendToProfile();
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   }
 

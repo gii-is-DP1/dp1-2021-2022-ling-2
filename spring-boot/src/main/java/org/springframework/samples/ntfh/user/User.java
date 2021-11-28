@@ -52,7 +52,7 @@ public class User {
 
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
-	private boolean enabled; // If a user gets banned, he/she will get disabled
+	private Boolean enabled; // If a user gets banned, he/she will get disabled
 
 	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
@@ -75,6 +75,6 @@ public class User {
 	// in your current game)
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	@JsonIgnore
+	@JsonIgnoreProperties({ "user" })
 	private Set<Authorities> authorities;
 }
