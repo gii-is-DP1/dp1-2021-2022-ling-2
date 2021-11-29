@@ -37,18 +37,13 @@ public class GameService {
         return gameRepo.findAll();
     }
 
-    // @Transactional
-    // public Game findGameById(int id) throws DataAccessException {
-    //     Optional<Game> game = gameRepo.findById(id);
-    //     if (!game.isPresent())
-    //         throw new DataAccessException("Game with id " + id + " was not found") {
-    //         };
-    //     return game.get();
-    // }
-
     @Transactional
-    public Optional<Game> findGameById(int id) {
-        return gameRepo.findById(id);
+    public Game findGameById(int id) throws DataAccessException {
+        Optional<Game> game = gameRepo.findById(id);
+        if (!game.isPresent())
+            throw new DataAccessException("Game with id " + id + " was not found") {
+            };
+        return game.get();
     }
 
     @Transactional
