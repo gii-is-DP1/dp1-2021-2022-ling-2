@@ -45,6 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
 				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll() // Everyone can see a user's match
 																					// history
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAnyAuthority("user") // Set character
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAnyAuthority("user") // Allow users to create new lobbies
 				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId}").hasAnyAuthority("user") // Update lobby
@@ -53,10 +54,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the
 																			// old games
 				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
-				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are ongoing
-				.antMatchers(HttpMethod.GET, "/lobbies/count").permitAll() // Enables to show how many of the elements in the game browser are open lobbies
-				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games have been played
-				
+				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+																			// ongoing
+				.antMatchers(HttpMethod.GET, "/lobbies/count").permitAll() // Enables to show how many of the elements
+																			// in the game browser are open lobbies
+				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games
+																				// have been played
+
 				.antMatchers(HttpMethod.PUT, "/achievements").hasAnyAuthority("admin") // Update achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
 																							// achievement

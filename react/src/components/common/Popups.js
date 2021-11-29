@@ -1,5 +1,6 @@
+import propTypes from "prop-types";
 import { useContext } from "react";
-import ErrorContext from "../../context/error";
+import PopupContext from "../../context/popup";
 import { Alert } from "react-bootstrap";
 
 /**
@@ -13,12 +14,12 @@ import { Alert } from "react-bootstrap";
  * @see https://react-bootstrap.github.io/components/alerts/
  */
 
-export default function Errors() {
-  // TODO rename to "messages" and also allow informative,
+export default function Popups() {
+  // TODO rename to "popups" and also allow informative,
   // success... messages, not only errors. Easily implementable
   // by including more variants of status on "getVariant"
 
-  const { errors, setErrors } = useContext(ErrorContext); // Array of error objects
+  const { popups, setPopups } = useContext(PopupContext); // Array of error objects
 
   /**
    *  Note to prof: We thought a switch-case was cleaner for this than if-else :(
@@ -42,24 +43,24 @@ export default function Errors() {
   };
 
   return (
-    <div className="fixed-top" id="errors-div">
-      {errors.map(
-        (errorObj, idx) =>
-          errorObj?.message && (
+    <div className="fixed-top" id="popups-div">
+      {popups.map(
+        (popupObj, idx) =>
+          popupObj?.message && (
             <Alert
               key={idx}
               className="m-2 p-1 pt-2 pl-2 shadow"
-              variant={getColor(errorObj.status)}
+              variant={getColor(popupObj.status)}
               onClose={() => {
-                const newErrors = [...errors];
-                newErrors.pop(errorObj);
-                setErrors(newErrors);
+                const newPopups = [...popups];
+                newPopups.pop(popupObj);
+                setPopups(newPopups);
               }}
               dismissible
             >
-              <Alert.Heading>{errorObj.error}</Alert.Heading>
+              <Alert.Heading>{popupObj.error}</Alert.Heading>
               <p>
-                {errorObj.message ??
+                {popupObj.message ??
                   "An error should be here... We are working on it"}
               </p>
             </Alert>
@@ -68,3 +69,9 @@ export default function Errors() {
     </div>
   );
 }
+
+// Popups.propTypes = {
+//   popups: PropTypes.shape({
+//     username: PropTypes.string.isRequired,
+//   }),
+// };

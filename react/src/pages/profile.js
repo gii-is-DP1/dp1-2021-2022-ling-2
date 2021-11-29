@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import Homebar from "../components/home/Homebar";
-import errorContext from "../context/error";
+import popupContext from "../context/popup";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import * as ROUTES from "../constants/routes";
@@ -13,7 +13,7 @@ export default function Profile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook
 
-  const { errors, setErrors } = useContext(errorContext); // Array of errors
+  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const { userToken } = useContext(userContext);
   const user = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null);
@@ -28,7 +28,7 @@ export default function Profile() {
 
         setGamesHistory(response.data);
       } catch (error) {
-        setErrors([...errors, error.response?.data]);
+        setPopups([...popups, error.response?.data]);
       }
     };
 
@@ -44,7 +44,7 @@ export default function Profile() {
         const response = await axios.get(`users/${params.username}`);
         setUserProfile(response.data);
       } catch (error) {
-        setErrors([...errors, error.response?.data]);
+        setPopups([...popups, error.response?.data]);
         history.push("/not-found");
       }
     };

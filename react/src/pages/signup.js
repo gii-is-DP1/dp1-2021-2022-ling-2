@@ -5,7 +5,7 @@ import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import errorContext from "../context/error";
+import popupContext from "../context/popup";
 
 /**
  *
@@ -15,7 +15,7 @@ import errorContext from "../context/error";
 export default function SignUp() {
   const history = useHistory(); // hook
   const { setUserToken } = useContext(userContext); // hook
-  const { errors, setErrors } = useContext(errorContext); // Array of errors
+  const { popups, setPopups } = useContext(popupContext); // Array of errors
 
   useEffect(() => {
     document.title = "NTFH - Sign up";
@@ -32,7 +32,7 @@ export default function SignUp() {
       setUserToken(loginResponse.data.authorization);
       history.push(ROUTES.HOME);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   };
 

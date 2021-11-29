@@ -1,15 +1,35 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { useHistory } from "react-router";
-import UserContext from "../../context/user";
 import axios from "../../api/axiosConfig";
-import ErrorContext from "../../context/error";
+import popupContext from "../../context/popup";
+import UserContext from "../../context/user";
+import tokenParser from "../../helpers/tokenParser";
+import hasAuthority from "../../helpers/hasAuthority";
 
 export default function UsersTable() {
   const history = useHistory();
   const { userToken } = useContext(UserContext);
-  const { errors, setErrors } = useContext(ErrorContext); // Array of errors
+  const loggedUser = tokenParser(useContext(UserContext));
+  const { popups, setPopups } = useContext(popupContext); // Array of errors
   const [userList, setUserList] = useState([]);
+
+  const handleToggleBan = async (_user) => {
+    const payload = {
+      username: _user.username,
+      email: _user.email,
+      enabled: !_user.enabled,
+    };
+    try {
+      await axios.put("/users", payload, {
+        headers: { Authorization: "Bearer " + userToken },
+      });
+      fetchUsers();
+      // Add popup message "the user {user} has been banned"
+    } catch (error) {
+      setPopups([...popups, error.response]);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -17,7 +37,7 @@ export default function UsersTable() {
       const response = await axios.get(`users`, { headers });
       setUserList(response.data);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      setPopups([...popups, error.response?.data]);
     }
   };
 
@@ -34,17 +54,23 @@ export default function UsersTable() {
         </tr>
       </thead>
       <tbody>
-        {userList.map((user, idx) => (
+        {userList.map((_user, idx) => (
           <tr key={idx}>
-            <th>{user.username}</th>
-            <th>{user.email}</th>
-            <th>{user.enabled ? "🟢" : "🔴"}</th>
-            <Button
-              variant="primary"
-              onClick={() => history.push(`/profile/${user.username}/edit`)}
-            >
-              Edit profile
-            </Button>
+            <th>{_user.username}</th>
+            <th>{_user.email}</th>
+            <th>{_user.enabled ? "🟢" : "🔴"}</th>
+            <th>
+              {hasAuthority(loggedUser, "admin") && (
+                <Button onClick={() => handleToggleBan(_user)}>Ban</Button>
+              )}
+              &nbsp;
+              <Button
+                variant="primary"
+                onClick={() => history.push(`/profile/${_user.username}/edit`)}
+              >
+                Edit profile
+              </Button>
+            </th>
           </tr>
         ))}
       </tbody>
