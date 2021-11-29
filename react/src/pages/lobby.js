@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import Homebar from "../components/home/Homebar";
@@ -8,7 +9,6 @@ import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import toast from "react-hot-toast";
 
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
@@ -140,13 +140,16 @@ export default function Lobby() {
   useEffect(() => {
     async function updateUserCharacter() {
       try {
-        user.character = getCharacterId();
-        const payload = { ...user };
+        const payload = {
+          username: user.username,
+          character: getCharacterId(),
+        };
+        payload.authorities = null;
         const response = await axios.put(`/users/character`, payload, {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {
-        toast.error(error.response?.data);
+        toast.error(error.response?.data?.message);
       }
     }
     updateUserCharacter();

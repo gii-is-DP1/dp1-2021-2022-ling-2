@@ -38,6 +38,7 @@ export default function Home() {
 
   const handleLogout = () => {
     setUserToken(null);
+    setCurrentUser(null);
     toast.success("Logged out successfully");
     history.push(ROUTES.HOME);
   };
