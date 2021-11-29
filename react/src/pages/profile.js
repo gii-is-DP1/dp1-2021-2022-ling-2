@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row, Table } from "react-bootstrap";
-import { useHistory, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Link, useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import Homebar from "../components/home/Homebar";
+import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import * as ROUTES from "../constants/routes";
-import toast from "react-hot-toast";
 
 export default function Profile() {
   const params = useParams(); // hook
@@ -16,7 +16,10 @@ export default function Profile() {
   const { userToken } = useContext(userContext);
   const user = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState(null);
-  const [gamesHistory, setGamesHistory] = useState([]);
+  const [userGamesHistory, setUserGamesHistory] = useState([]);
+  const [matchesWon, setMatchesWon] = useState(1402);
+  const [fastestMatch, setFastestMatch] = useState("26m54s");
+  const [longestMatch, setLongestMatch] = useState("1h48m");
 
   useEffect(() => {
     const fetchGameHistory = async () => {
@@ -24,8 +27,8 @@ export default function Profile() {
         // TODO remove auth if not needed
         const headers = { Authorization: "Bearer " + userToken };
         const response = await axios.get(`gameHistory`, { headers });
-
-        setGamesHistory(response.data);
+        const gamesPlayedByUser = filterByUsername(response.data);
+        setUserGamesHistory(gamesPlayedByUser);
       } catch (error) {
         toast.error(error.response?.data);
       }
@@ -64,7 +67,7 @@ export default function Profile() {
       userInPlayerList(gameHistory.game.players, user.username)
     );
 
-  return (
+  const html = (
     <>
       <div>
         <Homebar />
@@ -90,10 +93,10 @@ export default function Profile() {
           </Col>
           <Col>
             <Row>
-              <h2>Games played: {filterByUsername(gamesHistory).length}</h2>
+              <h2>Games played: {userGamesHistory.length}</h2>
             </Row>
             <Row>
-              <GamesHistoryTable data={filterByUsername(gamesHistory)} />
+              <GamesHistoryTable data={userGamesHistory} />
             </Row>
           </Col>
         </Row>
@@ -109,5 +112,46 @@ export default function Profile() {
         )}
       </div>
     </>
+  );
+
+  return (
+    <div className="flex flex-col h-screen bg-wood p-8">
+      <span className="text-center pb-8">
+        <Link to={ROUTES.PROFILE.replace(":username", params.username)}>
+          <button type="submit" className="btn-ntfh">
+            <p className="text-5xl text-gradient-ntfh">Profile</p>
+          </button>
+        </Link>
+      </span>
+      <span className="flex-1 flex flex-row justify-between">
+        <div className="flex flex-col w-2/5 justify-center items-center space-y-4 text-white text-2xl">
+          {/* username, email, matches, fastest and longest matches, stats and edit buttons */}
+          <span>Username: {userProfile?.username}</span>
+          <span>Email: {userProfile?.email}</span>
+          <span>Matches played: {userGamesHistory.length}</span>
+          <span>Matches won: {matchesWon}</span>
+          <span>Fastest match: {fastestMatch}</span>
+          <span>Longest match: {longestMatch}</span>
+          <div className="space-x-4">
+            <Link to={ROUTES.STATISTICS + `/${params.username}`}>
+              <button type="submit" className="btn-ntfh">
+                <p className="text-3xl text-gradient-ntfh">Stats</p>
+              </button>
+            </Link>
+            <Link
+              to={ROUTES.EDIT_PROFILE.replace(":username", params.username)}
+            >
+              <button type="submit" className="btn-ntfh">
+                <p className="text-3xl text-gradient-ntfh">Edit</p>
+              </button>
+            </Link>
+          </div>
+        </div>
+        <div className="flex flex-col w-3/5">
+          {/* match history table */}
+          <GamesHistoryTable data={userGamesHistory} />
+        </div>
+      </span>
+    </div>
   );
 }
