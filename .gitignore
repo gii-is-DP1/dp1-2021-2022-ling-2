@@ -96,6 +96,7 @@ chrome-user-data
 .history/
 *.swp
 *.swo
+.github/*
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
 packages/react-devtools-extensions/chrome/*.crx
