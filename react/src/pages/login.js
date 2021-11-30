@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 /**
