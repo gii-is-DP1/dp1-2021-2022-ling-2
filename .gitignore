@@ -87,16 +87,10 @@ chrome-user-data
 *.sublime-workspace
 .idea
 *.iml
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 *.code-workspace
 .history/
 *.swp
 *.swo
-.github/*
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
 packages/react-devtools-extensions/chrome/*.crx
