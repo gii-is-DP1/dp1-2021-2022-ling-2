@@ -42,39 +42,6 @@ export default function UsersTable() {
 
   useEffect(() => fetchUsers(), []);
 
-  const html = (
-    <Table>
-      <thead>
-        <tr>
-          <th>username</th>
-          <th>email</th>
-          <th>enabled</th>
-          <th>modify</th>
-        </tr>
-      </thead>
-      <tbody>
-        {userList.map((_user, idx) => (
-          <tr key={idx}>
-            <th>{_user.username}</th>
-            <th>{_user.email}</th>
-            <th>{_user.enabled ? "🟢" : "🔴"}</th>
-            <th>
-              {hasAuthority(loggedUser, "admin") && (
-                <Button onClick={() => handleToggleBan(_user)}>Ban</Button>
-              )}
-              <Button
-                variant="primary"
-                onClick={() => history.push(`/profile/${_user.username}/edit`)}
-              >
-                Edit profile
-              </Button>
-            </th>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-  );
-
   return (
     <div className="flex flex-col w-full">
       <div className="overflow-x-auto">

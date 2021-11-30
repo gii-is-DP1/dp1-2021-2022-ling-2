@@ -67,53 +67,6 @@ export default function Profile() {
       userInPlayerList(gameHistory.game.players, user.username)
     );
 
-  const html = (
-    <>
-      <div>
-        <Homebar />
-      </div>
-      <h1>{params.username}'s profile</h1>
-      <Table borderless>
-        <Row>
-          <Col>
-            {userProfile ? (
-              <div>
-                <p>Username: {userProfile.username}</p>
-                <p>Email: {userProfile.email}</p>
-              </div>
-            ) : (
-              <p>Loading...</p>
-            )}
-            <Button
-              variant="warning"
-              onClick={() => history.push(ROUTES.ACHIEVEMENTS)}
-            >
-              All achievements
-            </Button>
-          </Col>
-          <Col>
-            <Row>
-              <h2>Games played: {userGamesHistory.length}</h2>
-            </Row>
-            <Row>
-              <GamesHistoryTable data={userGamesHistory} />
-            </Row>
-          </Col>
-        </Row>
-      </Table>
-      <div className="d-grid gap-2">
-        {user?.username === params.username && (
-          <Button
-            variant="primary"
-            onClick={() => history.push(`${params.username}/edit`)}
-          >
-            Edit profile
-          </Button>
-        )}
-      </div>
-    </>
-  );
-
   return (
     <div className="flex flex-col h-screen bg-wood p-8">
       <span className="text-center pb-8">
