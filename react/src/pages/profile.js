@@ -77,7 +77,7 @@ export default function Profile() {
         </Link>
       </span>
       <span className="flex-1 flex flex-row justify-between">
-        <div className="flex flex-col w-2/5 justify-center items-center space-y-4 text-white text-2xl">
+        <div className="flex flex-col w-1/3 justify-center items-center space-y-4 text-2xl bg-felt border-20 border-gray-900 rounded-3xl m-8 shadow-2xl">
           {/* username, email, matches, fastest and longest matches, stats and edit buttons */}
           <span>Username: {userProfile?.username}</span>
           <span>Email: {userProfile?.email}</span>
