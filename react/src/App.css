@@ -38,7 +38,7 @@
 }
 
 .btn-ntfh {
-  @apply px-2 py-1 rounded-lg bg-gray-900 font-semibold text-3xl;
+  @apply px-2 py-1 rounded-lg bg-gray-900 font-semibold text-3xl shadow-xl;
 }
 
 .text-gradient-ntfh {
