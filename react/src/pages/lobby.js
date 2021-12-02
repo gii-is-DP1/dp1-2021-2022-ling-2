@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Homebar from "../components/home/Homebar";
+import HomeButton from "../components/common/home-button";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
@@ -160,178 +159,184 @@ export default function Lobby() {
   if (!lobby) return <></>; // Don't render anything if the lobby is not loadedw
 
   return (
-    <div className="flex flex-col h-screen items-center p-6 bg-wood bg-repeat">
-      <div className="flex-none btn-ntfh text-5xl">
-        <p className="text-gradient-ntfh">Lobby</p>
-      </div>
-      <div className="flex-1 flex flex-col w-3/4 lg:w-2/3 xl:w-1/2 justify-center">
-        <div className="flex bg-felt rounded-3xl border-20 border-gray-900 p-8 divide-x-2 divide-gray-900 text-xl">
-          <div className="w-3/5">
-            <div className="flex flex-col items-start">
-              {/* Game name, delete lobby */}
-              <div className="flex items-baseline space-x-5">
-                <p className="mb-1">{lobby.name}</p>
-                <button
-                  className="btn-ntfh mb-3"
-                  onClick={(e) => handleRemoveUserFromLobby(user.username)}
-                >
-                  <p className="text-gradient-ntfh text-2xl">
-                    {lobby.host.username === user.username
-                      ? "Delete "
-                      : "Leave "}
-                    lobby
+    <>
+      <HomeButton />
+      <div className="flex flex-col h-screen items-center p-6 bg-wood bg-repeat">
+        <div className="flex-none btn-ntfh text-5xl">
+          <p className="text-gradient-ntfh">Lobby</p>
+        </div>
+        <div className="flex-1 flex flex-col w-3/4 lg:w-2/3 xl:w-1/2 justify-center">
+          <div className="flex bg-felt rounded-3xl border-20 border-gray-900 p-8 divide-x-2 divide-gray-900 text-xl">
+            <div className="w-3/5">
+              <div className="flex flex-col items-start">
+                {/* Game name, delete lobby */}
+                <div className="flex items-baseline space-x-5">
+                  <p className="mb-1">{lobby.name}</p>
+                  <button
+                    className="btn-ntfh mb-3"
+                    onClick={(e) => handleRemoveUserFromLobby(user.username)}
+                  >
+                    <p className="text-gradient-ntfh text-2xl">
+                      {lobby.host.username === user.username
+                        ? "Delete "
+                        : "Leave "}
+                      lobby
+                    </p>
+                  </button>
+                </div>
+                <div className="mb-4">
+                  {/* Waiting people, counter */}
+                  <p>
+                    {fullLobby
+                      ? "The room is full"
+                      : "Waiting for people to join"}
                   </p>
-                </button>
+                  <p>
+                    Players in the lobby: {lobby.users.length}/
+                    {lobby.maxPlayers}
+                  </p>
+                </div>
+                <UsersInLobby
+                  lobby={lobby}
+                  handleRemoveUserFromLobby={handleRemoveUserFromLobby}
+                />
               </div>
-              <div className="mb-4">
-                {/* Waiting people, counter */}
-                <p>
-                  {fullLobby
-                    ? "The room is full"
-                    : "Waiting for people to join"}
-                </p>
-                <p>
-                  Players in the lobby: {lobby.users.length}/{lobby.maxPlayers}
-                </p>
-              </div>
-              <UsersInLobby
-                lobby={lobby}
-                handleRemoveUserFromLobby={handleRemoveUserFromLobby}
-              />
+              {/* Left col ( game info, current players)*/}
             </div>
-            {/* Left col ( game info, current players)*/}
-          </div>
-          <div className="w-2/5">
-            {/* Right col (Choose character and version, start game button) */}
-            <form className="flex flex-col px-3 mb-6">
-              <span>
-                <input
-                  className="mr-2"
-                  name="class"
-                  type="radio"
-                  defaultChecked
-                  onChange={(e) => setCharacter(null)}
-                ></input>
-                <label>🌫️ None</label>
-              </span>
-              <span>
-                <input
-                  className="mr-2"
-                  name="class"
-                  type="radio"
-                  disabled={
-                    character !== "rogue" && charactersTaken.includes("rogue")
-                  }
-                  onChange={(e) => setCharacter("rogue")}
-                ></input>
-                <label
-                  className={
-                    (character === "rogue" ||
-                      charactersTaken.includes("rogue")) &&
-                    "text-gray-600"
-                  }
-                >
-                  🗡️ Rogue
-                </label>
-              </span>
-              <span>
-                <input
-                  className="mr-2"
-                  name="class"
-                  type="radio"
-                  disabled={
-                    character !== "warrior" &&
-                    charactersTaken.includes("warrior")
-                  }
-                  onChange={(e) => setCharacter("warrior")}
-                ></input>
-                <label
-                  className={
-                    (character === "warrior" ||
-                      charactersTaken.includes("warrior")) &&
-                    "text-gray-600"
-                  }
-                >
-                  🛡 Warrior
-                </label>
-              </span>
-              <span>
-                <input
-                  className="mr-2"
-                  name="class"
-                  type="radio"
-                  disabled={
-                    character !== "wizard" && charactersTaken.includes("wizard")
-                  }
-                  onChange={(e) => setCharacter("wizard")}
-                ></input>
-                <label
-                  className={
-                    (character === "wizard" ||
-                      charactersTaken.includes("wizard")) &&
-                    "text-gray-600"
-                  }
-                >
-                  🧙 Wizard
-                </label>
-              </span>
-              <span>
-                <input
-                  className="mr-2"
-                  name="class"
-                  type="radio"
-                  disabled={
-                    character !== "ranger" && charactersTaken.includes("ranger")
-                  }
-                  onChange={(e) => setCharacter("ranger")}
-                ></input>
-                <label
-                  className={
-                    (character === "ranger" ||
-                      charactersTaken.includes("ranger")) &&
-                    "text-gray-600"
-                  }
-                >
-                  🏹 Ranger
-                </label>
-              </span>
-            </form>
-            <form className="flex flex-col px-3">
-              <span>
-                <input
-                  className="mr-2"
-                  name="class"
-                  type="radio"
-                  defaultChecked
-                  onChange={(e) => setGender("male")}
-                ></input>
-                <label>♂ Male</label>
-              </span>
-              <span>
-                <input
-                  className="mr-2"
-                  name="class"
-                  type="radio"
-                  onChange={(e) => setGender("female")}
-                ></input>
-                <label>♀ Female</label>
-              </span>
-            </form>
+            <div className="w-2/5">
+              {/* Right col (Choose character and version, start game button) */}
+              <form className="flex flex-col px-3 mb-6">
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
+                    type="radio"
+                    defaultChecked
+                    onChange={(e) => setCharacter(null)}
+                  ></input>
+                  <label>🌫️ None</label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
+                    type="radio"
+                    disabled={
+                      character !== "rogue" && charactersTaken.includes("rogue")
+                    }
+                    onChange={(e) => setCharacter("rogue")}
+                  ></input>
+                  <label
+                    className={
+                      (character === "rogue" ||
+                        charactersTaken.includes("rogue")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🗡️ Rogue
+                  </label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
+                    type="radio"
+                    disabled={
+                      character !== "warrior" &&
+                      charactersTaken.includes("warrior")
+                    }
+                    onChange={(e) => setCharacter("warrior")}
+                  ></input>
+                  <label
+                    className={
+                      (character === "warrior" ||
+                        charactersTaken.includes("warrior")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🛡 Warrior
+                  </label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
+                    type="radio"
+                    disabled={
+                      character !== "wizard" &&
+                      charactersTaken.includes("wizard")
+                    }
+                    onChange={(e) => setCharacter("wizard")}
+                  ></input>
+                  <label
+                    className={
+                      (character === "wizard" ||
+                        charactersTaken.includes("wizard")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🧙 Wizard
+                  </label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
+                    type="radio"
+                    disabled={
+                      character !== "ranger" &&
+                      charactersTaken.includes("ranger")
+                    }
+                    onChange={(e) => setCharacter("ranger")}
+                  ></input>
+                  <label
+                    className={
+                      (character === "ranger" ||
+                        charactersTaken.includes("ranger")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🏹 Ranger
+                  </label>
+                </span>
+              </form>
+              <form className="flex flex-col px-3">
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
+                    type="radio"
+                    defaultChecked
+                    onChange={(e) => setGender("male")}
+                  ></input>
+                  <label>♂ Male</label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
+                    type="radio"
+                    onChange={(e) => setGender("female")}
+                  ></input>
+                  <label>♀ Female</label>
+                </span>
+              </form>
 
-            {isHost() && (
-              <button
-                disabled={lobby.users.length < 2}
-                className="btn-ntfh ml-2 mt-6"
-                type="submit"
-                onClick={createGame}
-              >
-                <p className="text-gradient-ntfh">Start Game</p>
-              </button>
-            )}
+              {isHost() && (
+                <button
+                  disabled={lobby.users.length < 2}
+                  className="btn-ntfh ml-2 mt-6"
+                  type="submit"
+                  onClick={createGame}
+                >
+                  <p className="text-gradient-ntfh">Start Game</p>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

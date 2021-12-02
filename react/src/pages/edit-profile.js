@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
+import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
 import user from "../context/user";
 import userContext from "../context/user";
@@ -83,57 +84,60 @@ export default function EditProfile() {
   }, []); // Empty array means "run only first time the component renders"
 
   return (
-    <div className="flex flex-col h-screen bg-wood p-8 items-center">
-      <span className="text-center pb-8">
-        <button type="submit" className="btn-ntfh">
-          <p className="text-5xl text-gradient-ntfh">Edit profile</p>
-        </button>
-      </span>
-      <form className="flex flex-col bg-felt rounded-3xl border-20 border-gray-900 p-8">
-        <div className="flex flex-col mb-4">
-          <p className="font-bold text-2xl mb-2">Username</p>
-          <input
-            disabled
-            value={params.username}
-            type="text"
-            className="p-3 rounded-xl border-4 border-black text-black"
-            onChange={(e) => setUsername(e.target.value)}
-          ></input>
-        </div>
-        <div className="flex flex-col mb-4">
-          <p className="font-bold text-2xl mb-2">Email</p>
-          <input
-            defaultValue={email}
-            placeholder="user@mail.com"
-            type="email"
-            className="p-3 rounded-xl border-4 border-black text-black"
-            onChange={(e) => setEmail(e.target.value)}
-          ></input>
-        </div>
-        <div className="flex flex-row justify-between space-x-4">
+    <>
+      <HomeButton />
+      <div className="flex flex-col h-screen bg-wood p-8 items-center">
+        <span className="text-center pb-8">
+          <button type="submit" className="btn-ntfh">
+            <p className="text-5xl text-gradient-ntfh">Edit profile</p>
+          </button>
+        </span>
+        <form className="flex flex-col bg-felt rounded-3xl border-20 border-gray-900 p-8">
           <div className="flex flex-col mb-4">
-            <p className="font-bold text-2xl mb-2">Password</p>
+            <p className="font-bold text-2xl mb-2">Username</p>
             <input
-              placeholder="********"
-              type="password"
+              disabled
+              value={params.username}
+              type="text"
               className="p-3 rounded-xl border-4 border-black text-black"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             ></input>
           </div>
-          <div className="flex flex-col mb-8">
-            <p className="font-bold text-2xl mb-2">Confirm Password</p>
+          <div className="flex flex-col mb-4">
+            <p className="font-bold text-2xl mb-2">Email</p>
             <input
-              placeholder="********"
-              type="password"
+              defaultValue={email}
+              placeholder="user@mail.com"
+              type="email"
               className="p-3 rounded-xl border-4 border-black text-black"
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             ></input>
           </div>
-        </div>
-        <button type="submit" className="btn-ntfh" onClick={handleSubmit}>
-          <p className="text-gradient-ntfh text-5xl p-2">Edit</p>
-        </button>
-      </form>
-    </div>
+          <div className="flex flex-row justify-between space-x-4">
+            <div className="flex flex-col mb-4">
+              <p className="font-bold text-2xl mb-2">Password</p>
+              <input
+                placeholder="********"
+                type="password"
+                className="p-3 rounded-xl border-4 border-black text-black"
+                onChange={(e) => setPassword(e.target.value)}
+              ></input>
+            </div>
+            <div className="flex flex-col mb-8">
+              <p className="font-bold text-2xl mb-2">Confirm Password</p>
+              <input
+                placeholder="********"
+                type="password"
+                className="p-3 rounded-xl border-4 border-black text-black"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              ></input>
+            </div>
+          </div>
+          <button type="submit" className="btn-ntfh" onClick={handleSubmit}>
+            <p className="text-gradient-ntfh text-5xl p-2">Edit</p>
+          </button>
+        </form>
+      </div>
+    </>
   );
 }

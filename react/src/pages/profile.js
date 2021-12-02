@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
+import HomeButton from "../components/common/home-button";
 import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
@@ -68,43 +69,46 @@ export default function Profile() {
     );
 
   return (
-    <div className="flex flex-col h-screen bg-wood p-8">
-      <span className="text-center pb-8">
-        <Link to={ROUTES.PROFILE.replace(":username", params.username)}>
-          <button type="submit" className="btn-ntfh">
-            <p className="text-5xl text-gradient-ntfh">Profile</p>
-          </button>
-        </Link>
-      </span>
-      <span className="flex-1 flex flex-row justify-between">
-        <div className="flex flex-col w-1/3 justify-center items-center space-y-4 text-2xl bg-felt border-20 border-gray-900 rounded-3xl m-8 shadow-2xl">
-          {/* username, email, matches, fastest and longest matches, stats and edit buttons */}
-          <span>Username: {userProfile?.username}</span>
-          <span>Email: {userProfile?.email}</span>
-          <span>Matches played: {userGamesHistory.length}</span>
-          <span>Matches won: {matchesWon}</span>
-          <span>Fastest match: {fastestMatch}</span>
-          <span>Longest match: {longestMatch}</span>
-          <div className="space-x-4">
-            <Link to={ROUTES.STATISTICS + `/${params.username}`}>
-              <button type="submit" className="btn-ntfh">
-                <p className="text-3xl text-gradient-ntfh">Stats</p>
-              </button>
-            </Link>
-            <Link
-              to={ROUTES.EDIT_PROFILE.replace(":username", params.username)}
-            >
-              <button type="submit" className="btn-ntfh">
-                <p className="text-3xl text-gradient-ntfh">Edit</p>
-              </button>
-            </Link>
+    <>
+      <HomeButton />
+      <div className="flex flex-col h-screen bg-wood p-8">
+        <span className="text-center pb-8">
+          <Link to={ROUTES.PROFILE.replace(":username", params.username)}>
+            <button type="submit" className="btn-ntfh">
+              <p className="text-5xl text-gradient-ntfh">Profile</p>
+            </button>
+          </Link>
+        </span>
+        <span className="flex-1 flex flex-row justify-between">
+          <div className="flex flex-col w-1/3 justify-center items-center space-y-4 text-2xl bg-felt border-20 border-gray-900 rounded-3xl m-8 shadow-2xl">
+            {/* username, email, matches, fastest and longest matches, stats and edit buttons */}
+            <span>Username: {userProfile?.username}</span>
+            <span>Email: {userProfile?.email}</span>
+            <span>Matches played: {userGamesHistory.length}</span>
+            <span>Matches won: {matchesWon}</span>
+            <span>Fastest match: {fastestMatch}</span>
+            <span>Longest match: {longestMatch}</span>
+            <div className="space-x-4">
+              <Link to={ROUTES.STATISTICS + `/${params.username}`}>
+                <button type="submit" className="btn-ntfh">
+                  <p className="text-3xl text-gradient-ntfh">Stats</p>
+                </button>
+              </Link>
+              <Link
+                to={ROUTES.EDIT_PROFILE.replace(":username", params.username)}
+              >
+                <button type="submit" className="btn-ntfh">
+                  <p className="text-3xl text-gradient-ntfh">Edit</p>
+                </button>
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col w-3/5">
-          {/* match history table */}
-          <GamesHistoryTable data={userGamesHistory} />
-        </div>
-      </span>
-    </div>
+          <div className="flex flex-col w-3/5">
+            {/* match history table */}
+            <GamesHistoryTable data={userGamesHistory} />
+          </div>
+        </span>
+      </div>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
 import Homebar from "../components/home/Homebar";
 import toast from "react-hot-toast";
+import HomeButton from "../components/common/home-button";
 
 export default function EditAchievement() {
   const params = useParams();
@@ -62,7 +63,7 @@ export default function EditAchievement() {
 
   return (
     <>
-      <Homebar />
+      <HomeButton />
       <h1>Edit achievement</h1>
       <br />
       <Form onSubmit={handleSubmit}>
