@@ -28,7 +28,7 @@ export default function EditAchievement() {
       setName(response.data.name);
       setDescription(response.data.description);
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
       sendToAdminPage();
     }
   }
@@ -47,7 +47,7 @@ export default function EditAchievement() {
       toast.success("Achievement edited successfully");
       sendToAdminPage();
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
     }
   }
 

@@ -16,7 +16,7 @@ export default function AchievementsTable() {
         const response = await axios.get(`achievements`);
         setAchievements(response.data);
       } catch (error) {
-        toast.error(error.response?.data);
+        toast.error(error.response?.data?.message);
       }
     };
 

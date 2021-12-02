@@ -18,7 +18,7 @@ export default function LobbyBrowser() {
       const response = await axios.get(`lobbies`);
       setLobbyList(response.data);
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
       history.push("/not-found");
     }
   };

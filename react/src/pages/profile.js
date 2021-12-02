@@ -30,7 +30,7 @@ export default function Profile() {
         const gamesPlayedByUser = filterByUsername(response.data);
         setUserGamesHistory(gamesPlayedByUser);
       } catch (error) {
-        toast.error(error.response?.data);
+        toast.error(error.response?.data?.message);
       }
     };
 
@@ -46,7 +46,7 @@ export default function Profile() {
         const response = await axios.get(`users/${params.username}`);
         setUserProfile(response.data);
       } catch (error) {
-        toast.error(error.response?.data);
+        toast.error(error.response?.data?.message);
         history.push("/not-found");
       }
     };

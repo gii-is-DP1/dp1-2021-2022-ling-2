@@ -33,7 +33,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
       sendToProfile();
     }
   }

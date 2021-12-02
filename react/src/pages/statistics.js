@@ -13,7 +13,7 @@ export default function Statistics() {
         const response = await axios.get(`gameHistory`);
         setGamesHistory(response.data);
       } catch (error) {
-        toast.error(error.response?.data);
+        toast.error(error.response?.data?.message);
       }
     };
 

@@ -26,7 +26,7 @@ export default function UsersTable() {
       fetchUsers();
       toast.success(_user.username + " has been banned");
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
     }
   };
 
@@ -36,7 +36,7 @@ export default function UsersTable() {
       const response = await axios.get(`users`, { headers });
       setUserList(response.data);
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
     }
   };
 

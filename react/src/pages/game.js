@@ -23,7 +23,7 @@ export default function Game() {
       const response = await axios.get(`/games/${gameId}`);
       setGame(response.data);
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
       if (error.response?.status === 404) history.push(ROUTES.HOME);
     }
   };
@@ -33,7 +33,7 @@ export default function Game() {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
     } catch (error) {
-      toast.error(error.response?.data);
+      toast.error(error.response?.data?.message);
     }
   };
 

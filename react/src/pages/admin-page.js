@@ -28,7 +28,7 @@ export default function AdminPage() {
         const response = await axios.get(`gameHistory`, { headers });
         setGamesHistory(response.data);
       } catch (error) {
-        toast.error(error.response?.data);
+        toast.error(error.response?.data?.message);
       }
     };
     fetchGameHistory();
