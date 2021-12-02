@@ -7,6 +7,10 @@ import tokenParser from "../helpers/tokenParser";
 import toast from "react-hot-toast";
 import HomeButton from "../components/common/home-button";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function CreateLobby() {
   const history = useHistory(); // hook
 

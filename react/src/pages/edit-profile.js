@@ -4,11 +4,11 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import user from "../context/user";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
 /**
+ *
  * @author andrsdt
  */
 export default function EditProfile() {
@@ -80,7 +80,6 @@ export default function EditProfile() {
       toast.error("You can't edit another user's profile");
       history.push(ROUTES.PROFILE.replace(":username", params.username));
     } else fetchUserProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 
   return (

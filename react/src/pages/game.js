@@ -6,6 +6,10 @@ import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function Game() {
   // route for /games/gameId
   const { gameId } = useParams(); // get params from react router link

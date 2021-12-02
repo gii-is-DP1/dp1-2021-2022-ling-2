@@ -9,6 +9,10 @@ import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
 import toast from "react-hot-toast";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function Home() {
   const { userToken, setUserToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));

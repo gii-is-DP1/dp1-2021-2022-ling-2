@@ -1,10 +1,12 @@
-import Homebar from "../components/home/Homebar";
-import { Table, Col, Row } from "react-bootstrap";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import axios from "../api/axiosConfig";
 import toast from "react-hot-toast";
 import HomeButton from "../components/common/home-button";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function Statistics() {
   const [gamesHistory, setGamesHistory] = useState(null);
 

@@ -9,6 +9,10 @@ import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
 

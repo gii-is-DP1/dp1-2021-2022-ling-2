@@ -1,13 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import UserContext from "../context/user";
-import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import toast from "react-hot-toast";
 import HomeButton from "../components/common/home-button";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function LobbyBrowser() {
   const history = useHistory(); // hook
   const { userToken } = useContext(UserContext);

@@ -5,10 +5,13 @@ import tokenParser from "../helpers/tokenParser";
 import userContext from "../context/user";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
-import Homebar from "../components/home/Homebar";
 import toast from "react-hot-toast";
 import HomeButton from "../components/common/home-button";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function EditAchievement() {
   const params = useParams();
   const history = useHistory();

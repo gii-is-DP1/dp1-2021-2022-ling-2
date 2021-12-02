@@ -1,15 +1,17 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { Link, useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import HomeButton from "../components/common/home-button";
-import Homebar from "../components/home/Homebar";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
+/**
+ * 
+ * @author andrsdt
+ */
 export default function Profile() {
   const params = useParams(); // hook
   const history = useHistory(); // hook

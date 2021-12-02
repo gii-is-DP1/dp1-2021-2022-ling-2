@@ -13,6 +13,10 @@ import userContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function AdminPage() {
   const history = useHistory();
   const user = tokenParser(useContext(userContext));
