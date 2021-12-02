@@ -1,15 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "../../api/axiosConfig";
 import * as ROUTES from "../../constants/routes";
-import popupContext from "../../context/popup";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
-import hasAuthority from "../../helpers/hasAuthority";
+import toast from "react-hot-toast";
 
 export default function AchievementsTable() {
-  const { popups, setPopups } = useContext(popupContext);
   const [achievements, setAchievements] = useState([]);
   const user = tokenParser(useContext(userContext));
 
@@ -19,41 +16,69 @@ export default function AchievementsTable() {
         const response = await axios.get(`achievements`);
         setAchievements(response.data);
       } catch (error) {
-        setPopups([...popups, error.response?.data]);
+        toast.error(error.response?.data?.message);
       }
     };
 
     fetchAchievements();
   }, []);
 
+  const isAdmin = () => user.authorities.includes("admin");
+
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {achievements.map((achievement, idx) => (
-          <tr key={idx}>
-            <th>{achievement.name}</th>
-            <th>{achievement.description}</th>
-            <th>
-              <Link
-                to={ROUTES.EDIT_ACHIEVEMENT.replace(
-                  ":achievementId",
-                  achievement.id
+    <div className="flex flex-col">
+      <div className="py-2 align-middle inline-block min-w-full">
+        <div className="shadow overflow-hidden border-b border-gray-800 sm:rounded-lg">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-800">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-10 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider"
+                >
+                  Achievements
+                </th>
+                {isAdmin() && (
+                  <th scope="col" className="relative px-6 py-3">
+                    <span className="sr-only">Edit</span>
+                  </th>
                 )}
-              >
-                {hasAuthority(user, "admin") && (
-                  <Button type="submit">Edit</Button>
-                )}
-              </Link>
-            </th>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+              </tr>
+            </thead>
+            <tbody className="bg-gray-900 divide-y divide-gray-600">
+              {achievements.map((achievement, idx) => (
+                <tr key={idx}>
+                  <td className="px-6 py-4 ">
+                    <div className="flex items-center">
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-white">
+                          {achievement.name}
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {achievement.description}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  {isAdmin() && (
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <Link
+                        className="text-indigo-300 hover:text-indigo-500"
+                        to={ROUTES.EDIT_ACHIEVEMENT.replace(
+                          ":achievementId",
+                          achievement.id
+                        )}
+                      >
+                        Edit
+                      </Link>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }

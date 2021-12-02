@@ -1,5 +1,5 @@
 # LIng-2 DP1 Semester Project - No Time For Heroes
-![Logo](/spring-boot/src/main/resources/static/resources/images/logo_ntfh.png)
+![Logo](/react/public/images/logo_ntfh.png)
 
 
 ## Getting started
@@ -35,7 +35,7 @@ From here on out, the spring-boot proyect will be located at localhost:8080/api,
 To access the console follow this image:
 ![console-tutorial](/spring-boot/src/main/resources/static/resources/images/consola_db.png)
 
-### Reactj
+### React.js
 Now, for the visual part! Similar to spring-boot, we navigate to the react directory:
 ```
 cd ./react/

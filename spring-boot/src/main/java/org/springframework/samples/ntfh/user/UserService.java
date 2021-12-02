@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.samples.ntfh.character.Character;
 import org.springframework.samples.ntfh.exceptions.BannedUserException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
@@ -101,8 +103,8 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Iterable<User> findAll(Pageable pageable) {
-		return userRepository.findAll(pageable);
+	public Page<User> findAllPage(Pageable pageable) {
+		return userRepository.findAllPage(pageable);
 	}
 
 	@Transactional(readOnly = true)
