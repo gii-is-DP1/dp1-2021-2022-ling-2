@@ -16,7 +16,6 @@ export default function EditProfile() {
 
   const { userToken, setUserToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
-  const [userProfile, setUserProfile] = useState(null); // hook
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -29,7 +28,6 @@ export default function EditProfile() {
   async function fetchUserProfile() {
     try {
       const response = await axios.get(`/users/${params.username}`);
-      setUserProfile(response.data);
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error) {
