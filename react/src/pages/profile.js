@@ -9,7 +9,7 @@ import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
 /**
- * 
+ *
  * @author andrsdt
  */
 export default function Profile() {
@@ -81,8 +81,8 @@ export default function Profile() {
             </button>
           </Link>
         </span>
-        <span className="flex-1 flex flex-row justify-between">
-          <div className="flex flex-col w-1/3 justify-center items-center space-y-4 text-2xl bg-felt border-20 border-gray-900 rounded-3xl m-8 shadow-2xl">
+        <span className="flex flex-row justify-around">
+          <div className="flex flex-col max-w-1/3 justify-center items-center space-y-4 text-2xl bg-felt border-20 border-gray-900 rounded-3xl m-8 shadow-2xl p-6">
             {/* username, email, matches, fastest and longest matches, stats and edit buttons */}
             <span>Username: {userProfile?.username}</span>
             <span>Email: {userProfile?.email}</span>
@@ -90,17 +90,22 @@ export default function Profile() {
             <span>Matches won: {matchesWon}</span>
             <span>Fastest match: {fastestMatch}</span>
             <span>Longest match: {longestMatch}</span>
-            <div className="space-x-4">
+            <div className="flex flex-wrap space-x-3">
               <Link to={ROUTES.STATISTICS + `/${params.username}`}>
                 <button type="submit" className="btn-ntfh">
-                  <p className="text-3xl text-gradient-ntfh">Stats</p>
+                  <p className="text-2xl text-gradient-ntfh">Stats</p>
                 </button>
               </Link>
               <Link
                 to={ROUTES.EDIT_PROFILE.replace(":username", params.username)}
               >
                 <button type="submit" className="btn-ntfh">
-                  <p className="text-3xl text-gradient-ntfh">Edit</p>
+                  <p className="text-2xl text-gradient-ntfh">Edit</p>
+                </button>
+              </Link>
+              <Link to={ROUTES.ACHIEVEMENTS}>
+                <button type="submit" className="btn-ntfh">
+                  <p className="text-2xl text-gradient-ntfh">Achievements</p>
                 </button>
               </Link>
             </div>

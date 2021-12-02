@@ -23,6 +23,8 @@ export default function AchievementsTable() {
     fetchAchievements();
   }, []);
 
+  const isAdmin = () => user.authorities.includes("admin");
+
   return (
     <div className="flex flex-col">
       <div className="py-2 align-middle inline-block min-w-full">
@@ -36,9 +38,11 @@ export default function AchievementsTable() {
                 >
                   Achievements
                 </th>
-                <th scope="col" className="relative px-6 py-3">
-                  <span className="sr-only">Edit</span>
-                </th>
+                {isAdmin() && (
+                  <th scope="col" className="relative px-6 py-3">
+                    <span className="sr-only">Edit</span>
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-gray-900 divide-y divide-gray-600">
@@ -56,17 +60,19 @@ export default function AchievementsTable() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link
-                      className="text-indigo-300 hover:text-indigo-500"
-                      to={ROUTES.EDIT_ACHIEVEMENT.replace(
-                        ":achievementId",
-                        achievement.id
-                      )}
-                    >
-                      Edit
-                    </Link>
-                  </td>
+                  {isAdmin() && (
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <Link
+                        className="text-indigo-300 hover:text-indigo-500"
+                        to={ROUTES.EDIT_ACHIEVEMENT.replace(
+                          ":achievementId",
+                          achievement.id
+                        )}
+                      >
+                        Edit
+                      </Link>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
