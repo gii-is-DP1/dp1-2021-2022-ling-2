@@ -20,6 +20,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.ntfh.game.history.GameHistory;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -56,9 +59,10 @@ public class UserController {
 	private GameHistoryRepository gameHistoryRepository;
 
 	@GetMapping
-	public ResponseEntity<Iterable<User>> getAll() {
+	public ResponseEntity<Iterable<User>> getAll(@RequestParam(required = false) Integer page , @RequestParam(required = false) Integer limit) {
 		// untested
-		Iterable<User> users = this.userService.findAll();
+		Pageable pageable = PageRequest.of(page, limit);
+		Iterable<User> users = this.userService.findAll(pageable);
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
@@ -70,7 +74,7 @@ public class UserController {
 	 * @author andrsdt
 	 */
 	@GetMapping("{userId}")
-	public ResponseEntity<User> getUser(@PathVariable("userId") String username) {
+	public ResponseEntity<User> getUser(@PathVariable("userId") String username ) {
 		Optional<User> user = this.userService.findUser(username);
 		if (!user.isPresent())
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

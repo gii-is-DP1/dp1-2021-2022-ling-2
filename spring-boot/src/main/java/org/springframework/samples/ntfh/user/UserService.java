@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.samples.ntfh.character.Character;
@@ -62,8 +63,8 @@ public class UserService {
 			throw new DataIntegrityViolationException("This username is already in use") {
 			};
 
-		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
-		if (userWithSameEmail.isPresent())
+			Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
+			if (userWithSameEmail.isPresent())
 			throw new DataIntegrityViolationException("This email is already in use") {
 			};
 
@@ -100,8 +101,8 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Iterable<User> findAll() {
-		return userRepository.findAll();
+	public Iterable<User> findAll(Pageable pageable) {
+		return userRepository.findAll(pageable);
 	}
 
 	@Transactional(readOnly = true)
