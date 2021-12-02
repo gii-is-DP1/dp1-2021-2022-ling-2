@@ -1,5 +1,5 @@
 # LIng-2 DP1 Semester Project - No Time For Heroes
-![Logo](/spring-boot/src/main/resources/static/resources/images/logo_ntfh.png)
+![Logo](/react/public/images/logo_ntfh.png)
 
 
 ## Getting started
