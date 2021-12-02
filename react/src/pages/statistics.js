@@ -20,19 +20,6 @@ export default function Statistics() {
     fetchGameHistoryCount();
   }, []);
 
-  const html = (
-    <div>
-      <Homebar />
-      <h1>Statistics</h1>
-      <Table>
-        <Col>
-          <Row>
-            <h2>Total Games Played: {gamesHistory && gamesHistory.length}</h2>
-          </Row>
-        </Col>
-      </Table>
-    </div>
-  );
   return (
     <div className="flex flex-col h-screen bg-wood p-8 items-center">
       <span className="text-center pb-8">
