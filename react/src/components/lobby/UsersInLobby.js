@@ -13,7 +13,6 @@ export default function UsersInLobby(props) {
   const isHost = (user) => user.username === lobby.host.username;
   // craeate arrow function in a variable
 
-  // const characters = ["ranger", "rogue", "warrior", "wizard"];
   const characters = [
     "ranger",
     "ranger",
@@ -35,31 +34,29 @@ export default function UsersInLobby(props) {
   };
 
   return (
-    <>
-      <ListGroup className="d-inline-flex p-2">
-        {lobby.users
-          .sort((a, b) =>
-            a.username < b.username ? 1 : a.username > b.username ? -1 : 0
-          ) // arbitrary but consistent order
-          .map((user, idx) => (
-            <ListGroup.Item key={idx}>
-              {!isHost(user) && isHost(viewer) && (
-                // show me the kick button over a player only if i'm the host, and also if the player to kick is not me
-                <Button
-                  variant="m-0 p-1"
-                  onClick={(e) => handleRemoveUserFromLobby(user.username)}
-                >
-                  ❌
-                </Button>
-              )}
-              {isHost(user) && <span className="m-0 p-1">👑</span>}{" "}
-              {user.username +
-                " — " +
-                getGenderFromId(user.character?.id) +
-                capitalize(getCharacterFromId(user.character?.id))}
-            </ListGroup.Item>
-          ))}
-      </ListGroup>
-    </>
+    <ul className="flex flex-col space-y-2">
+      {lobby.users
+        .sort((a, b) =>
+          a.username < b.username ? 1 : a.username > b.username ? -1 : 0
+        ) // arbitrary but consistent order
+        .map((user, idx) => (
+          <li key={idx} className="bg-green-700 rounded-xl p-2 text-white">
+            {!isHost(user) && isHost(viewer) && (
+              // show me the kick button over a player only if i'm the host, and also if the player to kick is not me
+              <button
+                className="mr-2"
+                onClick={(e) => handleRemoveUserFromLobby(user.username)}
+              >
+                ❌
+              </button>
+            )}
+            {isHost(user) && <span className="m-0 p-1">👑</span>}{" "}
+            {user.username +
+              " — " +
+              getGenderFromId(user.character?.id) +
+              capitalize(getCharacterFromId(user.character?.id))}
+          </li>
+        ))}
+    </ul>
   );
 }
