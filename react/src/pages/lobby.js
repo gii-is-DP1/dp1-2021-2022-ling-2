@@ -88,6 +88,9 @@ export default function Lobby() {
       if (username === lobby.host.username) {
         toast.message("Lobby deleted successfully");
         history.goBack();
+      } else if (username === user.username) {
+        // If I was the one leaving the lobby
+        history.goBack();
       }
     } catch (error) {
       toast.error(error.response?.data?.message);
