@@ -103,6 +103,11 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
+    }
+
+	@Transactional(readOnly = true)
 	public Page<User> findAllPage(Pageable pageable) {
 		return userRepository.findAllPage(pageable);
 	}

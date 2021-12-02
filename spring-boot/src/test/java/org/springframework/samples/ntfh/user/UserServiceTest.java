@@ -31,15 +31,14 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     //TODO
-    // @Test
-    // public void testPH3E1(){
-    //     List<User> PetitionUsers = new ArrayList<>();
-    //     List<User> RepositoryUsers = new ArrayList<>();
-    //     Pageable pageable = PageRequest.of(0, RepositoryUsers.count);
-    //     userService.findAll().forEach(x->PetitionUsers.add(x));
-    //     userRepository.findAll().forEach(y->RepositoryUsers.add(y));
-    //     assertEquals(RepositoryUsers.size(), PetitionUsers.size());
-    // }
+    @Test
+    public void testPH3E1(){
+        List<User> PetitionUsers = new ArrayList<>();
+        List<User> RepositoryUsers = new ArrayList<>();
+        userService.findAll().forEach(x->PetitionUsers.add(x));
+        userRepository.findAll().forEach(y->RepositoryUsers.add(y));
+        assertEquals(RepositoryUsers.size(), PetitionUsers.size());
+    }
 
     /**
      * @BeforeAll private User createUserForTesting() { User user4testing = new
@@ -61,12 +60,11 @@ public class UserServiceTest {
         assertEquals("antonio", userService.findUser(tester.getUsername()).orElse(null).getUsername());
     }
 
-    // @Disabled
-    // @Test
-    // public void testfindAll() {
-    //     Integer count = Lists.newArrayList(userService.findAll()).size();
-    //     assertEquals(13, count);
-    // }
+    @Test
+    public void testfindAll() {
+        Integer count = Lists.newArrayList(userService.findAll()).size();
+        assertEquals(13, count);
+    }
 
     @Test
     public void testfindById() {
