@@ -42,12 +42,10 @@ public class TokenUtils {
         Set<Authorities> authorities = userParam.getAuthorities();
         user.setAuthorities(userParam.getAuthorities());
 
-        // TODO untested
         String authoritiesString = authorities.stream().map(Authorities::getAuthority).collect(Collectors.joining(","));
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList(authoritiesString);
 
-        // WARNING should user be a JSON? does it work if not?
         return Jwts.builder().setSubject(user.getUsername()).claim("data", user)
                 .claim("authorities",
                         grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
