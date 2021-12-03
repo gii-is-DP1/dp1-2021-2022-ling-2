@@ -1,21 +1,20 @@
 import { useContext, useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Sidebar from "../components/home/Sidebar";
-import UnregisteredSidebar from "../components/home/UnregisteredSidebar";
+import * as IMAGES from "../constants/images";
 import * as ROUTES from "../constants/routes";
-import ErrorContext from "../context/error";
 import UnregisteredUserContext from "../context/unregisteredUser";
 import UserContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
+import toast from "react-hot-toast";
 
-// import "../resources/css/nord.css";
-
+/**
+ *
+ * @author andrsdt
+ */
 export default function Home() {
-  const { errors, setErrors } = useContext(ErrorContext); // hook
-  const { userToken } = useContext(UserContext);
+  const { userToken, setUserToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
   const [currentUser, setCurrentUser] = useState();
   const history = useHistory(); // hook
@@ -23,25 +22,40 @@ export default function Home() {
     UnregisteredUserContext
   );
 
-  const isAdmin = (_user) => _user.authorities.includes("admin");
-
-  async function fetchUnregisteredData() {
+  async function fetchUnregisteredUserData() {
     try {
       const response = await axios.get("/unregistered-users");
       setUnregisteredUser(response.data);
-    } catch (error) {
-      setErrors([...errors, error.response?.data]);
-    }
+    } catch (error) {}
   }
 
   async function fetchUserData() {
     try {
       const response = await axios.get(`/users/${user.username}`);
       setCurrentUser(response.data);
-    } catch (error) {
-      setErrors([...errors, error.response?.data]);
-    }
+    } catch (error) {}
   }
+
+  const userInLobby = () => currentUser?.lobby;
+
+  const userInGame = () => currentUser?.lobby?.game;
+
+  const handleLogout = () => {
+    setUserToken(null);
+    setCurrentUser(null);
+    toast.success("Logged out successfully");
+    history.push(ROUTES.HOME);
+  };
+
+  const handleShare = () => {
+    const message =
+      "Hey, check out this web app for playing No Time for Heroes! " +
+      window.location.href;
+    // copy to clipboard
+    navigator.clipboard.writeText(message);
+    // show success message
+    toast("Copied to clipboard", { icon: "📋" });
+  };
 
   useEffect(() => {
     document.title = "No Time for Heroes";
@@ -51,7 +65,7 @@ export default function Home() {
     // Unregistered user creation
     if (!unregisteredUser) {
       // if there aren't unregistered user credentials, ask for some
-      fetchUnregisteredData();
+      fetchUnregisteredUserData();
     }
     if (userToken) {
       // if there are user credentials, fetch his info
@@ -59,55 +73,103 @@ export default function Home() {
     }
   }, []);
 
-  const generateUserButtons = () => {
-    return (
-      <>
-        {currentUser?.lobby ? (
-          <Link to={ROUTES.LOBBY.replace(":lobbyId", currentUser?.lobby.id)}>
-            <Button type="submit">Rejoin Game</Button>
+  return (
+    <div className="flex flex-row h-screen p-2 bg-wood">
+      <div className="flex-none w-1/4 flex flex-col justify-between">
+        {/* Left column (statistics, ranking, share)*/}
+        <div className="flex flex-col">
+          <Link to={ROUTES.STATISTICS}>
+            <button type="submit" className="btn-ntfh mb-2">
+              <p className="text-gradient-ntfh">Statistics</p>
+            </button>
           </Link>
+          <Link to="" className="btn-ntfh w-min">
+            <p className="text-gradient-ntfh">Ranking</p>
+          </Link>
+        </div>
+        <button className="btn-ntfh w-min" onClick={handleShare}>
+          <p className="text-gradient-ntfh">Share!</p>
+        </button>
+      </div>
+      <div className="flex-1 w-1/2 flex flex-col items-center justify-center my-6">
+        {/* Center column (logo, browse/join/admin buttons) */}
+        <img
+          className="flex flex-row xl:w-2/3"
+          src={IMAGES.LOGO}
+          alt="NTFH logo"
+        ></img>
+        <div className="flex flex-col justify-center items-center flex-auto gap-y-2">
+          {/* Buttons */}
+          {user && !userInLobby() && (
+            <Link to={ROUTES.CREATE_LOBBY}>
+              <button type="submit" className="btn-ntfh">
+                <p className="text-gradient-ntfh">Create Lobby</p>
+              </button>
+            </Link>
+          )}
+          {!userInLobby() && (
+            <Link to={ROUTES.BROWSE_LOBBIES}>
+              <button type="submit" className="btn-ntfh">
+                <p className="text-gradient-ntfh">Browse Games</p>
+              </button>
+            </Link>
+          )}
+          {userInLobby() && !userInGame() && (
+            <Link to={ROUTES.LOBBY.replace(":lobbyId", currentUser?.lobby?.id)}>
+              <button type="submit" className="btn-ntfh">
+                <p className="text-gradient-ntfh">Rejoin Lobby</p>
+              </button>
+            </Link>
+          )}
+          {userInGame() && (
+            <Link
+              to={ROUTES.GAME.replace(":gameId", currentUser?.lobby?.game?.id)}
+            >
+              <button type="submit" className="btn-ntfh">
+                <p className="text-gradient-ntfh">Rejoin Game</p>
+              </button>
+            </Link>
+          )}
+          {hasAuthority(user, "admin") && (
+            <Link to={ROUTES.ADMIN_PAGE}>
+              <button type="submit" className="btn-ntfh">
+                <p className="text-gradient-ntfh">Admin Tools</p>
+              </button>
+            </Link>
+          )}
+        </div>
+      </div>
+      <div className="flex-none w-1/4 flex flex-col items-end">
+        {/* Left column (profile, friends stuff)*/}
+        {user ? (
+          <>
+            <Link to={ROUTES.PROFILE.replace(":username", user.username)}>
+              <button className="btn-ntfh mb-2" type="submit">
+                <p className="text-gradient-ntfh">{user.username}</p>
+              </button>
+            </Link>
+            <button className="btn-ntfh" type="submit" onClick={handleLogout}>
+              <p className="text-gradient-ntfh">Log out</p>
+            </button>
+          </>
         ) : (
           <>
-            <Link to={ROUTES.CREATE_LOBBY}>
-              <Button type="submit">Create Game</Button>
+            <div className="btn-ntfh mb-4">
+              <p className="text-gradient-ntfh">{unregisteredUser?.username}</p>
+            </div>
+            <Link to={ROUTES.SIGNUP}>
+              <button className="btn-ntfh mb-2" type="submit">
+                <p className="text-gradient-ntfh">Sign up</p>
+              </button>
             </Link>
-            <Link to={ROUTES.BROWSE_LOBBIES}>
-              <Button type="submit">Browse Games</Button>
+            <Link to={ROUTES.LOGIN}>
+              <button className="btn-ntfh" type="submit">
+                <p className="text-gradient-ntfh">Log in</p>
+              </button>
             </Link>
           </>
         )}
-      </>
-    );
-  };
-
-  return (
-    <span>
-      <h1>Home</h1>
-
-      {/* TODO Rework all buttons, ask James what the fuck he means */}
-      {userToken ? <Sidebar /> : <UnregisteredSidebar />}
-
-      {/* Buttons */}
-      {!userToken ? (
-        <Link to={ROUTES.BROWSE_LOBBIES}>
-          <Button type="submit">Browse Games</Button>
-        </Link>
-      ) : (
-        generateUserButtons()
-      )}
-
-      {/* Admin Page*/}
-      {user && hasAuthority(user, "admin") ? (
-        <Link to={ROUTES.ADMIN_PAGE}>
-          <Button type="submit">Admin Page</Button>
-        </Link>
-      ) : (
-        ""
-      )}
-
-      <Link to={ROUTES.STATISTICS}>
-        <Button type="submit">Statistics</Button>
-      </Link>
-    </span>
+      </div>
+    </div>
   );
 }

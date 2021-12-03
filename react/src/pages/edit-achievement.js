@@ -5,14 +5,17 @@ import tokenParser from "../helpers/tokenParser";
 import userContext from "../context/user";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
-import errorContext from "../context/error";
-import Homebar from "../components/home/Homebar";
+import toast from "react-hot-toast";
+import HomeButton from "../components/common/home-button";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function EditAchievement() {
   const params = useParams();
   const history = useHistory();
-  const { errors, setErrors } = useContext(errorContext);
-  const { userToken, setUserToken } = useContext(userContext); // hook
+  const { userToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
 
   const [achievement, setAchievement] = useState(null);
@@ -29,7 +32,7 @@ export default function EditAchievement() {
       setName(response.data.name);
       setDescription(response.data.description);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      toast.error(error.response?.data?.message);
       sendToAdminPage();
     }
   }
@@ -45,9 +48,10 @@ export default function EditAchievement() {
       const response = await axios.put("/achievements", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
+      toast.success("Achievement edited successfully");
       sendToAdminPage();
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      toast.error(error.response?.data?.message);
     }
   }
 
@@ -55,13 +59,14 @@ export default function EditAchievement() {
     document.title = `NTFH - Edit achievement`;
 
     if (!loggedUser.authorities.includes("admin")) {
-      history.push(ROUTES.HOME);
+      toast.error("You must be an admin to access this page");
+      history.push(ROUTES.LOGIN);
     } else fetchAchievement();
   }, []);
 
   return (
     <>
-      <Homebar />
+      <HomeButton />
       <h1>Edit achievement</h1>
       <br />
       <Form onSubmit={handleSubmit}>

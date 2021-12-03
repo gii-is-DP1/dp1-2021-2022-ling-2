@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import toast from "react-hot-toast";
 import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Homebar from "../components/home/Homebar";
+import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
-import errorContext from "../context/error";
 
 /**
  *
@@ -15,81 +14,77 @@ import errorContext from "../context/error";
 export default function SignUp() {
   const history = useHistory(); // hook
   const { setUserToken } = useContext(userContext); // hook
-  const { errors, setErrors } = useContext(errorContext); // Array of errors
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     document.title = "NTFH - Sign up";
   });
 
-  const handleRegister = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData(e.target);
-      const formDataObj = Object.fromEntries(formData.entries());
-      await axios.post("/users/register", formDataObj); // register response
+      const payload = {
+        username,
+        email,
+        password,
+      };
+      await axios.post("/users/register", payload);
       // we want to auto log in after registering to get the auth token
-      const loginResponse = await axios.post("/users/login", formDataObj);
+      const loginResponse = await axios.post("/users/login", payload);
       setUserToken(loginResponse.data.authorization);
+      toast.success("Successfully registered!");
       history.push(ROUTES.HOME);
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      toast.error(error.response?.data?.message);
     }
   };
 
   return (
-    <div>
-      <div>
-        <Homebar />
+    <>
+      <HomeButton />
+      <div className="flex flex-col h-screen justify-center items-center text-white text-3xl bg-wood p-8">
+        <form className="flex flex-col w-2/3 md:w-1/2 xl:w-1/3">
+          <div className="flex flex-col mb-6">
+            <p className="font-bold text-2xl mb-2">Username</p>
+            <input
+              type="text"
+              className="p-3 rounded-xl border-4 border-black text-black"
+              onChange={(e) => setUsername(e.target.value)}
+            ></input>
+          </div>
+          <div className="flex flex-col mb-6">
+            <p className="font-bold text-2xl mb-2">Email</p>
+            <input
+              type="email"
+              className="p-3 rounded-xl border-4 border-black text-black"
+              onChange={(e) => setEmail(e.target.value)}
+            ></input>
+          </div>
+          <div className="flex flex-col mb-6">
+            <p className="font-bold text-2xl mb-2">Password</p>
+            <input
+              type="password"
+              className="p-3 rounded-xl border-4 border-black text-black"
+              onChange={(e) => setPassword(e.target.value)}
+            ></input>
+          </div>
+          <button
+            type="submit"
+            className="btn-ntfh mb-8"
+            onClick={handleSignup}
+          >
+            <p className="text-gradient-ntfh text-5xl p-2">Sign up</p>
+          </button>
+          <span className="flex flex-row justify-between items-baseline">
+            <span>Already have an account?</span>
+            <Link to={ROUTES.LOGIN} className="btn-ntfh w-1/3">
+              <p className="text-gradient-ntfh text-3xl text-center">Log in</p>
+            </Link>
+          </span>
+        </form>
       </div>
-      <h1>Sign up page</h1>
-      <p>
-        {" "}
-        Have an account?
-        <Link to={ROUTES.LOGIN}>
-          <Button variant="primary">Log In</Button>
-        </Link>
-      </p>
-      <br />
-      <Form onSubmit={handleRegister}>
-        <Form.Group className="mb-3">
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter username"
-            name="username"
-            required
-          />
-          <Form.Text className="text-muted">
-            Make sure it's creative! Have fun with it
-          </Form.Text>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            name="email"
-            required
-          />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else, only Facebook, I'm
-            sure they can keep a secret.
-          </Form.Text>
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter password"
-            name="password"
-            required
-          />
-        </Form.Group>
-
-        <Button type="submit">Submit</Button>
-      </Form>
-    </div>
+    </>
   );
 }

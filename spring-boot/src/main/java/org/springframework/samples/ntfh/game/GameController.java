@@ -1,6 +1,7 @@
 package org.springframework.samples.ntfh.game;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,4 +63,5 @@ public class GameController {
         Game game = gameService.findGameById(gameId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
+
 }

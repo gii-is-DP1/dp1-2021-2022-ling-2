@@ -22,6 +22,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.samples.ntfh.character.Character;
+import org.springframework.samples.ntfh.exceptions.BannedUserException;
 import org.springframework.samples.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.samples.ntfh.util.TokenUtils;
@@ -144,15 +146,11 @@ public class UserService {
 	 * @author andrsdt
 	 */
 	@Transactional
-
 	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
 			NonMatchingTokenException, IllegalArgumentException {
 
 		if (user.getUsername().isEmpty())
 			throw new IllegalArgumentException("The username cannot be empty") {
-			};
-		if (user.getPassword().isEmpty())
-			throw new IllegalArgumentException("The password cannot be empty") {
 			};
 		if (user.getEmail().isEmpty())
 			throw new IllegalArgumentException("The email cannot be empty") {
@@ -175,7 +173,7 @@ public class UserService {
 			throw new DataIntegrityViolationException("This email is already in use") {
 			};
 		}
-		if (user.getPassword().length() < 4)
+		if (user.getPassword() != null && user.getPassword().length() < 4)
 			throw new IllegalArgumentException("Password must be at least 4 characters long") {
 			};
 
@@ -185,21 +183,53 @@ public class UserService {
 			user.setPassword(userInDatabase.getPassword());
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
-
+		if (user.getEnabled() == null) {
+			user.setEnabled(userInDatabase.getEnabled());
+		}
 		return userRepository.save(user);
 	}
 
 	@Transactional
-	public String loginUser(User user) throws DataAccessException, IllegalArgumentException {
+	public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
 		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
 		if (!foundUserOptional.isPresent()) {
 			throw new DataAccessException("User not found") {
 			};
 		}
-		if (!foundUserOptional.get().getPassword().equals(user.getPassword())) {
+		User userInDB = foundUserOptional.get();
+		if (!userInDB.getEnabled()) {
+			throw new BannedUserException("This user has been banned") {
+			};
+		}
+		if (!userInDB.getPassword().equals(user.getPassword())) {
 			throw new IllegalArgumentException("Incorrect password") {
 			};
 		}
-		return TokenUtils.generateJWTToken(foundUserOptional.get());
+		return TokenUtils.generateJWTToken(userInDB);
+	}
+
+	@Transactional
+	public User setCharacter(String username, Character character) throws DataAccessException {
+		Optional<User> foundUserOptional = userRepository.findById(username);
+		if (!foundUserOptional.isPresent()) {
+			throw new DataAccessException("User not found") {
+			};
+		}
+		User user = foundUserOptional.get();
+		user.setCharacter(character);
+		return user;
+
+	}
+
+	@Transactional
+	public User banUser(User user) throws DataAccessException {
+		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
+		if (!foundUserOptional.isPresent()) {
+			throw new DataAccessException("User not found") {
+			};
+		}
+		User userInDB = foundUserOptional.get();
+		userInDB.setEnabled(user.getEnabled());
+		return user;
 	}
 }

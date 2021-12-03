@@ -1,26 +1,28 @@
 import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import Homebar from "../components/home/Homebar";
+import HomeButton from "../components/common/home-button";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
-import ErrorContext from "../context/error";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
 
-  const { errors, setErrors } = useContext(ErrorContext); // Array of error objects
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
   const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
   const { lobbyId } = useParams(); // TODO maybe we should just pass this as a param to the component
   const { userToken } = useContext(UserContext);
   const user = tokenParser(useContext(UserContext));
-  const [character, setCharacter] = useState("none");
+  const [character, setCharacter] = useState(null);
   const [gender, setGender] = useState("male");
   const [fullLobby, setFullLobby] = useState(false);
   const [charactersTaken, setCharactersTaken] = useState([]);
@@ -29,12 +31,14 @@ export default function Lobby() {
   const genders = ["male", "female"];
 
   const getCharacterId = () => {
-    if (character === "none") return null;
+    if (character === null) return null;
     return 1 + 2 * characters.indexOf(character) + genders.indexOf(gender);
     // Input: warrior, female
     // Output: 3+ 1  = 4 (id Of female warrior in the DB is 4)
     // This is a temporal solution to be refactored in the future
   };
+
+  const isHost = () => user?.username === lobby?.host?.username;
 
   async function fetchLobbyStatus() {
     try {
@@ -42,11 +46,11 @@ export default function Lobby() {
       const newLobby = response.data;
       if (lobby && !userInLobby(user, newLobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
-        history.push(ROUTES.BROWSE_LOBBIES);
+        toast("You have been kicked from the lobby");
+        history.goBack();
         return;
       }
       if (lobby && lobby.game) {
-        // If the lobby I am trying to join has already started, redirect me to the game
         history.push(ROUTES.GAME.replace(":gameId", lobby.game.id));
         return;
       }
@@ -59,7 +63,7 @@ export default function Lobby() {
       return newLobby;
     } catch (error) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
-      setErrors([...errors, error.response?.data]);
+      toast.error(error.response?.data?.message);
       history.push(ROUTES.BROWSE_LOBBIES);
       return;
     }
@@ -73,7 +77,7 @@ export default function Lobby() {
         headers,
       });
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      toast.error(error.response?.data?.message);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
     }
   }
@@ -84,9 +88,15 @@ export default function Lobby() {
       await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
         headers: { Authorization: "Bearer " + userToken },
       });
-      if (username === lobby.host.username) history.push(ROUTES.BROWSE_LOBBIES);
+      if (username === lobby.host.username) {
+        toast.message("Lobby deleted successfully");
+        history.goBack();
+      } else if (username === user.username) {
+        // If I was the one leaving the lobby
+        history.goBack();
+      }
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      toast.error(error.response?.data?.message);
     }
   }
 
@@ -103,7 +113,7 @@ export default function Lobby() {
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error) {
-      setErrors([...errors, error.response?.data]);
+      toast.error(error.response?.data?.message);
     }
   };
 
@@ -136,133 +146,200 @@ export default function Lobby() {
   useEffect(() => {
     async function updateUserCharacter() {
       try {
-        user.character = getCharacterId();
-        const payload = { ...user };
-        const response = await axios.put(`/users`, payload, {
+        const payload = {
+          username: user.username,
+          character: getCharacterId(),
+        };
+        await axios.put(`/users/character`, payload, {
           headers: { Authorization: "Bearer " + userToken },
         });
       } catch (error) {
-        setErrors([...errors, error.response?.data]);
+        toast.error(error.response?.data?.message);
       }
     }
     updateUserCharacter();
   }, [character, gender]);
 
+  if (!lobby) return <></>; // Don't render anything if the lobby is not loadedw
+
   return (
     <>
-      <Homebar />
-      {lobby && (
-        <>
-          <Row>
-            <Col>
-              <h1>Lobby - {lobby.name}</h1>
-              {/* TODO separate method for deleting game. Currently it's handled in the
-               user removal endpoint, it should have its own endpoint and Axios call */}
-              <Button onClick={(e) => handleRemoveUserFromLobby(user.username)}>
-                {lobby.host.username === user.username ? "Delete" : "Leave"}{" "}
-                lobby
-              </Button>
-              <div>
-                {fullLobby ? "The room is full" : "Waiting for people to join"}
+      <HomeButton />
+      <div className="flex flex-col h-screen items-center p-6 bg-wood bg-repeat">
+        <div className="flex-none btn-ntfh text-5xl">
+          <p className="text-gradient-ntfh">Lobby</p>
+        </div>
+        <div className="flex-1 flex flex-col w-3/4 lg:w-2/3 xl:w-1/2 justify-center">
+          <div className="flex bg-felt rounded-3xl border-20 border-gray-900 p-8 divide-x-2 divide-gray-900 text-xl">
+            <div className="w-3/5">
+              <div className="flex flex-col items-start">
+                {/* Game name, delete lobby */}
+                <div className="flex items-baseline space-x-5">
+                  <p className="mb-1">{lobby.name}</p>
+                  <button
+                    className="btn-ntfh mb-3"
+                    onClick={(e) => handleRemoveUserFromLobby(user.username)}
+                  >
+                    <p className="text-gradient-ntfh text-2xl">
+                      {lobby.host.username === user.username
+                        ? "Delete "
+                        : "Leave "}
+                      lobby
+                    </p>
+                  </button>
+                </div>
+                <div className="mb-4">
+                  {/* Waiting people, counter */}
+                  <p>
+                    {fullLobby
+                      ? "The room is full"
+                      : "Waiting for people to join"}
+                  </p>
+                  <p>
+                    Players in the lobby: {lobby.users.length}/
+                    {lobby.maxPlayers}
+                  </p>
+                </div>
+                <UsersInLobby
+                  lobby={lobby}
+                  handleRemoveUserFromLobby={handleRemoveUserFromLobby}
+                />
               </div>
-              <div>
-                Players in the lobby: {lobby.users.length}/{lobby.maxPlayers}
-              </div>
-              <br />
-              <UsersInLobby
-                lobby={lobby}
-                handleRemoveUserFromLobby={handleRemoveUserFromLobby}
-              />
-              <br />
-            </Col>
-            <Col>
-              <Form>
-                <Form.Group key="stacked-radio">
-                  <Form.Label>Class</Form.Label> <br />
-                  <Form.Check
-                    className="mx-3"
-                    label="🌫️ None"
+              {/* Left col ( game info, current players)*/}
+            </div>
+            <div className="w-2/5">
+              {/* Right col (Choose character and version, start game button) */}
+              <form className="flex flex-col px-3 mb-6">
+                <span>
+                  <input
+                    className="mr-2"
                     name="class"
                     type="radio"
                     defaultChecked
                     onChange={(e) => setCharacter(null)}
-                  />
-                  <Form.Check
-                    className="mx-3"
-                    label="🗡️ Rogue"
+                  ></input>
+                  <label>🌫️ None</label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
                     name="class"
                     type="radio"
                     disabled={
-                      charactersTaken.includes("rogue") || character === "rogue"
+                      character !== "rogue" && charactersTaken.includes("rogue")
                     }
                     onChange={(e) => setCharacter("rogue")}
-                  />
-                  <Form.Check
-                    className="mx-3"
-                    label="🛡 Warrior"
+                  ></input>
+                  <label
+                    className={
+                      (character === "rogue" ||
+                        charactersTaken.includes("rogue")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🗡️ Rogue
+                  </label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
                     name="class"
                     type="radio"
                     disabled={
-                      charactersTaken.includes("warrior") ||
-                      character === "warrior"
+                      character !== "warrior" &&
+                      charactersTaken.includes("warrior")
                     }
                     onChange={(e) => setCharacter("warrior")}
-                  />
-                  <Form.Check
-                    className="mx-3"
-                    label="🧙 Wizard"
+                  ></input>
+                  <label
+                    className={
+                      (character === "warrior" ||
+                        charactersTaken.includes("warrior")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🛡 Warrior
+                  </label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
                     name="class"
                     type="radio"
                     disabled={
-                      charactersTaken.includes("wizard") ||
-                      character === "wizard"
+                      character !== "wizard" &&
+                      charactersTaken.includes("wizard")
                     }
                     onChange={(e) => setCharacter("wizard")}
-                  />
-                  <Form.Check
-                    className="mx-3"
-                    label="🏹 Ranger"
+                  ></input>
+                  <label
+                    className={
+                      (character === "wizard" ||
+                        charactersTaken.includes("wizard")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🧙 Wizard
+                  </label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
                     name="class"
                     type="radio"
                     disabled={
-                      charactersTaken.includes("ranger") ||
-                      character === "ranger"
+                      character !== "ranger" &&
+                      charactersTaken.includes("ranger")
                     }
                     onChange={(e) => setCharacter("ranger")}
-                  />
-                </Form.Group>
-                <Form.Group className="mb-1">
-                  <Form.Label>Variant</Form.Label> <br />
-                  <Form.Check
-                    className="mx-3"
-                    label="♂ Male"
-                    name="gender"
+                  ></input>
+                  <label
+                    className={
+                      (character === "ranger" ||
+                        charactersTaken.includes("ranger")) &&
+                      "text-gray-600"
+                    }
+                  >
+                    🏹 Ranger
+                  </label>
+                </span>
+              </form>
+              <form className="flex flex-col px-3">
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
                     type="radio"
                     defaultChecked
                     onChange={(e) => setGender("male")}
-                  />
-                  <Form.Check
-                    className="mx-3"
-                    label="♀ Female"
-                    name="gender"
+                  ></input>
+                  <label>♂ Male</label>
+                </span>
+                <span>
+                  <input
+                    className="mr-2"
+                    name="class"
                     type="radio"
                     onChange={(e) => setGender("female")}
-                  />
-                </Form.Group>
-              </Form>
-            </Col>
-          </Row>
-          <Row>
-            {lobby.users.length > 1 && user.username === lobby.host.username ? (
-              <Button type="submit" classType="mx-auto" onClick={createGame}>
-                Start Game
-              </Button>
-            ) : (
-              ""
-            )}
-          </Row>
-        </>
-      )}
+                  ></input>
+                  <label>♀ Female</label>
+                </span>
+              </form>
+
+              {isHost() && (
+                <button
+                  disabled={lobby.users.length < 2}
+                  className="btn-ntfh ml-2 mt-6"
+                  type="submit"
+                  onClick={createGame}
+                >
+                  <p className="text-gradient-ntfh">Start Game</p>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
