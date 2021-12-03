@@ -99,6 +99,8 @@ public class LobbyServiceTest {
     @Test
     public void testSave() {
 //      Test made in the init
+//      TODO hacer un test q cuente antes y despues de añadir un dato, asi en el assert q compruebe q el 
+//      contador inicial sea igual al final +1
         assertEquals(lobbyRepository.findById(lobbyTester.getId()).get().getId(), lobbyTester.getId());
 
     }

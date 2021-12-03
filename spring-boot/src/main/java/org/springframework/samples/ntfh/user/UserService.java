@@ -232,4 +232,10 @@ public class UserService {
 		userInDB.setEnabled(user.getEnabled());
 		return user;
 	}
+
+	@Transactional
+	public void deleteUser(User user) {
+		this.userRepository.deleteById(user.getUsername());
+	}
+
 }
