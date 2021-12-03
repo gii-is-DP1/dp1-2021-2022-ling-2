@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import * as ROUTES from "../constants/routes";
 
+/**
+ *
+ * @author andrsdt
+ */
 export default function NotFound() {
   return (
     <div>
