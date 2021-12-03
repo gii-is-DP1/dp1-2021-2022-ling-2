@@ -21,6 +21,11 @@ public class PlayerService {
     }
 
     @Transactional
+    public Integer playerCount() {
+        return (int) playerRepository.count();
+    }
+
+    @Transactional
     public void savePlayer(Player player) throws DataAccessException {
         playerRepository.save(player);
     }
