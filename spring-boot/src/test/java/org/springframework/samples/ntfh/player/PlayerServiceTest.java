@@ -53,18 +53,17 @@ public class PlayerServiceTest {
 
     @Test
     public void testSavePlayer() {
-        Player tester = new Player();
-        tester.setGlory(1);
-        tester.setGold(1);
-        tester.setKills(1);
-        tester.setWounds(1);
-        tester.setCharacterType(characterService.findCharacterById(5).get());
-        tester.setUser(userService.findUser("merlin").get());
-        playerService.savePlayer(tester);
-        //assertEquals(1, playerService.findPlayer(tester.getId()).get().getGlory());
-        //assertEquals(9, playerService.findPlayer(tester.getId()).get().getId());
-        assertEquals(9, playerService.findPlayer(tester.getId()).get().getId());
-        playerRepository.deleteById(tester.getId());
+        Player tester2 = new Player();
+        tester2.setGlory(1);
+        tester2.setGold(4);
+        tester2.setKills(5);
+        tester2.setWounds(1);
+        tester2.setCharacterType(characterService.findCharacterById(5).get());
+        tester2.setUser(userService.findUser("merlin").get());
+        playerService.savePlayer(tester2);
+        assertEquals(tester2.getGold(), playerService.findPlayer(tester2.getId()).get().getGold());
+        assertEquals(tester2.getKills(), playerService.findPlayer(tester2.getId()).get(). getKills());
+        playerRepository.deleteById(tester2.getId());
     }
 
     @Test
