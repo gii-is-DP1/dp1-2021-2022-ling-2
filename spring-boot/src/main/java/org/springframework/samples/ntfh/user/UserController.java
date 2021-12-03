@@ -141,6 +141,7 @@ public class UserController {
 	@DeleteMapping("{username}")
     public ResponseEntity<User> deleteUser(@PathVariable("username") String username,
             @RequestHeader("Authorization") String token) {
+        // TODO implement
         return null;
     }
 
