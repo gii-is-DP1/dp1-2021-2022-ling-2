@@ -55,7 +55,7 @@ public class LobbyController {
     }
 
     @GetMapping("/count")
-    public ResponseEntity<Integer> getCount(){
+    public ResponseEntity<Integer> getCount() {
         Integer count = lobbyService.lobbyCount();
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
@@ -93,7 +93,8 @@ public class LobbyController {
             @RequestHeader("Authorization") String token) {
         // TODO {lobbyId} param is redundant. Maybe we rename this endpoint later on
         String usernameFromToken = TokenUtils.usernameFromToken(token);
-        if (!usernameFromToken.equals(lobby.getHost())) // Only the host can modify the game lobby
+        // Only the host can modify the game lobby
+        if (!usernameFromToken.equals(lobby.getHost().getUsername()))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Lobby updatedLobby = lobbyService.updateLobby(lobby);
