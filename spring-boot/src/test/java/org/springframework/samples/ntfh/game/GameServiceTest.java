@@ -11,7 +11,6 @@ import java.util.Set;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -34,7 +33,7 @@ public class GameServiceTest {
 
     @Autowired
     private GameRepository gameRepository;
-    
+
     @Autowired
     private LobbyService lobbyService;
 
@@ -66,7 +65,7 @@ public class GameServiceTest {
         lobbyTester.setLeader(userService.findUser("alex").get());
         lobbyService.save(lobbyTester);
 
-        Set<Player> players = new HashSet<>();
+        List<Player> players = new ArrayList<>();
         User user = userService.findUser("alex").get();
         user.setCharacter(characterService.findCharacterById(2).get());
         Player player = playerService.createFromUser(user, lobbyTester);
@@ -99,13 +98,13 @@ public class GameServiceTest {
 
     @Test
     public void testfindAllListVersion() {
-//      H1
+        // H1
         List<Game> gamesServiceList = new ArrayList<>();
         gameService.findAll().forEach(g -> gamesServiceList.add(g));
-           
+
         List<Game> gamesRepoList = new ArrayList<>();
         gameRepository.findAll().forEach(g -> gamesRepoList.add(g));
-            
+
         assertEquals(gamesServiceList, gamesRepoList);
     }
 
@@ -124,14 +123,16 @@ public class GameServiceTest {
 
     @Test
     public void testSaveGame() {
-//      Test made in the init
+        // Test made in the init
         assertEquals(gameRepository.findById(gameTester.getId()).get().getId(), gameTester.getId());
     }
 
-    @Test 
+    @Test
     public void testDeleteGame() {
         gameService.delete(gameTester);
-        assertThrows(DataAccessException.class, ()->{gameService.findGameById(gameTester.getId());});
+        assertThrows(DataAccessException.class, () -> {
+            gameService.findGameById(gameTester.getId());
+        });
     }
 
 }

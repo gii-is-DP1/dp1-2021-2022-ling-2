@@ -1,5 +1,6 @@
 package org.springframework.samples.ntfh.game;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,8 +55,8 @@ public class GameService {
 
         Set<User> users = lobby.getUsers();
         // TODO see implement this and see how are we going to do it
-        Set<Player> players = users.stream().map(user -> playerService.createFromUser(user, lobby))
-                .collect(Collectors.toSet());
+        List<Player> players = users.stream().map(user -> playerService.createFromUser(user, lobby))
+                .collect(Collectors.toList());
         game.setPlayers(players);
         game.setLeader(players.iterator().next()); // Random leader
 
