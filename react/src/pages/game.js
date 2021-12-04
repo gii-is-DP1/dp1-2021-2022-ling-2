@@ -5,7 +5,9 @@ import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-
+import PlayerNames from "../components/game/playerNames";
+import PlayerZone from "../components/game/playerZone";
+import CenterZone from "../components/game/centerZone";
 /**
  *
  * @author andrsdt
@@ -58,13 +60,30 @@ export default function Game() {
   }, []);
 
   return (
-    <div className="p-3 grid grid-cols-5 gap-4 h-screen bg-table">
-      <h1 className="bg-red-400 row-span-2">title 1</h1>
-      <h1 className="bg-red-400 col-span-3 row-span-2">title 2</h1>
-      <h1 className="bg-red-400 row-span-2">title 3</h1>
-      <h1 className="bg-red-400 col-span-2">title 4</h1>
-      <h1>{/* Blank space */}</h1>
-      <h1 className="bg-red-400 col-span-2">title 7</h1>
-    </div>
+    <>
+      <PlayerNames />
+      <div className="bg-wood h-screen p-20">
+        <div className="bg-felt rounded-3xl h-full">
+          <div className="p-3 grid grid-cols-5 gap-4 h-full">
+            <div className="bg-red-400 row-span-2">
+              <PlayerZone /> top left
+            </div>
+            <div className="bg-blue-400 col-span-3 row-span-2">
+              <CenterZone />
+            </div>
+            <div className="bg-green-400 row-span-2">
+              <PlayerZone /> top right
+            </div>
+            <div className="bg-yellow-400 col-span-2">
+              <PlayerZone /> bottom left
+            </div>
+            <div>{/* Blank space */}</div>
+            <div className="bg-purple-400 col-span-2">
+              <PlayerZone /> bottom right
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
