@@ -58,8 +58,13 @@ export default function Game() {
   }, []);
 
   return (
-    <>
-      <h1>This is game {gameId}</h1>
-    </>
+    <div className="p-3 grid grid-cols-5 gap-4 h-screen bg-table">
+      <h1 className="bg-red-400 row-span-2">title 1</h1>
+      <h1 className="bg-red-400 col-span-3 row-span-2">title 2</h1>
+      <h1 className="bg-red-400 row-span-2">title 3</h1>
+      <h1 className="bg-red-400 col-span-2">title 4</h1>
+      <h1>{/* Blank space */}</h1>
+      <h1 className="bg-red-400 col-span-2">title 7</h1>
+    </div>
   );
 }

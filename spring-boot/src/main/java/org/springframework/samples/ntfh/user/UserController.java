@@ -15,11 +15,15 @@
  */
 package org.springframework.samples.ntfh.user;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.ntfh.game.history.GameHistory;
@@ -57,9 +61,9 @@ public class UserController {
 	private GameHistoryRepository gameHistoryRepository;
 
 	@GetMapping
-	public ResponseEntity<Iterable<User>> getAll() {
-		// untested
-		Iterable<User> users = this.userService.findAll();
+	public ResponseEntity<Iterable<User>> getAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+		Page<User> usersPage = this.userService.findAllPage(pageable);
+		List<User> users = usersPage.getContent();
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 

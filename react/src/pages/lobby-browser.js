@@ -56,7 +56,16 @@ export default function LobbyBrowser() {
                       <th scope="col" className="text-table-th">
                         Spectators
                       </th>
-                      <th scope="col" className="text-table-th"></th>
+                      <th scope="col" className="text-table-th">
+                        <button
+                          className="btn-ntfh bg-gray-900 w-full"
+                          onClick={fetchLobbies}
+                        >
+                          <p className={"text-xl text-gradient-ntfh"}>
+                            Refresh
+                          </p>
+                        </button>{" "}
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-gray-900 divide-y divide-gray-200">
@@ -75,7 +84,7 @@ export default function LobbyBrowser() {
                         <td className="text-table-td">
                           {lobby.game ? ( // If the game has started
                             <button
-                              className="btn-ntfh bg-gray-800"
+                              className="btn-ntfh w-full bg-gray-800"
                               disabled={!lobby.spectatorsAllowed}
                               onClick={(e) =>
                                 history.push(
@@ -93,7 +102,7 @@ export default function LobbyBrowser() {
                             </button>
                           ) : (
                             <button
-                              className="btn-ntfh bg-gray-800"
+                              className="btn-ntfh w-full bg-gray-800"
                               disabled={lobby.users.length === lobby.maxPlayers}
                               onClick={(e) => {
                                 userToken

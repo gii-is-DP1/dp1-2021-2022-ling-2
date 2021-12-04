@@ -43,7 +43,7 @@ export default function UsersTable() {
   useEffect(() => fetchUsers(), []);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col">
       <div className="overflow-x-auto">
         <div className="py-2 align-middle inline-block min-w-full">
           <div className="shadow overflow-hidden border-b border-gray-900 rounded-xl">
