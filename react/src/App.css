@@ -82,17 +82,17 @@
 }
 
 .token {
-  @apply rounded-full;
+  @apply rounded-full text-center font-semibold text-3xl w-10 h-10;
 }
 
 .token-kill {
-  @apply text-red-800;
+  @apply bg-leather text-red-800 border-4 border-red-800;
 }
 
 .token-gold {
-  @apply text-gray-900;
+  @apply bg-gold text-gray-900 border-2 border-black;
 }
 
 .token-glory {
-  @apply text-blue-300;
+  @apply bg-fabric text-blue-800 border-4 border-blue-400;
 }
