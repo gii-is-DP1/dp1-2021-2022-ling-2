@@ -66,6 +66,12 @@ public class UserController {
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
+	@GetMapping("count")
+	public ResponseEntity<Long> getCount() {
+		Long userCount = this.userService.count();
+		return new ResponseEntity<>(userCount, HttpStatus.OK);
+	}
+
 	/**
 	 * Get information about a user. Should only return non-sensitive information
 	 * 
