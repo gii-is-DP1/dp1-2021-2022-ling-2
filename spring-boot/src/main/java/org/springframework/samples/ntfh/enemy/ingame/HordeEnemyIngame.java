@@ -22,6 +22,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "horde_enemies_ingame")
 public class HordeEnemyIngame extends BaseEntity {
+    // TODO extends IngameEntity?
     @ManyToOne(optional = false)
     @JoinColumn(name = "horde_enemy_id")
     private HordeEnemy hordeEnemy;
