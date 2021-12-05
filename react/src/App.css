@@ -81,8 +81,12 @@
   @apply px-1 py-1 bg-white rounded-2xl border-4 border-black text-3xl;
 }
 
+.zoomable:hover {
+  @apply z-50 transform;
+}
+
 .token {
-  @apply rounded-full text-center font-semibold text-3xl w-10 h-10;
+  @apply rounded-full text-center font-semibold text-3xl w-12 h-12 drop-shadow-2xl zoomable;
 }
 
 .token-kill {

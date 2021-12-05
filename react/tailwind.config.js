@@ -2,6 +2,12 @@ module.exports = {
   purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    scale: {
+      150: "1.5",
+      200: "2",
+      300: "3",
+      400: "4",
+    },
     extend: {
       backgroundImage: {
         // TODO this should be in /public/ folder
