@@ -65,9 +65,14 @@ export default function Game() {
   return (
     game && (
       <>
-        <PlayerNames players={players} />
-        <div className="bg-wood h-screen p-20">
-          <div className="bg-felt rounded-3xl h-full">
+        <div className="bg-wood h-screen px-20 flex flex-col">
+          {/* Top player names */}
+          <div className="flex-none flex justify-between items-center py-6 text-white text-3xl">
+            <p>{players[2] && players[2].user.username}</p>
+            <p>{players[3] && players[3].user.username}</p>
+          </div>
+          {/* Game board (green part)*/}
+          <div className="flex-1 bg-felt rounded-3xl">
             <div className="p-3 grid grid-cols-5 gap-4 h-full">
               <div className="bg-red-400 row-span-2">
                 {players[2] && <PlayerZone player={players[2]} />}
@@ -90,6 +95,11 @@ export default function Game() {
                 {/* bottom right */}
               </div>
             </div>
+          </div>
+          {/* Bottom player names */}
+          <div className="flex-none flex justify-between items-center py-6 text-white text-3xl">
+            <p>{players[0] && players[0].user.username}</p>
+            <p>{players[1] && players[1].user.username}</p>
           </div>
         </div>
       </>
