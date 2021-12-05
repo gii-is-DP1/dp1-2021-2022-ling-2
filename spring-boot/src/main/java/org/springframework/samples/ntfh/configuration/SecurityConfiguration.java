@@ -39,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/users/register").permitAll() // Allow to register
 				.antMatchers(HttpMethod.POST, "/users/login").permitAll() // Allow to login
 				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow admins to list all the users
+				.antMatchers(HttpMethod.GET, "/users/count").permitAll() // Allow everyone to get user number
 				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin") // Update user's profile
 				.antMatchers(HttpMethod.PUT, "/users/character").hasAnyAuthority("user") // Update user's current
 																							// character

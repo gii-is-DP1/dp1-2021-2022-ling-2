@@ -1,6 +1,5 @@
 package org.springframework.samples.ntfh.model;
 
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;

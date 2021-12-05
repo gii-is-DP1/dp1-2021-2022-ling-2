@@ -1,7 +1,6 @@
 package org.springframework.samples.ntfh.game;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,13 +50,12 @@ public class GameController {
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
     }
 
-
     @GetMapping("/count")
-    public ResponseEntity<Integer> getCount(){
+    public ResponseEntity<Integer> getCount() {
         Integer count = gameService.gameCount();
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
-    
+
     @GetMapping("/{gameId}")
     public ResponseEntity<Game> getGame(@PathVariable("gameId") Integer gameId) {
         Game game = gameService.findGameById(gameId);

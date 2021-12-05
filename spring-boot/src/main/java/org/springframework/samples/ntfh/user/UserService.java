@@ -117,6 +117,11 @@ public class UserService {
 		return userRepository.findById(username);
 	}
 
+	@Transactional(readOnly = true)
+	public Long count() {
+		return userRepository.count();
+	}
+
 	/**
 	 * This method is used to find an user but only return non-sensitive information
 	 * (username, email, authorities)

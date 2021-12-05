@@ -17,16 +17,12 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.ntfh.character.CharacterService;
 
 @JsonComponent
 public class UserDeserializer extends JsonDeserializer<User> {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private CharacterService characterService;
 
     /**
      * @param deserializationContext containing either the user id or the username
