@@ -1,8 +1,7 @@
 package org.springframework.samples.ntfh.game;
 
-import java.util.Set;
+import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -37,7 +36,7 @@ public class Game extends BaseEntity {
     @OneToMany // TODO cascade? If we set CascadeType.ALL then deleting the game will delete
                // the players. It shouldn't be like that.
     @JsonIgnoreProperties({ "game", "lobby" })
-    private Set<Player> players;
+    private List<Player> players;
 
     @OneToOne
     @JsonIgnoreProperties({ "game" })

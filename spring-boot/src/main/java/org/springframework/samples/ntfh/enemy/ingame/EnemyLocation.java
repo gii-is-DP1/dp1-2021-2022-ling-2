@@ -5,7 +5,10 @@ import org.springframework.samples.ntfh.interfaces.Location;
 /**
  * Applicable for both HordeEnemyIngame and WardlordIngame entities in principle
  */
-public enum EnemyLocation {
+public enum EnemyLocation implements Location {
+    // TODO this could be a good chance to apply the state design pattern, since the
+    // functionality of the card is different depending on its location (state)
+
     /** The enemy is still waiting to fight */
     PILE,
 

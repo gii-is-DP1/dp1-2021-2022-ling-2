@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "Launch NtfhApplication",
+      "request": "launch",
+      "mainClass": "org.springframework.samples.ntfh.NtfhApplication",
+      "projectName": "LIng-2"
+    },
+    {
       "type": "pwa-chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",

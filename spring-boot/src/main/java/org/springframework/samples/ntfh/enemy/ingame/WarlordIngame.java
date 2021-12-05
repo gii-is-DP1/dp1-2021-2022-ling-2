@@ -8,7 +8,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.samples.ntfh.enemy.Warlord;
+import org.springframework.samples.ntfh.game.Game;
 import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
@@ -18,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "warlords_ingame")
-public class WarlordIngame extends BaseEntity{
+public class WarlordIngame extends BaseEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "wardlord_id")
     private Warlord warlord;
@@ -29,5 +32,9 @@ public class WarlordIngame extends BaseEntity{
     // TODO check if this is overriding IngameEntity's location
     @NotNull
     @Enumerated(EnumType.STRING)
-    private EnemyLocation warlordLocation;
+    private EnemyLocation location;
+
+    @ManyToOne
+    @JsonIgnore
+    private Game game;
 }

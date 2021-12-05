@@ -5,7 +5,9 @@ import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-
+import PlayerNames from "../components/game/playerNames";
+import PlayerZone from "../components/game/playerZone";
+import CenterZone from "../components/game/centerZone";
 /**
  *
  * @author andrsdt
@@ -18,6 +20,7 @@ export default function Game() {
   const [game, setGame] = useState(null);
   const [user, setUser] = useState(null);
   const history = useHistory();
+  const [players, setPlayers] = useState([]);
 
   const isSpectator = () =>
     !userToken || (user && user?.lobby?.game?.id !== parseInt(gameId));
@@ -25,7 +28,9 @@ export default function Game() {
   const fetchGame = async () => {
     try {
       const response = await axios.get(`/games/${gameId}`);
-      setGame(response.data);
+      const game = response.data;
+      setGame(game);
+      setPlayers(game.players);
     } catch (error) {
       toast.error(error.response?.data?.message);
       if (error.response?.status === 404) history.push(ROUTES.HOME);
@@ -58,13 +63,46 @@ export default function Game() {
   }, []);
 
   return (
-    <div className="p-3 grid grid-cols-5 gap-4 h-screen bg-table">
-      <h1 className="bg-red-400 row-span-2">title 1</h1>
-      <h1 className="bg-red-400 col-span-3 row-span-2">title 2</h1>
-      <h1 className="bg-red-400 row-span-2">title 3</h1>
-      <h1 className="bg-red-400 col-span-2">title 4</h1>
-      <h1>{/* Blank space */}</h1>
-      <h1 className="bg-red-400 col-span-2">title 7</h1>
-    </div>
+    game && (
+      <>
+        <div className="bg-wood h-screen px-20 flex flex-col">
+          {/* Top player names */}
+          <div className="flex-none flex justify-between items-center py-6 text-white text-3xl">
+            <p>{players[2] && players[2].user.username}</p>
+            <p>{players[3] && players[3].user.username}</p>
+          </div>
+          {/* Game board (green part)*/}
+          <div className="flex-1 bg-felt rounded-3xl">
+            <div className="p-3 grid grid-cols-5 gap-4 h-full">
+              <div className="bg-red-400 row-span-2">
+                {players[2] && <PlayerZone player={players[2]} />}
+                {/* Top left */}
+              </div>
+              <div className="bg-blue-400 col-span-3 row-span-2">
+                <CenterZone />
+              </div>
+              <div className="bg-green-400 row-span-2">
+                {players[3] && <PlayerZone player={players[3]} />}
+                {/* top right */}
+              </div>
+              <div className="bg-yellow-400 col-span-2">
+                {players[0] && <PlayerZone player={players[0]} />}
+                {/* bottom left */}
+              </div>
+              <div>{/* Blank space */}</div>
+              <div className="bg-purple-400 col-span-2">
+                {players[1] && <PlayerZone player={players[1]} reverse />}
+                {/* bottom right */}
+              </div>
+            </div>
+          </div>
+          {/* Bottom player names */}
+          <div className="flex-none flex justify-between items-center py-6 text-white text-3xl">
+            <p>{players[0] && players[0].user.username}</p>
+            <p>{players[1] && players[1].user.username}</p>
+          </div>
+        </div>
+      </>
+    )
   );
 }

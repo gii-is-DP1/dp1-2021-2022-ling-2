@@ -80,3 +80,23 @@
 .btn-checkbox-ntfh {
   @apply px-1 py-1 bg-white rounded-2xl border-4 border-black text-3xl;
 }
+
+.zoomable:hover {
+  @apply z-50 transform;
+}
+
+.token {
+  @apply rounded-full text-center font-semibold text-3xl w-12 h-12 drop-shadow-2xl zoomable;
+}
+
+.token-kill {
+  @apply bg-leather text-red-800 border-4 border-red-800;
+}
+
+.token-gold {
+  @apply bg-gold text-gray-900 border-2 border-black;
+}
+
+.token-glory {
+  @apply bg-fabric text-blue-800 border-4 border-blue-400;
+}
