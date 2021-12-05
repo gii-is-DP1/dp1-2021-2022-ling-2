@@ -1,5 +1,6 @@
 package org.springframework.samples.ntfh.model;
 
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
@@ -7,6 +8,9 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.ntfh.game.Game;
 import org.springframework.samples.ntfh.interfaces.Location;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This class will be the base class for all entities that will be physically in
@@ -16,6 +20,8 @@ import org.springframework.samples.ntfh.interfaces.Location;
  * @author andrsdt
  */
 @MappedSuperclass
+@Getter
+@Setter
 public class IngameEntity extends BaseEntity {
 
     @NotNull

@@ -1,5 +1,7 @@
 package org.springframework.samples.ntfh.enemy.ingame;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -39,7 +41,7 @@ public class HordeEnemyIngameService {
     }
 
     @Transactional
-    public void saveHordeEnemyIngame(HordeEnemyIngame hordeEnemyIngame) throws DataAccessException {
+    public void save(HordeEnemyIngame hordeEnemyIngame) throws DataAccessException {
         hordeEnemyIngameRepository.save(hordeEnemyIngame);
     }
 
@@ -60,37 +62,28 @@ public class HordeEnemyIngameService {
                 3, 23, // 23 horde enemies for 3 players
                 4, 27);// 27 horde enemies for 4 players
 
-        Iterable<HordeEnemy> allHordeEnemies = hordeEnemyService.findAll();
-        Set<HordeEnemy> hordeEnemies = StreamSupport.stream(allHordeEnemies.spliterator(), false)
-                .limit(numEnemies.get(numPlayers)) // Take the ammount corresponding to the number of players
-                .collect(Collectors.toSet()); // Set of the selected hordeEnemies
+        List<HordeEnemy> allHordeEnemies = StreamSupport.stream(hordeEnemyService.findAll().spliterator(), false)
+                .collect(Collectors.toList());
 
-        Set<HordeEnemyIngame> hordeEnemyIngames = hordeEnemies.stream()
-                .map(hordeEnemy -> createFromHordeEnemy(hordeEnemy, game)) // Create a hordeEnemyIngame for every
-                                                                           // hordeEnemy
-                .collect(Collectors.toSet());
+        Collections.shuffle(allHordeEnemies);
 
-        // Store each one of them in the database
-        hordeEnemyIngames.forEach(hordeEnemyIngame -> {
-            try {
-                saveHordeEnemyIngame(hordeEnemyIngame);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
-        });
+        allHordeEnemies.stream() // From the shuffled list of possible horde enemies
+                .limit(numEnemies.get(numPlayers)) // Only keep the amount corresponding to the number of players
+                .forEach(hordeEnemy -> createFromHordeEnemy(hordeEnemy, game)); // And create the DB row of each one
     }
 
     @Transactional
-    public HordeEnemyIngame createFromHordeEnemy(HordeEnemy hordeEnemy, Game game) {
+    public void createFromHordeEnemy(HordeEnemy hordeEnemy, Game game) {
         HordeEnemyIngame hordeEnemyIngame = new HordeEnemyIngame();
         hordeEnemyIngame.setHordeEnemy(hordeEnemy);
         hordeEnemyIngame.setCurrentEndurance(hordeEnemy.getEndurance());
         hordeEnemyIngame.setHordeEnemyLocation(EnemyLocation.PILE);
         hordeEnemyIngame.setGame(game);
-        return hordeEnemyIngameRepository.save(hordeEnemyIngame);
+        this.save(hordeEnemyIngame);
     }
 
-    // TODO refactor, hard to understand at first sight
+    // TODO refactor, hard to understand. Do we really need the if-else? The
+    // endurance is set to the base hordeEnemy's endurance when it's created.
     @Transactional
     public void editHordeEnemyEndurance(HordeEnemyIngame hordeEnemyIngame, Integer damage) {
         if (hordeEnemyIngame.getCurrentEndurance().equals(hordeEnemyIngame.getHordeEnemy().getEndurance()))
