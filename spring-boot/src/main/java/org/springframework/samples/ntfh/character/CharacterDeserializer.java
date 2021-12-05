@@ -17,36 +17,6 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.ntfh.user.User;
-
-// @JsonComponent
-// public class CharacterDeserializer extends JsonDeserializer<Character> {
-
-//     @Autowired
-//     private CharacterService characterService;
-
-//     /**
-//      * @param deserializationContext with the id of the character to deserialize
-//      */
-//     @Override
-//     public Character deserialize(final JsonParser jp, final DeserializationContext ctxt)
-//             throws IOException, DataAccessException {
-//         // TODO add default deserializer for Character object, in case we need it
-//         ObjectCodec oc = jp.getCodec();
-//         JsonNode node = oc.readTree(jp);
-//         if (node.getNodeType() == JsonNodeType.NUMBER) {
-//             Integer characterId = node.asInt();
-//             Optional<Character> characterOptional = characterService.findCharacterById(characterId);
-//             if (characterOptional.isPresent()) {
-//                 return characterOptional.get();
-//             } else {
-//                 throw new IllegalArgumentException("Character with id " + characterId + " does not exist");
-//             }
-//         } else {
-//             throw new IllegalArgumentException("Cannot deserialize character");
-//         }
-//     }
-// }
 
 @JsonComponent
 public class CharacterDeserializer extends JsonDeserializer<Character> {

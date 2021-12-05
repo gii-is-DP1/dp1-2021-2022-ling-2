@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -33,9 +31,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandler {
-
-    @Autowired
-    private BasicErrorController errorController;
 
     private static ResponseEntity<Object> buildResponseEntity(String message, HttpStatus status) {
         Map<String, Object> body = Map.of("timestamp", new java.util.Date(), "status", status.value(), "error",
