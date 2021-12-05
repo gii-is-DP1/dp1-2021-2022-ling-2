@@ -5,9 +5,8 @@ import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import PlayerNames from "../components/game/playerNames";
-import PlayerZone from "../components/game/playerZone";
-import CenterZone from "../components/game/centerZone";
+import PlayerZone from "../components/game/zones/playerZone";
+import CenterZone from "../components/game/zones/centerZone";
 /**
  *
  * @author andrsdt
@@ -89,8 +88,8 @@ export default function Game() {
                 {players[0] && <PlayerZone player={players[0]} />}
                 {/* bottom left */}
               </div>
-              <div>{/* Blank space */}</div>
-              <div className="bg-purple-400 col-span-2 self-end">
+              <div className="self-end">{/* Blank space */}</div>
+              <div className="bg-purple-400 col-span-2 self-end items-end">
                 {players[1] && <PlayerZone player={players[1]} reverse />}
                 {/* bottom right */}
               </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Token from "./Token";
+import Token from "../elements/token";
 
 export default function PlayerZone(params) {
   const [player, setPlayer] = useState(params.player);
