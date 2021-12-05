@@ -67,7 +67,7 @@ export default function Game() {
       <>
         <div className="bg-wood h-screen px-20 flex flex-col">
           {/* Top player names */}
-          <div className="flex-none flex justify-between items-center py-6 text-white text-3xl">
+          <div className="flex-none flex justify-between items-center py-4 text-white text-3xl">
             <p>{players[2] && players[2].user.username}</p>
             <p>{players[3] && players[3].user.username}</p>
           </div>
@@ -85,19 +85,19 @@ export default function Game() {
                 {players[3] && <PlayerZone player={players[3]} />}
                 {/* top right */}
               </div>
-              <div className="bg-yellow-400 col-span-2">
+              <div className="bg-yellow-400 col-span-2 self-end">
                 {players[0] && <PlayerZone player={players[0]} />}
                 {/* bottom left */}
               </div>
               <div>{/* Blank space */}</div>
-              <div className="bg-purple-400 col-span-2">
+              <div className="bg-purple-400 col-span-2 self-end">
                 {players[1] && <PlayerZone player={players[1]} reverse />}
                 {/* bottom right */}
               </div>
             </div>
           </div>
           {/* Bottom player names */}
-          <div className="flex-none flex justify-between items-center py-6 text-white text-3xl">
+          <div className="flex-none flex justify-between items-center py-4 text-white text-3xl">
             <p>{players[0] && players[0].user.username}</p>
             <p>{players[1] && players[1].user.username}</p>
           </div>
