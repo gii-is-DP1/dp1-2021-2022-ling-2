@@ -61,6 +61,9 @@ public class GameService {
 
     @Transactional
     public Game createFromLobby(@Valid Lobby lobby) {
+        if (lobby.getUsers().size() < 2) {
+            throw new IllegalArgumentException("A game must have at least 2 players");
+        }
         Game game = new Game();
         game.setStartTime(System.currentTimeMillis());
         game.setHasScenes(lobby.getHasScenes());
