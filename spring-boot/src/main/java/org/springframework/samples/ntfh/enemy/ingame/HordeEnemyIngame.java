@@ -8,9 +8,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.samples.ntfh.enemy.HordeEnemy;
+import org.springframework.samples.ntfh.game.Game;
 import org.springframework.samples.ntfh.model.BaseEntity;
-import org.springframework.samples.ntfh.model.IngameEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,4 +33,8 @@ public class HordeEnemyIngame extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private EnemyLocation hordeEnemyLocation;
+
+    @ManyToOne
+    @JsonIgnore
+    private Game game;
 }

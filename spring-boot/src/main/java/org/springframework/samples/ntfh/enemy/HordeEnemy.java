@@ -7,17 +7,20 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.samples.ntfh.model.EnemyEntity;
+import org.springframework.samples.ntfh.model.BaseEntity;
 
 import lombok.Getter;
 
-// Entity that contains base information about an enemy.
-// Not concrete to any game. This will be used to instantiate
-// the initial enemies ingame.
+/**
+ * Entity that contains base information about an enemy. Not concrete to any
+ * game. This will be used to instantiate the initial enemies ingame.
+ * 
+ * @author andrsdt
+ */
 @Getter
 @Entity
 @Table(name = "horde_enemies")
-public class HordeEnemy extends EnemyEntity {
+public class HordeEnemy extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "horde_enemy_type_enum")
     private HordeEnemyType hordeEnemyType;
@@ -58,5 +61,10 @@ public class HordeEnemy extends EnemyEntity {
     @Transient
     public String getBackImage() {
         return String.format("/cards/enemies/horde_enemies/backs/%dgold_%dglory.png", gold, extraGlory);
+    }
+
+    @Transient
+    public Integer getEndurance() {
+        return hordeEnemyType.getEndurance();
     }
 }

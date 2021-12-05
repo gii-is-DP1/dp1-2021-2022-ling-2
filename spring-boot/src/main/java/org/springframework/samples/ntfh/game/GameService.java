@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.ntfh.enemy.ingame.HordeEnemyIngameService;
 import org.springframework.samples.ntfh.lobby.Lobby;
 import org.springframework.samples.ntfh.lobby.LobbyService;
 import org.springframework.samples.ntfh.player.Player;
@@ -28,6 +29,9 @@ public class GameService {
 
     @Autowired
     private LobbyService lobbyService;
+
+    @Autowired
+    private HordeEnemyIngameService hordeEnemyIngameService;
 
     @Transactional
     public Integer gameCount() {
@@ -62,10 +66,12 @@ public class GameService {
 
         Game savedGame = gameRepo.save(game);
 
+        // Now, we instantiate the entities that will be used in the game
+        hordeEnemyIngameService.createFromGame(game);
+
         // Once the game is in the database, we update the lobby with a FK to it
         lobby.setGame(game);
         lobbyService.save(lobby);
-
         return savedGame;
     }
 

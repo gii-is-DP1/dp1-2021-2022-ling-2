@@ -22,5 +22,4 @@ public class HordeEnemyType {
 
     @NotNull
     private Integer endurance;
-
 }
