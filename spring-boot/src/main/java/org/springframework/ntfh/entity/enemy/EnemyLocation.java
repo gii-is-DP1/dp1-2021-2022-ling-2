@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.enemy.ingame;
+package org.springframework.ntfh.entity.enemy;
 
 import org.springframework.ntfh.interfaces.Location;
 

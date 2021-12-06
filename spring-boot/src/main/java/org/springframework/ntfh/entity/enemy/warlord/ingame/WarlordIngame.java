@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.enemy.ingame;
+package org.springframework.ntfh.entity.enemy.warlord.ingame;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,7 +10,8 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.springframework.ntfh.entity.enemy.HordeEnemy;
+import org.springframework.ntfh.entity.enemy.EnemyLocation;
+import org.springframework.ntfh.entity.enemy.warlord.Warlord;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 
@@ -20,12 +21,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "horde_enemies_ingame")
-public class HordeEnemyIngame extends BaseEntity {
-    // TODO extends IngameEntity?
+@Table(name = "warlords_ingame")
+public class WarlordIngame extends BaseEntity {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "horde_enemy_id")
-    private HordeEnemy hordeEnemy;
+    @JoinColumn(name = "wardlord_id")
+    private Warlord warlord;
 
     @NotNull
     private Integer currentEndurance;
@@ -33,7 +33,7 @@ public class HordeEnemyIngame extends BaseEntity {
     // TODO check if this is overriding IngameEntity's location
     @NotNull
     @Enumerated(EnumType.STRING)
-    private EnemyLocation hordeEnemyLocation;
+    private EnemyLocation location;
 
     @ManyToOne
     @JsonIgnore

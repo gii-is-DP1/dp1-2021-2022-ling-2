@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.enemy.ingame;
+package org.springframework.ntfh.entity.enemy.hordeenemy.ingame;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +9,9 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.enemy.HordeEnemy;
-import org.springframework.ntfh.entity.enemy.HordeEnemyService;
+import org.springframework.ntfh.entity.enemy.EnemyLocation;
+import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemy;
+import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemyService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

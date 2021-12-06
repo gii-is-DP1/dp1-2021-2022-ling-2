@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.enemy;
+package org.springframework.ntfh.entity.enemy.warlord;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

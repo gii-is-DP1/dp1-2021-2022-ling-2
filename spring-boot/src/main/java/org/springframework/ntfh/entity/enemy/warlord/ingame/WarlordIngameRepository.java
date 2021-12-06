@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.enemy.ingame;
+package org.springframework.ntfh.entity.enemy.warlord.ingame;
 
 import org.springframework.data.repository.CrudRepository;
 

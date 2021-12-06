@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.enemy;
+package org.springframework.ntfh.entity.enemy.hordeenemy;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;

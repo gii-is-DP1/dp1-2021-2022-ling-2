@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.enemy;
+package org.springframework.ntfh.entity.enemy.warlord;
 
 import org.springframework.data.repository.CrudRepository;
 
