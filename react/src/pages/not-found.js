@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import * as ROUTES from "../constants/routes";
 import { useEffect } from "react";
 import HomeButton from "../components/common/home-button";
 
