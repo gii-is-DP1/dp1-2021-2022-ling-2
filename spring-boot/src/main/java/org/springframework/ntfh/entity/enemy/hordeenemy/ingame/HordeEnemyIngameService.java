@@ -86,7 +86,10 @@ public class HordeEnemyIngameService {
         HordeEnemyIngame hordeEnemyIngame = new HordeEnemyIngame();
         hordeEnemyIngame.setHordeEnemy(hordeEnemy);
         hordeEnemyIngame.setCurrentEndurance(hordeEnemy.getEndurance());
-        hordeEnemyIngame.setHordeEnemyLocation(EnemyLocation.PILE);
+        // TODO temporary change to test the frontend. ALl enemies should be on the
+        // pile.
+        EnemyLocation location = (hordeEnemy.getExtraGlory() == 1) ? EnemyLocation.FIGHTING : EnemyLocation.PILE;
+        hordeEnemyIngame.setHordeEnemyLocation(location);
         hordeEnemyIngame.setGame(game);
         this.save(hordeEnemyIngame);
     }

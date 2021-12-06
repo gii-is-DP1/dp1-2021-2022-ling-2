@@ -97,6 +97,7 @@ public class GameService {
         Game savedGame = gameRepo.save(game);
 
         // Now, we instantiate the entities that will be used in the game
+        // TODO should these be created on the turn? some of them? I dont know
         hordeEnemyIngameService.createFromGame(game);
         warlordIngameService.createFromGame(game);
         marketCardIngameService.createFromGame(game);
