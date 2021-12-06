@@ -106,5 +106,5 @@
 }
 
 .card {
-  @apply transition-all shadow-lg rounded-lg zoomable w-16 2xl:w-24;
+  @apply relative transition-all zoomable shadow-lg rounded-lg w-16 2xl:w-24;
 }
