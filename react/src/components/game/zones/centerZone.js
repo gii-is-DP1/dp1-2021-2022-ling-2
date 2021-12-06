@@ -9,15 +9,15 @@ export default function CenterZone(params) {
   const [marketCards, setMarketCards] = useState([]);
   const [hordeEnemies, setHordeEnemies] = useState([]);
   const [sceneCount, setSceneCount] = useState(0);
-  const [scene, setScene] = useState(null);
 
   useEffect(() => {
+    console.log(game);
     const fetchmarketCards = async () => {
-      const response = await axios.get(`/market-cards/${params.game.gameId}`);
+      const response = await axios.get(`/market-cards/${params.game.id}`);
       setMarketCards(response.data);
     };
     const fetchHordeEnemies = async () => {
-      const response = await axios.get(`/horde-enemies/${params.game.gameId}`);
+      const response = await axios.get(`/horde-enemies/${params.game.id}`);
       setHordeEnemies(response.data);
       console.log(response.data);
     };
@@ -55,14 +55,18 @@ export default function CenterZone(params) {
           {/* HordeEnemy pile (facing up), warlord card on top a bit displaced (facing down) */}
           <PlaceholderCard />
         </span>
-        <span className="col-start-4 col-end-5 transform-gpu translate-x-8 rotate-90">
-          {/* Scene pile*/}
-          <SceneCard count={sceneCount} />
-        </span>
-        <span className="col-start-6 transform-gpu">
-          {/* CURRENT SCENE (FACING UP) */}
-          <SceneCard scene={game.turn.scene} />
-        </span>
+        {game.hasScenes && (
+          <>
+            <span className="col-start-4 col-end-5 transform-gpu rotate-90 translate-x-8">
+              {/* Scene pile*/}
+              <SceneCard count={sceneCount} />
+            </span>
+            <span className="col-start-6 transform-gpu rotate-90">
+              {/* CURRENT SCENE (FACING UP) */}
+              <SceneCard scene={game.currentTurn.currentScene} />
+            </span>
+          </>
+        )}
       </span>
       <span className="grid grid-cols-6 gap-2 py-1">
         {/* Fighting HordeEnemies (0 to 3) and optionally a warlord (0 to 1) */}
