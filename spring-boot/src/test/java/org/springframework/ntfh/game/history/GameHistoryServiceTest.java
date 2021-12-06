@@ -1,4 +1,4 @@
-package org.springframework.ntfh.gameHistory;
+package org.springframework.ntfh.game.history;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

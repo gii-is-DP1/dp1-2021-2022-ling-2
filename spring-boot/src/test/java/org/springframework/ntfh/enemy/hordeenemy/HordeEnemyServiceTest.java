@@ -1,4 +1,4 @@
-package org.springframework.ntfh.enemy;
+package org.springframework.ntfh.enemy.hordeenemy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.ntfh.entity.enemy.HordeEnemy;
-import org.springframework.ntfh.entity.enemy.HordeEnemyService;
-import org.springframework.ntfh.entity.enemy.HordeEnemyTypeEnum;
-import org.springframework.ntfh.entity.enemy.HordeModifierTypeEnum;
+import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemy;
+import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemyService;
+import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemyTypeEnum;
+import org.springframework.ntfh.entity.enemy.hordeenemy.HordeModifierTypeEnum;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
