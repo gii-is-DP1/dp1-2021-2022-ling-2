@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AbilityCard from "../elements/abilityCard";
 import CharacterCard from "../elements/characterCard";
+import PlaceholderCard from "../elements/placeholderCard";
 import Token from "../elements/token";
 
 export default function PlayerZoneVertical(params) {
@@ -23,11 +24,11 @@ export default function PlayerZoneVertical(params) {
       <div
         className={`mb-5 2xl:mb-10 flex flex-row space-x-2 my-2 h-full w-full justify-${
           ccw ? "end" : "start"
-        } items-baseline`}
+        } items-baseline ${ccw ? "pr-4" : "pl-8"}`}
       >
-        <Token type="kill" value={player.kills} />
-        <Token type="gold" value={player.gold} />
-        <Token type="glory" value={player.glory} />
+        <Token type="kill" value={player.kills} counterclockwise={ccw} />
+        <Token type="gold" value={player.gold} counterclockwise={ccw} />
+        <Token type="glory" value={player.glory} counterclockwise={ccw} />
       </div>
       <div
         className={`grid grid-cols-3 gap-2 items-end justify-items-center transform-gpu ${
@@ -35,11 +36,14 @@ export default function PlayerZoneVertical(params) {
         }rotate-${rotation}`}
       >
         <span className={ccw ? "order-last" : "order-first"}>
-          <CharacterCard character={player.characterType} />
+          <CharacterCard
+            character={player.characterType}
+            counterclockwise={ccw}
+          />
         </span>
         <span className="order-2 grid grid-rows-2 gap-y-2">
-          <AbilityCard />
-          <AbilityCard />
+          <PlaceholderCard counterclockwise={ccw} />
+          <PlaceholderCard counterclockwise={ccw} />
         </span>
         <span className={ccw ? "order-first" : "order-last"}>
           <span className={`flex-1 flex flex-row${ccw ? "-reverse" : ""}`}>

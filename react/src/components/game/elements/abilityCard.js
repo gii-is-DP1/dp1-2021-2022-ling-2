@@ -7,7 +7,11 @@ export default function abilityCard(params) {
       className={`card transform-gpu
       ${reverse ? "" : "-"}translate-x-${position * 12}
       2xl:${reverse ? "" : "-"}translate-x-${position * 16}
-       hover:scale-250 hover:-translate-y-20`}
+       ${
+         position === undefined
+           ? "zoomable hover:scale-250 hover:-translate-y-20"
+           : ""
+       } `}
       src={CARD_BACK}
       // template CARD_BACK
       alt="PLACEHOLDER CARD"
