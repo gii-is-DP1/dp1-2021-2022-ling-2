@@ -77,6 +77,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 																							// achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
 																							// achievement
+				// MARKET CARD ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/market-cards/{gameId}").permitAll() // Allow everyone to list all market
+																					// cards in a game
+				// HORDE ENEMIES ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/horde-enemies/{gameId}").permitAll() // Allow everyone to list all horde
+																					// enemies
 				// ADMIN ENDPOINTS
 				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
 				// OTHER ENDPOINTS

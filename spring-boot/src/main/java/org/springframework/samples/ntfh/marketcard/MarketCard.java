@@ -41,14 +41,12 @@ public class MarketCard extends BaseEntity {
 
     @Transient
     public String getFrontImage() {
-        // TODO Auto-generated method stub
-        return null;
+        return "/cards/items/" + getMarketCardTypeEnum().toString().toLowerCase() + ".png";
     }
 
     @Transient
     public String getBackImage() {
-        // TODO Auto-generated method stub
-        return null;
+        return "/cards/back_standard.png";
     }
 
 }

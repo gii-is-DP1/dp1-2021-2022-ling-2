@@ -15,6 +15,10 @@ import org.springframework.samples.ntfh.game.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author andrsdt
+ * @author alegestor
+ */
 @Service
 public class HordeEnemyIngameService {
 
@@ -37,6 +41,11 @@ public class HordeEnemyIngameService {
     @Transactional
     public Optional<HordeEnemyIngame> findHordeEnemyIngameById(Integer id) {
         return hordeEnemyIngameRepository.findById(id);
+    }
+
+    @Transactional
+    public Iterable<HordeEnemyIngame> findHordeEnemyByGameId(Integer gameId) {
+        return hordeEnemyIngameRepository.findByGameId(gameId);
     }
 
     @Transactional
