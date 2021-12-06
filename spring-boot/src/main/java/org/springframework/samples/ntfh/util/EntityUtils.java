@@ -19,7 +19,7 @@ package org.springframework.samples.ntfh.util;
 import java.util.Collection;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.samples.ntfh.model.BaseEntity;
+import org.springframework.samples.ntfh.entity.model.BaseEntity;
 
 /**
  * Utility methods for handling entities. Separate from the BaseEntity class
@@ -28,7 +28,7 @@ import org.springframework.samples.ntfh.model.BaseEntity;
  *
  * @author Juergen Hoeller
  * @author Sam Brannen
- * @see org.springframework.samples.ntfh.model.BaseEntity
+ * @see org.springframework.samples.ntfh.entity.model.BaseEntity
  * @since 29.10.2003
  */
 public abstract class EntityUtils {

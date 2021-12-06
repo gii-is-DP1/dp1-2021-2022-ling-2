@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.samples.ntfh.model.BaseEntity;
+import org.springframework.samples.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;
 

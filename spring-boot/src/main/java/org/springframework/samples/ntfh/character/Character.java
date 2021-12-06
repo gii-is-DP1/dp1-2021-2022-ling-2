@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.springframework.samples.ntfh.marketcard.MarketCard;
-import org.springframework.samples.ntfh.model.BaseEntity;
+import org.springframework.samples.ntfh.entity.marketcard.MarketCard;
+import org.springframework.samples.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;
 

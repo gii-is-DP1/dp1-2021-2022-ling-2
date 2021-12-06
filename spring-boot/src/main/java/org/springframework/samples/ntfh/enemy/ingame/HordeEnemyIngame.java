@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.samples.ntfh.enemy.HordeEnemy;
-import org.springframework.samples.ntfh.game.Game;
-import org.springframework.samples.ntfh.model.BaseEntity;
+import org.springframework.samples.ntfh.entity.game.Game;
+import org.springframework.samples.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;

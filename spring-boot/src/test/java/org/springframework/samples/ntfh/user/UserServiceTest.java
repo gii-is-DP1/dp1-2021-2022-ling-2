@@ -5,24 +5,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.samples.ntfh.util.TokenUtils;
+import org.springframework.samples.ntfh.entity.user.User;
+import org.springframework.samples.ntfh.entity.user.UserRepository;
+import org.springframework.samples.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class UserServiceTest {
-    // TODO implement when JWT authentication is ready
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserRepository userRepository;
 

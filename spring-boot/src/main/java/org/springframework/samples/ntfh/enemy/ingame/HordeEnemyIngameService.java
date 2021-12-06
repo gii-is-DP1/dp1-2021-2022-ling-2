@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.ntfh.enemy.HordeEnemy;
 import org.springframework.samples.ntfh.enemy.HordeEnemyService;
-import org.springframework.samples.ntfh.game.Game;
+import org.springframework.samples.ntfh.entity.game.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -7,11 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Service;
 import org.springframework.samples.ntfh.character.CharacterService;
-import org.springframework.samples.ntfh.user.UserService;
-import org.springframework.samples.ntfh.user.User;
-import org.springframework.samples.ntfh.lobby.LobbyService;
+import org.springframework.samples.ntfh.entity.lobby.LobbyService;
+import org.springframework.samples.ntfh.entity.player.Player;
+import org.springframework.samples.ntfh.entity.player.PlayerRepository;
+import org.springframework.samples.ntfh.entity.player.PlayerService;
+import org.springframework.samples.ntfh.entity.user.User;
+import org.springframework.samples.ntfh.entity.user.UserService;
+import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class PlayerServiceTest {
@@ -30,7 +33,6 @@ public class PlayerServiceTest {
 
     @Autowired
     protected CharacterService characterService;
-
 
     @Test
     public void testCountWithInitialData() {
@@ -62,7 +64,7 @@ public class PlayerServiceTest {
         tester2.setUser(userService.findUser("merlin").get());
         playerService.savePlayer(tester2);
         assertEquals(tester2.getGold(), playerService.findPlayer(tester2.getId()).get().getGold());
-        assertEquals(tester2.getKills(), playerService.findPlayer(tester2.getId()).get(). getKills());
+        assertEquals(tester2.getKills(), playerService.findPlayer(tester2.getId()).get().getKills());
         playerRepository.deleteById(tester2.getId());
     }
 
@@ -75,5 +77,5 @@ public class PlayerServiceTest {
         playerRepository.deleteById(tester.getId());
         userService.findUser("ezio").get().setCharacter(null);
     }
-    
+
 }

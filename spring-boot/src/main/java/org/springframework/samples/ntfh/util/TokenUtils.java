@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.samples.ntfh.user.User;
-import org.springframework.samples.ntfh.user.authorities.Authorities;
+import org.springframework.samples.ntfh.entity.user.User;
+import org.springframework.samples.ntfh.entity.user.authorities.Authorities;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 

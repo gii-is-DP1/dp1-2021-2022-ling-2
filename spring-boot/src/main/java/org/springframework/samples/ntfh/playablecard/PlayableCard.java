@@ -6,7 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import org.springframework.samples.ntfh.character.CharacterTypeEnum;
-import org.springframework.samples.ntfh.model.BaseEntity;
+import org.springframework.samples.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;
 

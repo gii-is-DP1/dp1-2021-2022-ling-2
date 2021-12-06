@@ -2,24 +2,23 @@ package org.springframework.samples.ntfh.lobby;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.samples.ntfh.game.Game;
-import org.springframework.samples.ntfh.user.User;
-import org.springframework.samples.ntfh.user.UserService;
+import org.springframework.samples.ntfh.entity.lobby.Lobby;
+import org.springframework.samples.ntfh.entity.lobby.LobbyRepository;
+import org.springframework.samples.ntfh.entity.lobby.LobbyService;
+import org.springframework.samples.ntfh.entity.user.User;
+import org.springframework.samples.ntfh.entity.user.UserService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
@@ -93,18 +92,21 @@ public class LobbyServiceTest {
         assertEquals(2, tester.getMaxPlayers());
     }
 
-  // H7
-  // Un user no crea el lobby en si, sino que a traves del botón de crear una partida tiene acceso a la creación, por lo tanto la 
-  // creación de un lobby es ya de por si este test
+    // H7
+    // Un user no crea el lobby en si, sino que a traves del botón de crear una
+    // partida tiene acceso a la creación, por lo tanto la
+    // creación de un lobby es ya de por si este test
     @Test
     public void testSave() {
-//      Test made in the init
-//      TODO hacer un test q cuente antes y despues de añadir un dato, asi en el assert q compruebe q el 
-//      contador inicial sea igual al final +1
+        // Test made in the init
+        // TODO hacer un test q cuente antes y despues de añadir un dato, asi en el
+        // assert q compruebe q el
+        // contador inicial sea igual al final +1
         assertEquals(lobbyRepository.findById(lobbyTester.getId()).get().getId(), lobbyTester.getId());
 
     }
-    @Test 
+
+    @Test
     public void testDeleteLobby() {
         lobbyService.deleteLobby(lobbyTester);
         assertEquals(null, lobbyService.findLobbyById(lobbyTester.getId()).orElse(null));
@@ -121,7 +123,7 @@ public class LobbyServiceTest {
     }
 
     @Test
-    public void testRemoveUserFromLobby() {  
+    public void testRemoveUserFromLobby() {
         Integer lobbyTesterId = lobbyTester.getId();
         User requester = userService.findUser("merlin").get();
         String requesterString = requester.getUsername();

@@ -18,12 +18,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.ntfh.character.CharacterService;
-import org.springframework.samples.ntfh.lobby.Lobby;
-import org.springframework.samples.ntfh.lobby.LobbyService;
-import org.springframework.samples.ntfh.player.Player;
-import org.springframework.samples.ntfh.player.PlayerService;
-import org.springframework.samples.ntfh.user.User;
-import org.springframework.samples.ntfh.user.UserService;
+import org.springframework.samples.ntfh.entity.game.Game;
+import org.springframework.samples.ntfh.entity.game.GameRepository;
+import org.springframework.samples.ntfh.entity.game.GameService;
+import org.springframework.samples.ntfh.entity.lobby.Lobby;
+import org.springframework.samples.ntfh.entity.lobby.LobbyService;
+import org.springframework.samples.ntfh.entity.player.Player;
+import org.springframework.samples.ntfh.entity.player.PlayerService;
+import org.springframework.samples.ntfh.entity.user.User;
+import org.springframework.samples.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
