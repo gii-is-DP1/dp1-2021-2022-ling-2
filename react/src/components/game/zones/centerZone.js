@@ -1,17 +1,45 @@
+import { useEffect, useState } from "react";
+import axios from "../../../api/axiosConfig";
+import MarketCard from "../elements/marketCard";
+
 export default function CenterZone(params) {
+  const { gameId } = params;
+  const [marketCards, setMarketCards] = useState([]);
+  const [hordeEnemies, setHordeEnemies] = useState([]);
+
+  useEffect(() => {
+    const fetchmarketCards = async () => {
+      const response = await axios.get(`/market-cards/${params.gameId}`);
+      setMarketCards(response.data);
+      console.log(response.data);
+    };
+    const fetchHordeEnemies = async () => {
+      const response = await axios.get(`/horde-enemies/${params.gameId}`);
+      setHordeEnemies(response.data);
+      console.log(response.data);
+    };
+    fetchmarketCards();
+    fetchHordeEnemies();
+  }, []);
+
   return (
-    <div className="grid grid-rows-3 h-full">
-      <span className="bg-red-100 grid grid-cols-6 gap-2 py-1">
+    <div className="grid grid-rows-3">
+      <span className="grid grid-cols-6 gap-2 py-1">
         {/* Market cards pile (facing down) */}
-        <span className="col-start-1 bg-yellow-400">
-          MARKET CARDS (FACING DOWN)
+        <span className="col-start-1">
+          <MarketCard
+            count={
+              marketCards.filter((card) => card.location === "MARKET_PILE")
+                .length
+            }
+          />
         </span>
-        {/* Market cards */}
-        <span className="bg-yellow-400">MARKET CARD 1</span>
-        <span className="bg-yellow-400">MARKET CARD 2</span>
-        <span className="bg-yellow-400">MARKET CARD 3</span>
-        <span className="bg-yellow-400">MARKET CARD 4</span>
-        <span className="bg-yellow-400">MARKET CARD 5</span>
+        {/* Available market cards (facing up) */}
+        {marketCards
+          .filter((card) => card.location === "MARKET_FOR_SALE")
+          .map((card) => (
+            <MarketCard key={card.id} card={card} />
+          ))}
       </span>
       <span className="bg-green-100 grid grid-cols-6 gap-2 py-1">
         <span className="col-start-3 bg-green-400">
