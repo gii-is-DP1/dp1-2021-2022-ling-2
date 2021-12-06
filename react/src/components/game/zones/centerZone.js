@@ -42,35 +42,35 @@ export default function CenterZone(params) {
             <MarketCard key={card.id} card={card} />
           ))}
       </span>
-      <span className="bg-green-100 grid grid-cols-6 gap-2 py-1">
-        <span className="col-start-3 bg-green-400">
+      <span className="grid grid-cols-6 gap-2 py-1">
+        <span className="col-start-3">
           {/* HordeEnemy pile (facing up), warlord card on top a bit displaced (facing down) */}
           <PlaceholderCard />
         </span>
-        <span className="col-start-4 col-end-5 bg-blue-400 place-self-center transform-gpu rotate-90 translate-x-8">
+        <span className="col-start-4 col-end-5 place-self-center transform-gpu rotate-90 translate-x-8">
           {/* Scene pile, Current scene */}
           {/* CURRENT SCENE (FACING UP) */}
           <PlaceholderCard />
         </span>
-        <span className="col-start-6 bg-green-400 transform-gpu rotate-90">
+        <span className="col-start-6 transform-gpu rotate-90">
           <PlaceholderCard />
         </span>
       </span>
-      <span className="bg-blue-100 grid grid-cols-6 gap-2 py-1">
+      <span className="grid grid-cols-6 gap-2 py-1">
         {/* Fighting HordeEnemies (0 to 3) and optionally a warlord (0 to 1) */}
-        <span className="col-start-2 bg-blue-400">
+        <span className="col-start-2">
           {/* HORDE ENEMY 1 */}
           <PlaceholderCard />
         </span>
-        <span className="bg-blue-400">
+        <span>
           {/* HORDE ENEMY 2 */}
           <PlaceholderCard />
         </span>
-        <span className="bg-blue-400">
+        <span>
           {/* HORDE ENEMY 3 */}
           <PlaceholderCard />
         </span>
-        <span className="bg-blue-400">
+        <span>
           {/* WARLORD */}
           <PlaceholderCard />
         </span>
