@@ -1,5 +1,6 @@
 package org.springframework.ntfh.entity.game;
 
+import java.beans.Transient;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -46,4 +47,15 @@ public class Game extends BaseEntity {
     @OneToOne
     @JsonIgnoreProperties({ "game" })
     private Turn currentTurn;
+
+    /**
+     * 
+     * @author andrsdt
+     * @return A list of the players in the game sorted by their turn order
+     */
+    @Transient
+    public List<Player> getTurnOrder() {
+        return players.stream().sorted((p1, p2) -> p1.getTurnOrder() - p2.getTurnOrder()).collect(
+                java.util.stream.Collectors.toList());
+    }
 }

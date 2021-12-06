@@ -1,5 +1,6 @@
 package org.springframework.ntfh.entity.game;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
+import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,9 @@ public class GameService {
 
     @Autowired
     private MarketCardIngameService marketCardIngameService;
+
+    @Autowired
+    private TurnService turnService;
 
     @Transactional
     public Integer gameCount() {
@@ -69,18 +74,33 @@ public class GameService {
         game.setHasScenes(lobby.getHasScenes());
 
         Set<User> users = lobby.getUsers();
-        // TODO see implement this and see how are we going to do it
-        List<Player> players = users.stream().map(user -> playerService.createFromUser(user, lobby))
-                .collect(Collectors.toList());
-        game.setPlayers(players);
-        game.setLeader(players.iterator().next()); // Random leader
 
+        Integer i = 1;
+        List<Player> players = new ArrayList<>();
+        for (User user : users) {
+            // TODO test
+            // The turnOrder 0 is reserved for the host
+            Boolean isHost = lobby.getHost().getUsername().equals(user.getUsername());
+            Integer turnOrder = isHost ? 0 : i;
+            if (!isHost)
+                i++;
+            Player createdPlayer = playerService.createFromUser(user, lobby, turnOrder);
+            players.add(createdPlayer);
+
+            // TODO temporary solution. Set the lobby host as the leader. In the real game
+            // it is chosen via a "minigame" with cards
+            if (isHost)
+                game.setLeader(createdPlayer);
+        }
+
+        game.setPlayers(players);
         Game savedGame = gameRepo.save(game);
 
         // Now, we instantiate the entities that will be used in the game
         hordeEnemyIngameService.createFromGame(game);
         warlordIngameService.createFromGame(game);
         marketCardIngameService.createFromGame(game);
+        turnService.createFromGame(game);
 
         // Once the game is in the database, we update the lobby with a FK to it
         lobby.setGame(game);

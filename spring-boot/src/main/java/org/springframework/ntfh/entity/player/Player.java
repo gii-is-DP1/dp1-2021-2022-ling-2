@@ -34,6 +34,9 @@ public class Player extends BaseEntity {
     private Integer wounds;
 
     @NotNull
+    private Integer turnOrder; // Order in which the player will take their turn. The leader will be 0 (first)
+
+    @NotNull
     @ManyToOne() // TODO cascade types?
     @JoinColumn(name = "user_id", referencedColumnName = "username")
     private User user; // User who is handling this player
