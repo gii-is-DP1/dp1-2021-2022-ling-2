@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.ntfh.entity.enemy.HordeEnemy;
+import org.springframework.ntfh.entity.enemy.HordeEnemyService;
+import org.springframework.ntfh.entity.enemy.HordeEnemyTypeEnum;
+import org.springframework.ntfh.entity.enemy.HordeModifierTypeEnum;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))

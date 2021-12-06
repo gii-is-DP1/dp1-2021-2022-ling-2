@@ -1,4 +1,4 @@
-package org.springframework.ntfh.enemy;
+package org.springframework.ntfh.entity.enemy;
 
 public enum WarlordTypeEnum {
     GURDRUG, ROGHKILLER, SHRIEKKNIFER

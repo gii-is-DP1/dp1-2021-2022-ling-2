@@ -1,4 +1,4 @@
-package org.springframework.ntfh.enemy.ingame;
+package org.springframework.ntfh.entity.enemy.ingame;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.enemy.Warlord;
-import org.springframework.ntfh.enemy.WarlordService;
+import org.springframework.ntfh.entity.enemy.Warlord;
+import org.springframework.ntfh.entity.enemy.WarlordService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
