@@ -48,6 +48,7 @@ export default function Game() {
   };
 
   useEffect(() => {
+    document.title = "NTFH - Game " + gameId;
     // fetch game info on page load
     fetchGame();
     if (!isSpectator()) {
