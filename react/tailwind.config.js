@@ -3,6 +3,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     scale: {
+      50: "0.5",
       150: "1.5",
       200: "2",
       250: "2.5",
