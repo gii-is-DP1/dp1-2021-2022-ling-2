@@ -21,11 +21,11 @@ public class Scene extends BaseEntity {
 
     @Transient
     public String getFrontImage() {
-        return null;
+        return "/cards/scenes/" + getSceneTypeEnum().toString().toLowerCase() + ".png";
     }
 
     @Transient
     public String getBackImage() {
-        return null;
+        return "/cards/scenes/back.png";
     }
 }
