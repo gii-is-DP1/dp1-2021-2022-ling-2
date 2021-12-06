@@ -10,8 +10,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.enemy.ingame.HordeEnemyIngameService;
-import org.springframework.ntfh.entity.enemy.ingame.WarlordIngameService;
+import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngameService;
+import org.springframework.ntfh.entity.enemy.warlord.ingame.WarlordIngameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.marketcard.ingame.MarketCardIngameService;
