@@ -72,7 +72,7 @@ public class GameServiceTest {
         List<Player> players = new ArrayList<>();
         User user = userService.findUser("alex").get();
         user.setCharacter(characterService.findCharacterById(2).get());
-        Player player = playerService.createFromUser(user, lobbyTester);
+        Player player = playerService.createFromUser(user, lobbyTester, 0);
         players.add(player);
 
         gameTester = new Game();

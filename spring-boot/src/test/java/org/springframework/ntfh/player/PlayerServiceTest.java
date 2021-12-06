@@ -60,6 +60,7 @@ public class PlayerServiceTest {
         tester2.setGold(4);
         tester2.setKills(5);
         tester2.setWounds(1);
+        tester2.setTurnOrder(0);
         tester2.setCharacterType(characterService.findCharacterById(5).get());
         tester2.setUser(userService.findUser("merlin").get());
         playerService.savePlayer(tester2);
@@ -72,7 +73,7 @@ public class PlayerServiceTest {
     public void testCreateFromUser() {
         User user = userService.findUser("ezio").get();
         user.setCharacter(characterService.findCharacterById(5).get());
-        Player tester = playerService.createFromUser(user, lobbyService.findLobbyById(3).get());
+        Player tester = playerService.createFromUser(user, lobbyService.findLobbyById(3).get(), 0);
         assertEquals("ezio", playerService.findPlayer(tester.getId()).get().getUser().getUsername());
         playerRepository.deleteById(tester.getId());
         userService.findUser("ezio").get().setCharacter(null);
