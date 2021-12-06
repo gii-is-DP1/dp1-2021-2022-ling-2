@@ -32,6 +32,7 @@ import org.springframework.samples.ntfh.user.authorities.Authorities;
 import org.springframework.samples.ntfh.user.authorities.AuthoritiesService;
 import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -146,4 +147,12 @@ public class UserController {
 		Iterable<GameHistory> gameHistory = this.gameHistoryRepository.findByGamePlayersContaining(username);
 		return new ResponseEntity<>(gameHistory, HttpStatus.OK);
 	}
+
+	@DeleteMapping("{username}")
+    public ResponseEntity<User> deleteUser(@PathVariable("username") String username,
+            @RequestHeader("Authorization") String token) {
+        // TODO implement
+        return null;
+    }
+
 }
