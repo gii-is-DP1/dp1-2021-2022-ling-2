@@ -37,6 +37,18 @@ INSERT INTO authorities(id,username,authority) VALUES(13, 'aragorn','user');
 INSERT INTO users(username,password,email) VALUES ('ezio','ezio', 'ezio@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
 
+INSERT INTO users(username,password,email) VALUES ('user1','user1', 'user1@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(15, 'user1','user');
+
+INSERT INTO users(username,password,email) VALUES ('user2','user2', 'user2@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(16, 'user2','user');
+
+INSERT INTO users(username,password,email) VALUES ('user3','user3', 'user3@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(17, 'user3','user');
+
+INSERT INTO users(username,password,email) VALUES ('user4','user4', 'user4@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(18, 'user4','user');
+
 -- TODO users for JUnit tests should not be created in the database, but in the Junit tests and then deleted
 -- Usuario para el JUnit de la H10
 INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
