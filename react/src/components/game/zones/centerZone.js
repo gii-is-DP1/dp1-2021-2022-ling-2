@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../../../api/axiosConfig";
 import MarketCard from "../elements/marketCard";
+import PlaceholderCard from "../elements/placeholderCard";
 
 export default function CenterZone(params) {
   const { gameId } = params;
@@ -23,7 +24,7 @@ export default function CenterZone(params) {
   }, []);
 
   return (
-    <div className="grid grid-rows-3">
+    <div className="grid grid-rows-3 place-items-center">
       <span className="grid grid-cols-6 gap-2 py-1">
         {/* Market cards pile (facing down) */}
         <span className="col-start-1">
@@ -41,23 +42,38 @@ export default function CenterZone(params) {
             <MarketCard key={card.id} card={card} />
           ))}
       </span>
-      <span className="bg-green-100 grid grid-cols-6 gap-2 py-1">
-        <span className="col-start-3 bg-green-400">
+      <span className="grid grid-cols-6 gap-2 py-1">
+        <span className="col-start-3">
           {/* HordeEnemy pile (facing up), warlord card on top a bit displaced (facing down) */}
-          HORDE ENEMY PILE (FACING UP)
+          <PlaceholderCard />
         </span>
-        <span className="col-start-5 bg-green-400">
+        <span className="col-start-4 col-end-5 place-self-center transform-gpu rotate-90 translate-x-8">
           {/* Scene pile, Current scene */}
-          CURRENT SCENE (FACING UP)
+          {/* CURRENT SCENE (FACING UP) */}
+          <PlaceholderCard />
         </span>
-        <span className="bg-green-400"> SCENE PILE (FACING DOWN) </span>
+        <span className="col-start-6 transform-gpu rotate-90">
+          <PlaceholderCard />
+        </span>
       </span>
-      <span className="bg-blue-100 grid grid-cols-6 gap-2 py-1">
+      <span className="grid grid-cols-6 gap-2 py-1">
         {/* Fighting HordeEnemies (0 to 3) and optionally a warlord (0 to 1) */}
-        <span className="col-start-2 bg-blue-400">HORDE ENEMY 1</span>
-        <span className="bg-blue-400">HORDE ENEMY 2</span>
-        <span className="bg-blue-400">HORDE ENEMY 3</span>
-        <span className="bg-blue-400">WARLORD</span>
+        <span className="col-start-2">
+          {/* HORDE ENEMY 1 */}
+          <PlaceholderCard />
+        </span>
+        <span>
+          {/* HORDE ENEMY 2 */}
+          <PlaceholderCard />
+        </span>
+        <span>
+          {/* HORDE ENEMY 3 */}
+          <PlaceholderCard />
+        </span>
+        <span>
+          {/* WARLORD */}
+          <PlaceholderCard />
+        </span>
       </span>
     </div>
   );
