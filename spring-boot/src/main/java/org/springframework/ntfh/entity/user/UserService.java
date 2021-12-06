@@ -82,8 +82,8 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Long count() {
-		return userRepository.count();
+	public Integer count() {
+		return (int) userRepository.count();
 	}
 
 	/**

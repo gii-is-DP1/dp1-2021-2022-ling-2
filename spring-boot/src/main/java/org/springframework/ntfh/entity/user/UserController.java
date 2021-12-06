@@ -68,8 +68,8 @@ public class UserController {
 	}
 
 	@GetMapping("count")
-	public ResponseEntity<Long> getCount() {
-		Long userCount = this.userService.count();
+	public ResponseEntity<Integer> getCount() {
+		Integer userCount = this.userService.count();
 		return new ResponseEntity<>(userCount, HttpStatus.OK);
 	}
 
