@@ -9,7 +9,7 @@ export default function MarketCard(params) {
     <>
       {card ? (
         <img
-          className="shadow-lg rounded-lg zoomable hover:scale-250 hover:translate-y-32"
+          className="card hover:scale-250 hover:translate-y-32"
           src={`${BASE_IMAGE_PATH}${card.marketCard.frontImage}`}
           alt={card.marketCard.marketCardTypeEnum}
         ></img>
