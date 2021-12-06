@@ -38,16 +38,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
+	@Autowired
 	private UserRepository userRepository;
-	private AuthoritiesService authoritiesService;
 
 	@Autowired
-	public UserService(UserRepository userRepository, AuthoritiesService authoritiesService) {
-		// TODO can the constructor ve removed and annotate attributes with 2
-		// autowireds? I think so
-		this.userRepository = userRepository;
-		this.authoritiesService = authoritiesService;
-	}
+	private AuthoritiesService authoritiesService;
 
 	/**
 	 * Create a new user
@@ -58,42 +53,11 @@ public class UserService {
 	 */
 	@Transactional
 	public User saveUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+		if (userRepository.existsByEmail(user.getEmail()))
+			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
-		Optional<User> userWithSameUsername = userRepository.findById(user.getUsername());
-		if (userWithSameUsername.isPresent())
-			throw new DataIntegrityViolationException("This username is already in use") {
-			};
-
-		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
-		if (userWithSameEmail.isPresent())
-			throw new DataIntegrityViolationException("This email is already in use") {
-			};
-
-		if (user.getUsername().isEmpty())
-			throw new IllegalArgumentException("The username can not be empty") {
-			};
-		if (user.getPassword().isEmpty())
-			throw new IllegalArgumentException("The password can not be empty") {
-			};
-		if (user.getEmail().isEmpty())
-			throw new IllegalArgumentException("The email can not be empty") {
-			};
-
-		if (user.getPassword() == null || user.getPassword().isEmpty())
-			throw new IllegalArgumentException("A Password is required") {
-			};
-
-		if (user.getPassword().length() < 4)
-			throw new IllegalArgumentException("Password must be at least 8 characters long") {
-			};
-
-		if (user.getUsername().length() < 4)
-			throw new IllegalArgumentException("Username must be at least 4 characters long") {
-			};
-
-		if (user.getUsername().length() > 20)
-			throw new IllegalArgumentException("Username must be at most 20 characters long") {
-			};
+		if (userRepository.existsByUsername(user.getUsername()))
+			throw new IllegalArgumentException("There is already a user registered with the username provided");
 
 		user.setEnabled(true);
 		userRepository.save(user);
@@ -160,14 +124,6 @@ public class UserService {
 	@Transactional
 	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
 			NonMatchingTokenException, IllegalArgumentException {
-
-		if (user.getUsername().isEmpty())
-			throw new IllegalArgumentException("The username cannot be empty") {
-			};
-		if (user.getEmail().isEmpty())
-			throw new IllegalArgumentException("The email cannot be empty") {
-			};
-
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
 		if (!sentBySameUser && !sentByAdmin)
@@ -185,9 +141,6 @@ public class UserService {
 			throw new DataIntegrityViolationException("This email is already in use") {
 			};
 		}
-		if (user.getPassword() != null && user.getPassword().length() < 4)
-			throw new IllegalArgumentException("Password must be at least 4 characters long") {
-			};
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.

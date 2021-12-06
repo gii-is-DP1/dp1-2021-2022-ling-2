@@ -27,11 +27,11 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
-    public void testPH3E1(){
+    public void testPH3E1() {
         List<User> PetitionUsers = new ArrayList<>();
         List<User> RepositoryUsers = new ArrayList<>();
-        userService.findAll().forEach(x->PetitionUsers.add(x));
-        userRepository.findAll().forEach(y->RepositoryUsers.add(y));
+        userService.findAll().forEach(x -> PetitionUsers.add(x));
+        userRepository.findAll().forEach(y -> RepositoryUsers.add(y));
         assertEquals(RepositoryUsers.size(), PetitionUsers.size());
     }
 
@@ -58,7 +58,7 @@ public class UserServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(userService.findAll()).size();
-        assertEquals(13, count);
+        assertEquals(17, count);
     }
 
     @Test
@@ -67,10 +67,10 @@ public class UserServiceTest {
         assertEquals("stockie", tester.getPassword());
         assertEquals("stockie@mail.com", tester.getEmail());
     }
-    
+
     @Test
     public void testFindUserPublic() {
-  //      Map<String, String> user = userService.findUserPublic("andres");
+        // Map<String, String> user = userService.findUserPublic("andres");
         HashMap<String, String> user = new HashMap<>();
         user.put("username", userService.findUserPublic("andres").get("username"));
         user.put("email", userService.findUserPublic("andres").get("email"));
@@ -86,27 +86,28 @@ public class UserServiceTest {
         user.setEmail(posEmail);
         assertEquals(posEmail, user.getEmail());
     }
-/*
-    @Test
-    public void testUpdateUserV2() {
-        User user = this.userService.findUser("alex").orElse(null);
-        String token = TokenUtils.generateJWTToken(user);
-        User user4testing = new User();
-        user4testing.setUsername("alex");
-        user4testing.setPassword("alex1");
-        user4testing.setEmail("alex@mail.com");
-   //     userService.saveUser(user4testing);
-        userService.updateUser(user4testing, token);
-        assertEquals("alex1", userService.findUser("alex").get().getPassword());
-    }
-*/
-/*
-TODO: test negativo assertthrow de q lance error
-    @Test
-    public void testLoginUser() {
-
-    }
-*/
+    /*
+     * @Test
+     * public void testUpdateUserV2() {
+     * User user = this.userService.findUser("alex").orElse(null);
+     * String token = TokenUtils.generateJWTToken(user);
+     * User user4testing = new User();
+     * user4testing.setUsername("alex");
+     * user4testing.setPassword("alex1");
+     * user4testing.setEmail("alex@mail.com");
+     * // userService.saveUser(user4testing);
+     * userService.updateUser(user4testing, token);
+     * assertEquals("alex1", userService.findUser("alex").get().getPassword());
+     * }
+     */
+    /*
+     * TODO: test negativo assertthrow de q lance error
+     * 
+     * @Test
+     * public void testLoginUser() {
+     * 
+     * }
+     */
 
     // @AfterAll
     // Deletear todo lo generado

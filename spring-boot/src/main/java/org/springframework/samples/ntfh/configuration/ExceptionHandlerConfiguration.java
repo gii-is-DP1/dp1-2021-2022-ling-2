@@ -2,6 +2,7 @@ package org.springframework.samples.ntfh.configuration;
 
 import java.util.Map;
 
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -90,8 +91,16 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     public ResponseEntity<Object> constraintViolationExceptionHandler(HttpServletRequest request,
             ConstraintViolationException ex) {
         String message = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage)
-                .reduce((s1, s2) -> s1 + " " + s2).orElse("");
+                .reduce((s1, s2) -> s1 + ". " + s2).orElse("");
         return buildResponseEntity(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RollbackException.class)
+    public ResponseEntity<Object> rollbackExceptionHandler(HttpServletRequest request,
+            RollbackException ex) {
+        // TODO redirect this exception to its appropiate handler so the return message
+        // is clearer
+        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @Override
