@@ -12,7 +12,6 @@ export default function CenterZone(params) {
     const fetchmarketCards = async () => {
       const response = await axios.get(`/market-cards/${params.gameId}`);
       setMarketCards(response.data);
-      console.log(response.data);
     };
     const fetchHordeEnemies = async () => {
       const response = await axios.get(`/horde-enemies/${params.gameId}`);
