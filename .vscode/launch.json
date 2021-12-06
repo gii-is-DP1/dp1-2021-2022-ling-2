@@ -8,7 +8,7 @@
       "type": "java",
       "name": "Launch NtfhApplication",
       "request": "launch",
-      "mainClass": "org.springframework.samples.ntfh.NtfhApplication",
+      "mainClass": "org.springframework.ntfh.NtfhApplication",
       "projectName": "LIng-2"
     },
     {
