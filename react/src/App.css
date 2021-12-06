@@ -63,9 +63,9 @@
 }
 
 .token-count {
-  @apply bg-leather text-white border-4 border-gray-700 opacity-80 text-4xl;
+  @apply bg-leather text-white border-4 border-gray-700 opacity-80 text-2xl;
 }
 
 .card {
-  @apply relative transition-all zoomable shadow-lg rounded-lg w-16 2xl:w-24;
+  @apply relative transition-all zoomable shadow-lg rounded-md w-16 2xl:w-24;
 }
