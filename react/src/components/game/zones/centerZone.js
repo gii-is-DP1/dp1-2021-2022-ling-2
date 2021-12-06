@@ -3,6 +3,7 @@ import axios from "../../../api/axiosConfig";
 import MarketCard from "../elements/marketCard";
 import PlaceholderCard from "../elements/placeholderCard";
 import SceneCard from "../elements/sceneCard";
+import HordeEnemyCard from "../elements/hordeEnemyCard";
 
 export default function CenterZone(params) {
   const { game } = params;
@@ -11,7 +12,6 @@ export default function CenterZone(params) {
   const [sceneCount, setSceneCount] = useState(0);
 
   useEffect(() => {
-    console.log(game);
     const fetchmarketCards = async () => {
       const response = await axios.get(`/market-cards/${params.game.id}`);
       setMarketCards(response.data);
@@ -70,22 +70,13 @@ export default function CenterZone(params) {
       </span>
       <span className="grid grid-cols-6 gap-2 py-1">
         {/* Fighting HordeEnemies (0 to 3) and optionally a warlord (0 to 1) */}
-        <span className="col-start-2">
-          {/* HORDE ENEMY 1 */}
-          <PlaceholderCard />
-        </span>
-        <span>
-          {/* HORDE ENEMY 2 */}
-          <PlaceholderCard />
-        </span>
-        <span>
-          {/* HORDE ENEMY 3 */}
-          <PlaceholderCard />
-        </span>
-        <span>
-          {/* WARLORD */}
-          <PlaceholderCard />
-        </span>
+        <span> {/* Blank space (first col) */} </span>
+        {/* Up to 3 horde enemies and up to 1 Warlord */}
+        {hordeEnemies
+          .filter((enemy) => enemy.hordeEnemyLocation === "FIGHTING")
+          .map((enemy) => (
+            <HordeEnemyCard key={enemy.id} enemy={enemy} />
+          ))}
       </span>
     </div>
   );
