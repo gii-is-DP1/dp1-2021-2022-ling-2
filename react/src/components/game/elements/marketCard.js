@@ -9,13 +9,13 @@ export default function MarketCard(params) {
     <>
       {card ? (
         <img
-          className="card hover:scale-250 hover:translate-y-32"
+          className="card hover:scale-250 hover:translate-y-20"
           src={`${BASE_IMAGE_PATH}${card.marketCard.frontImage}`}
           alt={card.marketCard.marketCardTypeEnum}
         ></img>
       ) : (
         <div
-          className="flex items-center justify-center h-full bg-contain bg-no-repeat box-shadow-lg rounded-lg zoomable hover:scale-250 hover:translate-y-32"
+          className="card flex items-center justify-center h-full bg-contain bg-no-repeat hover:scale-250 hover:translate-y-20"
           style={{
             backgroundImage: `url('${CARD_BACK}')`,
           }}
