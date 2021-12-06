@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.round;
+package org.springframework.ntfh.entity.turn;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -15,13 +15,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Round extends BaseEntity {
+public class Turn extends BaseEntity {
 
     @OneToOne(optional = false)
     @JoinColumn(name = "game_id")
     private Game game;
-
-    private Integer roundNumber;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "scene_id")
