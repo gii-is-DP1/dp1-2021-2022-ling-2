@@ -86,7 +86,7 @@
 }
 
 .token {
-  @apply rounded-full text-center font-semibold text-3xl w-12 h-12 drop-shadow-2xl;
+  @apply rounded-full text-center font-semibold text-2xl w-10 h-10 drop-shadow-2xl;
 }
 
 .token-kill {
