@@ -81,7 +81,7 @@ export default function Game() {
               {/* Top left */}
             </div>
             <div className="col-span-3 row-span-2">
-              <CenterZone gameId={gameId} />
+              <CenterZone game={game} />
             </div>
             <div className="row-span-2">
               {players[3] && (

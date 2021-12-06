@@ -2,22 +2,31 @@ import { useEffect, useState } from "react";
 import axios from "../../../api/axiosConfig";
 import MarketCard from "../elements/marketCard";
 import PlaceholderCard from "../elements/placeholderCard";
+import SceneCard from "../elements/sceneCard";
 
 export default function CenterZone(params) {
-  const { gameId } = params;
+  const { game } = params;
   const [marketCards, setMarketCards] = useState([]);
   const [hordeEnemies, setHordeEnemies] = useState([]);
+  const [sceneCount, setSceneCount] = useState(0);
+  const [scene, setScene] = useState(null);
 
   useEffect(() => {
     const fetchmarketCards = async () => {
-      const response = await axios.get(`/market-cards/${params.gameId}`);
+      const response = await axios.get(`/market-cards/${params.game.gameId}`);
       setMarketCards(response.data);
     };
     const fetchHordeEnemies = async () => {
-      const response = await axios.get(`/horde-enemies/${params.gameId}`);
+      const response = await axios.get(`/horde-enemies/${params.game.gameId}`);
       setHordeEnemies(response.data);
       console.log(response.data);
     };
+    const fetchSceneCount = async () => {
+      // Total number of scenes
+      const response = await axios.get("/scenes/count");
+      setSceneCount(response.data);
+    };
+    fetchSceneCount();
     fetchmarketCards();
     fetchHordeEnemies();
   }, []);
@@ -46,13 +55,13 @@ export default function CenterZone(params) {
           {/* HordeEnemy pile (facing up), warlord card on top a bit displaced (facing down) */}
           <PlaceholderCard />
         </span>
-        <span className="col-start-4 col-end-5 place-self-center transform-gpu rotate-90 translate-x-8">
-          {/* Scene pile, Current scene */}
-          {/* CURRENT SCENE (FACING UP) */}
-          <PlaceholderCard />
+        <span className="col-start-4 col-end-5 transform-gpu translate-x-8 rotate-90">
+          {/* Scene pile*/}
+          <SceneCard count={sceneCount} />
         </span>
-        <span className="col-start-6 transform-gpu rotate-90">
-          <PlaceholderCard />
+        <span className="col-start-6 transform-gpu">
+          {/* CURRENT SCENE (FACING UP) */}
+          <SceneCard scene={game.turn.scene} />
         </span>
       </span>
       <span className="grid grid-cols-6 gap-2 py-1">
