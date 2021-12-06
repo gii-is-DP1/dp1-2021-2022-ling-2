@@ -24,4 +24,10 @@ public class SceneController {
         return new ResponseEntity<>(scenes, HttpStatus.OK);
     }
 
+    @GetMapping("count")
+    public ResponseEntity<Integer> getCount() {
+        Integer sceneCount = sceneService.count();
+        return new ResponseEntity<>(sceneCount, HttpStatus.OK);
+    }
+
 }

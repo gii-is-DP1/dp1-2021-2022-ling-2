@@ -49,19 +49,22 @@ public class PlayerService {
      * @return
      */
     @Transactional
-    public Player createFromUser(User user, Lobby lobby) {
-        // TODO untested
+    public Player createFromUser(User user, Lobby lobby, Integer turnOrder) {
         Player player = new Player();
         player.setGlory(0);
         player.setKills(0);
         player.setGold(0);
         player.setWounds(0);
-        // TODO exception if there is no user to associate with the player (should
-        // this happen?)
+        player.setTurnOrder(turnOrder);
+
+        // TODO exception if there is no user to associate with the player (should this
+        // happen?)
         player.setUser(user);
+
         if (user.getCharacter() == null) {
             throw new IllegalArgumentException("User " + user.getUsername() + " has not selected a character");
         }
+
         player.setCharacterType(user.getCharacter());
         return playerRepository.save(player);
     }

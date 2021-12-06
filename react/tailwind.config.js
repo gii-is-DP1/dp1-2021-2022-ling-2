@@ -3,11 +3,14 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     scale: {
+      50: "0.5",
       150: "1.5",
       200: "2",
       250: "2.5",
       300: "3",
+      350: "3.5",
       400: "4",
+      500: "5",
     },
     extend: {
       backgroundImage: {

@@ -13,13 +13,14 @@ import CenterZone from "../components/game/zones/centerZone";
  * @author andrsdt
  */
 export default function Game() {
-  // route for /games/gameId
   const { gameId } = useParams(); // get params from react router link
+
+  const history = useHistory();
   const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
+
   const [game, setGame] = useState(null);
   const [user, setUser] = useState(null);
-  const history = useHistory();
   const [players, setPlayers] = useState([]);
 
   const isSpectator = () =>
@@ -28,9 +29,9 @@ export default function Game() {
   const fetchGame = async () => {
     try {
       const response = await axios.get(`/games/${gameId}`);
-      const game = response.data;
-      setGame(game);
-      setPlayers(game.players);
+      const _game = response.data;
+      setGame(_game);
+      setPlayers(_game.players);
     } catch (error) {
       toast.error(error.response?.data?.message);
       if (error.response?.status === 404) history.push(ROUTES.HOME);
@@ -47,6 +48,7 @@ export default function Game() {
   };
 
   useEffect(() => {
+    document.title = "NTFH - Game " + gameId;
     // fetch game info on page load
     fetchGame();
     if (!isSpectator()) {
@@ -80,7 +82,7 @@ export default function Game() {
               {/* Top left */}
             </div>
             <div className="col-span-3 row-span-2">
-              <CenterZone gameId={gameId} />
+              <CenterZone game={game} />
             </div>
             <div className="row-span-2">
               {players[3] && (

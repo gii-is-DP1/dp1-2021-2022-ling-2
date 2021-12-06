@@ -77,6 +77,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 																							// achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
 																							// achievement
+				// SCENE ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/scenes/count").permitAll() // Allow everyone to get the number of scenes
 				// MARKET CARD ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/market-cards/{gameId}").permitAll() // Allow everyone to list all market
 																					// cards in a game

@@ -32,11 +32,11 @@ export default function PlayerZoneHorizontal(params) {
       </div>
       <div className="grid grid-cols-3 gap-2 items-end justify-items-center">
         <span className={reverse ? "order-last" : "order-first"}>
-          <CharacterCard />
+          <CharacterCard character={player.characterType} />
         </span>
         <span className="order-2 grid grid-rows-2 gap-y-2">
-          <CharacterCard />
-          <CharacterCard />
+          <AbilityCard />
+          <AbilityCard />
         </span>
         <span className={reverse ? "order-first" : "order-last"}>
           <span className={`flex-1 flex flex-row${reverse ? "-reverse" : ""}`}>
