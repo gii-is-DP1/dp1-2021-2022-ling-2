@@ -47,12 +47,12 @@ export default function CenterZone(params) {
           {/* HordeEnemy pile (facing up), warlord card on top a bit displaced (facing down) */}
           <PlaceholderCard />
         </span>
-        <span className="col-start-4 col-end-5 bg-blue-400 place-self-center transform rotate-90 translate-x-8">
+        <span className="col-start-4 col-end-5 bg-blue-400 place-self-center transform-gpu rotate-90 translate-x-8">
           {/* Scene pile, Current scene */}
           {/* CURRENT SCENE (FACING UP) */}
           <PlaceholderCard />
         </span>
-        <span className="col-start-6 bg-green-400 transform rotate-90">
+        <span className="col-start-6 bg-green-400 transform-gpu rotate-90">
           <PlaceholderCard />
         </span>
       </span>

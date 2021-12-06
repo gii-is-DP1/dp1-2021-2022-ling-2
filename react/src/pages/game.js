@@ -5,7 +5,8 @@ import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import PlayerZone from "../components/game/zones/playerZone";
+import PlayerZoneHorizontal from "../components/game/zones/playerZoneHorizontal";
+import PlayerZoneVertical from "../components/game/zones/playerZoneVertical";
 import CenterZone from "../components/game/zones/centerZone";
 /**
  *
@@ -73,23 +74,33 @@ export default function Game() {
         <div className="flex-1 bg-felt rounded-3xl">
           <div className="h-full p-2 grid grid-cols-5 gap-4">
             <div className="bg-red-400 row-span-2">
-              {players[2] && <PlayerZone player={players[2]} rotation={90} />}
+              {players[2] && (
+                <PlayerZoneVertical player={players[2]} rotation={90} />
+              )}
               {/* Top left */}
             </div>
             <div className="col-span-3 row-span-2">
               <CenterZone gameId={gameId} />
             </div>
             <div className="bg-green-400 row-span-2">
-              {players[3] && <PlayerZone player={players[3]} rotation={-90} />}
+              {players[3] && (
+                <PlayerZoneVertical
+                  player={players[3]}
+                  rotation={90}
+                  counterclockwise
+                />
+              )}
               {/* top right */}
             </div>
-            <div className="bg-yellow-400 col-span-2 self-end">
-              {players[0] && <PlayerZone player={players[0]} />}
+            <div className="bg-yellow-400 col-span-2 self-end max-w-xs 2xl:max-w-sm">
+              {players[0] && <PlayerZoneHorizontal player={players[0]} />}
               {/* bottom left */}
             </div>
             <div className="self-end">{/* Blank space */}</div>
-            <div className="bg-purple-400 col-span-2 self-end items-end">
-              {players[1] && <PlayerZone player={players[1]} reverse />}
+            <div className="bg-purple-400 col-span-2 self-end justify-self-end max-w-xs 2xl:max-w-sm">
+              {players[1] && (
+                <PlayerZoneHorizontal player={players[1]} reverse />
+              )}
               {/* bottom right */}
             </div>
           </div>
