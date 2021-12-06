@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -33,7 +34,7 @@ import lombok.Setter;
 @Table(name = "lobbies")
 public class Lobby extends BaseEntity {
 
-    @NotNull
+    @NotEmpty(message = "The lobby name must not be empty")
     private String name;
 
     // TODO replace with game. Initially to null, eventually to the game that has

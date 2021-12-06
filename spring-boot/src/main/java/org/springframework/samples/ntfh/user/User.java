@@ -37,17 +37,17 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
 	@Id
-	@NotBlank
-	@Length(min = 4, max = 20, message = "The username must be 4-20 characters long")
+	@NotBlank(message = "Username is required")
+	@Length(min = 4, max = 20, message = "Your username must be 4-20 characters long")
 	private String username;
 
-	@NotBlank
-	@Length(min = 4, message = "Password must be at least 4 characters long")
+	@Length(min = 4, message = "Your password must be at least 4 characters long")
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
-	@NotNull
-	@Email(message = "Please provide a valid Email")
+	@Column(unique = true)
+	@NotBlank(message = "The email must not be empty")
+	@Email(message = "Please provide a valid email")
 	private String email;
 
 	@NotNull
