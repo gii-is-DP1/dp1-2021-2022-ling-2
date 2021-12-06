@@ -82,21 +82,25 @@
 }
 
 .zoomable:hover {
-  @apply z-50 transform;
+  @apply z-10 transform transition duration-75 ease-in-out;
 }
 
 .token {
-  @apply rounded-full text-center font-semibold text-3xl w-12 h-12 drop-shadow-2xl zoomable;
+  @apply rounded-full text-center font-semibold text-3xl w-12 h-12 drop-shadow-2xl;
 }
 
 .token-kill {
-  @apply bg-leather text-red-800 border-4 border-red-800;
+  @apply bg-leather text-red-800 border-4 border-red-800 zoomable;
 }
 
 .token-gold {
-  @apply bg-gold text-gray-900 border-2 border-black;
+  @apply bg-gold text-gray-900 border-2 border-black zoomable;
 }
 
 .token-glory {
-  @apply bg-fabric text-blue-800 border-4 border-blue-400;
+  @apply bg-fabric text-blue-800 border-4 border-blue-400 zoomable;
+}
+
+.token-count {
+  @apply bg-leather text-white border-4 border-gray-700 opacity-80 text-4xl;
 }
