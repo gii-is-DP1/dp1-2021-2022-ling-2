@@ -13,7 +13,7 @@ public class SceneService {
     private SceneRepository sceneRepository;
 
     @Transactional
-    public Integer sceneCount() {
+    public Integer count() {
         return (int) sceneRepository.count();
     }
 
