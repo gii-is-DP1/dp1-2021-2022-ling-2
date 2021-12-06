@@ -17,6 +17,7 @@ export default function PlayerZoneVertical(params) {
     };
     fetchPlayer();
   }, []);
+
   return (
     <div className={`flex flex-col space-x-4 items-end`}>
       <div
@@ -34,11 +35,11 @@ export default function PlayerZoneVertical(params) {
         }rotate-${rotation}`}
       >
         <span className={ccw ? "order-last" : "order-first"}>
-          <CharacterCard />
+          <CharacterCard character={player.characterType} />
         </span>
         <span className="order-2 grid grid-rows-2 gap-y-2">
-          <CharacterCard />
-          <CharacterCard />
+          <AbilityCard />
+          <AbilityCard />
         </span>
         <span className={ccw ? "order-first" : "order-last"}>
           <span className={`flex-1 flex flex-row${ccw ? "-reverse" : ""}`}>
