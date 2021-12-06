@@ -82,7 +82,7 @@
 }
 
 .zoomable:hover {
-  @apply z-10 transform transition duration-75 ease-in-out;
+  @apply z-10 transform-gpu transition duration-75 ease-in-out;
 }
 
 .token {
@@ -106,5 +106,5 @@
 }
 
 .card {
-  @apply shadow-lg rounded-lg zoomable w-16 2xl:w-24;
+  @apply transition-all shadow-lg rounded-lg zoomable w-16 2xl:w-24;
 }
