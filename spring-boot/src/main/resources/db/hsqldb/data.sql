@@ -130,8 +130,8 @@ INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (5, 8, 'POCION
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (6, 4, 'PIEDRA_DE_AMOLAR');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (7, 5, 'VIAL_DE_CONJURACION');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (8, 5, 'VIAL_DE_CONJURACION');
-INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (9, 3, 'ELIXIR_DE_LA_CONCENTRACION');
-INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (10, 3, 'ELIXIR_DE_LA_CONCENTRACION');
+INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (9, 3, 'ELIXIR_DE_CONCENTRACION');
+INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (10, 3, 'ELIXIR_DE_CONCENTRACION');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (11, 3, 'CAPA_ELFICA');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (12, 4, 'ARMADURA_DE_PLACAS');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (13, 5, 'ALABARDA_ORCA');
@@ -221,7 +221,7 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (8, 6);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (8, 7);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (8, 8);
 
--- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (9, 'MARKET', 3, 'ELIXIR_DE_LA_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
+-- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (9, 'MARKET', 3, 'ELIXIR_DE_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 1);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 2);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 3);
@@ -231,7 +231,7 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 6);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 7);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 8);
 
--- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (10, 'MARKET', 3, 'ELIXIR_DE_LA_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
+-- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (10, 'MARKET', 3, 'ELIXIR_DE_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (10, 1);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (10, 2);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (10, 3);
