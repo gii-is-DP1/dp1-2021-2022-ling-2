@@ -8,7 +8,7 @@ export default function SceneCard(params) {
     <>
       {scene ? (
         <img
-          className="card hover:scale-250 hover:translate-y-20"
+          className="card hover:scale-400"
           src={`${SCENE_IMAGE_PATH}/${scene.sceneTypeEnum.toLowerCase()}.png`}
           alt={scene.sceneTypeEnum}
         ></img>
