@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.turn.Turn;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,4 +42,8 @@ public class Game extends BaseEntity {
     @OneToOne
     @JsonIgnoreProperties({ "game" })
     private Player leader;
+
+    @OneToOne
+    @JsonIgnoreProperties({ "game" })
+    private Turn currentTurn;
 }
