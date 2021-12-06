@@ -86,7 +86,7 @@
 }
 
 .token {
-  @apply rounded-full text-center font-semibold text-2xl w-10 h-10 drop-shadow-2xl;
+  @apply rounded-full text-center font-semibold text-4xl w-11 h-11 drop-shadow-2xl;
 }
 
 .token-kill {
@@ -103,4 +103,8 @@
 
 .token-count {
   @apply bg-leather text-white border-4 border-gray-700 opacity-80 text-4xl;
+}
+
+.card {
+  @apply shadow-lg rounded-lg zoomable w-16 2xl:w-24;
 }
