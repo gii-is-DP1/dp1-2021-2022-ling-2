@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/gameHistory")
+// TODO replace this and all its references in the frontend/backend with
+// "/game-history" (API naming conventions)
 public class GameHistoryController {
 
     @Autowired

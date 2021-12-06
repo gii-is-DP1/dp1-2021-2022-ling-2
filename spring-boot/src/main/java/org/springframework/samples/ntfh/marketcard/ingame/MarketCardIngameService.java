@@ -18,11 +18,17 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MarketCardIngameService {
+
     @Autowired
     private MarketCardIngameRepository marketCardIngameRepository;
 
     @Autowired
     private MarketCardService marketCardService;
+
+    @Transactional
+    public Iterable<MarketCardIngame> findMarketCardsByGameId(Integer gameId) {
+        return marketCardIngameRepository.findByGameId(gameId);
+    }
 
     @Transactional
     public void save(MarketCardIngame marketCardIngame) {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Token from "./Token";
+import Token from "../elements/token";
 
 export default function PlayerZone(params) {
   const [player, setPlayer] = useState(params.player);
@@ -14,8 +14,8 @@ export default function PlayerZone(params) {
     fetchPlayer();
   }, []);
   return (
-    <div className={`flex ${reverse && "flex-row-reverse"} h-full`}>
-      <div className="flex flex-col justify-end space-y-2">
+    <div className={`flex ${reverse && "flex-row-reverse"}`}>
+      <div className="flex flex-col space-y-2">
         <Token type="kill" value={player.kills} />
         <Token type="gold" value={player.gold} />
         <Token type="glory" value={player.glory} />

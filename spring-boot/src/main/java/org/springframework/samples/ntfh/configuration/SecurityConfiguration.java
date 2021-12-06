@@ -36,6 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests() // antMatchers:
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
+
+				// USER ENDPOINTS
 				.antMatchers(HttpMethod.POST, "/users/register").permitAll() // Allow to register
 				.antMatchers(HttpMethod.POST, "/users/login").permitAll() // Allow to login
 				.antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("admin") // Allow admins to list all the users
@@ -47,33 +49,43 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll() // Everyone can see a user's match
 																					// history
 				.antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAnyAuthority("user") // Set character
+				// UNREGISTERED USER ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
+																				// credentials
+				// LOBBY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAnyAuthority("user") // Allow users to create new lobbies
-				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId}").hasAnyAuthority("user") // Update lobby
-				.antMatchers(HttpMethod.DELETE, "/lobbies/{lobbyId}/remove/{username}").hasAnyAuthority("user")
-				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAnyAuthority("user") // Join a lobby
-				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the
-																			// old games
-				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
-				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
-																			// ongoing
 				.antMatchers(HttpMethod.GET, "/lobbies/count").permitAll() // Enables to show how many of the elements
-																			// in the game browser are open lobbies
+				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
+				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId}").hasAnyAuthority("user") // Update lobby
+				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAnyAuthority("user") // Join a lobby
+				.antMatchers(HttpMethod.DELETE, "/lobbies/{lobbyId}/remove/{username}").hasAnyAuthority("user")
+				// GAME ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
+				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
+				.antMatchers(HttpMethod.POST, "/games").hasAnyAuthority("user") // Allow users to create new games
+				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+				// GAMEHISTORY ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the old games
 				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games
 																				// have been played
-
+				// in the game browser are open lobbies
+				// ACHIEVEMENT ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
 				.antMatchers(HttpMethod.PUT, "/achievements").hasAnyAuthority("admin") // Update achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
 																							// achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
 																							// achievement
-				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
-				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
-				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
-				.antMatchers(HttpMethod.POST, "/games").hasAnyAuthority("user") // Allow users to create new games
-				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
-																				// credentials
+				// MARKET CARD ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/market-cards/{gameId}").permitAll() // Allow everyone to list all market
+																					// cards in a game
+				// HORDE ENEMIES ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/horde-enemies/{gameId}").permitAll() // Allow everyone to list all horde
+																					// enemies
+				// ADMIN ENDPOINTS
 				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
+				// OTHER ENDPOINTS
 				.anyRequest().denyAll(); // else, deny
 
 		// Configuración para que funcione la consola de administración
