@@ -63,25 +63,24 @@ export default function Game() {
 
   return (
     game && (
-      <div className="bg-wood h-screen px-64 flex flex-col justify-center">
-        {/* px-64 above is a temprary fix to prevent vertical overflow. TODO make this responsive */}
+      <div className="bg-wood h-screen px-16 flex flex-col justify-center">
         {/* Top player names */}
-        <div className="flex-none flex justify-between items-center py-4 text-white text-3xl">
+        <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
           <p>{players[2] && players[2].user.username}</p>
           <p>{players[3] && players[3].user.username}</p>
         </div>
         {/* Game board (green part)*/}
-        <div className="bg-felt rounded-3xl">
-          <div className="p-2 grid grid-cols-5 gap-4">
+        <div className="flex-1 bg-felt rounded-3xl">
+          <div className="h-full p-2 grid grid-cols-5 gap-4">
             <div className="bg-red-400 row-span-2">
-              {players[2] && <PlayerZone player={players[2]} />}
+              {players[2] && <PlayerZone player={players[2]} rotation={90} />}
               {/* Top left */}
             </div>
             <div className="col-span-3 row-span-2">
               <CenterZone gameId={gameId} />
             </div>
             <div className="bg-green-400 row-span-2">
-              {players[3] && <PlayerZone player={players[3]} />}
+              {players[3] && <PlayerZone player={players[3]} rotation={-90} />}
               {/* top right */}
             </div>
             <div className="bg-yellow-400 col-span-2 self-end">
