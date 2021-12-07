@@ -4,22 +4,28 @@ import MarketCard from "../elements/marketCard";
 import PlaceholderCard from "../elements/placeholderCard";
 import SceneCard from "../elements/sceneCard";
 import HordeEnemyCard from "../elements/hordeEnemyCard";
+import WarlordCard from "../elements/warlordCard";
 
 export default function CenterZone(params) {
   const { game } = params;
   const [marketCards, setMarketCards] = useState([]);
   const [hordeEnemies, setHordeEnemies] = useState([]);
   const [sceneCount, setSceneCount] = useState(0);
+  const [warlord, setWarlord] = useState(null);
 
   useEffect(() => {
     const fetchmarketCards = async () => {
       const response = await axios.get(`/market-cards/${params.game.id}`);
       setMarketCards(response.data);
     };
+    const fetchWarlord = async () => {
+      const response = await axios.get(`/warlords/${params.game.id}`);
+      setWarlord(response.data);
+      console.log(response.data);
+    };
     const fetchHordeEnemies = async () => {
       const response = await axios.get(`/horde-enemies/${params.game.id}`);
       setHordeEnemies(response.data);
-      console.log(response.data);
     };
     const fetchSceneCount = async () => {
       // Total number of scenes
@@ -28,6 +34,7 @@ export default function CenterZone(params) {
     };
     fetchSceneCount();
     fetchmarketCards();
+    fetchWarlord();
     fetchHordeEnemies();
   }, []);
 
@@ -69,7 +76,6 @@ export default function CenterZone(params) {
         )}
       </span>
       <span className="grid grid-cols-6 gap-2 py-1">
-        {/* Fighting HordeEnemies (0 to 3) and optionally a warlord (0 to 1) */}
         <span> {/* Blank space (first col) */} </span>
         {/* Up to 3 horde enemies and up to 1 Warlord */}
         {hordeEnemies
@@ -77,6 +83,9 @@ export default function CenterZone(params) {
           .map((enemy) => (
             <HordeEnemyCard key={enemy.id} enemy={enemy} />
           ))}
+        {warlord?.location === "FIGHTING" && (
+          <WarlordCard key={warlord.id} warlord={warlord} />
+        )}
       </span>
     </div>
   );

@@ -2,7 +2,6 @@ package org.springframework.ntfh.entity.enemy.warlord.ingame;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -15,6 +14,10 @@ import org.springframework.ntfh.entity.game.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author alegestor
+ * @author andrsdt
+ */
 @Service
 public class WarlordIngameService {
 
@@ -34,9 +37,14 @@ public class WarlordIngameService {
         return warlordIngameRepository.findAll();
     }
 
+    /**
+     * @author andrsdt
+     * @param gameId
+     * @return Warlord of that game
+     */
     @Transactional
-    public Optional<WarlordIngame> findWarlordIngameById(Integer id) {
-        return warlordIngameRepository.findById(id);
+    public WarlordIngame findWarlordByGameId(Integer gameId) {
+        return warlordIngameRepository.findByGameId(gameId);
     }
 
     @Transactional
@@ -81,5 +89,4 @@ public class WarlordIngameService {
         else
             warlordIngame.setCurrentEndurance(warlordIngame.getCurrentEndurance() - damage);
     }
-
 }

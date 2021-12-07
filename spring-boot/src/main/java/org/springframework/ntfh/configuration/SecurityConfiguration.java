@@ -80,12 +80,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// SCENE ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/scenes/count").permitAll() // Allow everyone to get the number of scenes
 				// MARKET CARD ENDPOINTS
-				.antMatchers(HttpMethod.GET, "/market-cards/{gameId}").permitAll() // Allow everyone to list all market
-																					// cards in a game
+				.antMatchers(HttpMethod.GET, "/market-cards/{gameId}").permitAll() // Allow everyone to list a game's
+																					// market cards
 				// HORDE ENEMIES ENDPOINTS
-				.antMatchers(HttpMethod.GET, "/horde-enemies/{gameId}").permitAll() // Allow everyone to list all horde
-																					// enemies
-				// ADMIN ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/horde-enemies/{gameId}").permitAll() // Allow everyone to list a game's
+																					// horde enemies
+				// WARLORDS ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/warlords/{gameId}").permitAll() // Allow everyone to list a game's
+																				// warlord
+																				// ADMIN ENDPOINTS
 				.antMatchers("/admin/**").hasAnyAuthority("admin") // access to admin info
 				// OTHER ENDPOINTS
 				.anyRequest().denyAll(); // else, deny
