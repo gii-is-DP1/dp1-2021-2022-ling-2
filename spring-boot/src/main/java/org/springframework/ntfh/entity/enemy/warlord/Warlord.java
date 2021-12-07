@@ -32,6 +32,7 @@ public class Warlord extends EnemyEntity {
      */
     @Transient
     public String getFrontImage() {
+        // TODO remove? being handled on frontend
         return "/cards/enemies/warlords/" + warlordTypeEnum.toString().toLowerCase() + ".png";
     }
 
@@ -43,6 +44,7 @@ public class Warlord extends EnemyEntity {
      */
     @Transient
     public String getBackImage() {
+        // TODO remove? being handled on frontend
         return "/cards/enemies/warlords/back_standard.png";
     }
 }
