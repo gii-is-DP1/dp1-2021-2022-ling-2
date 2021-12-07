@@ -29,6 +29,7 @@ import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.exceptions.BannedUserException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,9 @@ public class UserService {
 	@Autowired
 	private AuthoritiesService authoritiesService;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	/**
 	 * Create a new user
 	 * 
@@ -58,6 +62,10 @@ public class UserService {
 
 		if (userRepository.existsByUsername(user.getUsername()))
 			throw new IllegalArgumentException("There is already a user registered with the username provided");
+
+		// encrypt the password using bcrypt
+		String encryptedPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encryptedPassword);
 
 		user.setEnabled(true);
 		userRepository.save(user);
@@ -144,8 +152,13 @@ public class UserService {
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.
-		if (user.getPassword() == null || user.getPassword().equals("null"))
+		if (user.getPassword() == null || user.getPassword().equals("null")) {
 			user.setPassword(userInDatabase.getPassword());
+		} else {
+			// If there is a new password input, encrypt it using bcrypt
+			String encryptedPassword = passwordEncoder.encode(user.getPassword());
+			user.setPassword(encryptedPassword);
+		}
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
 		if (user.getEnabled() == null) {
@@ -158,6 +171,7 @@ public class UserService {
 	public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
 		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
 		if (!foundUserOptional.isPresent()) {
+			// TODO move this validation to the findUser method in the service?
 			throw new DataAccessException("User not found") {
 			};
 		}
@@ -166,7 +180,8 @@ public class UserService {
 			throw new BannedUserException("This user has been banned") {
 			};
 		}
-		if (!userInDB.getPassword().equals(user.getPassword())) {
+		String encryptedPassword = passwordEncoder.encode(user.getPassword());
+		if (!userInDB.getPassword().equals(encryptedPassword)) {
 			throw new IllegalArgumentException("Incorrect password") {
 			};
 		}
