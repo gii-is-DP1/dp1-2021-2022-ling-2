@@ -135,15 +135,9 @@ public class LobbyServiceTest {
 
     @Test
     public void testH14E1() {
-        List<Lobby> lobbiesServiceList = new ArrayList<>();
-        lobbyService.findAll().forEach(x -> lobbiesServiceList.add(x));
-        Integer playersLobby1Sevice = lobbiesServiceList.get(0).getUsers().size();
-
-        List<Lobby> lobbiesRepositoryList = new ArrayList<>();
-        lobbyRepository.findAll().forEach(x -> lobbiesRepositoryList.add(x));
-        Integer playersLobby1Repo = lobbiesRepositoryList.get(0).getUsers().size();
-
-        assertEquals(playersLobby1Repo, playersLobby1Sevice);
+        lobbyTester.addUser(userService.findUser("alex").get());
+        Integer numUsersInLobby=lobbyTester.getUsers().size();
+        assertEquals(1, numUsersInLobby);
     }
 
 }
