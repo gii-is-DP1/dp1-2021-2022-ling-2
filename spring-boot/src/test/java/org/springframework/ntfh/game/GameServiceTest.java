@@ -58,6 +58,7 @@ public class GameServiceTest {
     public void init() {
         Set<User> users = new HashSet<>();
         users.add(userService.findUser("alex").get());
+        users.add(userService.findUser("pablo").get());
 
         lobbyTester = new Lobby();
         lobbyTester.setName("init");
@@ -71,9 +72,13 @@ public class GameServiceTest {
 
         List<Player> players = new ArrayList<>();
         User user = userService.findUser("alex").get();
+        User user1 = userService.findUser("pablo").get();
         user.setCharacter(characterService.findCharacterById(2).get());
+        user1.setCharacter(characterService.findCharacterById(4).get());
         Player player = playerService.createFromUser(user, lobbyTester, 0);
+        Player player1 = playerService.createFromUser(user1, lobbyTester, 0);
         players.add(player);
+        players.add(player1);
 
         gameTester = new Game();
         gameTester.setStartTime(System.currentTimeMillis());
@@ -121,7 +126,7 @@ public class GameServiceTest {
 
     // TODO edit init() method to create a lobby with 2 users, this test currently
     // fails since the lobby only has 1 user
-    @Disabled
+    // @Disabled
     @Test
     public void testCreatefromLobby() {
         Game tester = gameService.createFromLobby(lobbyTester);
@@ -130,7 +135,7 @@ public class GameServiceTest {
 
     @Test
     public void testCreatefromLobbyNotEnoughPlayers() {
-        lobbyTester.setMaxPlayers(1);
+        lobbyTester.removeUser(userService.findUser("pablo").get());
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
