@@ -1,0 +1,30 @@
+package org.springframework.ntfh.entity.enemy.warlord;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class WarlordService {
+
+    @Autowired
+    private WarlordRepository warlordRepository;
+
+    @Transactional
+    public Integer warlordCount() {
+        return (int) warlordRepository.count();
+    }
+
+    @Transactional
+    public Iterable<Warlord> findAll() {
+        return warlordRepository.findAll();
+    }
+
+    @Transactional
+    public Optional<Warlord> findWarlordById(Integer id) {
+        return warlordRepository.findById(id);
+    }
+
+}

@@ -37,6 +37,18 @@ INSERT INTO authorities(id,username,authority) VALUES(13, 'aragorn','user');
 INSERT INTO users(username,password,email) VALUES ('ezio','ezio', 'ezio@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
 
+INSERT INTO users(username,password,email) VALUES ('user1','user1', 'user1@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(15, 'user1','user');
+
+INSERT INTO users(username,password,email) VALUES ('user2','user2', 'user2@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(16, 'user2','user');
+
+INSERT INTO users(username,password,email) VALUES ('user3','user3', 'user3@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(17, 'user3','user');
+
+INSERT INTO users(username,password,email) VALUES ('user4','user4', 'user4@mail.com');
+INSERT INTO authorities(id,username,authority) VALUES(18, 'user4','user');
+
 -- TODO users for JUnit tests should not be created in the database, but in the Junit tests and then deleted
 -- Usuario para el JUnit de la H10
 INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
@@ -130,8 +142,8 @@ INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (5, 8, 'POCION
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (6, 4, 'PIEDRA_DE_AMOLAR');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (7, 5, 'VIAL_DE_CONJURACION');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (8, 5, 'VIAL_DE_CONJURACION');
-INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (9, 3, 'ELIXIR_DE_LA_CONCENTRACION');
-INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (10, 3, 'ELIXIR_DE_LA_CONCENTRACION');
+INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (9, 3, 'ELIXIR_DE_CONCENTRACION');
+INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (10, 3, 'ELIXIR_DE_CONCENTRACION');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (11, 3, 'CAPA_ELFICA');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (12, 4, 'ARMADURA_DE_PLACAS');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (13, 5, 'ALABARDA_ORCA');
@@ -221,7 +233,7 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (8, 6);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (8, 7);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (8, 8);
 
--- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (9, 'MARKET', 3, 'ELIXIR_DE_LA_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
+-- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (9, 'MARKET', 3, 'ELIXIR_DE_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 1);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 2);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 3);
@@ -231,7 +243,7 @@ INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 6);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 7);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (9, 8);
 
--- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (10, 'MARKET', 3, 'ELIXIR_DE_LA_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
+-- INSERT INTO market_cards(id, location, price, name, usable_by) VALUES (10, 'MARKET', 3, 'ELIXIR_DE_CONCENTRACION', 'Ranger, Rogue, Warrior, Wizard');
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (10, 1);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (10, 2);
 INSERT INTO marketcards_characters(market_card_id, character_id) VALUES (10, 3);
@@ -268,8 +280,8 @@ INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players,
 UPDATE users SET lobby = 1 WHERE username = 'pablo';
 UPDATE users SET lobby = 1 WHERE username = 'andres';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (1, 0, 0, 0, 0, 8, 'pablo');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (2, 0, 0, 0, 0, 1, 'andres');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (1, 0, 0, 0, 0, 8, 0, 'pablo');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (2, 0, 0, 0, 0, 1, 1, 'andres');
 INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (1, true, 1637867168863, 1);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 1 WHERE id = 1;
@@ -289,10 +301,10 @@ UPDATE users SET lobby = 2 WHERE username = 'frodo';
 UPDATE users SET lobby = 2 WHERE username = 'legolas';
 UPDATE users SET lobby = 2 WHERE username = 'aragorn';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (3, 0, 0, 0, 0, 1, 'frodo');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (4, 0 ,0, 0, 0 ,3, 'gandalf');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (5, 0, 0, 0, 0, 5, 'legolas');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (6, 0 ,0, 0, 0 ,7, 'aragorn');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (3, 0, 0, 0, 0, 1, 1, 'frodo');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (4, 0 ,0, 0, 0 ,3, 0, 'gandalf');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (5, 0, 0, 0, 0, 5, 2, 'legolas');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (6, 0 ,0, 0, 0 ,7, 3, 'aragorn');
 INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (2, true, 1637881111234, 3);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 2 WHERE id = 2;
@@ -316,9 +328,9 @@ INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players
 UPDATE users SET lobby = 3 WHERE username = 'stockie';
 UPDATE users SET lobby = 3 WHERE username = 'alejandro';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (7, 0, 0, 0, 0, 2, 'stockie');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, user_id) VALUES (8, 0 ,0, 0, 0 ,4, 'alejandro');
-INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (3, true, 1637881111234, 3);
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (7, 0, 0, 0, 0, 2, 1, 'stockie');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (8, 0 ,0, 0, 0 ,4, 0, 'alejandro');
+INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (3, true, 1637881111234, 8);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 3 WHERE id = 3;
 -- Add the players to the game
