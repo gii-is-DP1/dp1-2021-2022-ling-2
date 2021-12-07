@@ -43,6 +43,6 @@ public class Warlord extends EnemyEntity {
      */
     @Transient
     public String getBackImage() {
-        return "/cards/enemies/warlords/backs/standard.png";
+        return "/cards/enemies/warlords/back_standard.png";
     }
 }

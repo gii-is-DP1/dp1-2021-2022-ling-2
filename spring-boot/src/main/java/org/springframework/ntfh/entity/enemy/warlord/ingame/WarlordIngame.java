@@ -18,6 +18,10 @@ import org.springframework.ntfh.entity.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author andrsdt
+ * @author alegestor
+ */
 @Entity
 @Getter
 @Setter
