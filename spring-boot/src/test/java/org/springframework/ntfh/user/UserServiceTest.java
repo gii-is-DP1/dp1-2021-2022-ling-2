@@ -17,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.samples.ntfh.util.TokenUtils;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.ntfh.entity.user.UserService;

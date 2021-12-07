@@ -129,6 +129,13 @@ public class GameServiceTest {
     }
 
     @Test
+    public void testCreatefromLobbyNotEnoughPlayers() {
+        lobbyTester.setMaxPlayers(1);
+        assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
+    }
+
+
+    @Test
     public void testSaveGame() {
         // Test made in the init
         assertEquals(gameRepository.findById(gameTester.getId()).get().getId(), gameTester.getId());
