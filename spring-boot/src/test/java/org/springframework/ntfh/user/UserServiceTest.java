@@ -68,16 +68,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testFindUserPublic() {
-        // Map<String, String> user = userService.findUserPublic("andres");
-        HashMap<String, String> user = new HashMap<>();
-        user.put("username", userService.findUserPublic("andres").get("username"));
-        user.put("email", userService.findUserPublic("andres").get("email"));
-        assertEquals("andres", user.get("username"));
-        assertEquals("andres@mail.com", user.get("email"));
-    }
-
-    @Test
     public void testUpdateUser() {
         User user = this.userService.findUser("alex").orElse(null);
         String preEmail = user.getEmail();
