@@ -44,6 +44,11 @@ public class UserService {
 	@Autowired
 	private AuthoritiesService authoritiesService;
 
+	@Autowired
+	public UserService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
 	/**
 	 * Create a new user
 	 * 
