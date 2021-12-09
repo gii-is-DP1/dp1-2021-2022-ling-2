@@ -9,9 +9,12 @@ import OngoingGamesTable from "../components/admin/OngoingGamesTable";
 import UsersTable from "../components/admin/UsersTable";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user.ts";
+import userContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
+import { GameHistory } from "../interfaces/GameHistory";
+
+type CurrentTableEnum = "ongoing" | "history" | "achievements" | "users";
 
 /**
  *
@@ -20,20 +23,17 @@ import tokenParser from "../helpers/tokenParser";
 export default function AdminPage() {
   const history = useHistory();
   const user = tokenParser(useContext(userContext));
-  const { userToken } = useContext(userContext);
-  const [currentTable, setCurrentTable] = useState("ongoingGames");
-  const [gamesHistory, setGamesHistory] = useState([]);
+  const [currentTable, setCurrentTable] = useState<CurrentTableEnum>("ongoing");
+  const [gamesHistory, setGamesHistory] = useState<GameHistory[]>([]);
 
   useEffect(() => {
     const fetchGameHistory = async () => {
-      if (currentTable !== "gamesHistory") return;
+      if (currentTable !== "ongoing") return;
       try {
-        // TODO remove auth if not needed
-        const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get(`gameHistory`, { headers });
+        const response = await axios.get("gameHistory");
         setGamesHistory(response.data);
-      } catch (error) {
-        toast.error(error.response?.data?.message);
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message);
       }
     };
     fetchGameHistory();
@@ -45,6 +45,7 @@ export default function AdminPage() {
       toast.error("You must be an admin to access this page");
       history.push(ROUTES.LOGIN);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -59,19 +60,18 @@ export default function AdminPage() {
           </Link>
         </span>
         <span className="flex flex-row flex-1 justify-between">
-          <div class="flex flex-col w-1/4 max-w-1/5 justify-center gap-y-4">
-            {/* 4 botones de seleccionar tabla */}
+          <div className="flex flex-col w-1/4 max-w-1/5 justify-center gap-y-4">
             <button
               type="submit"
               className="btn-ntfh"
-              onClick={() => setCurrentTable("ongoingGames")}
+              onClick={() => setCurrentTable("ongoing")}
             >
               <p className="text-gradient-ntfh">Ongoing games</p>
             </button>
             <button
               type="submit"
               className="btn-ntfh"
-              onClick={() => setCurrentTable("gamesHistory")}
+              onClick={() => setCurrentTable("ongoing")}
             >
               <p className="text-gradient-ntfh">Game history</p>
             </button>
@@ -90,10 +90,9 @@ export default function AdminPage() {
               <p className="text-gradient-ntfh">Achievements</p>
             </button>
           </div>
-          <div class="flex flex-col w-3/4 items-center justify-center pl-12">
-            {/* Tabla seleccionada */}
-            {currentTable === "ongoingGames" && <OngoingGamesTable />}
-            {currentTable === "gamesHistory" && (
+          <div className="flex flex-col w-3/4 items-center justify-start pl-12 pt-12">
+            {currentTable === "ongoing" && <OngoingGamesTable />}
+            {currentTable === "history" && (
               <GamesHistoryTable data={gamesHistory} />
             )}
             {currentTable === "users" && <UsersTable />}

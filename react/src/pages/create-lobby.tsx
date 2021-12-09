@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import * as ROUTES from "../constants/routes";
-import userContext from "../context/user.ts";
-import tokenParser from "../helpers/tokenParser";
-import toast from "react-hot-toast";
 import HomeButton from "../components/common/home-button";
+import * as ROUTES from "../constants/routes";
+import userContext from "../context/user";
+import tokenParser from "../helpers/tokenParser";
 
 /**
  *
@@ -17,30 +17,32 @@ export default function CreateLobby() {
   const { userToken } = useContext(userContext); // hook
   const user = tokenParser(useContext(userContext)); // hook
 
-  const [gameName, setGameName] = useState(`${user.username}'s game`);
+  const [gameName, setGameName] = useState(
+    user ? `${user.username}'s game` : ""
+  );
   const [maxPlayers, setMaxPlayers] = useState(4);
   const [scenesChecked, setScenesChecked] = useState(false);
   const [spectatorsChecked, setSpectatorsChecked] = useState(false);
 
-  const handleCreateLobby = async (e) => {
-    e.preventDefault();
+  const handleCreateLobby = async (event: React.MouseEvent) => {
+    event.preventDefault();
     try {
       const payload = {
         name: gameName,
         maxPlayers: maxPlayers,
         hasScenes: scenesChecked,
         spectatorsAllowed: spectatorsChecked,
-        host: user.username,
-        players: [user.username],
+        host: user?.username,
+        players: [user?.username],
       };
       const response = await axios.post("/lobbies", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
       const lobbyId = response.data.lobbyId;
       toast.success("Lobby created successfully");
-      history.push(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
-    } catch (error) {
-      toast.error(error.response?.data?.message);
+      history.replace(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -48,7 +50,7 @@ export default function CreateLobby() {
     document.title = "NTFH - Create new lobby";
     if (!userToken) {
       toast.error("You must be registered to create a lobby");
-      history.push(ROUTES.SIGNUP); // Send the user to signup screen if not logged in
+      history.replace(ROUTES.SIGNUP);
     }
   });
 
