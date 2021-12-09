@@ -23,9 +23,8 @@ export default function Game() {
   const [user, setUser] = useState(null);
   const [players, setPlayers] = useState([]);
 
-  const isSpectator = () =>
-    !userToken ||
-    (loggedUser && loggedUser?.lobby?.game?.id !== parseInt(gameId));
+  const isSpectator = (_user) =>
+    !userToken || (_user && _user?.lobby?.game?.id !== parseInt(gameId));
 
   const playersInRenderOrder = (_players) => {
     const orderedPlayerList = _players.sort(
@@ -35,7 +34,7 @@ export default function Game() {
      * that the first player of the list (the one who will be rendered on the
      * bottom left part) is us
      * */
-    if (!isSpectator()) {
+    if (!isSpectator(user)) {
       // Rotate the list until the current player is at the first position,
       // but they still keep the same order (by rotating values in array)
       while (orderedPlayerList[0].user.username !== loggedUser.username) {
@@ -70,9 +69,8 @@ export default function Game() {
   useEffect(() => {
     document.title = "NTFH - Game " + gameId;
     // fetch game info on page load
-    if (!isSpectator()) {
-      fetchUser();
-    } else {
+    fetchUser();
+    if (isSpectator()) {
       // if user is spectator, render a toast
       toast("Spectator", {
         position: "top-right",
@@ -80,8 +78,14 @@ export default function Game() {
         icon: "👁️",
         id: "Spectator",
       });
-      fetchGame();
     }
+    fetchGame();
+    return function cleanup() {
+      toast.dismiss("Spectator");
+      // To avoid sending the user to the lobby, that
+      // would redirect him/her to the game again
+      history.replace(ROUTES.HOME);
+    };
   }, []);
 
   return (
