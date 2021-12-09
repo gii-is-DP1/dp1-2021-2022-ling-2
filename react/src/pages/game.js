@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
-import UserContext from "../context/user";
+import UserContext from "../context/user.ts";
 import tokenParser from "../helpers/tokenParser";
 import PlayerZoneHorizontal from "../components/game/zones/playerZoneHorizontal";
 import PlayerZoneVertical from "../components/game/zones/playerZoneVertical";
@@ -24,7 +24,8 @@ export default function Game() {
   const [players, setPlayers] = useState([]);
 
   const isSpectator = () =>
-    !userToken || (user && user?.lobby?.game?.id !== parseInt(gameId));
+    !userToken ||
+    (loggedUser && loggedUser?.lobby?.game?.id !== parseInt(gameId));
 
   const playersInRenderOrder = (_players) => {
     const orderedPlayerList = _players.sort(
@@ -69,7 +70,6 @@ export default function Game() {
   useEffect(() => {
     document.title = "NTFH - Game " + gameId;
     // fetch game info on page load
-    fetchGame();
     if (!isSpectator()) {
       fetchUser();
     } else {
@@ -80,6 +80,7 @@ export default function Game() {
         icon: "👁️",
         id: "Spectator",
       });
+      fetchGame();
     }
   }, []);
 
