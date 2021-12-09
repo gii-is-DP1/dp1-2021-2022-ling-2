@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import tokenParser from "../helpers/tokenParser";
-import userContext from "../context/user";
+import userContext from "../context/user.ts";
 import { Button, Form } from "react-bootstrap";
 import * as ROUTES from "../constants/routes";
 import toast from "react-hot-toast";

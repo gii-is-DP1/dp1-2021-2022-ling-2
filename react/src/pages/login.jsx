@@ -4,7 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user";
+import userContext from "../context/user.ts";
 
 /**
  *

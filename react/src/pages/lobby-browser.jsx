@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import UserContext from "../context/user";
+import UserContext from "../context/user.ts";
 import * as ROUTES from "../constants/routes";
 import toast from "react-hot-toast";
 import HomeButton from "../components/common/home-button";

@@ -9,7 +9,7 @@ import OngoingGamesTable from "../components/admin/OngoingGamesTable";
 import UsersTable from "../components/admin/UsersTable";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user";
+import userContext from "../context/user.ts";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
 

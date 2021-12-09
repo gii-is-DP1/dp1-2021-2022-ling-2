@@ -6,7 +6,7 @@ import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
-import UserContext from "../context/user";
+import UserContext from "../context/user.ts";
 import tokenParser from "../helpers/tokenParser";
 
 /**

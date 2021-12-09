@@ -4,7 +4,7 @@ import axios from "../api/axiosConfig";
 import * as IMAGES from "../constants/images";
 import * as ROUTES from "../constants/routes";
 import UnregisteredUserContext from "../context/unregisteredUser";
-import UserContext from "../context/user";
+import UserContext from "../context/user.ts";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
 import toast from "react-hot-toast";

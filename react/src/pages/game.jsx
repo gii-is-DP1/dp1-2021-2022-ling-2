@@ -86,6 +86,7 @@ export default function Game() {
       // would redirect him/her to the game again
       history.replace(ROUTES.HOME);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
