@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import axios from "../../api/axiosConfig";
 import playerParser from "../../helpers/playerParser";
 import timeParser from "../../helpers/timeParser";
-import toast from "react-hot-toast";
+import { Game } from "../../interfaces/Game";
 
 export default function OngoingGamesTable() {
-  const [gameList, setGameList] = useState([]);
+  const [gameList, setGameList] = useState<Game[]>([]);
 
   useEffect(() => {
     // get lobby list
@@ -13,13 +14,15 @@ export default function OngoingGamesTable() {
       try {
         const response = await axios.get(`games`);
         setGameList(response.data);
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response.data.message);
       }
     };
 
     fetchGames();
   }, []);
+
+  const tableHeaders = ["Id", "Start Time", "Scenes", "Leader", "Players"];
 
   return (
     <div className="flex flex-col">
@@ -29,21 +32,11 @@ export default function OngoingGamesTable() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-800">
                 <tr>
-                  <th scope="col" className="text-table-th">
-                    Id
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Start time
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Scenes
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Leader
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Players
-                  </th>
+                  {tableHeaders.map((header, index) => (
+                    <th key={index} scope="col" className="text-table-th">
+                      {header}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="bg-gray-900 divide-y divide-gray-200">

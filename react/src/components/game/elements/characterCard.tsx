@@ -1,6 +1,12 @@
 import { CHARACTER_IMAGE_PATH } from "../../../constants/paths";
+import { Character } from "../../../interfaces/Character";
 
-export default function CharacterCard(params) {
+type Params = {
+  character: Character;
+  counterclockwise?: boolean;
+};
+
+export default function CharacterCard(params: Params) {
   const { character, counterclockwise } = params;
 
   return (

@@ -1,17 +1,23 @@
-import { ListGroup } from "react-bootstrap";
 import { useContext } from "react";
-import { Button } from "react-bootstrap";
 import UserContext from "../../context/user";
-import tokenParser from "../../helpers/tokenParser";
 import capitalize from "../../helpers/capitalize";
+import tokenParser from "../../helpers/tokenParser";
+import { Lobby } from "../../interfaces/Lobby";
+import { TokenUser } from "../../interfaces/TokenUser";
+import { User } from "../../interfaces/User";
 
-export default function UsersInLobby(props) {
+type Props = {
+  lobby: Lobby;
+  handleRemoveUserFromLobby: (username: string) => void;
+};
+
+export default function UsersInLobby(props: Props) {
   const { lobby, handleRemoveUserFromLobby } = props; // destructuring props // TODO in other files too
   // user: the one who is logged in
-  const viewer = tokenParser(useContext(UserContext)); // user who is logged in
+  const viewer: TokenUser | null = tokenParser(useContext(UserContext)); // user who is logged in
 
-  const isHost = (user) => user.username === lobby.host.username;
-  // craeate arrow function in a variable
+  const isHost = (user: TokenUser | User | null): boolean =>
+    user !== null && user.username === lobby.host.username;
 
   const characters = [
     "ranger",
@@ -23,12 +29,12 @@ export default function UsersInLobby(props) {
     "wizard",
     "wizard",
   ];
-  const getCharacterFromId = (id) => {
+  const getCharacterFromId = (id: number): string => {
     if (id === undefined) return "none";
     return characters[id - 1];
   };
 
-  const getGenderFromId = (id) => {
+  const getGenderFromId = (id: number): string => {
     if (id === undefined) return "";
     return id % 2 ? "♂ " : "♀ ";
   };
@@ -39,7 +45,7 @@ export default function UsersInLobby(props) {
         .sort((a, b) =>
           a.username < b.username ? 1 : a.username > b.username ? -1 : 0
         ) // arbitrary but consistent order
-        .map((user, idx) => (
+        .map((user: User, idx) => (
           <li key={idx} className="bg-green-700 rounded-xl p-2 text-white">
             {!isHost(user) && isHost(viewer) && (
               // show me the kick button over a player only if i'm the host, and also if the player to kick is not me

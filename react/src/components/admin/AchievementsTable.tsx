@@ -1,21 +1,23 @@
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import axios from "../../api/axiosConfig";
 import * as ROUTES from "../../constants/routes";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
-import toast from "react-hot-toast";
+import { Achievement } from "../../interfaces/Achievement";
+import { TokenUser } from "../../interfaces/TokenUser";
 
 export default function AchievementsTable() {
-  const [achievements, setAchievements] = useState([]);
-  const user = tokenParser(useContext(userContext));
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const user: TokenUser | null = tokenParser(useContext(userContext));
 
   useEffect(() => {
     const fetchAchievements = async () => {
       try {
         const response = await axios.get(`achievements`);
         setAchievements(response.data);
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response?.data?.message);
       }
     };
@@ -23,7 +25,7 @@ export default function AchievementsTable() {
     fetchAchievements();
   }, []);
 
-  const isAdmin = () => user.authorities.includes("admin");
+  const isAdmin = () => user && user.authorities.includes("admin");
 
   return (
     <div className="flex flex-col">
@@ -66,7 +68,7 @@ export default function AchievementsTable() {
                         className="text-indigo-300 hover:text-indigo-500"
                         to={ROUTES.EDIT_ACHIEVEMENT.replace(
                           ":achievementId",
-                          achievement.id
+                          achievement.id.toString()
                         )}
                       >
                         Edit

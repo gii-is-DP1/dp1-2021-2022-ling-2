@@ -1,8 +1,22 @@
 import playerParser from "../../helpers/playerParser";
 import timeParser from "../../helpers/timeParser";
+import { GameHistory } from "../../interfaces/GameHistory";
 
-export default function GamesHistoryTable(props) {
+type Props = {
+  data: GameHistory[];
+};
+
+export default function GamesHistoryTable(props: Props) {
   const { data } = props;
+
+  const tableHeaders = [
+    "Id",
+    "Duration",
+    "Start Time",
+    "Finish Time",
+    "Winner",
+    "Players",
+  ];
 
   return (
     <div className="flex flex-col">
@@ -12,27 +26,11 @@ export default function GamesHistoryTable(props) {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-800">
                 <tr>
-                  <th scope="col" className="text-table-th">
-                    Id
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Duration
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Start time
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Finish time
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Scenes
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Winner
-                  </th>
-                  <th scope="col" className="text-table-th">
-                    Players
-                  </th>
+                  {tableHeaders.map((header, index) => (
+                    <th key={index} scope="col" className="text-table-th">
+                      {header}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="bg-gray-900 divide-y divide-gray-200">

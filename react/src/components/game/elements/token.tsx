@@ -1,4 +1,12 @@
-export default function Token(params) {
+import { TokenTypeEnum } from "../../../types/TokenTypeEnum";
+
+type Params = {
+  type: TokenTypeEnum;
+  value: number;
+  counterclockwise?: boolean;
+};
+
+export default function Token(params: Params) {
   const { type, value, counterclockwise } = params;
   return (
     <div

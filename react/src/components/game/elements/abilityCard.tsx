@@ -1,6 +1,7 @@
 import { CARD_BACK } from "../../../constants/images";
 
-export default function abilityCard(params) {
+// TODO specify param type. this component is still in progress
+export default function abilityCard(params: any) {
   const { card, position, reverse } = params;
   return (
     <img

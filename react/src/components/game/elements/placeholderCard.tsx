@@ -1,7 +1,11 @@
 import { CARD_BACK } from "../../../constants/images";
 
-export default function PlaceholderCard(params) {
+type Params = {
+  counterclockwise?: boolean;
+};
+export default function PlaceholderCard(params: Params) {
   const { counterclockwise } = params;
+
   return (
     <img
       className={`card zoomable hover:scale-250 ${
@@ -11,7 +15,6 @@ export default function PlaceholderCard(params) {
           : "transform-gpu hover:-rotate-90")
       }`}
       src={CARD_BACK}
-      // template CARD_BACK
       alt="PLACEHOLDER CARD"
     ></img>
   );

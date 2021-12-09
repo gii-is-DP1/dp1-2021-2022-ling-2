@@ -1,16 +1,18 @@
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useHistory } from "react-router";
 import axios from "../../api/axiosConfig";
 import UserContext from "../../context/user";
 import hasAuthority from "../../helpers/hasAuthority";
 import tokenParser from "../../helpers/tokenParser";
-import toast from "react-hot-toast";
+import { User } from "../../interfaces/User";
 
 export default function UsersTable() {
   const history = useHistory();
+
   const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
-  const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = useState<User[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -22,7 +24,7 @@ export default function UsersTable() {
         params: { page: page },
       });
       setUserList(response.data);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
   };
@@ -33,11 +35,11 @@ export default function UsersTable() {
       const usersPerPage = 10;
       const userCount = response.data;
       setTotalPages(Math.ceil(userCount / usersPerPage));
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
   };
-  const handleToggleBan = async (_user) => {
+  const handleToggleBan = async (_user: User) => {
     const payload = {
       username: _user.username,
       email: _user.email,
@@ -49,12 +51,12 @@ export default function UsersTable() {
       });
       fetchUsers();
       toast.success(_user.username + " has been banned");
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
   };
 
-  const handleSetPage = (amount) => {
+  const handleSetPage = (amount: number) => {
     const newPage = page + amount;
     // Make sure the page is not out of bounds before updating
     if (totalPages >= newPage && newPage >= 0) setPage(newPage);
@@ -63,6 +65,8 @@ export default function UsersTable() {
   useEffect(() => {
     // Fetch users every time the page changes
     fetchUsers();
+    // TODO wrap fetchUsers() definition in useCallback? would improve performance
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, setPage]);
 
   useEffect(() => {

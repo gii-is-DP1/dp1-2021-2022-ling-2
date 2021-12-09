@@ -70,7 +70,7 @@ export default function CenterZone(params) {
             </span>
             <span className="col-start-6 transform-gpu rotate-90">
               {/* CURRENT SCENE (FACING UP) */}
-              <SceneCard scene={game.currentTurn.currentScene} />
+              <SceneCard scene={game?.currentTurn?.currentScene} />
             </span>
           </>
         )}
