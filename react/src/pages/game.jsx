@@ -61,6 +61,7 @@ export default function Game() {
     try {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
+      return response.data;
     } catch (error) {
       toast.error(error.response?.data?.message);
     }
@@ -69,8 +70,8 @@ export default function Game() {
   useEffect(() => {
     document.title = "NTFH - Game " + gameId;
     // fetch game info on page load
-    fetchUser();
-    if (isSpectator()) {
+    const _user = fetchUser();
+    if (isSpectator(_user)) {
       // if user is spectator, render a toast
       toast("Spectator", {
         position: "top-right",
