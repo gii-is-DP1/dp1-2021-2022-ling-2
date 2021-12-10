@@ -1,25 +1,25 @@
-import { useState, useEffect } from "react";
-import axios from "../api/axiosConfig";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
+import { GameHistory } from "../interfaces/GameHistory";
 
 /**
  *
  * @author andrsdt
  */
 export default function Statistics() {
-  const [gamesHistory, setGamesHistory] = useState(null);
+  const [gamesHistory, setGamesHistory] = useState<GameHistory[] | null>(null);
 
   useEffect(() => {
     const fetchGameHistoryCount = async () => {
       try {
         const response = await axios.get(`gameHistory`);
         setGamesHistory(response.data);
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response?.data?.message);
       }
     };
-
     fetchGameHistoryCount();
   }, []);
 

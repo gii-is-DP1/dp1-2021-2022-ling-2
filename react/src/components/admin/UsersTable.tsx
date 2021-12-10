@@ -93,7 +93,7 @@ export default function UsersTable() {
                   </th>
                   <th
                     scope="col"
-                    className="flex text-table-th justify-between text-lg"
+                    className="flex text-table-th space-x-5 text-lg"
                   >
                     <p>
                       {page + 1}/{totalPages + 1}
