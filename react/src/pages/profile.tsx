@@ -5,21 +5,24 @@ import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user.ts";
+import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import { GameHistory } from "../interfaces/GameHistory";
+import { Player } from "../interfaces/Player";
+import { User } from "../interfaces/User";
 
 /**
  *
  * @author andrsdt
  */
 export default function Profile() {
-  const params = useParams(); // hook
+  const { username } = useParams<{ username: string }>(); // hook
   const history = useHistory(); // hook
 
   const { userToken } = useContext(userContext);
   const user = tokenParser(useContext(userContext)); // hook
-  const [userProfile, setUserProfile] = useState(null);
-  const [userGamesHistory, setUserGamesHistory] = useState([]);
+  const [userProfile, setUserProfile] = useState<User | null>(null);
+  const [userGamesHistory, setUserGamesHistory] = useState<GameHistory[]>([]);
   const [matchesWon, setMatchesWon] = useState(1402);
   const [fastestMatch, setFastestMatch] = useState("26m54s");
   const [longestMatch, setLongestMatch] = useState("1h48m");
@@ -32,23 +35,24 @@ export default function Profile() {
         const response = await axios.get(`gameHistory`, { headers });
         const gamesPlayedByUser = filterByUsername(response.data);
         setUserGamesHistory(gamesPlayedByUser);
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response?.data?.message);
       }
     };
 
     fetchGameHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    document.title = `NTFH - ${params.username}'s profile`;
+    document.title = `NTFH - ${username}'s profile`;
 
     // get user profile
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get(`users/${params.username}`);
+        const response = await axios.get(`users/${username}`);
         setUserProfile(response.data);
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response?.data?.message);
         history.push("/not-found");
       }
@@ -57,16 +61,14 @@ export default function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 
-  {
-    /* TODO Replace with a backend filter */
-  }
-
-  const userInPlayerList = (list, username) => {
-    return list.some((player) => player.user.username === username);
+  // TODO replace with a backend filter
+  const userInPlayerList = (_list: Player[], _username: string) => {
+    return _list.some((player) => player.user.username === username);
   };
 
-  const filterByUsername = (list) =>
-    list.filter((gameHistory) =>
+  // TODO replace with a backend filter
+  const filterByUsername = (_list: GameHistory[]) =>
+    _list.filter((gameHistory) =>
       userInPlayerList(gameHistory.game.players, user.username)
     );
 
@@ -75,7 +77,7 @@ export default function Profile() {
       <HomeButton />
       <div className="flex flex-col h-screen bg-wood p-8">
         <span className="text-center pb-8">
-          <Link to={ROUTES.PROFILE.replace(":username", params.username)}>
+          <Link to={ROUTES.PROFILE.replace(":username", username)}>
             <button type="submit" className="btn-ntfh">
               <p className="text-5xl text-gradient-ntfh">Profile</p>
             </button>
@@ -91,14 +93,12 @@ export default function Profile() {
             <span>Fastest match: {fastestMatch}</span>
             <span>Longest match: {longestMatch}</span>
             <div className="flex flex-wrap space-x-3">
-              <Link to={ROUTES.STATISTICS + `/${params.username}`}>
+              <Link to={ROUTES.STATISTICS + `/${username}`}>
                 <button type="submit" className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">Stats</p>
                 </button>
               </Link>
-              <Link
-                to={ROUTES.EDIT_PROFILE.replace(":username", params.username)}
-              >
+              <Link to={ROUTES.EDIT_PROFILE.replace(":username", username)}>
                 <button type="submit" className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">Edit</p>
                 </button>

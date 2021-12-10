@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
@@ -6,8 +5,12 @@ import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
-import UserContext from "../context/user.ts";
+import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
+import { Lobby as ILobby } from "../interfaces/Lobby";
+import { TokenUser } from "../interfaces/TokenUser";
+import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
+import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 
 /**
  *
@@ -17,51 +20,58 @@ export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
 
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
-  const [lobby, setLobby] = useState(null); // current state of the lobby in the server. Updated perodically
+  const [lobby, setLobby] = useState<ILobby | null>(null); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
-  const { lobbyId } = useParams(); // TODO maybe we should just pass this as a param to the component
+  const { lobbyId } = useParams<{ lobbyId: string }>(); // TODO maybe we should just pass this as a param to the component
   const { userToken } = useContext(UserContext);
-  const user = tokenParser(useContext(UserContext));
-  const [character, setCharacter] = useState(null);
-  const [gender, setGender] = useState("male");
-  const [fullLobby, setFullLobby] = useState(false);
-  const [charactersTaken, setCharactersTaken] = useState([]);
+  const loggedUser = tokenParser(useContext(UserContext));
+  const [character, setCharacter] = useState<CharacterTypeEnum | null>(null);
+  const [gender, setGender] = useState<CharacterGenderEnum>("MALE");
+  const [fullLobby, setFullLobby] = useState<boolean>(false);
+  const [charactersTaken, setCharactersTaken] = useState<CharacterTypeEnum[]>(
+    []
+  );
 
-  const characters = ["ranger", "rogue", "warrior", "wizard"];
-  const genders = ["male", "female"];
+  const characters: CharacterTypeEnum[] = [
+    "RANGER",
+    "ROGUE",
+    "WARRIOR",
+    "WIZARD",
+  ];
+  const genders: CharacterGenderEnum[] = ["MALE", "FEMALE"];
 
   const getCharacterId = () => {
     if (character === null) return null;
     return 1 + 2 * characters.indexOf(character) + genders.indexOf(gender);
-    // Input: warrior, female
-    // Output: 3+ 1  = 4 (id Of female warrior in the DB is 4)
+    // Input: WARRIOR, FEMALE
+    // Output: 3+ 1  = 4 (id Of FEMALE WARRIOR in the DB is 4)
     // This is a temporal solution to be refactored in the future
   };
 
-  const isHost = () => user?.username === lobby?.host?.username;
+  const isHost = () => loggedUser.username === lobby?.host?.username;
 
   async function fetchLobbyStatus() {
     try {
       const response = await axios.get(`/lobbies/${lobbyId}`);
-      const newLobby = response.data;
-      if (lobby && !userInLobby(user, newLobby)) {
+      const newLobby: ILobby = response.data;
+      if (lobby && !userInLobby(loggedUser, newLobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
         toast("You have been kicked from the lobby");
         history.goBack();
         return;
       }
       if (lobby && lobby.game) {
-        history.push(ROUTES.GAME.replace(":gameId", lobby.game.id));
+        history.push(ROUTES.GAME.replace(":gameId", lobby.game.id.toString()));
         return;
       }
       setLobby(newLobby);
       setFullLobby(newLobby.maxPlayers === newLobby.users.length);
-      const takenCharacters = newLobby.users.map((_user) =>
-        _user.character?.characterTypeEnum?.toLowerCase()
+      const takenCharacters: CharacterTypeEnum[] = newLobby.users.map(
+        (_user) => _user.character?.characterTypeEnum
       );
       setCharactersTaken(takenCharacters);
       return newLobby;
-    } catch (error) {
+    } catch (error: any) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
       toast.error(error.response?.data?.message);
       history.push(ROUTES.BROWSE_LOBBIES);
@@ -71,39 +81,40 @@ export default function Lobby() {
 
   async function notifyJoinLobby() {
     try {
-      const payload = { username: user.username };
+      const payload = { username: loggedUser.username };
       const headers = { Authorization: "Bearer " + userToken };
       await axios.post(`/lobbies/${lobbyId}/join`, payload, {
         headers,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
       if (error?.response?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
     }
   }
 
-  async function handleRemoveUserFromLobby(username) {
+  async function handleRemoveUserFromLobby(username: string) {
     try {
+      if (!lobby || !loggedUser) return;
       // axios.delete only has 2 parameters, url and headers)
       await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
         headers: { Authorization: "Bearer " + userToken },
       });
       if (username === lobby.host.username) {
-        toast.message("Lobby deleted successfully");
+        toast.success("Lobby deleted successfully");
         history.goBack();
-      } else if (username === user.username) {
+      } else if (username === loggedUser.username) {
         // If I was the one leaving the lobby
         history.goBack();
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
   }
 
-  const userInLobby = (_user, _lobby) =>
-    _lobby.users.map((u) => u.username).includes(_user.username);
+  const userInLobby = (_user: TokenUser | null, _lobby: ILobby) =>
+    _user && _lobby.users.map((u) => u.username).includes(_user.username);
 
-  const createGame = async (e) => {
+  const createGame = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
       const payload = lobby;
@@ -112,19 +123,19 @@ export default function Lobby() {
       });
       const gameId = response.data.gameId;
       history.push(ROUTES.GAME.replace(":gameId", gameId));
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
   };
 
   useEffect(() => {
-    // We have to notify the server we have joined the lobby
     document.title = "NTFH - Game lobby";
-
+    if (loggedUser.username === "") history.push(ROUTES.LOGIN); // missing token
     async function firstFetch() {
       const _lobby = await fetchLobbyStatus();
+      // We have to notify the server we have joined the lobby
       // will be only executed if the user is not in the lobby yet
-      if (_lobby && !userInLobby(user, _lobby)) notifyJoinLobby();
+      if (_lobby && !userInLobby(loggedUser, _lobby)) notifyJoinLobby();
     }
     firstFetch();
   }, []); // Only run once
@@ -147,17 +158,18 @@ export default function Lobby() {
     async function updateUserCharacter() {
       try {
         const payload = {
-          username: user.username,
+          username: loggedUser.username,
           character: getCharacterId(),
         };
         await axios.put(`/users/character`, payload, {
           headers: { Authorization: "Bearer " + userToken },
         });
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response?.data?.message);
       }
     }
     updateUserCharacter();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [character, gender]);
 
   if (!lobby) return <></>; // Don't render anything if the lobby is not loadedw
@@ -178,10 +190,12 @@ export default function Lobby() {
                   <p className="mb-1">{lobby.name}</p>
                   <button
                     className="btn-ntfh mb-3"
-                    onClick={(e) => handleRemoveUserFromLobby(user.username)}
+                    onClick={(e) =>
+                      handleRemoveUserFromLobby(loggedUser.username)
+                    }
                   >
                     <p className="text-gradient-ntfh text-2xl">
-                      {lobby.host.username === user.username
+                      {lobby.host.username === loggedUser.username
                         ? "Delete "
                         : "Leave "}
                       lobby
@@ -226,15 +240,15 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     disabled={
-                      character !== "rogue" && charactersTaken.includes("rogue")
+                      character !== "ROGUE" && charactersTaken.includes("ROGUE")
                     }
-                    onChange={(e) => setCharacter("rogue")}
+                    onChange={(e) => setCharacter("ROGUE")}
                   ></input>
                   <label
                     className={
-                      (character === "rogue" ||
-                        charactersTaken.includes("rogue")) &&
-                      "text-gray-600"
+                      character === "ROGUE" || charactersTaken.includes("ROGUE")
+                        ? "text-gray-600"
+                        : ""
                     }
                   >
                     🗡️ Rogue
@@ -246,16 +260,17 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     disabled={
-                      character !== "warrior" &&
-                      charactersTaken.includes("warrior")
+                      character !== "WARRIOR" &&
+                      charactersTaken.includes("WARRIOR")
                     }
-                    onChange={(e) => setCharacter("warrior")}
+                    onChange={(e) => setCharacter("WARRIOR")}
                   ></input>
                   <label
                     className={
-                      (character === "warrior" ||
-                        charactersTaken.includes("warrior")) &&
-                      "text-gray-600"
+                      character === "WARRIOR" ||
+                      charactersTaken.includes("WARRIOR")
+                        ? "text-gray-600"
+                        : ""
                     }
                   >
                     🛡 Warrior
@@ -267,16 +282,17 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     disabled={
-                      character !== "wizard" &&
-                      charactersTaken.includes("wizard")
+                      character !== "WIZARD" &&
+                      charactersTaken.includes("WIZARD")
                     }
-                    onChange={(e) => setCharacter("wizard")}
+                    onChange={(e) => setCharacter("WIZARD")}
                   ></input>
                   <label
                     className={
-                      (character === "wizard" ||
-                        charactersTaken.includes("wizard")) &&
-                      "text-gray-600"
+                      character === "WIZARD" ||
+                      charactersTaken.includes("WIZARD")
+                        ? "text-gray-600"
+                        : ""
                     }
                   >
                     🧙 Wizard
@@ -288,16 +304,17 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     disabled={
-                      character !== "ranger" &&
-                      charactersTaken.includes("ranger")
+                      character !== "RANGER" &&
+                      charactersTaken.includes("RANGER")
                     }
-                    onChange={(e) => setCharacter("ranger")}
+                    onChange={(e) => setCharacter("RANGER")}
                   ></input>
                   <label
                     className={
-                      (character === "ranger" ||
-                        charactersTaken.includes("ranger")) &&
-                      "text-gray-600"
+                      character === "RANGER" ||
+                      charactersTaken.includes("RANGER")
+                        ? "text-gray-600"
+                        : ""
                     }
                   >
                     🏹 Ranger
@@ -311,16 +328,16 @@ export default function Lobby() {
                     name="class"
                     type="radio"
                     defaultChecked
-                    onChange={(e) => setGender("male")}
+                    onChange={(e) => setGender("MALE")}
                   ></input>
-                  <label>♂ Male</label>
+                  <label>♂ male</label>
                 </span>
                 <span>
                   <input
                     className="mr-2"
                     name="class"
                     type="radio"
-                    onChange={(e) => setGender("female")}
+                    onChange={(e) => setGender("FEMALE")}
                   ></input>
                   <label>♀ Female</label>
                 </span>
@@ -343,11 +360,3 @@ export default function Lobby() {
     </>
   );
 }
-
-Lobby.propTypes = {
-  User: PropTypes.shape({
-    username: PropTypes.string.isRequired,
-  }),
-
-  users: PropTypes.arrayOf(PropTypes.User),
-};

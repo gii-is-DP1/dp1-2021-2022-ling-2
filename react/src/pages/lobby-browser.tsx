@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import UserContext from "../context/user.ts";
-import * as ROUTES from "../constants/routes";
-import toast from "react-hot-toast";
 import HomeButton from "../components/common/home-button";
+import * as ROUTES from "../constants/routes";
+import UserContext from "../context/user";
+import { Lobby } from "../interfaces/Lobby";
 
 /**
  *
@@ -14,13 +15,13 @@ export default function LobbyBrowser() {
   const history = useHistory(); // hook
   const { userToken } = useContext(UserContext);
 
-  const [lobbyList, setLobbyList] = useState([]);
+  const [lobbyList, setLobbyList] = useState<Lobby[]>([]);
 
   const fetchLobbies = async () => {
     try {
       const response = await axios.get(`lobbies`);
       setLobbyList(response.data);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
       history.push("/not-found");
     }
@@ -28,7 +29,10 @@ export default function LobbyBrowser() {
 
   useEffect(() => {
     fetchLobbies();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const tableHeaders = ["No. Players", "Game Name", "Scenes", "Spectators"];
 
   return (
     <>
@@ -44,18 +48,11 @@ export default function LobbyBrowser() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-800">
                     <tr>
-                      <th scope="col" className="text-table-th">
-                        No.Players
-                      </th>
-                      <th scope="col" className="text-table-th">
-                        Game Name
-                      </th>
-                      <th scope="col" className="text-table-th">
-                        Scenes
-                      </th>
-                      <th scope="col" className="text-table-th">
-                        Spectators
-                      </th>
+                      {tableHeaders.map((header) => (
+                        <th key={header} scope="col" className="text-table-th">
+                          {header}
+                        </th>
+                      ))}
                       <th scope="col" className="text-table-th">
                         <button
                           className="btn-ntfh bg-gray-900 w-full"
@@ -64,7 +61,7 @@ export default function LobbyBrowser() {
                           <p className={"text-xl text-gradient-ntfh"}>
                             Refresh
                           </p>
-                        </button>{" "}
+                        </button>
                       </th>
                     </tr>
                   </thead>
@@ -88,7 +85,10 @@ export default function LobbyBrowser() {
                               disabled={!lobby.spectatorsAllowed}
                               onClick={(e) =>
                                 history.push(
-                                  ROUTES.GAME.replace(":gameId", lobby.game.id)
+                                  ROUTES.GAME.replace(
+                                    ":gameId",
+                                    lobby.game.id.toString()
+                                  )
                                 )
                               }
                             >
@@ -107,7 +107,10 @@ export default function LobbyBrowser() {
                               onClick={(e) => {
                                 userToken
                                   ? history.push(
-                                      ROUTES.LOBBY.replace(":lobbyId", lobby.id)
+                                      ROUTES.LOBBY.replace(
+                                        ":lobbyId",
+                                        lobby.id.toString()
+                                      )
                                     )
                                   : history.push(ROUTES.SIGNUP);
                               }}

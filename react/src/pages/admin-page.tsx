@@ -90,7 +90,7 @@ export default function AdminPage() {
               <p className="text-gradient-ntfh">Achievements</p>
             </button>
           </div>
-          <div className="flex flex-col w-3/4 items-center justify-start pl-12 pt-12">
+          <div className="flex flex-col w-full items-center justify-start pl-12 pt-12">
             {currentTable === "ongoing" && <OngoingGamesTable />}
             {currentTable === "history" && (
               <GamesHistoryTable data={gamesHistory} />
