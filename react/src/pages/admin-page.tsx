@@ -71,7 +71,7 @@ export default function AdminPage() {
             <button
               type="submit"
               className="btn-ntfh"
-              onClick={() => setCurrentTable("ongoing")}
+              onClick={() => setCurrentTable("history")}
             >
               <p className="text-gradient-ntfh">Game history</p>
             </button>
