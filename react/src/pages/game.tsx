@@ -18,7 +18,6 @@ import { User } from "../interfaces/User";
  */
 export default function Game() {
   const history = useHistory();
-  const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
 
   const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
@@ -27,7 +26,8 @@ export default function Game() {
   const [players, setPlayers] = useState<Player[]>([]);
 
   const isSpectator = (_user: User | null) =>
-    !userToken || (_user && _user?.lobby?.game?.id !== parseInt(gameId));
+    !loggedUser.username ||
+    (_user && _user?.lobby?.game?.id !== parseInt(gameId));
 
   const playersInRenderOrder = (_players: Player[]) => {
     const orderedPlayerList: Player[] = _players.sort(
@@ -37,7 +37,7 @@ export default function Game() {
      * that the first player of the list (the one who will be rendered on the
      * bottom left part) is us
      * */
-    if (!isSpectator(user)) {
+    if (user && !isSpectator(user)) {
       // Rotate the list until the current player is at the first position,
       // but they still keep the same order (by rotating values in array)
       while (orderedPlayerList[0].user.username !== loggedUser.username) {
@@ -64,9 +64,7 @@ export default function Game() {
   const fetchUser = async () => {
     try {
       const response = await axios.get(`/users/${loggedUser.username}`);
-      const _user: User = response.data;
-      setUser(_user);
-      return _user;
+      setUser(response.data);
     } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
@@ -74,9 +72,18 @@ export default function Game() {
 
   useEffect(() => {
     document.title = "NTFH - Game " + gameId;
-    // fetch game info on page load
-    const _user: any = fetchUser();
-    if (isSpectator(_user)) {
+    loggedUser.username && fetchUser();
+    return function cleanup() {
+      toast.dismiss("Spectator");
+      // To avoid sending the user to the lobby, that
+      // would redirect him/her to the game again
+      history.replace(ROUTES.HOME);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchGame();
+    if (isSpectator(user)) {
       // if user is spectator, render a toast
       toast("Spectator", {
         position: "top-center",
@@ -85,15 +92,7 @@ export default function Game() {
         id: "Spectator",
       });
     }
-    fetchGame();
-    return function cleanup() {
-      toast.dismiss("Spectator");
-      // To avoid sending the user to the lobby, that
-      // would redirect him/her to the game again
-      history.replace(ROUTES.HOME);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user]);
 
   return (
     game && (
