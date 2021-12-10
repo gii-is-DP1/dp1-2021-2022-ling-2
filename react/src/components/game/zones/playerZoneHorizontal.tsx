@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
+import { Player } from "../../../interfaces/Player";
 import AbilityCard from "../elements/abilityCard";
 import CharacterCard from "../elements/characterCard";
 import Token from "../elements/token";
 
-export default function PlayerZoneHorizontal(params) {
+type Params = {
+  player: Player;
+  reverse?: boolean;
+};
+
+export default function PlayerZoneHorizontal(params: Params) {
   const [player, setPlayer] = useState(params.player);
   const reverse = params.reverse ?? false;
   const cards = [1, 2, 3]; // Placeholder for cards
 
   useEffect(() => {
-    const fetchPlayer = async (player) => {
-      //   const response = await fetch(`/players/${player}`);
-      //   const data = await response.json();
-      //   setPlayer(data);
-    };
-    fetchPlayer();
+    // const fetchPlayer = async (player) => {
+    //   const response = await fetch(`/players/${player.user.username}`);
+    //   const data = await response.json();
+    //   setPlayer(data);
+    // };
+    // fetchPlayer();
   }, []);
 
   return (

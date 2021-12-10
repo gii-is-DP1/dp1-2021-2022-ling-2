@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
 import axios from "../../../api/axiosConfig";
+import { Game } from "../../../interfaces/Game";
+import { HordeEnemyIngame } from "../../../interfaces/HordeEnemyIngame";
+import { MarketCardIngame } from "../../../interfaces/MarketCardIngame";
+import { WarlordIngame } from "../../../interfaces/WarlordIngame";
+import HordeEnemyCard from "../elements/hordeEnemyCard";
 import MarketCard from "../elements/marketCard";
 import PlaceholderCard from "../elements/placeholderCard";
 import SceneCard from "../elements/sceneCard";
-import HordeEnemyCard from "../elements/hordeEnemyCard";
 import WarlordCard from "../elements/warlordCard";
 
-export default function CenterZone(params) {
+type Params = {
+  game: Game;
+};
+
+export default function CenterZone(params: Params) {
   const { game } = params;
-  const [marketCards, setMarketCards] = useState([]);
-  const [hordeEnemies, setHordeEnemies] = useState([]);
-  const [sceneCount, setSceneCount] = useState(0);
-  const [warlord, setWarlord] = useState(null);
+  const [marketCards, setMarketCards] = useState<MarketCardIngame[]>([]);
+  const [hordeEnemies, setHordeEnemies] = useState<HordeEnemyIngame[]>([]);
+  const [sceneCount, setSceneCount] = useState<number>(0);
+  const [warlord, setWarlord] = useState<WarlordIngame | undefined>(undefined);
 
   useEffect(() => {
     const fetchmarketCards = async () => {
@@ -21,7 +29,6 @@ export default function CenterZone(params) {
     const fetchWarlord = async () => {
       const response = await axios.get(`/warlords/${params.game.id}`);
       setWarlord(response.data);
-      console.log(response.data);
     };
     const fetchHordeEnemies = async () => {
       const response = await axios.get(`/horde-enemies/${params.game.id}`);

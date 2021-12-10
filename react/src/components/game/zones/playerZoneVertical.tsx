@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react";
+import { Player } from "../../../interfaces/Player";
 import AbilityCard from "../elements/abilityCard";
 import CharacterCard from "../elements/characterCard";
 import PlaceholderCard from "../elements/placeholderCard";
 import Token from "../elements/token";
 
-export default function PlayerZoneVertical(params) {
+type Params = {
+  player: Player;
+  rotation?: number;
+  counterclockwise?: boolean;
+};
+
+export default function PlayerZoneVertical(params: Params) {
   const [player, setPlayer] = useState(params.player);
   const rotation = params.rotation;
   const cards = [1, 2, 3, 4]; // Placeholder for cards
   const ccw = params.counterclockwise ?? false; // Clockwise or counter-clockwise rotations
 
   useEffect(() => {
-    const fetchPlayer = async (player) => {
-      //   const response = await fetch(`/players/${player}`);
-      //   const data = await response.json();
-      //   setPlayer(data);
-    };
-    fetchPlayer();
+    // const fetchPlayer = async (player) => {
+    //   const response = await fetch(`/players/${player}`);
+    //   const data = await response.json();
+    //   setPlayer(data);
+    // };
+    // fetchPlayer();
   }, []);
 
   return (
@@ -46,7 +53,7 @@ export default function PlayerZoneVertical(params) {
           <PlaceholderCard counterclockwise={ccw} />
         </span>
         <span className={ccw ? "order-first" : "order-last"}>
-          <span className={`flex-1 flex flex-row${ccw ? "-reverse" : ""}`}>
+          <span className={`flex-1 flex ${ccw ? "flex-row-reverse" : ""}`}>
             {/* <span className="inline-flex"> */}
             {cards.map((abilityCard, idx) => (
               <AbilityCard

@@ -4,7 +4,8 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user.ts";
+import userContext from "../context/user";
+import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
 
 /**
@@ -12,7 +13,7 @@ import tokenParser from "../helpers/tokenParser";
  * @author andrsdt
  */
 export default function EditProfile() {
-  const params = useParams(); // hook
+  const params: { username: string } = useParams(); // hook
   const history = useHistory(); // hook
 
   const { userToken, setUserToken } = useContext(userContext); // hook
@@ -31,13 +32,13 @@ export default function EditProfile() {
       const response = await axios.get(`/users/${params.username}`);
       setUsername(response.data.username);
       setEmail(response.data.email);
-    } catch (error) {
-      toast.error(error.response?.data?.message);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
       sendToProfile();
     }
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.MouseEvent) {
     e.preventDefault();
     try {
       if (password !== confirmPassword) {
@@ -45,7 +46,7 @@ export default function EditProfile() {
         return;
       }
 
-      const payload = {
+      const payload: any = {
         username,
         email,
       };
@@ -60,7 +61,7 @@ export default function EditProfile() {
       setUserToken(response.data.authorization);
       toast.success("Profile edited successfully");
       sendToProfile();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
   }
@@ -71,15 +72,16 @@ export default function EditProfile() {
       toast.error("You must be logged in to edit your profile");
       history.push(ROUTES.LOGIN);
     }
-    // redirect to login if no token
-    // redirect to profile if user is not the same as the one in the url or if the user is not an admin
+    // redirect to profile if user is not the same as
+    // the one in the url or if the user is not an admin
     else if (
-      loggedUser.username !== params.username &&
-      !loggedUser.authorities.includes("admin")
+      loggedUser?.username !== params.username &&
+      !hasAuthority(loggedUser, "admin")
     ) {
       toast.error("You can't edit another user's profile");
-      history.push(ROUTES.PROFILE.replace(":username", params.username));
+      history.replace(ROUTES.PROFILE.replace(":username", params.username));
     } else fetchUserProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 
   return (
