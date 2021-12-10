@@ -34,7 +34,7 @@ export default function Game() {
      * that the first player of the list (the one who will be rendered on the
      * bottom left part) is us
      * */
-    if (!isSpectator(loggedUser)) {
+    if (!isSpectator(user)) {
       // Rotate the list until the current player is at the first position,
       // but they still keep the same order (by rotating values in array)
       while (orderedPlayerList[0].user.username !== loggedUser.username) {
@@ -61,6 +61,7 @@ export default function Game() {
     try {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
+      return response.data;
     } catch (error) {
       toast.error(error.response?.data?.message);
     }
@@ -69,8 +70,8 @@ export default function Game() {
   useEffect(() => {
     document.title = "NTFH - Game " + gameId;
     // fetch game info on page load
-    fetchUser();
-    if (isSpectator(loggedUser)) {
+    const _user = fetchUser();
+    if (isSpectator(_user)) {
       // if user is spectator, render a toast
       toast("Spectator", {
         position: "top-right",
