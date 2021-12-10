@@ -40,7 +40,7 @@ export default function Game() {
     if (!isSpectator(user)) {
       // Rotate the list until the current player is at the first position,
       // but they still keep the same order (by rotating values in array)
-      while (orderedPlayerList[0].user.username !== loggedUser?.username) {
+      while (orderedPlayerList[0].user.username !== loggedUser.username) {
         const firstElement = orderedPlayerList.shift(); // removes it form array
         if (firstElement) orderedPlayerList.push(firstElement); // adds it at the end
       }
@@ -63,7 +63,7 @@ export default function Game() {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`/users/${loggedUser?.username}`);
+      const response = await axios.get(`/users/${loggedUser.username}`);
       const _user: User = response.data;
       setUser(_user);
       return _user;

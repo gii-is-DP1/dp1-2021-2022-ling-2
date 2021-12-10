@@ -8,7 +8,6 @@ import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Lobby as ILobby } from "../interfaces/Lobby";
-import { TokenUser } from "../interfaces/TokenUser";
 import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
 import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 
@@ -54,7 +53,7 @@ export default function Lobby() {
     try {
       const response = await axios.get(`/lobbies/${lobbyId}`);
       const newLobby: ILobby = response.data;
-      if (lobby && !userInLobby(loggedUser, newLobby)) {
+      if (lobby && !userInLobby(loggedUser.username, newLobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
         toast("You have been kicked from the lobby");
         history.goBack();
@@ -94,7 +93,7 @@ export default function Lobby() {
 
   async function handleRemoveUserFromLobby(username: string) {
     try {
-      if (!lobby || !loggedUser) return;
+      if (!lobby || !loggedUser.username) return;
       // axios.delete only has 2 parameters, url and headers)
       await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
         headers: { Authorization: "Bearer " + userToken },
@@ -111,8 +110,8 @@ export default function Lobby() {
     }
   }
 
-  const userInLobby = (_user: TokenUser | null, _lobby: ILobby) =>
-    _user && _lobby.users.map((u) => u.username).includes(_user.username);
+  const userInLobby = (_username: string, _lobby: ILobby) =>
+    _lobby.users.some((u) => u.username === _username);
 
   const createGame = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -130,12 +129,13 @@ export default function Lobby() {
 
   useEffect(() => {
     document.title = "NTFH - Game lobby";
-    if (loggedUser.username === "") history.push(ROUTES.LOGIN); // missing token
+    if (!loggedUser.username) history.push(ROUTES.LOGIN); // missing token
     async function firstFetch() {
       const _lobby = await fetchLobbyStatus();
       // We have to notify the server we have joined the lobby
       // will be only executed if the user is not in the lobby yet
-      if (_lobby && !userInLobby(loggedUser, _lobby)) notifyJoinLobby();
+      if (_lobby && !userInLobby(loggedUser.username, _lobby))
+        notifyJoinLobby();
     }
     firstFetch();
   }, []); // Only run once

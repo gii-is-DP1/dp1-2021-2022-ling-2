@@ -16,11 +16,11 @@ import { User } from "../interfaces/User";
  * @author andrsdt
  */
 export default function Profile() {
-  const { username } = useParams<{ username: string }>(); // hook
+  const { username: profileUsername } = useParams<{ username: string }>(); // hook
   const history = useHistory(); // hook
 
   const { userToken } = useContext(userContext);
-  const user = tokenParser(useContext(userContext)); // hook
+  const loggedUser = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState<User | null>(null);
   const [userGamesHistory, setUserGamesHistory] = useState<GameHistory[]>([]);
   const [matchesWon, setMatchesWon] = useState(1402);
@@ -45,12 +45,12 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
-    document.title = `NTFH - ${username}'s profile`;
+    document.title = `NTFH - ${profileUsername}'s profile`;
 
     // get user profile
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get(`users/${username}`);
+        const response = await axios.get(`users/${profileUsername}`);
         setUserProfile(response.data);
       } catch (error: any) {
         toast.error(error.response?.data?.message);
@@ -63,13 +63,13 @@ export default function Profile() {
 
   // TODO replace with a backend filter
   const userInPlayerList = (_list: Player[], _username: string) => {
-    return _list.some((player) => player.user.username === username);
+    return _list.some((player) => player.user.username === profileUsername);
   };
 
   // TODO replace with a backend filter
   const filterByUsername = (_list: GameHistory[]) =>
     _list.filter((gameHistory) =>
-      userInPlayerList(gameHistory.game.players, user.username)
+      userInPlayerList(gameHistory.game.players, loggedUser.username)
     );
 
   return (
@@ -77,7 +77,7 @@ export default function Profile() {
       <HomeButton />
       <div className="flex flex-col h-screen bg-wood p-8">
         <span className="text-center pb-8">
-          <Link to={ROUTES.PROFILE.replace(":username", username)}>
+          <Link to={ROUTES.PROFILE.replace(":username", profileUsername)}>
             <button type="submit" className="btn-ntfh">
               <p className="text-5xl text-gradient-ntfh">Profile</p>
             </button>
@@ -93,12 +93,14 @@ export default function Profile() {
             <span>Fastest match: {fastestMatch}</span>
             <span>Longest match: {longestMatch}</span>
             <div className="flex flex-wrap space-x-3">
-              <Link to={ROUTES.STATISTICS + `/${username}`}>
+              <Link to={ROUTES.STATISTICS + `/${profileUsername}`}>
                 <button type="submit" className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">Stats</p>
                 </button>
               </Link>
-              <Link to={ROUTES.EDIT_PROFILE.replace(":username", username)}>
+              <Link
+                to={ROUTES.EDIT_PROFILE.replace(":username", profileUsername)}
+              >
                 <button type="submit" className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">Edit</p>
                 </button>

@@ -32,7 +32,7 @@ export default function Home() {
 
   async function fetchUserData() {
     try {
-      const response = await axios.get(`/users/${loggedUser?.username}`);
+      const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
     } catch (error) {}
   }
@@ -147,7 +147,7 @@ export default function Home() {
       </div>
       <div className="flex-none w-1/4 flex flex-col items-end">
         {/* Left column (profile, friends stuff)*/}
-        {loggedUser ? (
+        {loggedUser.username ? (
           <>
             <Link to={ROUTES.PROFILE.replace(":username", loggedUser.username)}>
               <button className="btn-ntfh mb-2" type="submit">
