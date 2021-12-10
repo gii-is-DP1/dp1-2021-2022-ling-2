@@ -2,7 +2,7 @@ import { Player } from "./Player";
 import { Turn } from "./Turn";
 
 export interface Game {
-  id: string;
+  id: number;
   players: Player[];
   leader: Player;
   currentTurn: Turn;

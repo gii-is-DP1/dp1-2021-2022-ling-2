@@ -75,7 +75,7 @@ export default function EditProfile() {
     // redirect to profile if user is not the same as
     // the one in the url or if the user is not an admin
     else if (
-      loggedUser?.username !== params.username &&
+      loggedUser.username !== params.username &&
       !hasAuthority(loggedUser, "admin")
     ) {
       toast.error("You can't edit another user's profile");

@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user.ts";
+import userContext from "../context/user";
 
 /**
  *
@@ -17,7 +17,7 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
       const payload = {
@@ -28,7 +28,7 @@ export default function Login() {
       setUserToken(response.data.authorization);
       toast.success("Logged in successfully");
       history.push(ROUTES.HOME);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data.message);
     }
   };

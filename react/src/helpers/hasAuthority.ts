@@ -9,8 +9,8 @@ import { AuthorityEnum } from "../types/AuthorityEnum";
  * @returns true if the user object has the authority of the second parameter
  */
 export default function hasAuthority(
-  user: TokenUser | null,
+  user: TokenUser,
   authority: AuthorityEnum
 ): boolean {
-  return user !== null && user.authorities.includes(authority);
+  return !!user.username && user.authorities.includes(authority);
 }

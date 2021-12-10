@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user.ts";
+import userContext from "../context/user";
 
 /**
  *
@@ -18,11 +18,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    document.title = "NTFH - Sign up";
-  });
-
-  const handleSignup = async (e) => {
+  const handleSignup = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
       const payload = {
@@ -36,10 +32,14 @@ export default function SignUp() {
       setUserToken(loginResponse.data.authorization);
       toast.success("Successfully registered!");
       history.push(ROUTES.HOME);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
   };
+
+  useEffect(() => {
+    document.title = "NTFH - Sign up";
+  }, []);
 
   return (
     <>

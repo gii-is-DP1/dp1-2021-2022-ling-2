@@ -14,6 +14,7 @@ export default function GamesHistoryTable(props: Props) {
     "Duration",
     "Start Time",
     "Finish Time",
+    "Scenes",
     "Winner",
     "Players",
   ];

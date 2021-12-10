@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Link, useHistory } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import * as IMAGES from "../constants/images";
 import * as ROUTES from "../constants/routes";
 import UnregisteredUserContext from "../context/unregisteredUser";
-import UserContext from "../context/user.ts";
+import UserContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
-import toast from "react-hot-toast";
+import { User } from "../interfaces/User";
 
 /**
  *
@@ -15,8 +16,8 @@ import toast from "react-hot-toast";
  */
 export default function Home() {
   const { userToken, setUserToken } = useContext(UserContext);
-  const user = tokenParser(useContext(UserContext));
-  const [currentUser, setCurrentUser] = useState();
+  const loggedUser = tokenParser(useContext(UserContext));
+  const [user, setUser] = useState<User | null>(null);
   const history = useHistory(); // hook
   const { unregisteredUser, setUnregisteredUser } = useContext(
     UnregisteredUserContext
@@ -31,18 +32,18 @@ export default function Home() {
 
   async function fetchUserData() {
     try {
-      const response = await axios.get(`/users/${user.username}`);
-      setCurrentUser(response.data);
+      const response = await axios.get(`/users/${loggedUser.username}`);
+      setUser(response.data);
     } catch (error) {}
   }
 
-  const userInLobby = () => currentUser?.lobby;
+  const userInLobby = () => !!user?.lobby;
 
-  const userInGame = () => currentUser?.lobby?.game;
+  const userInGame = () => !!user?.lobby?.game;
 
   const handleLogout = () => {
     setUserToken(null);
-    setCurrentUser(null);
+    setUser(null);
     toast.success("Logged out successfully");
     history.push(ROUTES.HOME);
   };
@@ -62,15 +63,18 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    // TODO extract this to app.tsx? so it runs even if the
+    // person without credentials never visits / route
     // Unregistered user creation
-    if (!unregisteredUser) {
+    if (!unregisteredUser.username) {
       // if there aren't unregistered user credentials, ask for some
       fetchUnregisteredUserData();
     }
     if (userToken) {
-      // if there are user credentials, fetch his info
+      // if there are user credentials, fetch his/her info
       fetchUserData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -100,7 +104,7 @@ export default function Home() {
         ></img>
         <div className="flex flex-col justify-center items-center flex-auto gap-y-2">
           {/* Buttons */}
-          {user && !userInLobby() && (
+          {loggedUser && !userInLobby() && (
             <Link to={ROUTES.CREATE_LOBBY}>
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Create Lobby</p>
@@ -114,23 +118,25 @@ export default function Home() {
               </button>
             </Link>
           )}
-          {userInLobby() && !userInGame() && (
-            <Link to={ROUTES.LOBBY.replace(":lobbyId", currentUser?.lobby?.id)}>
+          {user && userInLobby() && !userInGame() && (
+            <Link
+              to={ROUTES.LOBBY.replace(":lobbyId", user?.lobby.id.toString())}
+            >
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Rejoin Lobby</p>
               </button>
             </Link>
           )}
-          {userInGame() && (
+          {user && userInGame() && (
             <Link
-              to={ROUTES.GAME.replace(":gameId", currentUser?.lobby?.game?.id)}
+              to={ROUTES.GAME.replace(":gameId", user.lobby.game.id.toString())}
             >
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Rejoin Game</p>
               </button>
             </Link>
           )}
-          {hasAuthority(user, "admin") && (
+          {hasAuthority(loggedUser, "admin") && (
             <Link to={ROUTES.ADMIN_PAGE}>
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Admin Tools</p>
@@ -141,11 +147,11 @@ export default function Home() {
       </div>
       <div className="flex-none w-1/4 flex flex-col items-end">
         {/* Left column (profile, friends stuff)*/}
-        {user ? (
+        {loggedUser.username ? (
           <>
-            <Link to={ROUTES.PROFILE.replace(":username", user.username)}>
+            <Link to={ROUTES.PROFILE.replace(":username", loggedUser.username)}>
               <button className="btn-ntfh mb-2" type="submit">
-                <p className="text-gradient-ntfh">{user.username}</p>
+                <p className="text-gradient-ntfh">{loggedUser.username}</p>
               </button>
             </Link>
             <button className="btn-ntfh" type="submit" onClick={handleLogout}>
