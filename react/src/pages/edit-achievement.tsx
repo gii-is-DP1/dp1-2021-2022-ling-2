@@ -36,7 +36,7 @@ export default function EditAchievement() {
       setName(response.data.name);
       setDescription(response.data.description);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.message);
       sendToAdminPage();
     }
   }
@@ -54,7 +54,7 @@ export default function EditAchievement() {
       toast.success("Achievement edited successfully");
       sendToAdminPage();
     } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.message);
     }
   }
 

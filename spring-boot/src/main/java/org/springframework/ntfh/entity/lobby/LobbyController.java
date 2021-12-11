@@ -69,16 +69,8 @@ public class LobbyController {
      */
     @GetMapping("{lobbyId}")
     public ResponseEntity<Lobby> getLobbyStatus(@PathVariable("lobbyId") Integer lobbyId) {
-        // TODO untested
-        Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
-        if (lobbyOptional.isPresent()) {
-            Lobby lobby = lobbyOptional.get();
-            // TODO currently returns user's password info. Maybe create a custom JSON
-            // parser to hide sensitive info?
-            return new ResponseEntity<>(lobby, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Lobby lobby = lobbyService.findLobby(lobbyId);
+        return new ResponseEntity<>(lobby, HttpStatus.OK);
     }
 
     /**
@@ -92,6 +84,7 @@ public class LobbyController {
     public ResponseEntity<Lobby> updateLobby(@PathVariable("lobbyId") Integer lobbyId, @RequestBody Lobby lobby,
             @RequestHeader("Authorization") String token) {
         // TODO {lobbyId} param is redundant. Maybe we rename this endpoint later on
+        // TODO handle FORBIDDEN exception with a validator in the service instead
         String usernameFromToken = TokenUtils.usernameFromToken(token);
         // Only the host can modify the game lobby
         if (!usernameFromToken.equals(lobby.getHost().getUsername()))

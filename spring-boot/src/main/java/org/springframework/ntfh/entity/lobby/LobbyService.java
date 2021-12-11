@@ -41,6 +41,12 @@ public class LobbyService {
         return lobbyRepository.findById(id);
     }
 
+    @Transactional
+    public Lobby findLobby(Integer lobbyId) {
+        return lobbyRepository.findById(lobbyId).orElseThrow(() -> new DataAccessException("Lobby not found") {
+        });
+    }
+
     /**
      * 
      * @author andrsdt

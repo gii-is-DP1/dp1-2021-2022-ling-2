@@ -33,7 +33,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.message);
       sendToProfile();
     }
   }
@@ -62,7 +62,7 @@ export default function EditProfile() {
       toast.success("Profile edited successfully");
       sendToProfile();
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error?.message);
     }
   }
 
