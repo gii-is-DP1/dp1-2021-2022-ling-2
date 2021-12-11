@@ -33,7 +33,7 @@ export default function SignUp() {
       toast.success("Successfully registered!");
       history.push(ROUTES.HOME);
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error?.message);
     }
   };
 
