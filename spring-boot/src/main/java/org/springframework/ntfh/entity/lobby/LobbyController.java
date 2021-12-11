@@ -69,16 +69,15 @@ public class LobbyController {
      */
     @GetMapping("{lobbyId}")
     public ResponseEntity<Lobby> getLobbyStatus(@PathVariable("lobbyId") Integer lobbyId) {
-        // TODO untested
-        Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
-        if (lobbyOptional.isPresent()) {
-            Lobby lobby = lobbyOptional.get();
-            // TODO currently returns user's password info. Maybe create a custom JSON
-            // parser to hide sensitive info?
-            return new ResponseEntity<>(lobby, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Lobby lobby = lobbyService.findLobby(lobbyId);
+        return new ResponseEntity<>(lobby, HttpStatus.OK);
+        // Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
+        // if (lobbyOptional.isPresent()) {
+        // Lobby lobby = lobbyOptional.get();
+        // return new ResponseEntity<>(lobby, HttpStatus.OK);
+        // } else {
+        // return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        // }
     }
 
     /**
