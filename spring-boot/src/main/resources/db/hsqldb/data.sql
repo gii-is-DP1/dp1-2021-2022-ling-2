@@ -344,3 +344,7 @@ INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 
 -- Set that the users are not in a game anymore
 UPDATE users set game = null WHERE username = 'stockie';
 UPDATE users set game = null WHERE username = 'alejandro';
+
+
+-- UnregisteredUser for testing
+INSERT INTO unregistered_users(username, creation_time) VALUES ('user23', 1637882596427);
