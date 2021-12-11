@@ -1,8 +1,6 @@
 package org.springframework.ntfh.user.unregistered;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,6 +20,7 @@ import org.springframework.ntfh.entity.user.unregistered.UnregisteredUserService
 /**
  * @author alegestor
  */
+
 @ExtendWith(MockitoExtension.class)
 public class UnregisteredUserMockTest {
     
@@ -68,6 +67,5 @@ public class UnregisteredUserMockTest {
         verify(unregisteredUserRepository, times(1)).delete(unregisteredUser);
         assertEquals(true, res);
     }
-
 
 }

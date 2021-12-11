@@ -11,6 +11,10 @@ import org.springframework.ntfh.entity.user.unregistered.UnregisteredUser;
 import org.springframework.ntfh.entity.user.unregistered.UnregisteredUserService;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author alegestor
+ */
+
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class UnregisteredUserTest {
     
