@@ -21,6 +21,11 @@ public class UnregisteredUserService {
     }
 
     @Transactional(readOnly = true)
+	public Iterable<UnregisteredUser> findAll() {
+		return unregisteredUserRepository.findAll();
+	}
+
+    @Transactional(readOnly = true)
     public Optional<UnregisteredUser> findUnregisteredUserById(String username) {
         return this.unregisteredUserRepository.findById(username);
     }
