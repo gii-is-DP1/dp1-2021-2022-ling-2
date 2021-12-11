@@ -31,8 +31,8 @@ public class AchievementService {
         return achievementRepository.findById(id);
     }
 
-    public Achievement updateAchievement(Achievement achievement, String token) throws DataAccessException,
-            DataIntegrityViolationException, NonMatchingTokenException, IllegalArgumentException {
+    public Achievement updateAchievement(Achievement achievement, String token)
+            throws NonMatchingTokenException, IllegalArgumentException {
 
         // If we are sending a petition with a non-existing id, we throw an exception.
         // We always have to send an id because we are always editing existing
