@@ -15,7 +15,7 @@ export default function OngoingGamesTable() {
         const response = await axios.get(`games`);
         setGameList(response.data);
       } catch (error: any) {
-        toast.error(error.response.data.message);
+        toast.error(error?.message);
       }
     };
 
