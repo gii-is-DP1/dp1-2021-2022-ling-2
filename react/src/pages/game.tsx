@@ -57,7 +57,7 @@ export default function Game() {
       setPlayers(sortedPlayers);
     } catch (error: any) {
       toast.error(error?.message);
-      if (error.response?.status === 404) history.push(ROUTES.HOME);
+      if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
     }
   };
 
