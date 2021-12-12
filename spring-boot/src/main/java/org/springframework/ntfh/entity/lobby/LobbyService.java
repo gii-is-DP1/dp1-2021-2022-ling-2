@@ -61,7 +61,8 @@ public class LobbyService {
             };
 
         lobby.getUsers().forEach(user -> {
-            removeUserFromLobby(lobby, user.getUsername());
+            user.setLobby(null);
+            user.setCharacter(null);
         });
         this.lobbyRepository.deleteById(lobby.getId());
     }
