@@ -47,42 +47,6 @@ public class LobbyService {
         });
     }
 
-    /**
-     * 
-     * @author andrsdt
-     * @param id of the lobby to be fetched
-     * @return Lobby object without sensitive information (users' passwords)
-     */
-    @Transactional
-    public Optional<Lobby> findLobbyByIdNonSensitive(int id) throws DataAccessException {
-        // TODO unused. Maybe replace with a custom JSON parser?
-        Optional<Lobby> lobbyOptional = lobbyRepository.findById(id);
-        if (!lobbyOptional.isPresent())
-            throw new DataAccessException("The lobby does not exist") {
-            };
-
-        Lobby lobby = lobbyOptional.get();
-
-        // Create a Lobby object without sensitive information
-        Lobby lobbyNonSensitive = new Lobby();
-        lobbyNonSensitive.setId(lobby.getId());
-        lobbyNonSensitive.setName(lobby.getName());
-        lobbyNonSensitive.setHasScenes(lobby.getHasScenes());
-        lobbyNonSensitive.setSpectatorsAllowed(lobby.getSpectatorsAllowed());
-        lobbyNonSensitive.setMaxPlayers(lobby.getMaxPlayers());
-        Set<User> usersNonSensitive = new HashSet<>();
-        Set<User> lobbyUsers = lobbyNonSensitive.getUsers();
-        if (lobbyUsers != null) {
-            lobbyUsers.forEach(user -> {
-                User userNonSensitive = new User();
-                userNonSensitive.setUsername(user.getUsername());
-                usersNonSensitive.add(userNonSensitive);
-            });
-            lobbyNonSensitive.setUsers(usersNonSensitive);
-        }
-        return Optional.of(lobbyNonSensitive); // assure that it always returns an optional
-    }
-
     @Transactional
     public Lobby save(@Valid Lobby lobby) {
         return this.lobbyRepository.save(lobby);
@@ -92,6 +56,10 @@ public class LobbyService {
     public void deleteLobby(Lobby lobby) {
         // make sure to remove all FK refrences to this lobby from the users who were in
         // the lobby
+        if (lobby.getGame() != null)
+            throw new DataAccessException("The game has already started") {
+            };
+
         lobby.getUsers().forEach(user -> {
             user.setLobby(null);
             user.setCharacter(null);
@@ -143,7 +111,7 @@ public class LobbyService {
             };
 
         user.setLobby(lobby);
-
+        user.setCharacter(null);
         lobby.addUser(user);
         return lobbyRepository.save(lobby);
     }
@@ -159,7 +127,6 @@ public class LobbyService {
      */
     @Transactional
     public Boolean removeUserFromLobby(Lobby lobby, String username) throws DataAccessException {
-        // TODO untested
         Optional<User> userOptional = userService.findUser(username);
         if (!userOptional.isPresent())
             throw new DataAccessException("The user that is being removed from the lobby does not exist") {
@@ -186,20 +153,6 @@ public class LobbyService {
      */
     @Transactional
     public Lobby updateLobby(Lobby lobby) throws MissingAttributeException {
-        // TODO check if there are missing attributes in the object? should there be
-        // any?
-        if (lobby.getName().isEmpty())
-            throw new MissingAttributeException("The name of the lobby cannot be empty") {
-            };
-
-        if (lobby.getHasScenes() == null)
-            throw new MissingAttributeException("The scenes setting must be enable or disable") {
-            };
-
-        if (lobby.getMaxPlayers() == null)
-            throw new MissingAttributeException("The number of max players can not be null") {
-            };
-
         return this.lobbyRepository.save(lobby);
     }
 }

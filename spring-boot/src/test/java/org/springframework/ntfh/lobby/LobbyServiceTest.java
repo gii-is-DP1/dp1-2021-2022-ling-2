@@ -82,16 +82,6 @@ public class LobbyServiceTest {
         assertEquals(userService.findUser("andres").get(), tester.getLeader());
     }
 
-    @Test
-    public void testFindByIdNonSensitive() {
-        Lobby tester = this.lobbyService.findLobbyByIdNonSensitive(1).orElse(null);
-        assertEquals("andres with pablo", tester.getName());
-        assertEquals(null, tester.getGame());
-        assertEquals(true, tester.getHasScenes());
-        assertEquals(true, tester.getSpectatorsAllowed());
-        assertEquals(2, tester.getMaxPlayers());
-    }
-
     // H7
     // Un user no crea el lobby en si, sino que a traves del botón de crear una
     // partida tiene acceso a la creación, por lo tanto la
