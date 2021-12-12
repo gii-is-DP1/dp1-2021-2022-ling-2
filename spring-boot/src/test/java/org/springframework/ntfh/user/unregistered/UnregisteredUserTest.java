@@ -29,8 +29,8 @@ public class UnregisteredUserTest {
 
     @Test
     void testFindById() {
-        UnregisteredUser tester = this.unregisteredUserService.findUnregisteredUserById("user23").get();
-        assertEquals("user23", tester.getUsername());
+        UnregisteredUser tester = this.unregisteredUserService.findUnregisteredUserById("user0023").get();
+        assertEquals(1637882596427l, tester.getCreationTime());
     }
 
 }

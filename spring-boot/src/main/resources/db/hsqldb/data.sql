@@ -347,4 +347,4 @@ UPDATE users set game = null WHERE username = 'alejandro';
 
 
 -- UnregisteredUser for testing
-INSERT INTO unregistered_users(username, creation_time) VALUES ('user23', 1637882596427);
+INSERT INTO unregistered_users(username, creation_time) VALUES ('user0023', 1637882596427);
