@@ -13,7 +13,6 @@ import org.springframework.ntfh.character.CharacterService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.player.PlayerRepository;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
@@ -30,9 +29,6 @@ public class PlayerServiceTest {
     protected PlayerService playerService;
 
     @Autowired
-    protected PlayerRepository playerRepository;
-
-    @Autowired
     protected CharacterService characterService;
 
     @Autowired
@@ -41,7 +37,10 @@ public class PlayerServiceTest {
     @Autowired
     protected LobbyService lobbyService;
 
-    private Integer counter;
+    // Number of players in the DB
+    private final Integer INITIAL_COUNT = 8;
+
+    private Player currentPlayer;
 
     @BeforeEach
     void createPlayer() {
@@ -54,50 +53,43 @@ public class PlayerServiceTest {
         tester.setCharacterType(characterService.findCharacterById(7).get());
         tester.setUser(userService.findUser("merlin").get());
         playerService.savePlayer(tester);
+
+        currentPlayer = tester;
     }
 
     @AfterEach
     void deletePlayer() {
-        counter = playerService.playerCount();
-        // 6 is the number of players created in this test
-        for(int i=counter; i<=counter+6; i++) {
-            if(playerService.findPlayer(i).isPresent()) playerRepository.deleteById(i);
-        }
+        playerService.delete(currentPlayer);
     }
 
     @Test
     public void testCountWithInitialData() {
         Integer count = playerService.playerCount();
-        assertEquals(8+1, count);
+        assertEquals(INITIAL_COUNT + 1, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(playerService.findAll()).size();
-        assertEquals(8+1, count);
+        assertEquals(INITIAL_COUNT + 1, count);
     }
 
     @Test
     public void testFindByPlayerId() {
-        Player tester = this.playerService.findPlayer(1).get();
-        assertEquals("pablo", tester.getUser().getUsername());
-        assertEquals(0, tester.getGlory());
-        assertEquals(0, tester.getGold());
-        assertEquals(0, tester.getKills());
-        assertEquals(0, tester.getTurnOrder());
-        assertEquals(0, tester.getWounds());
-        assertEquals(characterService.findCharacterById(8).get(), tester.getCharacterType());
+        Player tester = this.playerService.findPlayer(currentPlayer.getId()).get();
+        assertEquals("merlin", tester.getUser().getUsername());
+        assertEquals(1, tester.getGlory());
+        assertEquals(4, tester.getGold());
+        assertEquals(5, tester.getKills());
+        assertEquals(2, tester.getTurnOrder());
+        assertEquals(1, tester.getWounds());
+        assertEquals(characterService.findCharacterById(7).get(), tester.getCharacterType());
     }
 
     @Test
     public void testSavePlayer() {
         // Player created in the BeforeEach
-        Player tester = null;
-        counter = playerService.playerCount();
-        // 6 is the number of players created in this test
-        for(int i=counter; i<=counter+6; i++) {
-            if(playerService.findPlayer(i).isPresent()) tester = playerService.findPlayer(i).get();
-        }
+        Player tester = currentPlayer;
         assertEquals("merlin", tester.getUser().getUsername());
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());
@@ -114,6 +106,9 @@ public class PlayerServiceTest {
         Lobby lobby = lobbyService.findLobby(3);
         Player tester = playerService.createFromUser(user, lobby, 3);
         assertEquals("user4", tester.getUser().getUsername());
+
+        // TODO do we have to delete the character or is this covered by Junit's default
+        // rollback?
     }
 
 }
