@@ -41,6 +41,8 @@ public class PlayerServiceTest {
     @Autowired
     protected LobbyService lobbyService;
 
+    private Integer counter;
+
     @BeforeEach
     void createPlayer() {
         Player tester = new Player();
@@ -56,8 +58,9 @@ public class PlayerServiceTest {
 
     @AfterEach
     void deletePlayer() {
-        // 9 would be the id of the new player
-        for(int i=9; i<20; i++) {
+        counter = playerService.playerCount();
+        // 6 is the number of players created in this test
+        for(int i=counter; i<=counter+6; i++) {
             if(playerService.findPlayer(i).isPresent()) playerRepository.deleteById(i);
         }
     }
@@ -88,12 +91,13 @@ public class PlayerServiceTest {
 
     @Test
     public void testSavePlayer() {
-        // Player i was created in the beforeEach
+        // Player created in the BeforeEach
         Player tester = null;
-        for(int i=9; i<20; i++) {
+        counter = playerService.playerCount();
+        // 6 is the number of players created in this test
+        for(int i=counter; i<=counter+6; i++) {
             if(playerService.findPlayer(i).isPresent()) tester = playerService.findPlayer(i).get();
         }
-
         assertEquals("merlin", tester.getUser().getUsername());
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());
