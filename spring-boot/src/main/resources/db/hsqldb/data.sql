@@ -133,12 +133,12 @@ INSERT INTO scenes(id, scene_type_enum) VALUES (12, 'YERMO_DE_CEMENMAR');
 
 --INSERT INTO playable_cards_ingame(id, game_id, ability_card_id, location) VALUES (1, 1, 1, 'HORDE_PILE');
 
-INSERT INTO proficiencies(id, proficiency_type_enum, secondaryDebuff) VALUES (1, 'Dexterity', 0);
-INSERT INTO proficiencies(id, proficiency_type_enum, secondaryDebuff) VALUES (2, 'MELEE', 0);
-INSERT INTO proficiencies(id, proficiency_type_enum, secondaryDebuff) VALUES (3, 'MELEE', -1);
-INSERT INTO proficiencies(id, proficiency_type_enum, secondaryDebuff) VALUES (4, 'RANGED', 0);
-INSERT INTO proficiencies(id, proficiency_type_enum, secondaryDebuff) VALUES (5, 'RANGED', -1);
-INSERT INTO proficiencies(id, proficiency_type_enum, secondaryDebuff) VALUES (6, 'SPELL', 0);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (1, 'DEXTERITY', 0);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (2, 'MELEE', 0);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (3, 'MELEE', -1);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (4, 'RANGED', 0);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (5, 'RANGED', -1);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (6, 'SPELL', 0);
 
 
 -- MARKET no es una propiedad de las cartas. Es una propiedad de la instancia de la carta, cuando se encuentre ya dentro de un juego.
