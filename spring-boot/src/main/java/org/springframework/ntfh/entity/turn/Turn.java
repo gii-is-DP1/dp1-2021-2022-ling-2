@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -20,7 +22,6 @@ import lombok.Setter;
 @Setter
 @Entity
 public class Turn extends BaseEntity {
-
     @OneToOne(optional = false)
     @JoinColumn(name = "game_id")
     @JsonIgnoreProperties({ "startTime" })
@@ -34,4 +35,15 @@ public class Turn extends BaseEntity {
     @ManyToOne(optional = true)
     @JoinColumn(name = "scene_id")
     private Scene currentScene;
+
+    @Transient
+    TurnState state;
+    @Transient
+    TurnState EnemyState;
+    @Transient
+    TurnState MarketState;
+    @Transient
+    TurnState PlayerState;
+    @Transient
+    TurnState RefreshState;
 }

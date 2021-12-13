@@ -68,4 +68,8 @@ public class TurnService {
         game.setCurrentTurn(turn);
     }
 
+    // State functions
+
+    
+
 }
