@@ -57,6 +57,7 @@ public class PlayerServiceTest {
     @AfterEach
     void deletePlayer() {
         // 9 would be the id of the new player
+        // 20 is an "upper bound" to delete all the users created during this test. Temporary solution.
         for(int i=9; i<20; i++) {
             if(playerService.findPlayer(i).isPresent()) playerRepository.deleteById(i);
         }
