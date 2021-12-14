@@ -1,64 +1,52 @@
--- One admin user, named admin with password admin and authority admin
-INSERT INTO users(username,password, email) VALUES ('admin','admin', 'admin@mail.com');
+INSERT INTO users(username,password, email) VALUES ('admin','$2a$10$bicbzJTFskk8.sHWJauxCu2RzDIqXk/zCxQDZ5ByLQw0m0lQ6l2Pa', 'admin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
 INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
 
-INSERT INTO users(username,password,email) VALUES ('pablo','pablo', 'pablo@mail.com');
+INSERT INTO users(username,password,email) VALUES ('pablo','$2a$10$k.p0O7lwMeTbmeKbODEqbO8l6VDv38JgLI66UHydll9QhIK4ewlgq', 'pablo@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(4, 'pablo','admin');
 INSERT INTO authorities(id,username,authority) VALUES(5, 'pablo','user');
 
-INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
+INSERT INTO users(username,password,email) VALUES ('andres','$2a$10$MnbY762s/bvKrB249IRRferPU3lg70XfzPLxHBwK9Sg8EXA.OSMGO','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
-INSERT INTO users(username,password,email) VALUES ('stockie','stockie', 'stockie@mail.com');
+INSERT INTO users(username,password,email) VALUES ('stockie','$2a$10$xKDzRwhX90OQZ4EeOUOtMeTc8Sfzj4Dacsbfqh8HSeLzBT5zWgX6W', 'stockie@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(6, 'stockie','user');
 
-INSERT INTO users(username,password,email) VALUES ('alejandro','alejandro', 'alejandro@mail.com');
+INSERT INTO users(username,password,email) VALUES ('alejandro','$2a$10$wto4YGQm44mFCrxN.GoAW.0ll2zZiA.1dy6fMk06AwPy8tqKsw.ra', 'alejandro@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(7, 'alejandro','user');
 
-INSERT INTO users(username,password,email) VALUES ('merlin','merlin', 'merlin@mail.com');
+INSERT INTO users(username,password,email) VALUES ('merlin','$2a$10$nY6NBJd0GmBPNLvi/JqiguR6.3UDaXINdnIP2Z3PpOAIATvW6ahj.', 'merlin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(8, 'merlin','user');
 
-INSERT INTO users(username,password,email) VALUES ('legolas','legolas', 'legolas@mail.com');
+INSERT INTO users(username,password,email) VALUES ('legolas','$2a$10$M5ZhWHiGOKrB5gpLAnPo3OTEj9SFOmxmBDyj.FuwtCH9ZdQlNNtWG', 'legolas@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(9, 'legolas','user');
 
-INSERT INTO users(username,password,email) VALUES ('gandalf','gandalf', 'gandalf@mail.com');
+INSERT INTO users(username,password,email) VALUES ('gandalf','$2a$10$mtBX7rLI1QALxQcnsUc1/OapMiBnjMmDTsRwxiXqJXpQmXZuOYR5q', 'gandalf@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(10, 'gandalf','user');
 
-INSERT INTO users(username,password,email) VALUES ('frodo','frodo', 'frodo@mail.com');
+INSERT INTO users(username,password,email) VALUES ('frodo','$2a$10$PalqK8iUM3awRALpPgs1j.AnUo2uKdriZcOAXQopLRIUQVsySrDVa', 'frodo@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(11, 'frodo','user');
 
-INSERT INTO users(username,password,email) VALUES ('dalinar','dalinar', 'dalinar@mail.com');
+INSERT INTO users(username,password,email) VALUES ('dalinar','$2a$10$UkzgrcjhQFvIzpSAiev6YuGzKzKFLCk9YOD8GD/vGerFzMjRyl7De', 'dalinar@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(12, 'dalinar','user');
 
-INSERT INTO users(username,password,email) VALUES ('aragorn','aragorn', 'aragorn@mail.com');
+INSERT INTO users(username,password,email) VALUES ('aragorn','$2a$10$yDGVc5VBqkHDkEIu7xHYquXsiMNAa4iY3ioE1s5HPT2x5P2N1ftvS', 'aragorn@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(13, 'aragorn','user');
 
-INSERT INTO users(username,password,email) VALUES ('ezio','ezio', 'ezio@mail.com');
+INSERT INTO users(username,password,email) VALUES ('ezio','$2a$10$wlrC8OwlLYJYg3wM.5gxmuiPhvHaK/sh2sDbHnMYehSzvnRUzauXm', 'ezio@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
 
-INSERT INTO users(username,password,email) VALUES ('user1','user1', 'user1@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user1','$2a$10$/oWmIwbGzUR5guYoznFzDefC.MMYFTwZ3bmLIiWd4akO8cac/eTX2', 'user1@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(15, 'user1','user');
 
-INSERT INTO users(username,password,email) VALUES ('user2','user2', 'user2@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user2','$2a$10$pLlYabqhasLIEdk16qUXqeNNNnK3tszIc2ud1QQ6IshsN.WoOOQHu', 'user2@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(16, 'user2','user');
 
-INSERT INTO users(username,password,email) VALUES ('user3','user3', 'user3@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user3','$2a$10$/Equ7DkGQXhbXtz5bO6uruA/VStGtLxhGE8aLd3Xi28mOkVqaj70y', 'user3@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(17, 'user3','user');
 
-INSERT INTO users(username,password,email) VALUES ('user4','user4', 'user4@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user4','$2a$10$.AxtcWQeT3zpXHv4j0892uKnU5kkJTpRhFijkaJujP2bb22KcR/qC', 'user4@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(18, 'user4','user');
-
--- TODO users for JUnit tests should not be created in the database, but in the Junit tests and then deleted
--- Usuario para el JUnit de la H10
-INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
-
-
--- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host)  VALUES('test lobby 2', 1, true, true, 4, 'gandalf');
--- INSERT INTO games(id, name, startTime, has scenes, players, leader) VALUES
--- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
--- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
 
 INSERT INTO achievements(name, description, type) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light', 'CREATE_ACCOUNT');
 INSERT INTO achievements(name, description, type) VALUES ('Newcomer', 'Play your first game', 'PLAY_1_GAME');
