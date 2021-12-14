@@ -3,7 +3,6 @@ package org.springframework.ntfh.player;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 /**
  * @author alegestor
  */
+
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class PlayerServiceTest {
@@ -58,11 +58,6 @@ public class PlayerServiceTest {
 
         currentPlayer = tester;
     }
-
-    // @AfterEach
-    // void deletePlayer() {
-    //     playerService.delete(currentPlayer);
-    // }
 
     @Test
     public void testCountWithInitialData() {
@@ -108,9 +103,6 @@ public class PlayerServiceTest {
         Lobby lobby = lobbyService.findLobby(3);
         Player tester = playerService.createFromUser(user, lobby, 3);
         assertEquals("user4", tester.getUser().getUsername());
-        // playerService.delete(tester);
-        // TODO do we have to delete the character or is this covered by Junit's default
-        // rollback?
     }
 
 }
