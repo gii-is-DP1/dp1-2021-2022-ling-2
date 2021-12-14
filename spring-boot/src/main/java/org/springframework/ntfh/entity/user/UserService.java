@@ -15,8 +15,6 @@
  */
 package org.springframework.ntfh.entity.user;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +68,8 @@ public class UserService {
 			throw new IllegalArgumentException("There is already a user registered with the username provided");
 
 		// encrypt the password using bcrypt
-		String encryptedPassword = passwordEncoder.encode(user.getPassword());
-		user.setPassword(encryptedPassword);
+		String encodedParamPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedParamPassword);
 
 		user.setEnabled(true);
 		userRepository.save(user);
@@ -137,8 +135,8 @@ public class UserService {
 			user.setPassword(userInDatabase.getPassword());
 		} else {
 			// If there is a new password input, encrypt it using bcrypt
-			String encryptedPassword = passwordEncoder.encode(user.getPassword());
-			user.setPassword(encryptedPassword);
+			String encodedParamPassword = passwordEncoder.encode(user.getPassword());
+			user.setPassword(encodedParamPassword);
 		}
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
@@ -156,13 +154,14 @@ public class UserService {
 			throw new DataAccessException("User not found") {
 			};
 		}
+
 		User userInDB = foundUserOptional.get();
 		if (!userInDB.getEnabled()) {
 			throw new BannedUserException("This user has been banned") {
 			};
 		}
-		String encryptedPassword = passwordEncoder.encode(user.getPassword());
-		if (!userInDB.getPassword().equals(encryptedPassword)) {
+
+		if (!passwordEncoder.matches(user.getPassword(), userInDB.getPassword())) {
 			throw new IllegalArgumentException("Incorrect password") {
 			};
 		}
