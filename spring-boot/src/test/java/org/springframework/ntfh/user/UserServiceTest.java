@@ -44,6 +44,7 @@ public class UserServiceTest {
         tester.setUsername("antonio");
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
+        userService.saveUser(tester);
 
         currentUser = tester;
     }
@@ -65,7 +66,7 @@ public class UserServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(userService.findAll()).size();
-        assertEquals(INITIAL_COUNT, count);
+        assertEquals(INITIAL_COUNT + 1, count);
     }
 
     @Test
