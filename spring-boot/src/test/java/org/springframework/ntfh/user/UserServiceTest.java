@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
  * @author alegestor
  */
 
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class UserServiceTest {
 
@@ -36,15 +37,20 @@ public class UserServiceTest {
     private final Integer INITIAL_COUNT = 17;
 
     private User currentUser;
-    
+
     @BeforeEach
-    void createPlayer() {
+    void createUser() {
         User tester = new User();
         tester.setUsername("antonio");
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
-    
+
         currentUser = tester;
+    }
+
+    @AfterEach
+    void deleteUser() {
+        userService.deleteUser(currentUser);
     }
 
     @Test
@@ -77,7 +83,7 @@ public class UserServiceTest {
         assertEquals("antonio", tester.getPassword());
         assertEquals("antonio@mail.com", tester.getEmail());
     }
-    
+
     @Test
     public void testUpdateUser() {
         User tester = currentUser;
@@ -86,6 +92,5 @@ public class UserServiceTest {
         tester.setPassword(posPassword);
         assertEquals(posPassword, tester.getPassword());
     }
-
 
 }

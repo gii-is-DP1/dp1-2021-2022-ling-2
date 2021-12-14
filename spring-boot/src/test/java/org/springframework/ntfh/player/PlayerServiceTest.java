@@ -3,6 +3,7 @@ package org.springframework.ntfh.player;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
  * @author alegestor
  */
 
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class PlayerServiceTest {
 
@@ -57,6 +58,11 @@ public class PlayerServiceTest {
         playerService.savePlayer(tester);
 
         currentPlayer = tester;
+    }
+
+    @AfterEach
+    void deletePlayer() {
+        playerService.delete(currentPlayer);
     }
 
     @Test

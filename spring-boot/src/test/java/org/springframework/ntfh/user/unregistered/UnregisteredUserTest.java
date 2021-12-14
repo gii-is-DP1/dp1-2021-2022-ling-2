@@ -10,17 +10,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.ntfh.entity.user.unregistered.UnregisteredUser;
 import org.springframework.ntfh.entity.user.unregistered.UnregisteredUserService;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 /**
  * @author alegestor
  */
 
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class UnregisteredUserTest {
-    
+
     @Autowired
     private UnregisteredUserService unregisteredUserService;
 
@@ -44,7 +41,7 @@ public class UnregisteredUserTest {
         Integer preCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
         unregisteredUserService.create();
         Integer posCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
-        assertEquals(preCreationCount+1, posCreationCount);
+        assertEquals(preCreationCount + 1, posCreationCount);
     }
 
     @Test
@@ -53,8 +50,7 @@ public class UnregisteredUserTest {
         Integer preDeletionCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
         unregisteredUserService.delete(toBeDeleted);
         Integer posCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
-        assertEquals(preDeletionCount-1, posCreationCount);
+        assertEquals(preDeletionCount - 1, posCreationCount);
     }
-
 
 }
