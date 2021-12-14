@@ -48,6 +48,12 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	public UserService(UserRepository userRepository) {
+		// TODO needed?
+		this.userRepository = userRepository;
+	}
+
 	/**
 	 * Create a new user
 	 * 
@@ -92,31 +98,6 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public Integer count() {
 		return (int) userRepository.count();
-	}
-
-	/**
-	 * This method is used to find an user but only return non-sensitive information
-	 * (username, email, authorities)
-	 * 
-	 * @param username the username of the user to find
-	 * @return the user with restricted information
-	 * @author andrsdt
-	 */
-	@Transactional(readOnly = true)
-	public Map<String, String> findUserPublic(String username) {
-		// TODO: Delete this method and create a custom JSON builder that receives
-		// a User and returns only non-sensitive information
-		// The username is the id (primary key)
-		Optional<User> userOptional = userRepository.findById(username);
-		if (userOptional.isPresent()) {
-			User user = userOptional.get();
-
-			HashMap<String, String> res = new HashMap<>();
-			res.put("username", user.getUsername());
-			res.put("email", user.getEmail());
-			return res;
-		} else
-			return Map.of();
 	}
 
 	/**

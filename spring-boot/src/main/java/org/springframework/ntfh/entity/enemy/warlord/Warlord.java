@@ -20,9 +20,6 @@ public class Warlord extends EnemyEntity {
     @Enumerated(EnumType.STRING)
     private WarlordTypeEnum warlordTypeEnum;
 
-    @NotNull
-    private Integer endurance;
-
     /**
      * Derived. Return the route to the front image of a warlord. Can be obtained by
      * knowing the WarlordType
