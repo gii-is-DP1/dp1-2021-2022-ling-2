@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,7 +16,14 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+/**
+ * @author alegestor
+ */
+
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class UserServiceTest {
 
@@ -23,6 +32,27 @@ public class UserServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    // Number of users in the DB
+    private final Integer INITIAL_COUNT = 17;
+
+    private User currentUser;
+
+    @BeforeEach
+    void createUser() {
+        User tester = new User();
+        tester.setUsername("antonio");
+        tester.setPassword("antonio");
+        tester.setEmail("antonio@mail.com");
+        userService.saveUser(tester);
+
+        currentUser = tester;
+    }
+
+    @AfterEach
+    void deleteUser() {
+        userService.deleteUser(currentUser);
+    }
 
     @Test
     public void testPH3E1() {
@@ -36,7 +66,7 @@ public class UserServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(userService.findAll()).size();
-        assertEquals(17, count);
+        assertEquals(INITIAL_COUNT + 1, count);
     }
 
     @Test
@@ -44,6 +74,24 @@ public class UserServiceTest {
         User tester = this.userService.findUser("stockie").orElse(null);
         assertEquals("stockie", tester.getPassword());
         assertEquals("stockie@mail.com", tester.getEmail());
+    }
+
+    @Test
+    public void testSaveUser() {
+        // User created in the BeforeEach
+        User tester = currentUser;
+        assertEquals("antonio", tester.getUsername());
+        assertEquals("antonio", tester.getPassword());
+        assertEquals("antonio@mail.com", tester.getEmail());
+    }
+
+    @Test
+    public void testUpdateUser() {
+        User tester = currentUser;
+        String prePassword = tester.getPassword();
+        String posPassword = prePassword.concat("123");
+        tester.setPassword(posPassword);
+        assertEquals(posPassword, tester.getPassword());
     }
 
 }
