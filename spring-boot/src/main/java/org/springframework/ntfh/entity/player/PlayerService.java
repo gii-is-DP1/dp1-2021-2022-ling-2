@@ -31,6 +31,16 @@ public class PlayerService {
     }
 
     @Transactional
+    public void delete(Player player) {
+        playerRepository.delete(player);
+    }
+
+    @Transactional
+    public void deleteById(Integer id) {
+        playerRepository.deleteById(id);
+    }
+
+    @Transactional
     public Iterable<Player> findAll() {
         return playerRepository.findAll();
     }

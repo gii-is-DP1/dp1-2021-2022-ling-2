@@ -44,13 +44,13 @@ public class Lobby extends BaseEntity {
     @JsonIgnoreProperties(value = { "players", "leader" })
     private Game game;
 
-    @NotNull
+    @NotNull(message = "The scenes must be either on or off")
     private Boolean hasScenes;
 
-    @NotNull
+    @NotNull(message = "The spectators must be either allowed or not allowed")
     private Boolean spectatorsAllowed;
 
-    @NotNull
+    @NotNull(message = "The number of max players can not be null")
     private Integer maxPlayers;
 
     // TODO if I remove CascadeType.REMOVE then the deleteLobby() method in

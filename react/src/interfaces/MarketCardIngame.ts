@@ -5,6 +5,6 @@ import { MarketCardLocationEnum } from "../types/MarketCardLocationEnum";
 export interface MarketCardIngame {
   id: number;
   marketCard: MarketCard;
-  marketCardLocation: MarketCardLocationEnum;
+  location: MarketCardLocationEnum;
   game: Game;
 }

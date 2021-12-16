@@ -133,6 +133,14 @@ INSERT INTO scenes(id, scene_type_enum) VALUES (12, 'YERMO_DE_CEMENMAR');
 
 --INSERT INTO playable_cards_ingame(id, game_id, ability_card_id, location) VALUES (1, 1, 1, 'HORDE_PILE');
 
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (1, 'DEXTERITY', 0);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (2, 'MELEE', 0);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (3, 'MELEE', -1);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (4, 'RANGED', 0);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (5, 'RANGED', -1);
+INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (6, 'SPELL', 0);
+
+
 -- MARKET no es una propiedad de las cartas. Es una propiedad de la instancia de la carta, cuando se encuentre ya dentro de un juego.
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (1, 3, 'DAGA_ELFICA');
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (2, 3, 'DAGA_ELFICA');
@@ -344,3 +352,7 @@ INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 
 -- Set that the users are not in a game anymore
 UPDATE users set game = null WHERE username = 'stockie';
 UPDATE users set game = null WHERE username = 'alejandro';
+
+
+-- UnregisteredUser for testing
+INSERT INTO unregistered_users(username, creation_time) VALUES ('user0023', 1637882596427);

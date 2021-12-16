@@ -86,10 +86,9 @@ public class HordeEnemyIngameService {
         HordeEnemyIngame hordeEnemyIngame = new HordeEnemyIngame();
         hordeEnemyIngame.setHordeEnemy(hordeEnemy);
         hordeEnemyIngame.setCurrentEndurance(hordeEnemy.getEndurance());
-        // TODO temporary change to test the frontend. ALl enemies should be on the
-        // pile.
-        EnemyLocation location = (hordeEnemy.getExtraGlory() == 1) ? EnemyLocation.FIGHTING : EnemyLocation.PILE;
-        hordeEnemyIngame.setHordeEnemyLocation(location);
+        hordeEnemyIngame.setHordeEnemyLocation(EnemyLocation.PILE);
+        // All the horde enemies will be on the pile initially. When the first turn
+        // begins, the refill of enemies for fight will be done (by the Turn service?)
         hordeEnemyIngame.setGame(game);
         this.save(hordeEnemyIngame);
     }

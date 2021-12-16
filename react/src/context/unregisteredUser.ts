@@ -7,4 +7,10 @@ import { UnregisteredUser } from "../interfaces/UnregisteredUser";
 export default createContext<{
   unregisteredUser: UnregisteredUser;
   setUnregisteredUser: any;
-} | null>(null);
+}>({
+  unregisteredUser: {
+    username: "",
+    token: -1,
+  },
+  setUnregisteredUser: null,
+});
