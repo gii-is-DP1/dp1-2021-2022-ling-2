@@ -37,8 +37,6 @@ public class Lobby extends BaseEntity {
     @NotEmpty(message = "The lobby name must not be empty")
     private String name;
 
-    // TODO replace with game. Initially to null, eventually to the game that has
-    // been created from that lobby
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "game")
     @JsonIgnoreProperties(value = { "players", "leader" })
