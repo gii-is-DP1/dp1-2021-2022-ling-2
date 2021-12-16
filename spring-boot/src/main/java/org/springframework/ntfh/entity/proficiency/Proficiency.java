@@ -10,10 +10,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "proficiencies")
 public class Proficiency extends BaseEntity {
