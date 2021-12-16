@@ -17,11 +17,14 @@ import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 /**
  * @author alegestor
  */
 
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class PlayerServiceTest {
 
@@ -106,9 +109,6 @@ public class PlayerServiceTest {
         Lobby lobby = lobbyService.findLobby(3);
         Player tester = playerService.createFromUser(user, lobby, 3);
         assertEquals("user4", tester.getUser().getUsername());
-
-        // TODO do we have to delete the character or is this covered by Junit's default
-        // rollback?
     }
 
 }

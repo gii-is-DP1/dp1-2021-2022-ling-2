@@ -17,20 +17,40 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class UnregisteredUserTest {
-    
+
     @Autowired
     private UnregisteredUserService unregisteredUserService;
+
+    // Number of unregisteredUsers in the DB
+    private final Integer INITIAL_COUNT = 1;
 
     @Test
     void testFindAll() {
         Integer count = Lists.newArrayList(unregisteredUserService.findAll()).size();
-        assertEquals(1, count);
+        assertEquals(INITIAL_COUNT, count);
     }
 
     @Test
     void testFindById() {
         UnregisteredUser tester = this.unregisteredUserService.findUnregisteredUserById("user0023").get();
-        assertEquals(1637882596427l, tester.getCreationTime());
+        assertEquals(1637882596427L, tester.getCreationTime());
+    }
+
+    @Test
+    void testCreateUnregisteredUser() {
+        Integer preCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
+        unregisteredUserService.create();
+        Integer posCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
+        assertEquals(preCreationCount + 1, posCreationCount);
+    }
+
+    @Test
+    void testDeleteUnregisteredUser() {
+        UnregisteredUser toBeDeleted = unregisteredUserService.create();
+        Integer preDeletionCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
+        unregisteredUserService.delete(toBeDeleted);
+        Integer posCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
+        assertEquals(preDeletionCount - 1, posCreationCount);
     }
 
 }
