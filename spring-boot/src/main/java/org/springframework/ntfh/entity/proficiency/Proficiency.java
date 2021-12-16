@@ -19,12 +19,10 @@ import lombok.Setter;
 public class Proficiency extends BaseEntity {
 
     @NotNull
-    @Column(name = "proficiency_type_enum")
     @Enumerated(EnumType.STRING)
     private ProficiencyTypeEnum proficiencyTypeEnum;
 
     @NotNull
-    @Column(name = "secondary_debuff")
-    private Integer secondaryDebuff;
+    private Integer secondaryDebuff; // 0 or -1
 
 }

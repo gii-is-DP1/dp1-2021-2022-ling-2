@@ -12,11 +12,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.springframework.ntfh.character.Character;
 import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.proficiency.Proficiency;
 
 import lombok.Getter;
 
@@ -25,19 +26,17 @@ import lombok.Getter;
 @Table(name = "market_cards")
 public class MarketCard extends BaseEntity {
 
-    @Column(name = "price")
+    @NotNull
     private Integer price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "market_card_type_enum")
     private MarketCardTypeEnum marketCardTypeEnum;
 
-    // Inspiration from PetClinic for this ManyToMany big join (It creates an
-    // association table)
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(name = "marketcards_characters", joinColumns = @JoinColumn(name = "market_card_id"), inverseJoinColumns = @JoinColumn(name = "character_id"))
+    @JoinTable(name = "marketcards_proficiencies", joinColumns = @JoinColumn(name = "market_card_id"), inverseJoinColumns = @JoinColumn(name = "proficiency_id"))
     @JsonIgnore
-    private Set<Character> usableBy;
+    private Set<Proficiency> proficiencies; // if null, usable by anyone
 
     @Transient
     public String getFrontImage() {
