@@ -178,22 +178,22 @@ INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (13, 5, 'ALABA
 INSERT INTO market_cards(id, price, market_card_type_enum) VALUES (14, 5, 'ARCO_COMPUESTO');
 
 -- PIEDRA DE AMOLAR can be used by characters with dexterity, melee and ranged
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (6, 1);
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_id) VALUES (6, 2);
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_id) VALUES (6, 4);
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (6, 'DEXTERITY');
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (6, 'MELEE');
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (6, 'RANGED');
 
 -- CAPA ELFICA can be used by characters with ranged, spell
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_id) VALUES (11, 4);
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_id) VALUES (11, 6);
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (11, 'RANGED');
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (11, 'SPELL');
 
 -- ARMADURA DE PLACAS can be used by characters with melee
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_id) VALUES (12, 2);
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (12, 'MELEE');
 
 -- ALABARDA ORCA can be used by characters with melee
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_id) VALUES (13, 2);
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (13, 'MELEE');
 
 -- ARCO COMPUESTO can be used by characters with ranged
-INSERT INTO marketcards_proficiencies(market_card_id, proficiency_id) VALUES (14, 6);
+INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (14, 'RANGED');
 
 -- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
 -- Create the initial lobby
