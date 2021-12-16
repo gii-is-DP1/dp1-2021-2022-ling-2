@@ -1,18 +1,18 @@
- /*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*
+* Copyright 2002-2013 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package org.springframework.ntfh.entity.user;
 
 import java.util.HashMap;
@@ -62,41 +62,8 @@ public class UserService {
 		if (userRepository.existsByEmail(user.getEmail()))
 			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
-		Optional<User> userWithSameUsername = userRepository.findById(user.getUsername());
-		if (userWithSameUsername.isPresent())
-			throw new DataIntegrityViolationException("This username is already in use") {
-			};
-
-			Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
-			if (userWithSameEmail.isPresent())
-			throw new DataIntegrityViolationException("This email is already in use") {
-			};
-
-		if (user.getUsername().isEmpty())
-			throw new IllegalArgumentException("The username can not be empty") {
-			};
-		if (user.getPassword().isEmpty())
-			throw new IllegalArgumentException("The password can not be empty") {
-			};
-		if (user.getEmail().isEmpty())
-			throw new IllegalArgumentException("The email can not be empty") {
-			};
-
-		if (user.getPassword() == null || user.getPassword().isEmpty())
-			throw new IllegalArgumentException("A Password is required") {
-			};
-
-		if (user.getPassword().length() < 4)
-			throw new IllegalArgumentException("Password must be at least 8 characters long") {
-			};
-
-		if (user.getUsername().length() < 4)
-			throw new IllegalArgumentException("Username must be at least 4 characters long") {
-			};
-
-		if (user.getUsername().length() > 20)
-			throw new IllegalArgumentException("Username must be at most 20 characters long") {
-			};
+		if (userRepository.existsByUsername(user.getUsername()))
+			throw new IllegalArgumentException("There is already a user registered with the username provided");
 
 		user.setEnabled(true);
 		userRepository.save(user);
