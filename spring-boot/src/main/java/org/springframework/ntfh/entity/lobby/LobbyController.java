@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,36 +68,8 @@ public class LobbyController {
      */
     @GetMapping("{lobbyId}")
     public ResponseEntity<Lobby> getLobbyStatus(@PathVariable("lobbyId") Integer lobbyId) {
-        // TODO untested
-        Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
-        if (lobbyOptional.isPresent()) {
-            Lobby lobby = lobbyOptional.get();
-            // TODO currently returns user's password info. Maybe create a custom JSON
-            // parser to hide sensitive info?
-            return new ResponseEntity<>(lobby, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    /**
-     * This endpoint will be only accessible for the host of the game (via JWT token
-     * validation) and will allow him/her to modify attributes of the game lobby
-     * (unused yet)
-     * 
-     * @author andrsdt
-     */
-    @PutMapping("{lobbyId}")
-    public ResponseEntity<Lobby> updateLobby(@PathVariable("lobbyId") Integer lobbyId, @RequestBody Lobby lobby,
-            @RequestHeader("Authorization") String token) {
-        // TODO {lobbyId} param is redundant. Maybe we rename this endpoint later on
-        String usernameFromToken = TokenUtils.usernameFromToken(token);
-        // Only the host can modify the game lobby
-        if (!usernameFromToken.equals(lobby.getHost().getUsername()))
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
-        Lobby updatedLobby = lobbyService.updateLobby(lobby);
-        return new ResponseEntity<>(updatedLobby, HttpStatus.OK);
+        Lobby lobby = lobbyService.findLobby(lobbyId);
+        return new ResponseEntity<>(lobby, HttpStatus.OK);
     }
 
     /**
@@ -186,6 +157,8 @@ public class LobbyController {
     @DeleteMapping("{lobbyId}")
     public ResponseEntity<Lobby> deleteLobby(@PathVariable("lobbyId") Integer lobbyId,
             @RequestHeader("Authorization") String token) {
+        // TODO implement? currently delegated to removeUserFromLobby() when the one
+        // leaving is the host. Kind of violates the single responsibility principle
         return null;
     }
 

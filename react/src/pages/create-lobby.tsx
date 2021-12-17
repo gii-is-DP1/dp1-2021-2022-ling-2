@@ -15,10 +15,10 @@ export default function CreateLobby() {
   const history = useHistory(); // hook
 
   const { userToken } = useContext(userContext); // hook
-  const user = tokenParser(useContext(userContext)); // hook
+  const loggedUser = tokenParser(useContext(userContext)); // hook
 
   const [gameName, setGameName] = useState(
-    user ? `${user.username}'s game` : ""
+    loggedUser.username ? `${loggedUser.username}'s game` : ""
   );
   const [maxPlayers, setMaxPlayers] = useState(4);
   const [scenesChecked, setScenesChecked] = useState(false);
@@ -27,13 +27,15 @@ export default function CreateLobby() {
   const handleCreateLobby = async (event: React.MouseEvent) => {
     event.preventDefault();
     try {
+      // TODO should the initial player be passed here in the payload?
+      // or should this be handled in the server?
       const payload = {
         name: gameName,
         maxPlayers: maxPlayers,
         hasScenes: scenesChecked,
         spectatorsAllowed: spectatorsChecked,
-        host: user?.username,
-        players: [user?.username],
+        host: loggedUser.username,
+        players: [loggedUser.username],
       };
       const response = await axios.post("/lobbies", payload, {
         headers: { Authorization: "Bearer " + userToken },
@@ -42,7 +44,7 @@ export default function CreateLobby() {
       toast.success("Lobby created successfully");
       history.replace(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.message);
     }
   };
 

@@ -6,11 +6,10 @@ import * as ROUTES from "../../constants/routes";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
 import { Achievement } from "../../interfaces/Achievement";
-import { TokenUser } from "../../interfaces/TokenUser";
 
 export default function AchievementsTable() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const user: TokenUser | null = tokenParser(useContext(userContext));
+  const loggedUser = tokenParser(useContext(userContext));
 
   useEffect(() => {
     const fetchAchievements = async () => {
@@ -18,14 +17,15 @@ export default function AchievementsTable() {
         const response = await axios.get(`achievements`);
         setAchievements(response.data);
       } catch (error: any) {
-        toast.error(error.response?.data?.message);
+        toast.error(error?.message);
       }
     };
 
     fetchAchievements();
   }, []);
 
-  const isAdmin = () => user && user.authorities.includes("admin");
+  const isAdmin = () =>
+    loggedUser.username && loggedUser.authorities.includes("admin");
 
   return (
     <div className="flex flex-col">

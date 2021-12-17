@@ -47,7 +47,7 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> dataIntegrityViolationExceptionHandler(HttpServletRequest request,
             DataIntegrityViolationException ex) {
-        return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
+        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NonMatchingTokenException.class)
@@ -100,6 +100,12 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
             RollbackException ex) {
         // TODO redirect this exception to its appropiate handler so the return message
         // is clearer
+        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<Object> numberFormatExceptionHandler(HttpServletRequest request,
+            NumberFormatException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

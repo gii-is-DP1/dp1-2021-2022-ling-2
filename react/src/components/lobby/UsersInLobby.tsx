@@ -14,7 +14,7 @@ type Props = {
 export default function UsersInLobby(props: Props) {
   const { lobby, handleRemoveUserFromLobby } = props; // destructuring props // TODO in other files too
   // user: the one who is logged in
-  const viewer: TokenUser | null = tokenParser(useContext(UserContext)); // user who is logged in
+  const loggedUser: TokenUser = tokenParser(useContext(UserContext)); // user who is logged in
 
   const isHost = (user: TokenUser | User | null): boolean =>
     user !== null && user.username === lobby.host.username;
@@ -47,8 +47,9 @@ export default function UsersInLobby(props: Props) {
         ) // arbitrary but consistent order
         .map((user: User, idx) => (
           <li key={idx} className="bg-green-700 rounded-xl p-2 text-white">
-            {!isHost(user) && isHost(viewer) && (
-              // show me the kick button over a player only if i'm the host, and also if the player to kick is not me
+            {!isHost(user) && isHost(loggedUser) && (
+              // show me the kick button over a player only if i'm the host
+              // AND the player to kick is not me
               <button
                 className="mr-2"
                 onClick={(e) => handleRemoveUserFromLobby(user.username)}

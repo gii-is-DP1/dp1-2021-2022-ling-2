@@ -33,7 +33,7 @@ export default function EditProfile() {
       setUsername(response.data.username);
       setEmail(response.data.email);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.message);
       sendToProfile();
     }
   }
@@ -62,7 +62,7 @@ export default function EditProfile() {
       toast.success("Profile edited successfully");
       sendToProfile();
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error?.message);
     }
   }
 
@@ -75,7 +75,7 @@ export default function EditProfile() {
     // redirect to profile if user is not the same as
     // the one in the url or if the user is not an admin
     else if (
-      loggedUser?.username !== params.username &&
+      loggedUser.username !== params.username &&
       !hasAuthority(loggedUser, "admin")
     ) {
       toast.error("You can't edit another user's profile");
