@@ -94,7 +94,7 @@ public class UserControllerTest {
     //     tester.setEmail("antonio@mail.com");
     //     users.add(tester);
     //     Mockito.when(userService.findAll()).thenReturn(users);
-    //     mockMvc.perform(get("/getMapping")).andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(1)))
+    //     mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(jsonPath("$", Matchers.hasSize(1)))
     //             .andExpect(jsonPath("$[0].username", Matchers.equalTo("antonio")));
     // }
 
