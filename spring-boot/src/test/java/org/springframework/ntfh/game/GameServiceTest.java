@@ -11,7 +11,6 @@ import java.util.Set;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -56,30 +55,33 @@ public class GameServiceTest {
 
     @BeforeEach
     public void init() {
-        Set<User> users = new HashSet<>();
-        users.add(userService.findUser("alex").get());
+        User alex = userService.findUser("alex").get();
+        User pablo = userService.findUser("pablo").get();
+        Set<User> users = new HashSet<User>();
+        users.add(alex);
+        users.add(pablo);
 
         lobbyTester = new Lobby();
-        lobbyTester.setName("init");
+        lobbyTester.setName("Test lobby");
         lobbyTester.setHasScenes(true);
         lobbyTester.setSpectatorsAllowed(false);
         lobbyTester.setMaxPlayers(4);
         lobbyTester.setUsers(users);
-        lobbyTester.setHost(userService.findUser("alex").get());
-        lobbyTester.setLeader(userService.findUser("alex").get());
+        lobbyTester.setHost(alex);
+        lobbyTester.setLeader(alex);
         lobbyService.save(lobbyTester);
 
-        List<Player> players = new ArrayList<>();
-        User user = userService.findUser("alex").get();
-        user.setCharacter(characterService.findCharacterById(2).get());
-        Player player = playerService.createFromUser(user, lobbyTester, 0);
-        players.add(player);
+        alex.setCharacter(characterService.findCharacterById(2).get());
+        pablo.setCharacter(characterService.findCharacterById(4).get());
+        Player alexPlayer = playerService.createFromUser(alex, lobbyTester, 0);
+        Player pabloPlayer = playerService.createFromUser(pablo, lobbyTester, 1);
+        List<Player> players = Lists.newArrayList(alexPlayer, pabloPlayer);
 
         gameTester = new Game();
         gameTester.setStartTime(System.currentTimeMillis());
         gameTester.setHasScenes(true);
         gameTester.setPlayers(players);
-        gameTester.setLeader(Lists.newArrayList(players).get(0));
+        gameTester.setLeader(players.get(0));
         gameService.save(gameTester);
     }
 
@@ -113,19 +115,22 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testfindById() {
+    public void testFindById() {
         Game tester = this.gameService.findGameById(1);
         assertEquals(true, tester.getHasScenes());
         assertEquals(1, tester.getLeader().getId());
     }
 
-    // TODO edit init() method to create a lobby with 2 users, this test currently
-    // fails since the lobby only has 1 user
-    @Disabled
     @Test
-    public void testCreatefromLobby() {
+    public void testCreateFromLobby() {
         Game tester = gameService.createFromLobby(lobbyTester);
         assertEquals(gameRepository.findById(tester.getId()).get().getId(), tester.getId());
+    }
+
+    @Test
+    public void testCreateFromLobbyNotEnoughPlayers() {
+        lobbyTester.removeUser(userService.findUser("pablo").get());
+        assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
     @Test
