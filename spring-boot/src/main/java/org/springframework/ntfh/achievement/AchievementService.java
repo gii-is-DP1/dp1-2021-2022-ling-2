@@ -3,7 +3,6 @@ package org.springframework.ntfh.achievement;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
