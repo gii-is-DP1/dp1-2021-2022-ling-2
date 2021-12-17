@@ -73,7 +73,7 @@ public class GameServiceTest {
         lobbyService.save(lobbyTester);
 
         user1.setCharacter(characterService.findCharacterById(2).get());
-        user2.setCharacter(characterService.findCharacterById(3).get());
+        user2.setCharacter(characterService.findCharacterById(4).get());
         Player player1 = playerService.createFromUser(user1, lobbyTester, 0);
         Player player2 = playerService.createFromUser(user1, lobbyTester, 1);
         List<Player> players = Lists.list(player1, player2);
@@ -116,16 +116,22 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testfindById() {
+    public void testFindById() {
         Game tester = this.gameService.findGameById(1);
         assertEquals(true, tester.getHasScenes());
         assertEquals(1, tester.getLeader().getId());
     }
 
     @Test
-    public void testCreatefromLobby() {
+    public void testCreateFromLobby() {
         Game tester = gameService.createFromLobby(lobbyTester);
         assertEquals(gameService.findGameById(tester.getId()).getId(), tester.getId());
+    }
+
+    @Test
+    public void testCreateFromLobbyNotEnoughPlayers() {
+        lobbyTester.removeUser(userService.findUser("pablo").get());
+        assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
     @Test
