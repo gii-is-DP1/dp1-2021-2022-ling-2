@@ -2,8 +2,6 @@ package org.springframework.ntfh.lobby;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.util.Lists;
@@ -128,8 +126,9 @@ public class LobbyServiceTest {
 
     @Test
     public void testH14E1() {
-        lobbyTester.addUser(userService.findUser("alex").get());
-        Integer numUsersInLobby=lobbyTester.getUsers().size();
+        User user1 = userService.findUser("user1").get();
+        lobbyTester.addUser(user1);
+        Integer numUsersInLobby = lobbyTester.getUsers().size();
         assertEquals(1, numUsersInLobby);
     }
 

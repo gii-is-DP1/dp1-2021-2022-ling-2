@@ -130,7 +130,8 @@ public class GameServiceTest {
 
     @Test
     public void testCreateFromLobbyNotEnoughPlayers() {
-        lobbyTester.removeUser(userService.findUser("pablo").get());
+        User user2 = userService.findUser("user2").get();
+        lobbyTester.removeUser(user2);
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
