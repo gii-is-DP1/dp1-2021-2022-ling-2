@@ -1,30 +1,41 @@
 package org.springframework.ntfh.user;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.entity.user.authorities.Authorities;
+import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 /**
  * @author alegestor
+ * @author andrsdt
  */
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@Import(BCryptPasswordEncoder.class)
 public class UserServiceTest {
 
     @Autowired
@@ -33,24 +44,33 @@ public class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    private static PasswordEncoder passwordEncoder;
+
     // Number of users in the DB
-    private final Integer INITIAL_COUNT = 17;
+    private final Integer INITIAL_COUNT = 16;
 
     private User currentUser;
 
+    @BeforeAll
+    private static void initPasswordService() {
+        passwordEncoder = new BCryptPasswordEncoder(10, new SecureRandom("NTFHseed".getBytes()));
+    }
+
     @BeforeEach
-    void createUser() {
+    public void createUser() {
         User tester = new User();
+        Set<Authorities> userAuthority = userService.findUser("user1").get().getAuthorities();
         tester.setUsername("antonio");
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
+        tester.setAuthorities(userAuthority);
         userService.saveUser(tester);
 
         currentUser = tester;
     }
 
     @AfterEach
-    void deleteUser() {
+    public void deleteUser() {
         userService.deleteUser(currentUser);
     }
 
@@ -72,7 +92,7 @@ public class UserServiceTest {
     @Test
     public void testfindById() {
         User tester = this.userService.findUser("stockie").orElse(null);
-        assertEquals("stockie", tester.getPassword());
+        assertTrue(passwordEncoder.matches("stockie", tester.getPassword()));
         assertEquals("stockie@mail.com", tester.getEmail());
     }
 
@@ -81,17 +101,18 @@ public class UserServiceTest {
         // User created in the BeforeEach
         User tester = currentUser;
         assertEquals("antonio", tester.getUsername());
-        assertEquals("antonio", tester.getPassword());
         assertEquals("antonio@mail.com", tester.getEmail());
+        assertTrue(passwordEncoder.matches("antonio", tester.getPassword()));
     }
 
     @Test
     public void testUpdateUser() {
         User tester = currentUser;
-        String prePassword = tester.getPassword();
-        String posPassword = prePassword.concat("123");
-        tester.setPassword(posPassword);
-        assertEquals(posPassword, tester.getPassword());
+        String newPassword = "newPassword";
+        tester.setPassword(newPassword);
+        String testerToken = TokenUtils.generateJWTToken(tester);
+        User updatedTester = userService.updateUser(tester, testerToken);
+        assertTrue(passwordEncoder.matches(newPassword, updatedTester.getPassword()));
     }
 
 }
