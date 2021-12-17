@@ -22,7 +22,7 @@ type CurrentTableEnum = "ongoing" | "history" | "achievements" | "users";
  */
 export default function AdminPage() {
   const history = useHistory();
-  const user = tokenParser(useContext(userContext));
+  const loggedUser = tokenParser(useContext(userContext));
   const [currentTable, setCurrentTable] = useState<CurrentTableEnum>("ongoing");
   const [gamesHistory, setGamesHistory] = useState<GameHistory[]>([]);
 
@@ -41,7 +41,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     document.title = "NTFH - Admin panel";
-    if (!hasAuthority(user, "admin")) {
+    if (!hasAuthority(loggedUser, "admin")) {
       toast.error("You must be an admin to access this page");
       history.push(ROUTES.LOGIN);
     }
@@ -90,7 +90,7 @@ export default function AdminPage() {
               <p className="text-gradient-ntfh">Achievements</p>
             </button>
           </div>
-          <div className="flex flex-col w-3/4 items-center justify-start pl-12 pt-12">
+          <div className="flex flex-col w-full items-center justify-start pl-12 pt-12">
             {currentTable === "ongoing" && <OngoingGamesTable />}
             {currentTable === "history" && (
               <GamesHistoryTable data={gamesHistory} />
