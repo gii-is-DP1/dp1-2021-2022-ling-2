@@ -24,7 +24,6 @@ public class AchievementController {
 
     @GetMapping
     public ResponseEntity<Iterable<Achievement>> getAll() {
-        // untested
         Iterable<Achievement> achievements = this.achievementService.findAll();
         return new ResponseEntity<>(achievements, HttpStatus.OK);
     }

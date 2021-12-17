@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AchievementService {
+    
     @Autowired
     private AchievementRepository achievementRepository;
 
@@ -47,6 +48,7 @@ public class AchievementService {
             throw new IllegalArgumentException("There is already an achievement with the same name.");
         }
 
+        // TODO check all these in the entity if we can
         if (achievement.getName().isEmpty()) {
             throw new IllegalArgumentException("The name cannot be empty.");
         }
