@@ -29,7 +29,7 @@ export default function Login() {
       toast.success("Logged in successfully");
       history.push(ROUTES.HOME);
     } catch (error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error?.message);
     }
   };
 

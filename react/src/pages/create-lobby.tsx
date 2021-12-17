@@ -44,7 +44,7 @@ export default function CreateLobby() {
       toast.success("Lobby created successfully");
       history.replace(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
     } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.message);
     }
   };
 

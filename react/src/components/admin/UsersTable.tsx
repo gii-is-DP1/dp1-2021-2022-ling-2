@@ -25,7 +25,7 @@ export default function UsersTable() {
       });
       setUserList(response.data);
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error?.message);
     }
   };
 
@@ -36,7 +36,7 @@ export default function UsersTable() {
       const userCount = response.data;
       setTotalPages(Math.ceil(userCount / usersPerPage));
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error?.message);
     }
   };
   const handleToggleBan = async (_user: User) => {
@@ -52,7 +52,7 @@ export default function UsersTable() {
       fetchUsers();
       toast.success(_user.username + " has been banned");
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error?.message);
     }
   };
 

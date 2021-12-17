@@ -56,8 +56,8 @@ export default function Game() {
       const sortedPlayers = playersInRenderOrder(_game.players);
       setPlayers(sortedPlayers);
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
-      if (error.response?.status === 404) history.push(ROUTES.HOME);
+      toast.error(error?.message);
+      if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
     }
   };
 
@@ -66,7 +66,7 @@ export default function Game() {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
+      toast.error(error?.message);
     }
   };
 
