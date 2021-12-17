@@ -10,13 +10,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.model.NamedEntity;
 import org.springframework.ntfh.entity.user.User;
 
 import lombok.Getter;
@@ -32,10 +31,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "lobbies")
-public class Lobby extends BaseEntity {
-
-    @NotEmpty(message = "The lobby name must not be empty")
-    private String name;
+public class Lobby extends NamedEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "game")

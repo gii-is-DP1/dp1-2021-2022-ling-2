@@ -17,14 +17,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "achievements") // TODO redundant?
+@Table(name = "achievements")
 public class Achievement extends NamedEntity {
 
-    @NotEmpty
+    @NotEmpty(message = "The description must not be empty")
     private String description;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @JsonIgnore // This is for internal handling
+    @JsonIgnore
     private AchievementType type;
 }

@@ -3,6 +3,7 @@ package org.springframework.ntfh.entity.comment;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
@@ -22,6 +23,7 @@ import lombok.Setter;
 @Entity
 public class Comment extends BaseEntity {
 
+    @NotEmpty(message = "A comment must not be empty")
     private String text;
 
     // Many comments can be made in a game
