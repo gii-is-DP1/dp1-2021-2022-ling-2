@@ -126,6 +126,7 @@ public class GameServiceTest {
     public void testCreateFromLobby() {
         Game tester = gameService.createFromLobby(lobbyTester);
         assertEquals(gameService.findGameById(tester.getId()).getId(), tester.getId());
+        gameService.delete(tester);
     }
 
     @Test
