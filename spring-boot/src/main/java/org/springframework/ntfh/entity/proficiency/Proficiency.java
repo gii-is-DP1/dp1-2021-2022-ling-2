@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.proficiency;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

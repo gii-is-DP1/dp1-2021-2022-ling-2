@@ -15,9 +15,12 @@
  */
 package org.springframework.ntfh.entity.model;
 
-import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Simple JavaBean domain object adds a name property to
@@ -27,24 +30,12 @@ import javax.validation.constraints.Size;
  * @author Ken Krebs
  * @author Juergen Hoeller
  */
+@Getter
+@Setter
 @MappedSuperclass
 public class NamedEntity extends BaseEntity {
 
+	@NotEmpty(message = "The name must not be empty")
 	@Size(min = 3, max = 50)
-	@Column(name = "name")
 	private String name;
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String toString() {
-		return this.getName();
-	}
-
 }
