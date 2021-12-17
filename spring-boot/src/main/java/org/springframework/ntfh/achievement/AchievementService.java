@@ -5,15 +5,13 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AchievementService {
-    
+
     @Autowired
     private AchievementRepository achievementRepository;
 
