@@ -16,14 +16,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "achievements")
+@Table(name = "achievements") // TODO redundant?
 public class Achievement extends NamedEntity {
 
     // private Date date; // TODO: Date of? shouldn't be used.
     // private Predicate<Object> achievementCondition;
     // This can't be stored as a predicate here because it can't be stored in a db.
 
-    @NotNull
+    @NotEmpty
     private String description;
 
     @NotNull
