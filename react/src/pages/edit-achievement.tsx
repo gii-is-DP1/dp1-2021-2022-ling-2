@@ -42,6 +42,7 @@ export default function EditAchievement() {
   }
 
   async function handleSubmit(event: React.MouseEvent) {
+    event.preventDefault();
     try {
       const payload = {
         id: achievement?.id, // Needed to identify the achievement
@@ -90,7 +91,7 @@ export default function EditAchievement() {
             <p className="font-bold text-2xl mb-2">Description</p>
             <input
               value={description}
-              type="email"
+              type="text"
               className="p-3 rounded-xl border-4 border-black text-black"
               onChange={(e) => setDescription(e.target.value)}
             ></input>
