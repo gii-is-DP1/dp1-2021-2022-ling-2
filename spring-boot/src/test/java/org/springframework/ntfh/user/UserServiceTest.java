@@ -44,17 +44,13 @@ public class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Number of users in the DB
     private final Integer INITIAL_COUNT = 16;
 
     private User currentUser;
-
-    @BeforeAll
-    private static void initPasswordService() {
-        passwordEncoder = new BCryptPasswordEncoder(10, new SecureRandom("NTFHseed".getBytes()));
-    }
 
     @BeforeEach
     public void createUser() {
