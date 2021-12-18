@@ -211,40 +211,41 @@ INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUE
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (25, 'ESPADAZO', 'WARRIOR');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (26, 'ESPADAZO', 'WARRIOR');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (27, 'PASO_ATRAS', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (28, 'TODO_O_NADA', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (29, 'VOZ_DE_ALIENTO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (28, 'PASO_ATRAS', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (29, 'TODO_O_NADA', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (30, 'VOZ_DE_ALIENTO', 'WARRIOR');
 
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (30, 'AURA_PROTECTORA', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (31, 'BOLA_DE_FUEGO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (32, 'DISPARO_GELIDO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (31, 'AURA_PROTECTORA', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (32, 'BOLA_DE_FUEGO', 'WIZARD');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (33, 'DISPARO_GELIDO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (34, 'FLECHA_CORROSIVA', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (35, 'GOLPE_DE_BASTON', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (34, 'DISPARO_GELIDO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (35, 'FLECHA_CORROSIVA', 'WIZARD');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (36, 'GOLPE_DE_BASTON', 'WIZARD');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (37, 'GOLPE_DE_BASTON', 'WIZARD');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (38, 'GOLPE_DE_BASTON', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (39, 'ORBE_CURATIVO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (40, 'PROYECTIL_IGNEO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (39, 'GOLPE_DE_BASTON', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (40, 'ORBE_CURATIVO', 'WIZARD');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (41, 'PROYECTIL_IGNEO', 'WIZARD');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (42, 'PROYECTIL_IGNEO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (43, 'RECONSTITUCION', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (44, 'TORRENTE_DE_LUZ', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (43, 'PROYECTIL_IGNEO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (44, 'RECONSTITUCION', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (45, 'TORRENTE_DE_LUZ', 'WIZARD');
 
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (45, 'AL_CORAZON', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (46, 'AL_CORAZON', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (47, 'ATAQUE_FURTIVO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (47, 'AL_CORAZON', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (48, 'ATAQUE_FURTIVO', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (49, 'ATAQUE_FURTIVO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (50, 'BALLESTA_PRECISA', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (50, 'ATAQUE_FURTIVO', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (51, 'BALLESTA_PRECISA', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (52, 'BALLESTA_PRECISA', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (53, 'EN_LAS_SOMBRAS', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (53, 'BALLESTA_PRECISA', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (54, 'EN_LAS_SOMBRAS', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (55, 'ENGANAR', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (56, 'ROBAR_BOLSILLOS', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (57, 'SAQUEO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (55, 'EN_LAS_SOMBRAS', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (56, 'ENGANAR', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (57, 'ROBAR_BOLSILLOS', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (58, 'SAQUEO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'TRAMPA', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (60, 'TRAMPA', 'ROGUE');
 
 
 -- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
