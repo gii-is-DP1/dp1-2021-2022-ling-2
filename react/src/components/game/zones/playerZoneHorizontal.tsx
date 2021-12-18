@@ -30,7 +30,9 @@ export default function PlayerZoneHorizontal(params: Params) {
         <span>
           <CountCard count={player.discardPile.length} zoomDirection="up" />
         </span>
-        <span>{/* Blank space */}</span>
+        <span className="invisible">
+          <PlaceholderCard />
+        </span>
         <span className={reverse ? "order-3" : ""}>
           <CharacterCard character={player.characterType} />
         </span>
@@ -40,7 +42,7 @@ export default function PlayerZoneHorizontal(params: Params) {
         <span
           className={`flex-1 flex ${
             reverse ? "flex-row-reverse" : "flex-row"
-          } -space-x-12`}
+          } -space-x-12 2xl:-space-x-16`}
         >
           {reverse && <span>{/* Blank space */}</span>}
           {player.hand.map((_, idx) => (
