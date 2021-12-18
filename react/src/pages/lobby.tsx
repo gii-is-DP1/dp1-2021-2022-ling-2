@@ -330,7 +330,7 @@ export default function Lobby() {
                     defaultChecked
                     onChange={(e) => setGender("MALE")}
                   ></input>
-                  <label>♂ male</label>
+                  <label>♂ Male</label>
                 </span>
                 <span>
                   <input

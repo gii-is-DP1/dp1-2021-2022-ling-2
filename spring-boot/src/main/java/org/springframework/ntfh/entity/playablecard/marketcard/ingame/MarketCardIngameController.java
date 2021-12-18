@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.marketcard.ingame;
+package org.springframework.ntfh.entity.playablecard.marketcard.ingame;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

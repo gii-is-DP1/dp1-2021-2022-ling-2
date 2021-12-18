@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.marketcard;
+package org.springframework.ntfh.entity.playablecard.marketcard;
 
 import java.util.Optional;
 

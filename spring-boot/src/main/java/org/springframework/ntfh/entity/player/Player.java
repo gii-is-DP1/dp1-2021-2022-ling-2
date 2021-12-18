@@ -1,16 +1,22 @@
 package org.springframework.ntfh.entity.player;
 
 import java.beans.Transient;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardLocationEnum;
 import org.springframework.ntfh.entity.user.User;
 
 import lombok.Getter;
@@ -47,6 +53,30 @@ public class Player extends BaseEntity {
     @JoinColumn(name = "character_id", referencedColumnName = "id")
     private Character characterType;
 
+    @OneToMany()
+    private List<AbilityCardIngame> cards;
+
+    @Transient
+    public List<AbilityCardIngame> getHand() {
+        return cards.stream()
+                .filter(abilityCardIngame -> abilityCardIngame.getLocation() == AbilityCardLocationEnum.HAND)
+                .collect(Collectors.toList());
+    }
+
+    @Transient
+    public List<AbilityCardIngame> getAbilityPile() {
+        return cards.stream()
+                .filter(abilityCardIngame -> abilityCardIngame.getLocation() == AbilityCardLocationEnum.ABILITY_PILE)
+                .collect(Collectors.toList());
+    }
+
+    @Transient
+    public List<AbilityCardIngame> getDiscardPile() {
+        return cards.stream()
+                .filter(abilityCardIngame -> abilityCardIngame.getLocation() == AbilityCardLocationEnum.DISCARD_PILE)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Derivated from User, who has a "game" column with the game where he/she is
      * playing in.
@@ -57,5 +87,10 @@ public class Player extends BaseEntity {
     @Transient
     public Game getGame() {
         return user.getGame();
+    }
+
+    @Transient
+    public CharacterTypeEnum getCharacterTypeEnum() {
+        return characterType.getCharacterTypeEnum();
     }
 }
