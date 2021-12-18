@@ -59,7 +59,7 @@ public class WarlordIngameService {
      * @param game that the warlord will be instantiated for
      */
     @Transactional
-    public void createFromGame(Game game) {
+    public void initializeFromGame(Game game) {
 
         List<Warlord> allWarlords = StreamSupport.stream(warlordService.findAll().spliterator(), false)
                 .collect(Collectors.toList());
