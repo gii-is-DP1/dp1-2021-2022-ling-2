@@ -14,7 +14,7 @@ import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngameS
 import org.springframework.ntfh.entity.enemy.warlord.ingame.WarlordIngameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
-import org.springframework.ntfh.entity.marketcard.ingame.MarketCardIngameService;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.TurnService;

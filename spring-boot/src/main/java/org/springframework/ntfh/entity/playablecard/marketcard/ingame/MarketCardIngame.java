@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.marketcard.ingame;
+package org.springframework.ntfh.entity.playablecard.marketcard.ingame;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.marketcard.MarketCard;
 import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.playablecard.marketcard.MarketCard;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,7 +33,6 @@ public class MarketCardIngame extends BaseEntity {
     @JsonIgnore
     private Game game;
 
-    // TODO check if this is overriding IngameEntity's location
     @NotNull
     @Enumerated(EnumType.STRING)
     private MarketCardLocation location;

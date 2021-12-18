@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.marketcard.ingame;
+package org.springframework.ntfh.entity.playablecard.marketcard.ingame;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +9,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.marketcard.MarketCard;
-import org.springframework.ntfh.entity.marketcard.MarketCardService;
+import org.springframework.ntfh.entity.playablecard.marketcard.MarketCard;
+import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
 import org.springframework.stereotype.Service;
 
 /**
