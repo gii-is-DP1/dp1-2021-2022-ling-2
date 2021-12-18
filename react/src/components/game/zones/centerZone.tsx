@@ -4,6 +4,7 @@ import { Game } from "../../../interfaces/Game";
 import { HordeEnemyIngame } from "../../../interfaces/HordeEnemyIngame";
 import { MarketCardIngame } from "../../../interfaces/MarketCardIngame";
 import { WarlordIngame } from "../../../interfaces/WarlordIngame";
+import CountCard from "../elements/countCard";
 import HordeEnemyCard from "../elements/hordeEnemyCard";
 import MarketCard from "../elements/marketCard";
 import PlaceholderCard from "../elements/placeholderCard";
@@ -50,11 +51,12 @@ export default function CenterZone(params: Params) {
       <span className="grid grid-cols-6 gap-2 py-1">
         {/* Market cards pile (facing down) */}
         <span className="col-start-1">
-          <MarketCard
+          <CountCard
             count={
               marketCards.filter((card) => card.location === "MARKET_PILE")
                 .length
             }
+            zoomDirection="down"
           />
         </span>
         {/* Available market cards (facing up) */}
