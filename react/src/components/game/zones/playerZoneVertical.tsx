@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import axios from "../../../api/axiosConfig";
+import { useState } from "react";
 import { Player } from "../../../interfaces/Player";
-import AbilityCard from "../elements/abilityCard";
 import CharacterCard from "../elements/characterCard";
 import CountCard from "../elements/countCard";
 import PlaceholderCard from "../elements/placeholderCard";
@@ -30,7 +28,7 @@ export default function PlayerZoneVertical(params: Params) {
         <Token type="glory" value={player.glory} counterclockwise={ccw} />
       </div>
       <div
-        className={`grid grid-cols-3 gap-2 items-end justify-items-center transform-gpu ${
+        className={`grid grid-cols-3 gap-2 items-end transform-gpu ${
           ccw ? "-" : ""
         }rotate-${rotation}`}
       >
@@ -49,7 +47,12 @@ export default function PlayerZoneVertical(params: Params) {
           />
         </span>
         <span className={ccw ? "order-first" : "order-last"}>
-          <span className={`flex-1 flex ${ccw ? "flex-row-reverse" : ""}`}>
+          <span
+            className={`flex-1 flex ${
+              ccw ? "flex-row-reverse" : ""
+            } -space-x-12`}
+          >
+            {ccw && <span>{/* Blank space */}</span>}
             {player.hand.map((abilityCard, idx) => (
               <PlaceholderCard key={idx} reverse={ccw} />
             ))}
