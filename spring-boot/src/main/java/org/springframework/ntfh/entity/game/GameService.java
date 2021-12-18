@@ -10,11 +10,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngameService;
-import org.springframework.ntfh.entity.enemy.warlord.ingame.WarlordIngameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
-import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.TurnService;
@@ -34,15 +31,6 @@ public class GameService {
     private LobbyService lobbyService;
 
     @Autowired
-    private HordeEnemyIngameService hordeEnemyIngameService;
-
-    @Autowired
-    private WarlordIngameService warlordIngameService;
-
-    @Autowired
-    private MarketCardIngameService marketCardIngameService;
-
-    @Autowired
     private TurnService turnService;
 
     @Transactional
@@ -54,7 +42,6 @@ public class GameService {
         return gameRepo.findAll();
     }
 
-    @Transactional
     public Game findGameById(int id) throws DataAccessException {
         Optional<Game> game = gameRepo.findById(id);
         if (!game.isPresent())
@@ -97,10 +84,8 @@ public class GameService {
 
         // Now, we instantiate the entities that will be used in the game
         // TODO should these be created on the turn? some of them? I dont know
-        hordeEnemyIngameService.createFromGame(game);
-        warlordIngameService.createFromGame(game);
-        marketCardIngameService.createFromGame(game);
-        turnService.createFromGame(game);
+
+        turnService.initializeFromGame(game);
 
         // Once the game is in the database, we update the lobby with a FK to it
         lobby.setGame(game);
