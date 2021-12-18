@@ -82,7 +82,7 @@ public class PlayerServiceTest {
 
     @Test
     public void testFindByPlayerId() {
-        Player tester = this.playerService.findPlayer(currentPlayer.getId()).get();
+        Player tester = this.playerService.findById(currentPlayer.getId());
         assertEquals("merlin", tester.getUser().getUsername());
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());

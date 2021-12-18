@@ -46,8 +46,12 @@ public class PlayerService {
     }
 
     @Transactional
-    public Optional<Player> findPlayer(Integer id) {
-        return playerRepository.findById(id);
+    public Player findById(int id) throws DataAccessException {
+        Optional<Player> player = playerRepository.findById(id);
+        if (!player.isPresent())
+            throw new DataAccessException("Player with id " + id + " was not found") {
+            };
+        return player.get();
     }
 
     /**
