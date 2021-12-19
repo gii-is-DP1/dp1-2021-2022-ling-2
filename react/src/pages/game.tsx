@@ -105,14 +105,14 @@ export default function Game() {
             <PlayerHand player={playersInRenderOrder(game.players)[0]} />
           )}
         </div>
-        <div className="flex-1 bg-wood h-screen px-16 flex flex-col justify-center">
+        <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
           {/* Top player names */}
           <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
             <p>{players[3] && players[3].user.username}</p>
             <p>{players[2] && players[2].user.username}</p>
           </div>
           {/* Game board (felt part)*/}
-          <div className="flex-1 bg-felt rounded-3xl">
+          <div className="flex-1 bg-felt bg-repeat-round rounded-3xl">
             <div className="h-full p-2 grid grid-cols-5 gap-4">
               <div className="row-span-2">
                 {players[2] && (
