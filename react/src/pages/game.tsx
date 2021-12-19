@@ -8,7 +8,6 @@ import PlayerZoneHorizontal from "../components/game/zones/playerZoneHorizontal"
 import PlayerZoneVertical from "../components/game/zones/playerZoneVertical";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
-import separatePlayerCards from "../helpers/separatePlayerCards";
 import tokenParser from "../helpers/tokenParser";
 import { Game as IGame } from "../interfaces/Game";
 import { Player } from "../interfaces/Player";
@@ -54,7 +53,6 @@ export default function Game() {
     try {
       const response = await axios.get(`/games/${gameId}`);
       const _game = response.data;
-      separatePlayerCards(_game);
       setGame(_game);
       const sortedPlayers = playersInRenderOrder(_game.players);
       setPlayers(sortedPlayers);

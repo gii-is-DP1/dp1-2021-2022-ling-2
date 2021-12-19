@@ -1,5 +1,4 @@
 import { EnemyLocationEnum } from "../types/EnemyLocationEnum";
-import { Game } from "./Game";
 import { HordeEnemy } from "./HordeEnemy";
 
 export interface HordeEnemyIngame {
@@ -7,5 +6,4 @@ export interface HordeEnemyIngame {
   hordeEnemy: HordeEnemy;
   hordeEnemyLocation: EnemyLocationEnum;
   currentEndurance: number;
-  game: Game;
 }

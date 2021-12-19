@@ -57,7 +57,7 @@ public class AbilityCardIngameService {
                 .map(abilityCard -> createFromAbilityCard(abilityCard, player))
                 .collect(Collectors.toList());
 
-        player.setCards(playerAbilityCards);
+        player.setAbilityPile(playerAbilityCards);
 
         refillHandWithCards(player);
 
@@ -77,16 +77,11 @@ public class AbilityCardIngameService {
         while (!playerAbilityPile.isEmpty() && playerHand.size() < 4) {
             AbilityCardIngame lastAbilityCardInPile = playerAbilityPile.get(0);
             playerAbilityPile.remove(lastAbilityCardInPile);
-            lastAbilityCardInPile.setLocation(AbilityCardLocationEnum.HAND);
             playerHand.add(lastAbilityCardInPile);
         }
 
-        // Join both lists back together and save them in the DB
-        List<AbilityCardIngame> marketCardsInPileAndForSale = Stream.of(playerAbilityPile, playerHand)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-
-        player.setCards(marketCardsInPileAndForSale);
+        player.setAbilityPile(playerAbilityPile);
+        player.setHand(playerHand);
     }
 
     /**
@@ -101,7 +96,6 @@ public class AbilityCardIngameService {
     private AbilityCardIngame createFromAbilityCard(AbilityCard abilityCard, Player player) {
         AbilityCardIngame abilityCardIngame = new AbilityCardIngame();
         abilityCardIngame.setAbilityCard(abilityCard);
-        abilityCardIngame.setLocation(AbilityCardLocationEnum.ABILITY_PILE);
         abilityCardIngameRepository.save(abilityCardIngame);
         return abilityCardIngame;
     }

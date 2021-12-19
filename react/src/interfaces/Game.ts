@@ -1,3 +1,5 @@
+import { HordeEnemyIngame } from "./HordeEnemyIngame";
+import { MarketCardIngame } from "./MarketCardIngame";
 import { Player } from "./Player";
 import { Turn } from "./Turn";
 
@@ -8,4 +10,6 @@ export interface Game {
   currentTurn: Turn;
   hasScenes: boolean;
   startTime: number;
+  hordeEnemies: HordeEnemyIngame[];
+  marketCards: MarketCardIngame[];
 }
