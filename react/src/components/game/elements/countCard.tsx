@@ -28,13 +28,16 @@ export default function CountCard(params: Params) {
       style={{
         backgroundImage: `url('${CARD_BACK}')`,
       }}
-      className={`card zoomable flex items-center justify-center w-full h-full bg-contain bg-no-repeat hover:scale-250 ${zoomDirectionClassname}
+      className={
+        `card zoomable flex items-center justify-center w-full h-full bg-contain bg-no-repeat hover:scale-250 ${zoomDirectionClassname}
       ${
         counterclockwise !== undefined &&
         (counterclockwise
           ? "transform-gpu hover:rotate-90"
           : "transform-gpu hover:-rotate-90")
-      }`}
+      }
+      ${!count && " invisible "}` /* Don´t show the counter if count is 0 */
+      }
     >
       <Token type="count" value={count} />
     </div>
