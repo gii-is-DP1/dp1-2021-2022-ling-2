@@ -29,8 +29,11 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @Import(BCryptPasswordEncoder.class)
 public class GameServiceTest {
 
