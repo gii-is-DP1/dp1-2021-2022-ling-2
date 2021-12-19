@@ -100,7 +100,7 @@ export default function Game() {
   return (
     game && (
       <div className="flex justify-center items-end">
-        <div className="fixed w-32 z-50">
+        <div className="fixed w-32 z-50 bottom-22 transform hover:-translate-y-32 transition duration-200 ease-in-out">
           {!isSpectator(user) && (
             <PlayerHand player={playersInRenderOrder(game.players)[0]} />
           )}
