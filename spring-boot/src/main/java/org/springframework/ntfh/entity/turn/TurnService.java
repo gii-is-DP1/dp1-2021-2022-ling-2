@@ -77,7 +77,8 @@ public class TurnService {
 
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
-            Scene randomScene = sceneService.findSceneById(new Random().nextInt(sceneService.count())).get();
+            Scene randomScene = sceneService
+                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).get(); // DB indexes start in 1
             turn.setCurrentScene(randomScene);
         }
 
