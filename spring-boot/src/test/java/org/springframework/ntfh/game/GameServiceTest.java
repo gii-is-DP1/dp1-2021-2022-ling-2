@@ -144,9 +144,10 @@ public class GameServiceTest {
 
     @Test
     public void testDeleteGame() {
-        gameService.delete(gameTester);
+        Game tester = gameService.createFromLobby(lobbyTester);
+        gameService.delete(tester);
         assertThrows(DataAccessException.class, () -> {
-            gameService.findGameById(gameTester.getId());
+            gameService.findGameById(tester.getId());
         });
     }
 
