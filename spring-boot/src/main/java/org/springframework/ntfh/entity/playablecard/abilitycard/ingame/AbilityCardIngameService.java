@@ -77,7 +77,6 @@ public class AbilityCardIngameService {
         while (!playerAbilityPile.isEmpty() && playerHand.size() < 4) {
             AbilityCardIngame lastAbilityCardInPile = playerAbilityPile.get(0);
             playerAbilityPile.remove(lastAbilityCardInPile);
-            lastAbilityCardInPile.setLocation(AbilityCardLocationEnum.HAND);
             playerHand.add(lastAbilityCardInPile);
         }
 
@@ -97,7 +96,6 @@ public class AbilityCardIngameService {
     private AbilityCardIngame createFromAbilityCard(AbilityCard abilityCard, Player player) {
         AbilityCardIngame abilityCardIngame = new AbilityCardIngame();
         abilityCardIngame.setAbilityCard(abilityCard);
-        abilityCardIngame.setLocation(AbilityCardLocationEnum.ABILITY_PILE);
         abilityCardIngameRepository.save(abilityCardIngame);
         return abilityCardIngame;
     }
