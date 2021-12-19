@@ -57,7 +57,7 @@ public class AbilityCardIngameService {
                 .map(abilityCard -> createFromAbilityCard(abilityCard, player))
                 .collect(Collectors.toList());
 
-        player.setCards(playerAbilityCards);
+        player.setAbilityPile(playerAbilityCards);
 
         refillHandWithCards(player);
 
@@ -81,12 +81,8 @@ public class AbilityCardIngameService {
             playerHand.add(lastAbilityCardInPile);
         }
 
-        // Join both lists back together and save them in the DB
-        List<AbilityCardIngame> marketCardsInPileAndForSale = Stream.of(playerAbilityPile, playerHand)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-
-        player.setCards(marketCardsInPileAndForSale);
+        player.setAbilityPile(playerAbilityPile);
+        player.setHand(playerHand);
     }
 
     /**
