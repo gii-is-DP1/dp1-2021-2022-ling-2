@@ -24,6 +24,7 @@ public class UnregisteredUserTest {
     @Autowired
     private UnregisteredUserService unregisteredUserService;
 
+    // TODO test this dynamically. There should be no initial unregisteredUser rows in the DB
     // Number of unregisteredUsers in the DB
     private final Integer INITIAL_COUNT = 1;
 
