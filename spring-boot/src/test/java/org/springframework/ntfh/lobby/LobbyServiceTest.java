@@ -2,27 +2,28 @@ package org.springframework.ntfh.lobby;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyRepository;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@Import(BCryptPasswordEncoder.class)
 public class LobbyServiceTest {
 
     @Autowired
@@ -38,8 +39,8 @@ public class LobbyServiceTest {
 
     @BeforeEach
     public void init() {
-        Set<User> users = new HashSet<>();
-        users.add(userService.findUser("alex").get());
+        User user1 = userService.findUser("user1").get();
+        Set<User> users = Sets.newSet(user1);
 
         lobbyTester = new Lobby();
         lobbyTester.setName("init");
@@ -47,8 +48,8 @@ public class LobbyServiceTest {
         lobbyTester.setSpectatorsAllowed(false);
         lobbyTester.setMaxPlayers(4);
         lobbyTester.setUsers(users);
-        lobbyTester.setHost(userService.findUser("alex").get());
-        lobbyTester.setLeader(userService.findUser("alex").get());
+        lobbyTester.setHost(user1);
+        lobbyTester.setLeader(user1);
         lobbyService.save(lobbyTester);
     }
 
@@ -125,15 +126,10 @@ public class LobbyServiceTest {
 
     @Test
     public void testH14E1() {
-        List<Lobby> lobbiesServiceList = new ArrayList<>();
-        lobbyService.findAll().forEach(x -> lobbiesServiceList.add(x));
-        Integer playersLobby1Sevice = lobbiesServiceList.get(0).getUsers().size();
-
-        List<Lobby> lobbiesRepositoryList = new ArrayList<>();
-        lobbyRepository.findAll().forEach(x -> lobbiesRepositoryList.add(x));
-        Integer playersLobby1Repo = lobbiesRepositoryList.get(0).getUsers().size();
-
-        assertEquals(playersLobby1Repo, playersLobby1Sevice);
+        User user1 = userService.findUser("user1").get();
+        lobbyTester.addUser(user1);
+        Integer numUsersInLobby = lobbyTester.getUsers().size();
+        assertEquals(1, numUsersInLobby);
     }
 
 }

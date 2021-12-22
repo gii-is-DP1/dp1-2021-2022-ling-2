@@ -113,7 +113,9 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers,
             HttpStatus status, WebRequest request) {
-        return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        String message = ex.getBindingResult().getAllErrors().stream().map(e -> e.getDefaultMessage())
+                .reduce((s1, s2) -> s1 + ". " + s2).orElse("");
+        return buildResponseEntity(message, HttpStatus.BAD_REQUEST);
     }
 
     // TODO add more custom exceptions here. The structure is the same, the only

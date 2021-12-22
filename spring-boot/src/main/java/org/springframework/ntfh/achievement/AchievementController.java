@@ -3,6 +3,8 @@ package org.springframework.ntfh.achievement;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,6 @@ public class AchievementController {
 
     @GetMapping
     public ResponseEntity<Iterable<Achievement>> getAll() {
-        // untested
         Iterable<Achievement> achievements = this.achievementService.findAll();
         return new ResponseEntity<>(achievements, HttpStatus.OK);
     }
@@ -38,7 +39,7 @@ public class AchievementController {
     }
 
     @PutMapping()
-    public ResponseEntity<Map<String, String>> updateAchievement(@RequestBody Achievement achievements,
+    public ResponseEntity<Map<String, String>> updateAchievement(@RequestBody @Valid Achievement achievements,
             @RequestHeader("Authorization") String token) {
         achievementService.updateAchievement(achievements, token);
 

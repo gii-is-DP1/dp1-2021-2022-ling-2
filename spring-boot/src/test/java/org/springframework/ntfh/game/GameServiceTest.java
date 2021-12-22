@@ -4,18 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.character.CharacterService;
 import org.springframework.ntfh.entity.game.Game;
@@ -27,9 +27,11 @@ import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@Import(BCryptPasswordEncoder.class)
 public class GameServiceTest {
 
     @Autowired
@@ -50,36 +52,37 @@ public class GameServiceTest {
     @Autowired
     private CharacterService characterService;
 
-    protected Game gameTester;
+    private Game gameTester;
 
     protected Lobby lobbyTester;
 
     @BeforeEach
     public void init() {
-        Set<User> users = new HashSet<>();
-        users.add(userService.findUser("alex").get());
+        User user1 = userService.findUser("user1").get();
+        User user2 = userService.findUser("user2").get();
+        Set<User> users = Sets.newSet(user1, user2);
 
         lobbyTester = new Lobby();
-        lobbyTester.setName("init");
+        lobbyTester.setName("Init lobby");
         lobbyTester.setHasScenes(true);
         lobbyTester.setSpectatorsAllowed(false);
         lobbyTester.setMaxPlayers(4);
         lobbyTester.setUsers(users);
-        lobbyTester.setHost(userService.findUser("alex").get());
-        lobbyTester.setLeader(userService.findUser("alex").get());
+        lobbyTester.setHost(user1);
+        lobbyTester.setLeader(user1);
         lobbyService.save(lobbyTester);
 
-        List<Player> players = new ArrayList<>();
-        User user = userService.findUser("alex").get();
-        user.setCharacter(characterService.findCharacterById(2).get());
-        Player player = playerService.createFromUser(user, lobbyTester, 0);
-        players.add(player);
+        user1.setCharacter(characterService.findCharacterById(2).get());
+        user2.setCharacter(characterService.findCharacterById(4).get());
+        Player player1 = playerService.createFromUser(user1, lobbyTester, 0);
+        Player player2 = playerService.createFromUser(user1, lobbyTester, 1);
+        List<Player> players = Lists.list(player1, player2);
 
         gameTester = new Game();
         gameTester.setStartTime(System.currentTimeMillis());
         gameTester.setHasScenes(true);
         gameTester.setPlayers(players);
-        gameTester.setLeader(Lists.newArrayList(players).get(0));
+        gameTester.setLeader(player1);
         gameService.save(gameTester);
     }
 
@@ -113,19 +116,24 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testfindById() {
+    public void testFindById() {
         Game tester = this.gameService.findGameById(1);
         assertEquals(true, tester.getHasScenes());
         assertEquals(1, tester.getLeader().getId());
     }
 
-    // TODO edit init() method to create a lobby with 2 users, this test currently
-    // fails since the lobby only has 1 user
-    @Disabled
     @Test
-    public void testCreatefromLobby() {
+    public void testCreateFromLobby() {
         Game tester = gameService.createFromLobby(lobbyTester);
-        assertEquals(gameRepository.findById(tester.getId()).get().getId(), tester.getId());
+        assertEquals(gameService.findGameById(tester.getId()).getId(), tester.getId());
+        gameService.delete(tester);
+    }
+
+    @Test
+    public void testCreateFromLobbyNotEnoughPlayers() {
+        User user2 = userService.findUser("user2").get();
+        lobbyTester.removeUser(user2);
+        assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
     @Test
@@ -136,9 +144,10 @@ public class GameServiceTest {
 
     @Test
     public void testDeleteGame() {
-        gameService.delete(gameTester);
+        Game tester = gameService.createFromLobby(lobbyTester);
+        gameService.delete(tester);
         assertThrows(DataAccessException.class, () -> {
-            gameService.findGameById(gameTester.getId());
+            gameService.findGameById(tester.getId());
         });
     }
 
