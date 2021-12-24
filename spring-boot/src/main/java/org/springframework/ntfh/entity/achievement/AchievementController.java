@@ -1,4 +1,4 @@
-package org.springframework.ntfh.achievement;
+package org.springframework.ntfh.entity.achievement;
 
 import java.util.Map;
 import java.util.Optional;
