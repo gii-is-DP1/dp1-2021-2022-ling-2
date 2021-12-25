@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -62,4 +63,16 @@ public class GameController {
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
+    /**
+     * This endpoint will receive the petitions of a player to play a card
+     * 
+     * @author andrsdt
+     * @param entity
+     * @return
+     */
+    @PostMapping("/{gameId}/ability-cards/{abilityCardIngameId}")
+    public ResponseEntity<Object> playCard(@PathVariable("gameId") Integer gameId,
+            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, String> body) {
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
 }

@@ -1,5 +1,5 @@
 import { Player } from "../../../interfaces/Player";
-import AbilityCard from "./abilityCard";
+import AbilityCard from "../elements/abilityCard";
 
 type Params = {
   player: Player;
