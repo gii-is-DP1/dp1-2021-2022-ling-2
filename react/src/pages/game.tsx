@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
-import PlayerHand from "../components/game/elements/playerHand";
+import PlayerHand from "../components/game/zones/playerHand";
 import CenterZone from "../components/game/zones/centerZone";
 import PlayerZoneHorizontal from "../components/game/zones/playerZoneHorizontal";
 import PlayerZoneVertical from "../components/game/zones/playerZoneVertical";
