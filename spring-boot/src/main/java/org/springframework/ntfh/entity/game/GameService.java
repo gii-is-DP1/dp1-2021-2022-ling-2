@@ -16,6 +16,7 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
+import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     @Autowired
-    private GameRepository gameRepo;
+    private GameRepository gameRepository;
 
     @Autowired
     private PlayerService playerService;
@@ -40,19 +41,23 @@ public class GameService {
 
     @Transactional
     public Integer gameCount() {
-        return (int) gameRepo.count();
+        return (int) gameRepository.count();
     }
 
     public Iterable<Game> findAll() {
-        return gameRepo.findAll();
+        return gameRepository.findAll();
     }
 
     public Game findGameById(int id) throws DataAccessException {
-        Optional<Game> game = gameRepo.findById(id);
+        Optional<Game> game = gameRepository.findById(id);
         if (!game.isPresent())
             throw new DataAccessException("Game with id " + id + " was not found") {
             };
         return game.get();
+    }
+
+    public Turn getCurrentTurnByGameId(Integer gameId) {
+        return gameRepository.getCurrentTurnByGameId(gameId);
     }
 
     @Transactional
@@ -69,7 +74,6 @@ public class GameService {
         Integer i = 1;
         List<Player> players = new ArrayList<>();
         for (User user : users) {
-            // TODO test
             // The turnOrder 0 is reserved for the host
             Boolean isHost = lobby.getHost().getUsername().equals(user.getUsername());
             Integer turnOrder = isHost ? 0 : i;
@@ -77,7 +81,6 @@ public class GameService {
                 i++;
             Player createdPlayer = playerService.createFromUser(user, lobby, turnOrder);
             players.add(createdPlayer);
-
             // TODO temporary solution. Set the lobby host as the leader. In the real game
             // it is chosen via a "minigame" with cards
             if (isHost)
@@ -85,8 +88,7 @@ public class GameService {
         }
 
         game.setPlayers(players);
-        Game savedGame = gameRepo.save(game);
-
+        Game savedGame = gameRepository.save(game);
         // Now, we instantiate the entities that will be used in the game
 
         turnService.initializeFromGame(game);
@@ -100,11 +102,11 @@ public class GameService {
     @Transactional
     public Game save(@Valid Game game) {
         // Return the game created after saving it
-        return gameRepo.save(game);
+        return gameRepository.save(game);
     }
 
     public void delete(Game game) {
-        gameRepo.delete(game);
+        gameRepository.delete(game);
     }
 
     @Transactional
