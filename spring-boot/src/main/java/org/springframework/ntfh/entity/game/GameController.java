@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ntfh.entity.lobby.Lobby;
+import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,18 +63,25 @@ public class GameController {
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
+    @GetMapping("/{gameId}/turn")
+    public ResponseEntity<Turn> getGameTurn(@PathVariable("gameId") Integer gameId) {
+        Turn turn = gameService.getCurrentTurnByGameId(gameId);
+        return new ResponseEntity<>(turn, HttpStatus.OK);
+    }
+
     /**
      * This endpoint will receive the petitions of a player to play a card
      * 
      * @author andrsdt
-     * @param entity
-     * @return
+     * @param entity with the information of the card to play
+     * @return the game with the updated state
      */
     @PostMapping("/{gameId}/ability-cards/{abilityCardIngameId}")
     public ResponseEntity<Object> playCard(@PathVariable("gameId") Integer gameId,
             @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body) {
         Integer enemyId = body.get("enemyId");
         gameService.playCard(gameId, abilityCardIngameId, enemyId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Game game = gameService.findGameById(gameId);
+        return new ResponseEntity<>(game, HttpStatus.OK);
     }
 }
