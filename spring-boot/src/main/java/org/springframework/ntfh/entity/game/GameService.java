@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.TurnService;
@@ -32,6 +34,9 @@ public class GameService {
 
     @Autowired
     private TurnService turnService;
+
+    @Autowired
+    private AbilityCardIngameService abilityCardIngameService;
 
     @Transactional
     public Integer gameCount() {
@@ -102,4 +107,21 @@ public class GameService {
         gameRepo.delete(game);
     }
 
+    @Transactional
+    public void playCard(Integer gameId, Integer abilityCardIngameId, Integer enemyId) {
+        if (enemyId == null) {
+            // Handle self playable card (does not target a specific enemy)
+
+        } else {
+            // Handle card that targets an enemy
+        }
+        // After playing any card, make sure to move the card to the discard pile
+        AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
+        Player player = abilityCardIngame.getPlayer();
+        player.getHand().remove(abilityCardIngame);
+        player.getDiscardPile().add(abilityCardIngame);
+
+        // Check if the card is exiliable and if so, remove it from the discard pile too
+
+    }
 }

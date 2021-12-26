@@ -1,17 +1,45 @@
-import select from "../../../context/select";
 import { useContext } from "react";
+import { unmountComponentAtNode } from "react-dom";
+import toast from "react-hot-toast";
+import { useParams } from "react-router";
+import axios from "../../../api/axiosConfig";
+import UserContext from "../../../context/user";
 import { AbilityCardIngame } from "../../../interfaces/AbilityCardIngame";
+import { SelfPlayableCards } from "../../../types/SelfPlayableCardEnum";
 
 type Params = {
   card: AbilityCardIngame;
+  selected: AbilityCardIngame | null;
+  setSelected: (card: AbilityCardIngame | null) => void;
 };
 
 export default function AbilityCard(params: Params) {
-  const { card } = params;
-  const { selected, addSelect, removeSelect } = useContext(select);
-  const isSelected = selected.includes(card);
+  const { card, selected, setSelected } = params;
+  const { userToken } = useContext(UserContext);
+  const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
 
   const abilityCardTypeEnum = card.abilityCard.abilityCardTypeEnum;
+
+  const isSelected = selected === card;
+  const isSelfPlayable = SelfPlayableCards.includes(
+    card.abilityCard.abilityCardTypeEnum
+  );
+
+  const handleOnClick = async () => {
+    if (isSelfPlayable) {
+      try {
+        const response = await axios.post(
+          `/games/${gameId}/ability-cards/${card.id}`,
+          { enemyId: null }, // Payload
+          { headers: { Authorization: "Bearer " + userToken } }
+        );
+      } catch (error: any) {
+        toast.error(error?.message);
+      }
+    } else {
+      isSelected ? setSelected(null) : setSelected(card);
+    }
+  };
 
   return (
     <img
@@ -22,7 +50,7 @@ export default function AbilityCard(params: Params) {
       `}
       src={`/images/cards/characters/${card.abilityCard.characterTypeEnum.toLowerCase()}/${abilityCardTypeEnum.toLowerCase()}.png`}
       alt={abilityCardTypeEnum.toLowerCase().toString()}
-      onClick={() => (isSelected ? removeSelect(card) : addSelect(card))}
+      onClick={handleOnClick}
     ></img>
   );
 }
