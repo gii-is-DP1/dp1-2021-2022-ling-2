@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { unmountComponentAtNode } from "react-dom";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import axios from "../../../api/axiosConfig";
+import GameContext from "../../../context/game";
 import UserContext from "../../../context/user";
 import { AbilityCardIngame } from "../../../interfaces/AbilityCardIngame";
 import { SelfPlayableCards } from "../../../types/SelfPlayableCardEnum";
@@ -16,6 +16,7 @@ type Params = {
 export default function AbilityCard(params: Params) {
   const { card, selected, setSelected } = params;
   const { userToken } = useContext(UserContext);
+  const { setGame } = useContext(GameContext);
   const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
 
   const abilityCardTypeEnum = card.abilityCard.abilityCardTypeEnum;
@@ -33,6 +34,8 @@ export default function AbilityCard(params: Params) {
           { enemyId: null }, // Payload
           { headers: { Authorization: "Bearer " + userToken } }
         );
+        const _game = response.data;
+        setGame(_game);
       } catch (error: any) {
         toast.error(error?.message);
       }
