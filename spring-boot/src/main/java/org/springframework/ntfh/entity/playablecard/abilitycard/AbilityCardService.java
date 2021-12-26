@@ -3,7 +3,7 @@ package org.springframework.ntfh.entity.playablecard.abilitycard;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ntfh.character.CharacterTypeEnum;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.user.authorities.Authorities;

@@ -11,14 +11,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.springframework.ntfh.character.Character;
-import org.springframework.ntfh.character.CharacterTypeEnum;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.character.Character;
 
 import lombok.Getter;
 import lombok.Setter;

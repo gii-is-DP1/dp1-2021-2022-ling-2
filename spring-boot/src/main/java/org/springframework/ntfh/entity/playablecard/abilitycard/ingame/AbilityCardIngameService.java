@@ -9,12 +9,11 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.character.CharacterTypeEnum;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.stereotype.Service;
 
 @Service

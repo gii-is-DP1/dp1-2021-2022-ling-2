@@ -17,7 +17,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.character.CharacterService;
+import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
