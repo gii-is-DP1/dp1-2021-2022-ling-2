@@ -108,7 +108,7 @@ public class UserController {
 
 	@PostMapping("register")
 	public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
-		this.userService.saveUser(user);
+		this.userService.createUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
