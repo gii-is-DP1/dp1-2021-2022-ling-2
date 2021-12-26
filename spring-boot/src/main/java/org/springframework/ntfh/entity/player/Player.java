@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.springframework.ntfh.character.Character;
 import org.springframework.ntfh.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
