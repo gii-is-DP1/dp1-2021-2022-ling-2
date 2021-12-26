@@ -56,6 +56,7 @@ public class User {
 
 	// TODO the cascade type is yet to be determined
 	// @OneToOne(mappedBy = "host")
+	// TODO is this even used? Set to null on new creations
 	@ManyToOne
 	@JoinColumn(name = "game")
 	@JsonIgnore
