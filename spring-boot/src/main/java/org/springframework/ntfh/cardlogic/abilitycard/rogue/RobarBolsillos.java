@@ -1,30 +1,25 @@
 package org.springframework.ntfh.cardlogic.abilitycard.rogue;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ntfh.command.Command;
 import org.springframework.ntfh.command.StealCoinCommand;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-// Roba 1 moneda a cada héroe
+/**
+ * Roba 1 moneda a cada héroe
+ * 
+ * @author andrsdt
+ */
 @Component
-public class RobarBolsillos implements Command {
-    // private Integer gameId;
-    // private Player playerFrom;
+public class RobarBolsillos {
 
     @Autowired
-    GameService gameService;
+    private GameService gameService;
 
-    // public RobarBolsillos(Integer gameId, Player playerFrom) {
-    // this.gameId = gameId;
-    // this.playerFrom = playerFrom;
-    // }
-
-    @Override
-    public void execute() {
-        // gameService.findPlayersByGameId(gameId).forEach(player -> {
-        // new StealCoinCommand(playerFrom, player).execute();
-        // });
+    public void execute(Integer gameId, Player playerFrom) {
+        gameService.findPlayersByGameId(gameId).forEach(player -> {
+            new StealCoinCommand(playerFrom, player).execute();
+        });
     }
 }

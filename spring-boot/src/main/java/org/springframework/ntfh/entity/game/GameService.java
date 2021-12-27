@@ -12,6 +12,8 @@ import javax.validation.Valid;
 
 import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngame;
 import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngameService;
@@ -29,6 +31,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     private GameRepository gameRepository;
@@ -128,39 +133,43 @@ public class GameService {
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
         String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
+
+        // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
+        // DagaElfica)
         String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
                 new char[] { '_' });
         String completeClassName = String.format("org.springframework.ntfh.cardlogic.abilitycard.%s.%s",
                 characterType,
                 className);
+
         try {
+            // Get the class from its name
+            Class<?> clazz = Class.forName(completeClassName);
+            // Instantiate an object of the class
+            Object cardCommand = clazz.getDeclaredConstructor().newInstance();
+            // Autowire the new object's dependencies (services used inside)
+            AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
+            factory.autowireBean(cardCommand);
+            factory.initializeBean(cardCommand, className);
             if (enemyId == null) {
                 // Handle self playable card (does not target a specific enemy)
-                // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
-                // DagaElfica)
-                // Get the class from its name
-                Class<?> clazz = Class
-                        .forName(completeClassName);
-                // Instantiate an object with the existing constructor for (gameId, playerFrom)
-                // parameters
-                Object card = clazz.getDeclaredConstructor(Integer.class, Player.class).newInstance(gameId, playerFrom);
-                // Get a reference to the method "execute", that receives no parameters
-                Method method = clazz.getDeclaredMethod("execute");
-                // Execute such a method
-                method.invoke(card);
+                // Get a reference to the method "execute", that receives 2 parameters
+                Method method = clazz.getDeclaredMethod("execute", Integer.class,
+                        Player.class);
+                // Execute the method with the parameters
+                method.invoke(cardCommand, gameId, playerFrom);
             } else {
                 // Handle card that targets an enemy
                 HordeEnemyIngame targetedEnemy = hordeEnemyIngameService.findById(abilityCardIngameId);
-                Class<?> clazz = Class.forName(completeClassName);
-                Object card = clazz.getDeclaredConstructor(Integer.class, Player.class, HordeEnemyIngame.class)
-                        .newInstance(gameId, playerFrom, targetedEnemy);
-                Method method = clazz.getDeclaredMethod("execute");
-                method.invoke(card);
+                Method method = clazz.getDeclaredMethod("execute", Integer.class,
+                        Player.class, HordeEnemyIngame.class);
+                method.invoke(cardCommand, gameId, playerFrom, targetedEnemy);
 
             }
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-            throw new IllegalArgumentException("Ability card type " + className + " is not implemented");
+            throw new IllegalArgumentException("Ability card type " + className +
+                    " is not implemented");
         }
         // After playing any card, make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();
