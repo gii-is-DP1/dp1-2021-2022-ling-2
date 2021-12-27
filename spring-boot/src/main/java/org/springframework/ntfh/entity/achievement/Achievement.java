@@ -1,4 +1,4 @@
-package org.springframework.ntfh.achievement;
+package org.springframework.ntfh.entity.achievement;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

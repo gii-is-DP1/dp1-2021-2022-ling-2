@@ -3,6 +3,7 @@ package org.springframework.ntfh.entity.enemy.hordeenemy.ingame;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -41,6 +42,15 @@ public class HordeEnemyIngameService {
     @Transactional
     public Iterable<HordeEnemyIngame> findAll() {
         return hordeEnemyIngameRepository.findAll();
+    }
+
+    @Transactional
+    public HordeEnemyIngame findById(Integer id) throws DataAccessException {
+        Optional<HordeEnemyIngame> hordeEnemyIngame = hordeEnemyIngameRepository.findById(id);
+        if (!hordeEnemyIngame.isPresent())
+            throw new DataAccessException("HordeEnemyIngame with id " + id + " was not found") {
+            };
+        return hordeEnemyIngame.get();
     }
 
     @Transactional

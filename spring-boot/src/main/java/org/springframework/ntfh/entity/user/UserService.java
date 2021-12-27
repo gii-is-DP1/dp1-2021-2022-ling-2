@@ -22,7 +22,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.exceptions.BannedUserException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
@@ -60,7 +60,7 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User saveUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+	public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
 		if (userRepository.existsByEmail(user.getEmail()))
 			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
@@ -72,9 +72,13 @@ public class UserService {
 		user.setPassword(encodedParamPassword);
 
 		user.setEnabled(true);
-		userRepository.save(user);
+		this.save(user);
 		authoritiesService.saveAuthorities(user.getUsername(), "user");
 		return user;
+	}
+
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 
 	@Transactional(readOnly = true)

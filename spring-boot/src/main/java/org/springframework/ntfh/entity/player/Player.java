@@ -11,8 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.ntfh.character.Character;
-import org.springframework.ntfh.character.CharacterTypeEnum;
+import org.springframework.ntfh.entity.character.Character;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
@@ -70,7 +70,7 @@ public class Player extends BaseEntity {
      */
     @Transient
     public Game getGame() {
-        return user.getGame();
+        return user.getLobby().getGame();
     }
 
     @Transient

@@ -64,9 +64,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.DELETE, "/lobbies/{lobbyId}/remove/{username}").hasAnyAuthority("user")
 				// GAME ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
-				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
 				.antMatchers(HttpMethod.POST, "/games").hasAnyAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
+				.antMatchers(HttpMethod.GET, "/games/{gameId}/turn").permitAll() // Allow everyone to list the current
+																					// turn info
+				.antMatchers(HttpMethod.POST, "/games/{gameId}/ability-cards/{abilityCardIngameId}")
+				.hasAnyAuthority("user") // Allor users to play cards
 				// GAMEHISTORY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the old games
 				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games

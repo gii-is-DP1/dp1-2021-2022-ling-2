@@ -58,7 +58,7 @@ public class UserServiceTest {
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
         tester.setAuthorities(userAuthority);
-        userService.saveUser(tester);
+        userService.createUser(tester);
 
         currentUser = tester;
     }

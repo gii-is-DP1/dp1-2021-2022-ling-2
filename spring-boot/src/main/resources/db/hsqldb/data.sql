@@ -263,9 +263,6 @@ UPDATE lobbies SET game = 1 WHERE id = 1;
 -- Add the players to the game
 INSERT INTO games_players(game_id, players_id) VALUES (1, 1);
 INSERT INTO games_players(game_id, players_id) VALUES (1, 2);
--- Also, set the game attribute in each user to reference the game they are in now
-UPDATE users SET game = 1 WHERE username = 'pablo';
-UPDATE users SET game = 1 WHERE username = 'andres';
 
 -- CREATE A GAME FROM A LOBBY WITH 4 PLAYERS
 -- Create the initial lobby
@@ -288,12 +285,6 @@ INSERT INTO games_players(game_id, players_id) VALUES (2, 3);
 INSERT INTO games_players(game_id, players_id) VALUES (2, 4);
 INSERT INTO games_players(game_id, players_id) VALUES (2, 5);
 INSERT INTO games_players(game_id, players_id) VALUES (2, 6);
--- Also, set the game attribute in each user to reference the game they are in now
-UPDATE users SET game = 2 WHERE username = 'gandalf';
-UPDATE users SET game = 2 WHERE username = 'frodo';
-UPDATE users SET game = 2 WHERE username = 'legolas';
-UPDATE users SET game = 2 WHERE username = 'aragorn';
-
 
 -- CREATE A GAME HISTORY FROM A LOBBY WITH 3 PLAYERS
 -- CREATE A GAME FROM A LOBBY WITH 4 PLAYERS
@@ -311,14 +302,8 @@ UPDATE lobbies SET game = 3 WHERE id = 3;
 -- Add the players to the game
 INSERT INTO games_players(game_id, players_id) VALUES (3, 7);
 INSERT INTO games_players(game_id, players_id) VALUES (3, 8);
--- Also, set the game attribute in each user to reference the game they are in now
-UPDATE users SET game = 3 WHERE username = 'stockie';
-UPDATE users SET game = 3 WHERE username = 'alejandro';
 
 INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 1637882596427);
--- Set that the users are not in a game anymore
-UPDATE users set game = null WHERE username = 'stockie';
-UPDATE users set game = null WHERE username = 'alejandro';
 
 
 -- UnregisteredUser for testing

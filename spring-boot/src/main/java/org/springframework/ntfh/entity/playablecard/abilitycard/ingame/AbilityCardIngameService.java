@@ -8,7 +8,8 @@ import java.util.stream.StreamSupport;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ntfh.character.CharacterTypeEnum;
+import org.springframework.dao.DataAccessException;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
@@ -23,6 +24,16 @@ public class AbilityCardIngameService {
 
     @Autowired
     private AbilityCardService abilityCardService;
+
+    public AbilityCardIngame findById(int id) {
+        return abilityCardIngameRepository.findById(id)
+                .orElseThrow(() -> new DataAccessException("Ability card not found") {
+                });
+    }
+
+    public void delete(AbilityCardIngame abilityCardIngame) {
+        abilityCardIngameRepository.delete(abilityCardIngame);
+    }
 
     /**
      * Given a game, instantiate the abilityCardIngame entities for each of the
@@ -78,7 +89,6 @@ public class AbilityCardIngameService {
             playerAbilityPile.remove(lastAbilityCardInPile);
             playerHand.add(lastAbilityCardInPile);
         }
-
         player.setAbilityPile(playerAbilityPile);
         player.setHand(playerHand);
     }
@@ -94,6 +104,7 @@ public class AbilityCardIngameService {
     @Transactional
     private AbilityCardIngame createFromAbilityCard(AbilityCard abilityCard, Player player) {
         AbilityCardIngame abilityCardIngame = new AbilityCardIngame();
+        abilityCardIngame.setPlayer(player);
         abilityCardIngame.setAbilityCard(abilityCard);
         abilityCardIngameRepository.save(abilityCardIngame);
         return abilityCardIngame;

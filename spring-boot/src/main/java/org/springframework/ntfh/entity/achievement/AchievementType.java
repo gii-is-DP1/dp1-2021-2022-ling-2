@@ -1,4 +1,4 @@
-package org.springframework.ntfh.achievement;
+package org.springframework.ntfh.entity.achievement;
 
 /**
  * This approach will help us stablish a distinction between different

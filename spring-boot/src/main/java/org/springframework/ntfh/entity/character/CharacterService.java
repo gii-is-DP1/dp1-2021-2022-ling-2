@@ -1,4 +1,4 @@
-package org.springframework.ntfh.character;
+package org.springframework.ntfh.entity.character;
 
 import java.util.Optional;
 

@@ -3,6 +3,7 @@ import { Character } from "./Character";
 import { User } from "./User";
 
 export interface Player {
+  id: number;
   user: User;
   glory: number;
   kills: number;

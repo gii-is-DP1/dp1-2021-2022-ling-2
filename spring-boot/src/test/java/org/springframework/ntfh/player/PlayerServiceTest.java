@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.ntfh.character.CharacterService;
+import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.player.Player;
