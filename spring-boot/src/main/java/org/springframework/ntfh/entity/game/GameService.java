@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngame;
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngameService;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
@@ -51,7 +51,7 @@ public class GameService {
     private AbilityCardIngameService abilityCardIngameService;
 
     @Autowired
-    private HordeEnemyIngameService hordeEnemyIngameService;
+    private EnemyIngameService enemyIngameService;
 
     @Transactional
     public Integer gameCount() {
@@ -159,8 +159,8 @@ public class GameService {
                 method.invoke(cardCommand, playerFrom);
             } else {
                 // Handle card that targets an enemy
-                HordeEnemyIngame targetedEnemy = hordeEnemyIngameService.findById(abilityCardIngameId);
-                Method method = clazz.getDeclaredMethod("execute", Player.class, HordeEnemyIngame.class);
+                EnemyIngame targetedEnemy = enemyIngameService.findById(abilityCardIngameId);
+                Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
 
             }
