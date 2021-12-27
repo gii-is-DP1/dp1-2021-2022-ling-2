@@ -1,4 +1,4 @@
-package org.springframework.ntfh.enemy.hordeenemy;
+package org.springframework.ntfh.enemy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,35 +18,35 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import(BCryptPasswordEncoder.class)
-@Disabled
-public class HordeEnemyServiceTest {
+public class EnemyServiceTest {
 
     @Autowired
-    private EnemyService hordeEnemyService;
+    private EnemyService enemyService;
 
     @Test
     public void testCountWithInitialData() {
         // TODO: Delete all and create mock initial data. Then test count.
         // By doing this we will make this test independent of the initial data.
-        Integer count = hordeEnemyService.hordeEnemyCount();
-        assertEquals(27, count);
+        Integer count = enemyService.count();
+        assertEquals(30, count);
     }
 
     @Test
     public void testfindAll() {
-        Integer count = Lists.newArrayList(hordeEnemyService.findAll()).size();
-        assertEquals(27, count);
+        Integer count = Lists.newArrayList(enemyService.findAll()).size();
+        assertEquals(30, count);
     }
 
     @Test
     public void testfindById() {
-        Enemy tester = this.hordeEnemyService.findHordeEnemyById(17).orElse(null);
-        assertEquals(EnemyType.REGEN, tester.getHordeEnemyType().getHordeEnemyTypeEnum());
+        Enemy tester = this.enemyService.findEnemyById(17).orElse(null);
+        assertEquals(EnemyType.REGEN, tester.getEnemyType());
         assertEquals(0, tester.getGold());
         assertEquals(0, tester.getExtraGlory());
         assertEquals(EnemyModifierType.HEALING_CAPABILITIES,
-                tester.getHordeEnemyType().getHordeEnemyModifierTypeEnum());
-        assertEquals(3, tester.getHordeEnemyType().getEndurance());
+                tester.getEnemyModifierType());
+        assertEquals(3, tester.getEndurance());
+        ;
     }
 
 }

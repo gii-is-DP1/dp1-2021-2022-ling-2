@@ -14,7 +14,7 @@ public class EnemyService {
     private EnemyRepository enemyRepository;
 
     @Transactional
-    public Integer EnemyCount() {
+    public Integer count() {
         return (int) enemyRepository.count();
     }
 
