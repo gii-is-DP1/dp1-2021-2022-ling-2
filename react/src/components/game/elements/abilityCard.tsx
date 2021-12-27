@@ -2,6 +2,7 @@ import { useContext } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import axios from "../../../api/axiosConfig";
+import { BASE_IMAGE_PATH } from "../../../constants/paths";
 import GameContext from "../../../context/game";
 import UserContext from "../../../context/user";
 import { AbilityCardIngame } from "../../../interfaces/AbilityCardIngame";
@@ -20,13 +21,14 @@ export default function AbilityCard(params: Params) {
   const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
 
   const abilityCardTypeEnum = card.abilityCard.abilityCardTypeEnum;
+  const characterTypeEnum = card.abilityCard.characterTypeEnum;
 
   const isSelected = selected === card;
   const isSelfPlayable = SelfPlayableCards.includes(
     card.abilityCard.abilityCardTypeEnum
   );
 
-  const handleOnClick = async () => {
+  const playCard = async () => {
     if (isSelfPlayable) {
       try {
         const response = await axios.post(
@@ -51,9 +53,13 @@ export default function AbilityCard(params: Params) {
       hover:-translate-y-6 
       ${isSelected ? "border-opacity-100 border-yellow-300" : ""}
       `}
-      src={`/images/cards/characters/${card.abilityCard.characterTypeEnum.toLowerCase()}/${abilityCardTypeEnum.toLowerCase()}.png`}
+      src={`${BASE_IMAGE_PATH}/cards${
+        characterTypeEnum
+          ? "/characters/" + characterTypeEnum.toLowerCase()
+          : "/items"
+      }/${abilityCardTypeEnum.toLowerCase()}.png`}
       alt={abilityCardTypeEnum.toLowerCase().toString()}
-      onClick={handleOnClick}
+      onClick={playCard}
     ></img>
   );
 }

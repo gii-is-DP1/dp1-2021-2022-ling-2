@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,7 +47,6 @@ public class GameController {
      */
     @PostMapping
     public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) {
-        // TODO untested
         Game createdGame = gameService.createFromLobby(lobby);
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
     }
@@ -77,10 +77,19 @@ public class GameController {
      * @return the game with the updated state
      */
     @PostMapping("/{gameId}/ability-cards/{abilityCardIngameId}")
-    public ResponseEntity<Object> playCard(@PathVariable("gameId") Integer gameId,
+    public ResponseEntity<Game> playCard(@PathVariable("gameId") Integer gameId,
             @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body) {
         Integer enemyId = body.get("enemyId");
         gameService.playCard(abilityCardIngameId, enemyId);
+        Game game = gameService.findGameById(gameId);
+        return new ResponseEntity<>(game, HttpStatus.OK);
+    }
+
+    @PostMapping("/{gameId}/market-cards/{marketCardIngameId}")
+    public ResponseEntity<Game> buyMarketCard(@PathVariable("gameId") Integer gameId,
+            @PathVariable("marketCardIngameId") Integer marketCardIngameId,
+            @RequestHeader("Authorization") String token) {
+        gameService.buyMarketCard(marketCardIngameId, token);
         Game game = gameService.findGameById(gameId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }

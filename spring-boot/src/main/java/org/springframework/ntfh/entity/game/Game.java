@@ -38,8 +38,7 @@ public class Game extends BaseEntity {
     private Boolean hasScenes;
 
     // Set from Lobby by creating Players instances from users
-    @OneToMany // TODO cascade? If we set CascadeType.ALL then deleting the game will delete
-               // the players. It shouldn't be like that.
+    @OneToMany
     @JsonIgnoreProperties({ "game", "lobby" })
     private List<Player> players;
 
