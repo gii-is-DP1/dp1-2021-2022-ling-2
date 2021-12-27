@@ -80,7 +80,7 @@ public class GameController {
     public ResponseEntity<Object> playCard(@PathVariable("gameId") Integer gameId,
             @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body) {
         Integer enemyId = body.get("enemyId");
-        gameService.playCard(gameId, abilityCardIngameId, enemyId);
+        gameService.playCard(abilityCardIngameId, enemyId);
         Game game = gameService.findGameById(gameId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }

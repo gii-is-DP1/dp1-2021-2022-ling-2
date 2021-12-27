@@ -17,7 +17,8 @@ public class RobarBolsillos {
     @Autowired
     private GameService gameService;
 
-    public void execute(Integer gameId, Player playerFrom) {
+    public void execute(Player playerFrom) {
+        Integer gameId = playerFrom.getGame().getId();
         gameService.findPlayersByGameId(gameId).forEach(player -> {
             new StealCoinCommand(playerFrom, player).execute();
         });

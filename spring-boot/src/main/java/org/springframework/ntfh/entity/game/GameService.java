@@ -128,7 +128,7 @@ public class GameService {
     }
 
     @Transactional
-    public void playCard(Integer gameId, Integer abilityCardIngameId, Integer enemyId) {
+    public void playCard(Integer abilityCardIngameId, Integer enemyId) {
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
@@ -154,16 +154,14 @@ public class GameService {
             if (enemyId == null) {
                 // Handle self playable card (does not target a specific enemy)
                 // Get a reference to the method "execute", that receives 2 parameters
-                Method method = clazz.getDeclaredMethod("execute", Integer.class,
-                        Player.class);
+                Method method = clazz.getDeclaredMethod("execute", Player.class);
                 // Execute the method with the parameters
-                method.invoke(cardCommand, gameId, playerFrom);
+                method.invoke(cardCommand, playerFrom);
             } else {
                 // Handle card that targets an enemy
                 HordeEnemyIngame targetedEnemy = hordeEnemyIngameService.findById(abilityCardIngameId);
-                Method method = clazz.getDeclaredMethod("execute", Integer.class,
-                        Player.class, HordeEnemyIngame.class);
-                method.invoke(cardCommand, gameId, playerFrom, targetedEnemy);
+                Method method = clazz.getDeclaredMethod("execute", Player.class, HordeEnemyIngame.class);
+                method.invoke(cardCommand, playerFrom, targetedEnemy);
 
             }
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
