@@ -16,6 +16,6 @@ public class BallestaPrecisa {
 
     public void execute(Player playerFrom, HordeEnemyIngame targetedEnemy) {
         // TODO missing the complex condition
-        new DealDamageCommand(3, targetedEnemy);
+        new DealDamageCommand(2, targetedEnemy).execute();
     }
 }
