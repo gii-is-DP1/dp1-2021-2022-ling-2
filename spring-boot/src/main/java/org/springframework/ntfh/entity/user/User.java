@@ -54,14 +54,6 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
 
-	// TODO the cascade type is yet to be determined
-	// @OneToOne(mappedBy = "host")
-	// TODO is this even used? Set to null on new creations
-	@ManyToOne
-	@JoinColumn(name = "game")
-	@JsonIgnore
-	private Game game; // game where the user is currently in
-
 	@ManyToOne
 	@JoinColumn(name = "lobby")
 	@JsonIgnoreProperties({ "users", "host", "leader" })
