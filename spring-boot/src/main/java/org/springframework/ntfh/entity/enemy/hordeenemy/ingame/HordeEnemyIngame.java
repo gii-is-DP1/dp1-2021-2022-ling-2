@@ -8,11 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.ntfh.entity.enemy.EnemyLocation;
 import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemy;
-import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;
@@ -23,7 +20,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "horde_enemies_ingame")
 public class HordeEnemyIngame extends BaseEntity {
-    // TODO extends IngameEntity?
     @ManyToOne(optional = false)
     @JoinColumn(name = "horde_enemy_id")
     private HordeEnemy hordeEnemy;
@@ -31,12 +27,7 @@ public class HordeEnemyIngame extends BaseEntity {
     @NotNull
     private Integer currentEndurance;
 
-    // TODO check if this is overriding IngameEntity's location
     @NotNull
     @Enumerated(EnumType.STRING)
     private EnemyLocation hordeEnemyLocation;
-
-    @ManyToOne
-    @JsonIgnore
-    private Game game;
 }

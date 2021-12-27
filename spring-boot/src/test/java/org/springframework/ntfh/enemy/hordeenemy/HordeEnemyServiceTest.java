@@ -7,13 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemy;
 import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemyService;
 import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemyTypeEnum;
 import org.springframework.ntfh.entity.enemy.hordeenemy.HordeModifierTypeEnum;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@Import(BCryptPasswordEncoder.class)
 public class HordeEnemyServiceTest {
 
     @Autowired

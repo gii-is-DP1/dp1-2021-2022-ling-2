@@ -1,64 +1,52 @@
--- One admin user, named admin with password admin and authority admin
-INSERT INTO users(username,password, email) VALUES ('admin','admin', 'admin@mail.com');
+INSERT INTO users(username,password, email) VALUES ('admin','$2a$10$bicbzJTFskk8.sHWJauxCu2RzDIqXk/zCxQDZ5ByLQw0m0lQ6l2Pa', 'admin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
 INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
 
-INSERT INTO users(username,password,email) VALUES ('pablo','pablo', 'pablo@mail.com');
+INSERT INTO users(username,password,email) VALUES ('pablo','$2a$10$k.p0O7lwMeTbmeKbODEqbO8l6VDv38JgLI66UHydll9QhIK4ewlgq', 'pablo@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(4, 'pablo','admin');
 INSERT INTO authorities(id,username,authority) VALUES(5, 'pablo','user');
 
-INSERT INTO users(username,password,email) VALUES ('andres','andres','andres@mail.com');
+INSERT INTO users(username,password,email) VALUES ('andres','$2a$10$MnbY762s/bvKrB249IRRferPU3lg70XfzPLxHBwK9Sg8EXA.OSMGO','andres@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
 
-INSERT INTO users(username,password,email) VALUES ('stockie','stockie', 'stockie@mail.com');
+INSERT INTO users(username,password,email) VALUES ('stockie','$2a$10$xKDzRwhX90OQZ4EeOUOtMeTc8Sfzj4Dacsbfqh8HSeLzBT5zWgX6W', 'stockie@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(6, 'stockie','user');
 
-INSERT INTO users(username,password,email) VALUES ('alejandro','alejandro', 'alejandro@mail.com');
+INSERT INTO users(username,password,email) VALUES ('alejandro','$2a$10$wto4YGQm44mFCrxN.GoAW.0ll2zZiA.1dy6fMk06AwPy8tqKsw.ra', 'alejandro@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(7, 'alejandro','user');
 
-INSERT INTO users(username,password,email) VALUES ('merlin','merlin', 'merlin@mail.com');
+INSERT INTO users(username,password,email) VALUES ('merlin','$2a$10$nY6NBJd0GmBPNLvi/JqiguR6.3UDaXINdnIP2Z3PpOAIATvW6ahj.', 'merlin@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(8, 'merlin','user');
 
-INSERT INTO users(username,password,email) VALUES ('legolas','legolas', 'legolas@mail.com');
+INSERT INTO users(username,password,email) VALUES ('legolas','$2a$10$M5ZhWHiGOKrB5gpLAnPo3OTEj9SFOmxmBDyj.FuwtCH9ZdQlNNtWG', 'legolas@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(9, 'legolas','user');
 
-INSERT INTO users(username,password,email) VALUES ('gandalf','gandalf', 'gandalf@mail.com');
+INSERT INTO users(username,password,email) VALUES ('gandalf','$2a$10$mtBX7rLI1QALxQcnsUc1/OapMiBnjMmDTsRwxiXqJXpQmXZuOYR5q', 'gandalf@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(10, 'gandalf','user');
 
-INSERT INTO users(username,password,email) VALUES ('frodo','frodo', 'frodo@mail.com');
+INSERT INTO users(username,password,email) VALUES ('frodo','$2a$10$PalqK8iUM3awRALpPgs1j.AnUo2uKdriZcOAXQopLRIUQVsySrDVa', 'frodo@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(11, 'frodo','user');
 
-INSERT INTO users(username,password,email) VALUES ('dalinar','dalinar', 'dalinar@mail.com');
+INSERT INTO users(username,password,email) VALUES ('dalinar','$2a$10$UkzgrcjhQFvIzpSAiev6YuGzKzKFLCk9YOD8GD/vGerFzMjRyl7De', 'dalinar@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(12, 'dalinar','user');
 
-INSERT INTO users(username,password,email) VALUES ('aragorn','aragorn', 'aragorn@mail.com');
+INSERT INTO users(username,password,email) VALUES ('aragorn','$2a$10$yDGVc5VBqkHDkEIu7xHYquXsiMNAa4iY3ioE1s5HPT2x5P2N1ftvS', 'aragorn@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(13, 'aragorn','user');
 
-INSERT INTO users(username,password,email) VALUES ('ezio','ezio', 'ezio@mail.com');
+INSERT INTO users(username,password,email) VALUES ('ezio','$2a$10$wlrC8OwlLYJYg3wM.5gxmuiPhvHaK/sh2sDbHnMYehSzvnRUzauXm', 'ezio@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
 
-INSERT INTO users(username,password,email) VALUES ('user1','user1', 'user1@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user1','$2a$10$/oWmIwbGzUR5guYoznFzDefC.MMYFTwZ3bmLIiWd4akO8cac/eTX2', 'user1@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(15, 'user1','user');
 
-INSERT INTO users(username,password,email) VALUES ('user2','user2', 'user2@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user2','$2a$10$pLlYabqhasLIEdk16qUXqeNNNnK3tszIc2ud1QQ6IshsN.WoOOQHu', 'user2@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(16, 'user2','user');
 
-INSERT INTO users(username,password,email) VALUES ('user3','user3', 'user3@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user3','$2a$10$/Equ7DkGQXhbXtz5bO6uruA/VStGtLxhGE8aLd3Xi28mOkVqaj70y', 'user3@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(17, 'user3','user');
 
-INSERT INTO users(username,password,email) VALUES ('user4','user4', 'user4@mail.com');
+INSERT INTO users(username,password,email) VALUES ('user4','$2a$10$.AxtcWQeT3zpXHv4j0892uKnU5kkJTpRhFijkaJujP2bb22KcR/qC', 'user4@mail.com');
 INSERT INTO authorities(id,username,authority) VALUES(18, 'user4','user');
-
--- TODO users for JUnit tests should not be created in the database, but in the Junit tests and then deleted
--- Usuario para el JUnit de la H10
-INSERT INTO users(username,password,email) VALUES ('alex','alex','alex@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (80,'alex','user');
-
-
--- INSERT INTO lobbies(name, game, has_scenes, spectators_allowed, max_players, host)  VALUES('test lobby 2', 1, true, true, 4, 'gandalf');
--- INSERT INTO games(id, name, startTime, has scenes, players, leader) VALUES
--- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 2', false, true, false, 3);
--- INSERT INTO lobbies(name, has_started, has_scenes, spectators_allowed, max_players) VALUES ('test lobby 3', false, true, true, 4);
 
 INSERT INTO achievements(name, description, type) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light', 'CREATE_ACCOUNT');
 INSERT INTO achievements(name, description, type) VALUES ('Newcomer', 'Play your first game', 'PLAY_1_GAME');
@@ -194,6 +182,71 @@ INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VAL
 
 -- ARCO COMPUESTO can be used by characters with ranged
 INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (14, 'RANGED');
+
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (1, 'COMPANERO_LOBO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (2, 'DISPARO_CERTERO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (3, 'DISPARO_CERTERO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (4, 'DISPARO_RAPIDO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (5, 'DISPARO_RAPIDO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (6, 'DISPARO_RAPIDO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (7, 'DISPARO_RAPIDO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (8, 'DISPARO_RAPIDO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (9, 'DISPARO_RAPIDO', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (10, 'EN_LA_DIANA', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (11, 'LLUVIA_DE_FLECHAS', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (12, 'LLUVIA_DE_FLECHAS', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (13, 'RECOGER_FLECHAS', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (14, 'RECOGER_FLECHAS', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (15, 'SUPERVIVENCIA', 'RANGER');
+
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (16, 'ATAQUE_BRUTAL', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (17, 'ATAQUE_BRUTAL', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (18, 'CARGA_CON_ESCUDO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (19, 'DOBLE_ESPADAZO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (20, 'DOBLE_ESPADAZO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (21, 'ESCUDO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (22, 'ESCUDO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (23, 'ESPADAZO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (24, 'ESPADAZO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (25, 'ESPADAZO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (26, 'ESPADAZO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (27, 'PASO_ATRAS', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (28, 'PASO_ATRAS', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (29, 'TODO_O_NADA', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (30, 'VOZ_DE_ALIENTO', 'WARRIOR');
+
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (31, 'AURA_PROTECTORA', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (32, 'BOLA_DE_FUEGO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (33, 'DISPARO_GELIDO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (34, 'DISPARO_GELIDO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (35, 'FLECHA_CORROSIVA', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (36, 'GOLPE_DE_BASTON', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (37, 'GOLPE_DE_BASTON', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (38, 'GOLPE_DE_BASTON', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (39, 'GOLPE_DE_BASTON', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (40, 'ORBE_CURATIVO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (41, 'PROYECTIL_IGNEO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (42, 'PROYECTIL_IGNEO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (43, 'PROYECTIL_IGNEO', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (44, 'RECONSTITUCION', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (45, 'TORRENTE_DE_LUZ', 'WIZARD');
+
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (46, 'AL_CORAZON', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (47, 'AL_CORAZON', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (48, 'ATAQUE_FURTIVO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (49, 'ATAQUE_FURTIVO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (50, 'ATAQUE_FURTIVO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (51, 'BALLESTA_PRECISA', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (52, 'BALLESTA_PRECISA', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (53, 'BALLESTA_PRECISA', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (54, 'EN_LAS_SOMBRAS', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (55, 'EN_LAS_SOMBRAS', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (56, 'ENGANAR', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (57, 'ROBAR_BOLSILLOS', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (58, 'SAQUEO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (60, 'TRAMPA', 'ROGUE');
+
 
 -- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
 -- Create the initial lobby

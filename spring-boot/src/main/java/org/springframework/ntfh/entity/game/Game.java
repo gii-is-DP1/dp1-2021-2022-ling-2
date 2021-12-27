@@ -11,7 +11,9 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngame;
 import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
 
@@ -47,6 +49,12 @@ public class Game extends BaseEntity {
     @OneToOne
     @JsonIgnoreProperties({ "game" })
     private Turn currentTurn;
+
+    @OneToMany
+    private List<HordeEnemyIngame> hordeEnemies;
+
+    @OneToMany
+    private List<MarketCardIngame> marketCards;
 
     /**
      * 
