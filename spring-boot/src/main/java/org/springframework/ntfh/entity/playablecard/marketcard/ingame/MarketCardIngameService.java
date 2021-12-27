@@ -27,14 +27,6 @@ public class MarketCardIngameService {
     @Autowired
     private MarketCardService marketCardService;
 
-    @Autowired
-    private GameService gameService;
-
-    @Transactional
-    public Iterable<MarketCardIngame> findMarketCardsByGameId(Integer gameId) {
-        return gameService.findGameById(gameId).getMarketCards();
-    }
-
     @Transactional
     public void save(MarketCardIngame marketCardIngame) {
         this.marketCardIngameRepository.save(marketCardIngame);
@@ -61,26 +53,15 @@ public class MarketCardIngameService {
      */
     private void refillMarketWithCards(Game game) {
         // Get a list of
-        List<MarketCardIngame> marketCardsIngame = game.getMarketCards();
-        List<MarketCardIngame> marketCardsInPile = marketCardsIngame.stream()
-                .filter(mc -> mc.getLocation() == MarketCardLocation.MARKET_PILE).collect(Collectors.toList());
-        List<MarketCardIngame> marketCardsForSale = marketCardsIngame.stream()
-                .filter(mc -> mc.getLocation() == MarketCardLocation.MARKET_FOR_SALE).collect(Collectors.toList());
+        List<MarketCardIngame> marketCardsInPile = game.getMarketCardsInPile();
+        List<MarketCardIngame> marketCardsForSale = game.getMarketCardsForSale();
 
         while (!marketCardsInPile.isEmpty() && marketCardsForSale.size() < 5) {
             MarketCardIngame lastMarketCardInPile = marketCardsInPile.get(0);
             marketCardsInPile.remove(lastMarketCardInPile);
-            lastMarketCardInPile.setLocation(MarketCardLocation.MARKET_FOR_SALE);
             marketCardsForSale.add(lastMarketCardInPile);
         }
-
-        // Join both lists back together and save them in the DB
-        List<MarketCardIngame> marketCardsInPileAndForSale = Stream.of(marketCardsInPile, marketCardsForSale)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-
-        game.setMarketCards(marketCardsInPileAndForSale);
-
+        // TODO do we need to .save()?
     }
 
     @Transactional
@@ -95,7 +76,7 @@ public class MarketCardIngameService {
                 .map(marketCard -> createFromMarketCard(marketCard, game)) // And create the DB row of each one
                 .collect(Collectors.toList());
 
-        game.setMarketCards(gameMarketCards);
+        game.getMarketCardsInPile().addAll(gameMarketCards);
 
         refillMarketWithCards(game);
     }
@@ -103,9 +84,7 @@ public class MarketCardIngameService {
     @Transactional
     private MarketCardIngame createFromMarketCard(MarketCard marketCard, Game game) {
         MarketCardIngame marketCardIngame = new MarketCardIngame();
-        // marketCardIngame.setGame(game);
         marketCardIngame.setMarketCard(marketCard);
-        marketCardIngame.setLocation(MarketCardLocation.MARKET_PILE);
         this.save(marketCardIngame);
         return marketCardIngame;
     }

@@ -16,7 +16,7 @@ export default function MarketCard(params: Params) {
       {card ? (
         <img
           className="card zoomable hover:scale-250 hover:translate-y-20"
-          src={`${BASE_IMAGE_PATH}${card.marketCard.frontImage}`}
+          src={`${BASE_IMAGE_PATH}/cards/items/${card.marketCard.marketCardTypeEnum.toLowerCase()}.png`}
           alt={card.marketCard.marketCardTypeEnum}
         ></img>
       ) : (
