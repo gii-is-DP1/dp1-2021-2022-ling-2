@@ -1,6 +1,7 @@
 package org.springframework.ntfh.entity.game;
 
 import java.beans.Transient;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngame;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.player.Player;
@@ -51,10 +52,16 @@ public class Game extends BaseEntity {
     private Turn currentTurn;
 
     @OneToMany
-    private List<HordeEnemyIngame> hordeEnemies;
+    private List<EnemyIngame> enemiesInPile = new ArrayList<>();
 
     @OneToMany
-    private List<MarketCardIngame> marketCards;
+    private List<EnemyIngame> enemiesFighting = new ArrayList<>();
+
+    @OneToMany
+    private List<MarketCardIngame> marketCardsInPile = new ArrayList<>();
+
+    @OneToMany
+    private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
 
     /**
      * 

@@ -5,18 +5,18 @@ import axios from "../../../api/axiosConfig";
 import { BASE_IMAGE_PATH } from "../../../constants/paths";
 import UserContext from "../../../context/user";
 import { AbilityCardIngame } from "../../../interfaces/AbilityCardIngame";
-import { HordeEnemyIngame } from "../../../interfaces/HordeEnemyIngame";
+import { EnemyIngame } from "../../../interfaces/EnemyIngame";
 import GameContext from "../../../context/game";
 
 type Params = {
-  enemy: HordeEnemyIngame;
+  enemyIngame: EnemyIngame;
   flipped?: boolean;
   selectedAbilityCard: AbilityCardIngame | null;
   setSelectedAbilityCard: (abilityCard: AbilityCardIngame | null) => void;
 };
 
-export default function HordeEnemyCard(params: Params) {
-  const { enemy, flipped, selectedAbilityCard, setSelectedAbilityCard } =
+export default function EnemyCard(params: Params) {
+  const { enemyIngame, flipped, selectedAbilityCard, setSelectedAbilityCard } =
     params;
   const { userToken } = useContext(UserContext);
   const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
@@ -28,7 +28,7 @@ export default function HordeEnemyCard(params: Params) {
     try {
       const response = await axios.post(
         `/games/${gameId}/ability-cards/${selectedAbilityCard.id}`,
-        { enemyId: enemy.id }, // Payload
+        { enemyId: enemyIngame.id }, // Payload
         { headers: { Authorization: "Bearer " + userToken } }
       );
       const _game = response.data;
@@ -43,11 +43,12 @@ export default function HordeEnemyCard(params: Params) {
       className={`card zoomable hover:scale-250
       border-2 border-opacity-0
       `}
-      src={
-        BASE_IMAGE_PATH +
-        (flipped ? enemy.hordeEnemy.backImage : enemy.hordeEnemy.frontImage)
-      } // TODO frontend or backend?
-      alt={enemy.hordeEnemy.hordeEnemyType.hordeEnemyTypeEnum}
+      src={`${BASE_IMAGE_PATH}/cards/enemies${
+        flipped
+          ? "/backs/warlord.png"
+          : `/fronts/${enemyIngame.enemy.enemyType.toLowerCase()}.png`
+      }`}
+      alt={enemyIngame.enemy.enemyType}
       onClick={handleOnClick}
     ></img>
   );
