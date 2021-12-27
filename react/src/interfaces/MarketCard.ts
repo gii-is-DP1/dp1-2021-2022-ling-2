@@ -6,6 +6,4 @@ export interface MarketCard {
   price: number;
   proficiencies: ProficiencyTypeEnum[];
   marketCardTypeEnum: MarketCardTypeEnum;
-  frontImage: string;
-  backImage: string;
 }

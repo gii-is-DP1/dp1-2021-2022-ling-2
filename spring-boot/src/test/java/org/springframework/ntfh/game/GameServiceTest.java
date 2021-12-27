@@ -58,8 +58,8 @@ public class GameServiceTest {
 
     @BeforeEach
     public void init() {
-        User user1 = userService.findUser("user1").get();
-        User user2 = userService.findUser("user2").get();
+        User user1 = userService.findUser("user1");
+        User user2 = userService.findUser("user2");
         Set<User> users = Sets.newSet(user1, user2);
 
         lobbyTester = new Lobby();
@@ -131,7 +131,7 @@ public class GameServiceTest {
 
     @Test
     public void testCreateFromLobbyNotEnoughPlayers() {
-        User user2 = userService.findUser("user2").get();
+        User user2 = userService.findUser("user2");
         lobbyTester.removeUser(user2);
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }

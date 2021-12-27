@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -15,18 +16,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngame;
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngameService;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
+import org.springframework.ntfh.entity.proficiency.Proficiency;
+import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,6 +44,9 @@ public class GameService {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private PlayerService playerService;
@@ -51,7 +61,10 @@ public class GameService {
     private AbilityCardIngameService abilityCardIngameService;
 
     @Autowired
-    private HordeEnemyIngameService hordeEnemyIngameService;
+    private MarketCardIngameService marketCardIngameService;
+
+    @Autowired
+    private EnemyIngameService enemyIngameService;
 
     @Transactional
     public Integer gameCount() {
@@ -129,6 +142,11 @@ public class GameService {
 
     @Transactional
     public void playCard(Integer abilityCardIngameId, Integer enemyId) {
+
+        // TODO Throw exception if it's not the player's turn
+        // TODO throw exception if the one sending the request is not the card owner
+        // TODO throw exception if the card is not in the player's hand
+
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
@@ -159,8 +177,8 @@ public class GameService {
                 method.invoke(cardCommand, playerFrom);
             } else {
                 // Handle card that targets an enemy
-                HordeEnemyIngame targetedEnemy = hordeEnemyIngameService.findById(abilityCardIngameId);
-                Method method = clazz.getDeclaredMethod("execute", Player.class, HordeEnemyIngame.class);
+                EnemyIngame targetedEnemy = enemyIngameService.findById(abilityCardIngameId);
+                Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
 
             }
@@ -176,5 +194,54 @@ public class GameService {
 
         // Check if the card is exiliable and if so, remove it from the discard pile too
 
+    }
+
+    /**
+     * Executed when a player tries to buy a market card
+     * 
+     * @param marketCardIngameId
+     */
+    @Transactional
+    public void buyMarketCard(Integer marketCardIngameId, String token) {
+
+        // TODO Throw exception if it's not the player's turn
+        // TODO Throw exception if not in the market stage
+
+        String username = TokenUtils.usernameFromToken(token);
+        User user = userService.findUser(username);
+        Player player = user.getPlayer();
+
+        MarketCardIngame marketCardIngame = marketCardIngameService.findById(marketCardIngameId);
+
+        Set<ProficiencyTypeEnum> marketCardProficiencies = marketCardIngame.getMarketCard().getProficiencies();
+        Set<ProficiencyTypeEnum> playerProficiencies = player.getCharacterType().getProficiencies().stream()
+                .map(Proficiency::getProficiencyTypeEnum).collect(Collectors.toSet());
+
+        playerProficiencies.retainAll(marketCardProficiencies); // Intersection of both sets
+
+        if (!marketCardProficiencies.isEmpty() && playerProficiencies.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "This card is not available for the " + player.getCharacterTypeEnum().toString().toLowerCase());
+        }
+
+        if (player.getHand().size() >= 4) {
+            throw new IllegalArgumentException("You can't have more than 4 cards in your hand");
+        }
+
+        Integer price = marketCardIngame.getMarketCard().getPrice();
+        if (player.getGold() < price) {
+            throw new IllegalArgumentException("You do not have enough gold to buy this card");
+        }
+
+        player.setGold(player.getGold() - price);
+        AbilityCardIngame marketCardAsAbilityCard = abilityCardIngameService.createFromMarketCard(
+                marketCardIngame.getMarketCard(),
+                player);
+        player.getHand().add(marketCardAsAbilityCard);
+
+        // Remove the card from the For Sale pile and it from the database
+        Game game = player.getGame();
+        game.getMarketCardsForSale().remove(marketCardIngame);
+        marketCardIngameService.delete(marketCardIngame);
     }
 }

@@ -39,7 +39,7 @@ public class LobbyServiceTest {
 
     @BeforeEach
     public void init() {
-        User user1 = userService.findUser("user1").get();
+        User user1 = userService.findUser("user1");
         Set<User> users = Sets.newSet(user1);
 
         lobbyTester = new Lobby();
@@ -79,8 +79,8 @@ public class LobbyServiceTest {
         assertEquals(true, tester.getHasScenes());
         assertEquals(true, tester.getSpectatorsAllowed());
         assertEquals(2, tester.getMaxPlayers());
-        assertEquals(userService.findUser("andres").get(), tester.getHost());
-        assertEquals(userService.findUser("andres").get(), tester.getLeader());
+        assertEquals(userService.findUser("andres"), tester.getHost());
+        assertEquals(userService.findUser("andres"), tester.getLeader());
     }
 
     // H7
@@ -106,7 +106,7 @@ public class LobbyServiceTest {
     @Test
     public void testJoinToLobby() {
         Integer lobbyTesterId = lobbyTester.getId();
-        User requester = userService.findUser("merlin").get();
+        User requester = userService.findUser("merlin");
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
@@ -116,7 +116,7 @@ public class LobbyServiceTest {
     @Test
     public void testRemoveUserFromLobby() {
         Integer lobbyTesterId = lobbyTester.getId();
-        User requester = userService.findUser("merlin").get();
+        User requester = userService.findUser("merlin");
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
@@ -126,7 +126,7 @@ public class LobbyServiceTest {
 
     @Test
     public void testH14E1() {
-        User user1 = userService.findUser("user1").get();
+        User user1 = userService.findUser("user1");
         lobbyTester.addUser(user1);
         Integer numUsersInLobby = lobbyTester.getUsers().size();
         assertEquals(1, numUsersInLobby);
