@@ -1,5 +1,8 @@
 package org.springframework.ntfh.command;
 
+import java.util.List;
+
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 
 import lombok.AllArgsConstructor;
@@ -12,6 +15,16 @@ public class DiscardCommand implements Command{
 
     @Override
     public void execute() {
-        
+        Integer i = 0;
+        for(i=0; i<numDiscards; i++){
+            List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
+            AbilityCardIngame discardedCard = listAbilityPile.get(0);
+            listAbilityPile.remove(0);
+            List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
+            listDiscardPile.add(discardedCard);
+            
+            playerFrom.setAbilityPile(listAbilityPile);
+            playerFrom.setDiscardPile(listDiscardPile);
+        }
     }
 }
