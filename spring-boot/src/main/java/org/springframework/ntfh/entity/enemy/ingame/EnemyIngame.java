@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
-import org.springframework.ntfh.entity.enemy.EnemyType;
 import org.springframework.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;

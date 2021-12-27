@@ -29,9 +29,6 @@ public class EnemyIngameService {
     @Autowired
     private EnemyService enemyService;
 
-    @Autowired
-    private GameService gameService;
-
     @Transactional
     public Integer enemyIngameCount() {
         return (int) enemyIngameRepository.count();

@@ -164,7 +164,6 @@ export default function Game() {
                 </div>
                 <div className="col-span-3 row-span-2">
                   <CenterZone
-                    game={game}
                     selectedAbilityCard={selectedAbilityCard}
                     setSelectedAbilityCard={setSelectedAbilityCard}
                   />
