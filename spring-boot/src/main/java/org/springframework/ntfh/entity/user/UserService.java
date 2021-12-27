@@ -15,21 +15,19 @@
 */
 package org.springframework.ntfh.entity.user;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.exceptions.BannedUserException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +44,11 @@ public class UserService {
 	private AuthoritiesService authoritiesService;
 
 	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
 	public UserService(UserRepository userRepository) {
+		// TODO needed?
 		this.userRepository = userRepository;
 	}
 
@@ -58,17 +60,25 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User saveUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+	public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
 		if (userRepository.existsByEmail(user.getEmail()))
 			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
 		if (userRepository.existsByUsername(user.getUsername()))
 			throw new IllegalArgumentException("There is already a user registered with the username provided");
 
+		// encrypt the password using bcrypt
+		String encodedParamPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedParamPassword);
+
 		user.setEnabled(true);
-		userRepository.save(user);
+		this.save(user);
 		authoritiesService.saveAuthorities(user.getUsername(), "user");
 		return user;
+	}
+
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 
 	@Transactional(readOnly = true)
@@ -125,8 +135,13 @@ public class UserService {
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.
-		if (user.getPassword() == null || user.getPassword().equals("null"))
+		if (user.getPassword() == null || user.getPassword().equals("null")) {
 			user.setPassword(userInDatabase.getPassword());
+		} else {
+			// If there is a new password input, encrypt it using bcrypt
+			String encodedParamPassword = passwordEncoder.encode(user.getPassword());
+			user.setPassword(encodedParamPassword);
+		}
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
 		if (user.getEnabled() == null) {
@@ -139,15 +154,18 @@ public class UserService {
 	public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
 		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
 		if (!foundUserOptional.isPresent()) {
+			// TODO move this validation to the findUser method in the service?
 			throw new DataAccessException("User not found") {
 			};
 		}
+
 		User userInDB = foundUserOptional.get();
 		if (!userInDB.getEnabled()) {
 			throw new BannedUserException("This user has been banned") {
 			};
 		}
-		if (!userInDB.getPassword().equals(user.getPassword())) {
+
+		if (!passwordEncoder.matches(user.getPassword(), userInDB.getPassword())) {
 			throw new IllegalArgumentException("Incorrect password") {
 			};
 		}

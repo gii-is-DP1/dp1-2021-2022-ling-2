@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
 import axios from "../../../api/axiosConfig";
+import { AbilityCardIngame } from "../../../interfaces/AbilityCardIngame";
 import { Game } from "../../../interfaces/Game";
 import { HordeEnemyIngame } from "../../../interfaces/HordeEnemyIngame";
 import { MarketCardIngame } from "../../../interfaces/MarketCardIngame";
 import { WarlordIngame } from "../../../interfaces/WarlordIngame";
+import CountCard from "../elements/countCard";
 import HordeEnemyCard from "../elements/hordeEnemyCard";
 import MarketCard from "../elements/marketCard";
 import PlaceholderCard from "../elements/placeholderCard";
 import SceneCard from "../elements/sceneCard";
-import WarlordCard from "../elements/warlordCard";
 
 type Params = {
   game: Game;
+  selectedAbilityCard: AbilityCardIngame | null;
+  setSelectedAbilityCard: (abilityCard: AbilityCardIngame | null) => void;
 };
 
 export default function CenterZone(params: Params) {
-  const { game } = params;
+  const { game, selectedAbilityCard, setSelectedAbilityCard } = params;
   const [marketCards, setMarketCards] = useState<MarketCardIngame[]>([]);
   const [hordeEnemies, setHordeEnemies] = useState<HordeEnemyIngame[]>([]);
   const [sceneCount, setSceneCount] = useState<number>(0);
@@ -50,11 +53,12 @@ export default function CenterZone(params: Params) {
       <span className="grid grid-cols-6 gap-2 py-1">
         {/* Market cards pile (facing down) */}
         <span className="col-start-1">
-          <MarketCard
+          <CountCard
             count={
               marketCards.filter((card) => card.location === "MARKET_PILE")
                 .length
             }
+            zoomDirection="down"
           />
         </span>
         {/* Available market cards (facing up) */}
@@ -88,11 +92,13 @@ export default function CenterZone(params: Params) {
         {hordeEnemies
           .filter((enemy) => enemy.hordeEnemyLocation === "FIGHTING")
           .map((enemy) => (
-            <HordeEnemyCard key={enemy.id} enemy={enemy} />
+            <HordeEnemyCard
+              key={enemy.id}
+              enemy={enemy}
+              selectedAbilityCard={selectedAbilityCard}
+              setSelectedAbilityCard={setSelectedAbilityCard}
+            />
           ))}
-        {warlord?.location === "FIGHTING" && (
-          <WarlordCard key={warlord.id} warlord={warlord} />
-        )}
       </span>
     </div>
   );

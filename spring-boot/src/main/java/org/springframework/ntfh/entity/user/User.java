@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
@@ -53,13 +53,6 @@ public class User {
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
-
-	// TODO the cascade type is yet to be determined
-	// @OneToOne(mappedBy = "host")
-	@ManyToOne
-	@JoinColumn(name = "game")
-	@JsonIgnore
-	private Game game; // game where the user is currently in
 
 	@ManyToOne
 	@JoinColumn(name = "lobby")

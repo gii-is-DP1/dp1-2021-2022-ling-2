@@ -1,7 +1,9 @@
+import { AbilityCardIngame } from "./AbilityCardIngame";
 import { Character } from "./Character";
 import { User } from "./User";
 
 export interface Player {
+  id: number;
   user: User;
   glory: number;
   kills: number;
@@ -9,4 +11,8 @@ export interface Player {
   wounds: number;
   turnOrder: number;
   characterType: Character;
+  cards: AbilityCardIngame[];
+  hand: AbilityCardIngame[];
+  discardPile: AbilityCardIngame[];
+  abilityPile: AbilityCardIngame[];
 }

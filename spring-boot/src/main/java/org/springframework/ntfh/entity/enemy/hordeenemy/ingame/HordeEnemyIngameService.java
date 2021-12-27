@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.ntfh.entity.enemy.EnemyLocation;
 import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemy;
 import org.springframework.ntfh.entity.enemy.hordeenemy.HordeEnemyService;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ public class HordeEnemyIngameService {
     @Autowired
     private HordeEnemyService hordeEnemyService;
 
+    @Autowired
+    private GameService gameService;
+
     @Transactional
     public Integer hordeEnemyIngameCount() {
         return (int) hordeEnemyIngameRepository.count();
@@ -40,18 +45,53 @@ public class HordeEnemyIngameService {
     }
 
     @Transactional
-    public Optional<HordeEnemyIngame> findHordeEnemyIngameById(Integer id) {
-        return hordeEnemyIngameRepository.findById(id);
+    public HordeEnemyIngame findById(Integer id) throws DataAccessException {
+        Optional<HordeEnemyIngame> hordeEnemyIngame = hordeEnemyIngameRepository.findById(id);
+        if (!hordeEnemyIngame.isPresent())
+            throw new DataAccessException("HordeEnemyIngame with id " + id + " was not found") {
+            };
+        return hordeEnemyIngame.get();
     }
 
     @Transactional
     public Iterable<HordeEnemyIngame> findHordeEnemyByGameId(Integer gameId) {
-        return hordeEnemyIngameRepository.findByGameId(gameId);
+        return gameService.findGameById(gameId).getHordeEnemies();
     }
 
     @Transactional
     public void save(HordeEnemyIngame hordeEnemyIngame) throws DataAccessException {
         hordeEnemyIngameRepository.save(hordeEnemyIngame);
+    }
+
+    /**
+     * Keep taking enemies from the pile and adding them to the fighting area while
+     * there are less than 3
+     * 
+     * @author @andrsdt
+     */
+    private void refillTableWithEnemies(Game game) {
+        List<HordeEnemyIngame> hordeEnemiesIngame = game.getHordeEnemies();
+        List<HordeEnemyIngame> enemiesInPile = hordeEnemiesIngame.stream()
+                .filter(e -> e.getHordeEnemyLocation() == EnemyLocation.PILE).collect(Collectors.toList());
+        List<HordeEnemyIngame> enemiesFighting = hordeEnemiesIngame.stream()
+                .filter(e -> e.getHordeEnemyLocation() == EnemyLocation.FIGHTING).collect(Collectors.toList());
+
+        while (!enemiesInPile.isEmpty() && enemiesFighting.size() < 3) {
+            // The game rules tell us that the horde enemy cards have to be taken from the
+            // bottom of the pile
+            HordeEnemyIngame lastEnemyInPile = enemiesInPile.get(0);
+            enemiesInPile.remove(lastEnemyInPile);
+            lastEnemyInPile.setHordeEnemyLocation(EnemyLocation.FIGHTING);
+            enemiesFighting.add(lastEnemyInPile);
+        }
+
+        // Join both lists back together and save them in the DB
+        List<HordeEnemyIngame> enemiesInPileAndFighting = Stream.of(enemiesInPile, enemiesFighting)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        game.setHordeEnemies(enemiesInPileAndFighting);
+
     }
 
     /**
@@ -64,7 +104,7 @@ public class HordeEnemyIngameService {
      * @return
      */
     @Transactional
-    public void createFromGame(Game game) {
+    public void initializeFromGame(Game game) {
         Integer numPlayers = game.getPlayers().size();
         Map<Integer, Integer> numEnemies = Map.of(
                 2, 19, // 19 horde enemies for 2 players
@@ -76,31 +116,25 @@ public class HordeEnemyIngameService {
 
         Collections.shuffle(allHordeEnemies);
 
-        allHordeEnemies.stream() // From the shuffled list of possible horde enemies
+        List<HordeEnemyIngame> gameHordeEnemies = allHordeEnemies.stream() // From the shuffled list of possible enemies
                 .limit(numEnemies.get(numPlayers)) // Only keep the amount corresponding to the number of players
-                .forEach(hordeEnemy -> createFromHordeEnemy(hordeEnemy, game)); // And create the DB row of each one
+                .map(hordeEnemy -> createFromHordeEnemy(hordeEnemy, game)) // And create the DB row of each one
+                .collect(Collectors.toList());
+
+        game.setHordeEnemies(gameHordeEnemies);
+
+        refillTableWithEnemies(game);
     }
 
     @Transactional
-    public void createFromHordeEnemy(HordeEnemy hordeEnemy, Game game) {
+    public HordeEnemyIngame createFromHordeEnemy(HordeEnemy hordeEnemy, Game game) {
         HordeEnemyIngame hordeEnemyIngame = new HordeEnemyIngame();
         hordeEnemyIngame.setHordeEnemy(hordeEnemy);
         hordeEnemyIngame.setCurrentEndurance(hordeEnemy.getEndurance());
         hordeEnemyIngame.setHordeEnemyLocation(EnemyLocation.PILE);
         // All the horde enemies will be on the pile initially. When the first turn
         // begins, the refill of enemies for fight will be done (by the Turn service?)
-        hordeEnemyIngame.setGame(game);
         this.save(hordeEnemyIngame);
+        return hordeEnemyIngame;
     }
-
-    // TODO refactor, hard to understand. Do we really need the if-else? The
-    // endurance is set to the base hordeEnemy's endurance when it's created.
-    @Transactional
-    public void editHordeEnemyEndurance(HordeEnemyIngame hordeEnemyIngame, Integer damage) {
-        if (hordeEnemyIngame.getCurrentEndurance().equals(hordeEnemyIngame.getHordeEnemy().getEndurance()))
-            hordeEnemyIngame.setCurrentEndurance(hordeEnemyIngame.getHordeEnemy().getEndurance() - damage);
-        else
-            hordeEnemyIngame.setCurrentEndurance(hordeEnemyIngame.getCurrentEndurance() - damage);
-    }
-
 }

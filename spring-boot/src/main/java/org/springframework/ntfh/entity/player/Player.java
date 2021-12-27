@@ -1,16 +1,21 @@
 package org.springframework.ntfh.entity.player;
 
 import java.beans.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.entity.character.Character;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.user.User;
 
 import lombok.Getter;
@@ -47,6 +52,15 @@ public class Player extends BaseEntity {
     @JoinColumn(name = "character_id", referencedColumnName = "id")
     private Character characterType;
 
+    @OneToMany
+    private List<AbilityCardIngame> hand = new ArrayList<>();
+
+    @OneToMany
+    private List<AbilityCardIngame> abilityPile = new ArrayList<>();
+
+    @OneToMany
+    private List<AbilityCardIngame> discardPile = new ArrayList<>();
+
     /**
      * Derivated from User, who has a "game" column with the game where he/she is
      * playing in.
@@ -56,6 +70,11 @@ public class Player extends BaseEntity {
      */
     @Transient
     public Game getGame() {
-        return user.getGame();
+        return user.getLobby().getGame();
+    }
+
+    @Transient
+    public CharacterTypeEnum getCharacterTypeEnum() {
+        return characterType.getCharacterTypeEnum();
     }
 }
