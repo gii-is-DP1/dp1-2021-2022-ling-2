@@ -1,5 +1,5 @@
 package org.springframework.ntfh.cardEfects;
 
-public interface Commad {
+public interface Command {
     void execute();
 }
