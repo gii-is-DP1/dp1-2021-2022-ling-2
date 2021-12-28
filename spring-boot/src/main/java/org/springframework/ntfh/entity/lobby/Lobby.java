@@ -35,7 +35,7 @@ public class Lobby extends NamedEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "game")
-    @JsonIgnoreProperties(value = { "players", "leader" })
+    @JsonIgnoreProperties(value = { "players", "leader", "currentTurn" })
     private Game game;
 
     @NotNull(message = "The scenes must be either on or off")

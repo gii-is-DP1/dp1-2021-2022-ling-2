@@ -67,11 +67,8 @@ public class UserController {
 	 */
 	@GetMapping("{userId}")
 	public ResponseEntity<User> getUser(@PathVariable("userId") String username) {
-		Optional<User> user = this.userService.findUser(username);
-		if (!user.isPresent())
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		// TODO create a custom response that only returns the non-sensitive information
-		return new ResponseEntity<>(user.get(), HttpStatus.OK);
+		User user = this.userService.findUser(username);
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class UserController {
 
 	@PostMapping("register")
 	public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
-		this.userService.saveUser(user);
+		this.userService.createUser(user);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 

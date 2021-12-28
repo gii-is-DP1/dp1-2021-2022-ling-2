@@ -22,7 +22,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.exceptions.BannedUserException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
@@ -60,7 +60,7 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User saveUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+	public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
 		if (userRepository.existsByEmail(user.getEmail()))
 			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
@@ -72,9 +72,13 @@ public class UserService {
 		user.setPassword(encodedParamPassword);
 
 		user.setEnabled(true);
-		userRepository.save(user);
+		this.save(user);
 		authoritiesService.saveAuthorities(user.getUsername(), "user");
 		return user;
+	}
+
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 
 	@Transactional(readOnly = true)
@@ -88,9 +92,13 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<User> findUser(String username) {
+	public User findUser(String username) throws DataAccessException {
 		// The username is the id (primary key)
-		return userRepository.findById(username);
+		Optional<User> user = userRepository.findById(username);
+		if (!user.isPresent())
+			throw new DataAccessException("User " + username + " was not found") {
+			};
+		return user.get();
 	}
 
 	@Transactional(readOnly = true)
@@ -116,13 +124,6 @@ public class UserService {
 		if (!sentBySameUser && !sentByAdmin)
 			throw new NonMatchingTokenException("A user's profile can only be updated by him/herself or by an admin");
 
-		Optional<User> userInDatabaseOptional = this.findUser(user.getUsername());
-		if (!userInDatabaseOptional.isPresent())
-			throw new DataAccessException("User not found") {
-			};
-
-		User userInDatabase = userInDatabaseOptional.get();
-
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
 			throw new DataIntegrityViolationException("This email is already in use") {
@@ -131,6 +132,7 @@ public class UserService {
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.
+		User userInDatabase = this.findUser(user.getUsername());
 		if (user.getPassword() == null || user.getPassword().equals("null")) {
 			user.setPassword(userInDatabase.getPassword());
 		} else {

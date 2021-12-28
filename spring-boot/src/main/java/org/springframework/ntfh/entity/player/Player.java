@@ -8,11 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.ntfh.character.Character;
-import org.springframework.ntfh.character.CharacterTypeEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.ntfh.entity.character.Character;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
@@ -26,6 +30,11 @@ import lombok.Setter;
 @Entity
 @Table(name = "players")
 public class Player extends BaseEntity {
+
+    @OneToOne(mappedBy = "player")
+    @JsonIgnoreProperties({ "password", "email", "enabled", "lobby", "game", "player", "character", "authorities" })
+    private User user;
+
     @NotNull
     private Integer glory;
 
@@ -40,11 +49,6 @@ public class Player extends BaseEntity {
 
     @NotNull
     private Integer turnOrder; // Order in which the player will take their turn. The leader will be 0 (first)
-
-    @NotNull
-    @ManyToOne() // TODO cascade types?
-    @JoinColumn(name = "user_id", referencedColumnName = "username")
-    private User user; // User who is handling this player
 
     // Should not change when user's character is changed. Once the
     // row is created in the databse, it stays the same
@@ -61,20 +65,13 @@ public class Player extends BaseEntity {
     @OneToMany
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
-    /**
-     * Derivated from User, who has a "game" column with the game where he/she is
-     * playing in.
-     * 
-     * @author andrsdt
-     * @return game where the player is playing in.
-     */
-    @Transient
-    public Game getGame() {
-        return user.getGame();
-    }
-
     @Transient
     public CharacterTypeEnum getCharacterTypeEnum() {
         return characterType.getCharacterTypeEnum();
+    }
+
+    @Transient
+    public Game getGame() {
+        return user.getLobby().getGame();
     }
 }

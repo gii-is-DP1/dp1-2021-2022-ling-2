@@ -25,8 +25,4 @@ public class MarketCardIngame extends BaseEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "market_card_id") // TODO redundant?
     private MarketCard marketCard;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private MarketCardLocation location;
 }
