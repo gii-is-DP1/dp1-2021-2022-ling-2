@@ -57,7 +57,7 @@ public class UserDeserializer extends JsonDeserializer<User> {
             // If the user id is present, use it to retrieve the user
             if (node.getNodeType() == JsonNodeType.STRING) {
                 String username = node.textValue();
-                return userService.findUser(username).get();
+                return userService.findUser(username);
             } else {
                 throw new IllegalArgumentException("Cannot deserialize user");
             }

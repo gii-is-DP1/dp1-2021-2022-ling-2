@@ -70,7 +70,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/games/{gameId}/turn").permitAll() // Allow everyone to list the current
 																					// turn info
 				.antMatchers(HttpMethod.POST, "/games/{gameId}/ability-cards/{abilityCardIngameId}")
-				.hasAnyAuthority("user") // Allor users to play cards
+				.hasAnyAuthority("user") // Allow users to play cards
+				.antMatchers(HttpMethod.POST, "/games/{gameId}/market-cards/{marketCardIngameId}")
+				.hasAnyAuthority("user") // Allow users to buy cards in the market
 				// GAMEHISTORY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the old games
 				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games

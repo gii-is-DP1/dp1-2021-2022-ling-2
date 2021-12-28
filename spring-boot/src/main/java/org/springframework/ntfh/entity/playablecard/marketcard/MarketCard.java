@@ -10,7 +10,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.ntfh.entity.model.BaseEntity;
@@ -36,15 +35,4 @@ public class MarketCard extends BaseEntity {
     @CollectionTable(name = "marketcards_proficiencies", joinColumns = @JoinColumn(name = "market_card_id"))
     @Column(name = "proficiency_type_enum")
     private Set<ProficiencyTypeEnum> proficiencies;
-
-    @Transient
-    public String getFrontImage() {
-        return "/cards/items/" + getMarketCardTypeEnum().toString().toLowerCase() + ".png";
-    }
-
-    @Transient
-    public String getBackImage() {
-        return "/cards/back_standard.png";
-    }
-
 }

@@ -57,7 +57,6 @@ public class PlayerServiceTest {
         tester.setWounds(1);
         tester.setTurnOrder(2);
         tester.setCharacterType(characterService.findCharacterById(7).get());
-        tester.setUser(userService.findUser("merlin").get());
         playerService.savePlayer(tester);
 
         currentPlayer = tester;
@@ -83,7 +82,6 @@ public class PlayerServiceTest {
     @Test
     public void testFindByPlayerId() {
         Player tester = this.playerService.findById(currentPlayer.getId());
-        assertEquals("merlin", tester.getUser().getUsername());
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());
         assertEquals(5, tester.getKills());
@@ -96,7 +94,6 @@ public class PlayerServiceTest {
     public void testSavePlayer() {
         // Player created in the BeforeEach
         Player tester = currentPlayer;
-        assertEquals("merlin", tester.getUser().getUsername());
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());
         assertEquals(5, tester.getKills());
@@ -107,11 +104,11 @@ public class PlayerServiceTest {
 
     @Test
     public void testCreateFromUser() {
-        User user = userService.findUser("user4").get();
+        User user = userService.findUser("user4");
         user.setCharacter(characterService.findCharacterById(2).get());
         Lobby lobby = lobbyService.findLobby(3);
         Player tester = playerService.createFromUser(user, lobby, 3);
-        assertEquals("user4", tester.getUser().getUsername());
+        assertEquals(0, tester.getGold());
     }
 
 }
