@@ -88,51 +88,42 @@ INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (6, 6)
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (7, 2);
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (8, 2);
 
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (1, 'HORDE', 'WARRIOR', null, 4, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (2, 'HORDE', 'WARRIOR', null, 4, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (3, 'HORDE', 'WARRIOR', null, 4, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (4, 'HORDE', 'WARRIOR', null, 4, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (5, 'HORDE', 'WARRIOR', null, 4, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (6, 'HORDE', 'WARRIOR', null, 4, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (7, 'HORDE', 'WARRIOR', null, 4, 2, 1);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (8, 'HORDE', 'WARRIOR', null, 4, 2, 1);
 
-INSERT INTO horde_enemy_types(horde_enemy_type_enum, horde_enemy_modifier_type_enum, endurance) VALUES ('WARRIOR', null, 4);
-INSERT INTO horde_enemy_types(horde_enemy_type_enum, horde_enemy_modifier_type_enum, endurance) VALUES ('SLINGER', null, 2);
-INSERT INTO horde_enemy_types(horde_enemy_type_enum, horde_enemy_modifier_type_enum, endurance) VALUES ('BERSERKER', null, 6);
-INSERT INTO horde_enemy_types(horde_enemy_type_enum, horde_enemy_modifier_type_enum, endurance) VALUES ('REGEN','HEALING_CAPABILITIES', 3);
-INSERT INTO horde_enemy_types(horde_enemy_type_enum, horde_enemy_modifier_type_enum, endurance) VALUES ('MAGE','MAGIC_ATTACKER', 5);
-INSERT INTO horde_enemy_types(horde_enemy_type_enum, horde_enemy_modifier_type_enum, endurance) VALUES ('SHAMAN','MAGIC_ATTACKER', 3);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (9, 'HORDE', 'SLINGER', null, 2, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (10, 'HORDE', 'SLINGER', null, 2, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (11, 'HORDE', 'SLINGER', null, 2, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (12, 'HORDE', 'SLINGER', null, 2, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (13, 'HORDE', 'SLINGER', null, 2, 1, 0);
 
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (1, 'WARRIOR', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (2, 'WARRIOR', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (3, 'WARRIOR', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (4, 'WARRIOR', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (5, 'WARRIOR', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (6, 'WARRIOR', 2, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (7, 'WARRIOR', 2, 1);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (8, 'WARRIOR', 2, 1);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (9, 'SLINGER', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (10, 'SLINGER', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (11, 'SLINGER', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (12, 'SLINGER', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (13, 'SLINGER', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (14, 'BERSERKER', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (15, 'BERSERKER', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (16, 'BERSERKER', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (17, 'REGEN', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (18, 'REGEN', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (19, 'REGEN', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (20, 'REGEN', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (21, 'REGEN', 1, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (22, 'MAGE', 0, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (23, 'MAGE', 2, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (24, 'MAGE', 2, 0);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (25, 'MAGE', 2, 1);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (26, 'SHAMAN', 1, 1);
-INSERT INTO horde_enemies(id, horde_enemy_type_enum, gold, extra_glory) VALUES (27, 'SHAMAN', 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (14, 'HORDE', 'BERSERKER', null, 6, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (15, 'HORDE', 'BERSERKER', null, 6, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (16, 'HORDE', 'BERSERKER', null, 6, 1, 0);
 
--- Ejemplo de entidad hordeEnemyIngame:
--- INSERT INTO horde_enemies_ingame(id, game_id, horde_enemy_id, current_endurance, horde_enemy_location) VALUES (1, 1, 1, defaultEndurance, 'HORDE_PILE')
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (17, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (18, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (19, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (20, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (21, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 2, 1);
 
-INSERT INTO warlords(id, warlord_type_enum, endurance) VALUES (1, 'GURDRUG', 8);
-INSERT INTO warlords(id, warlord_type_enum, endurance) VALUES (2, 'ROGHKILLER', 9);
-INSERT INTO warlords(id, warlord_type_enum, endurance) VALUES (3, 'SHRIEKKNIFER', 10);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (22, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (23, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (24, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (25, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 1);
 
--- Ejemplo de entidad warlord ingame:
--- INSERT INTO warlords_ingame(id, game_id, warlord_id, current_endurance, warlord_location) VALUES (1, 1, 1, 8, 'HORDE_PILE');
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (26, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER', 5, 1, 1);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (27, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER', 5, 2, 0);
+
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (28, 'WARLORD', 'GURDRUG', null, 8, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (29, 'WARLORD', 'ROGHKILLER', null, 9, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (30, 'WARLORD', 'SHRIEKKNIFER', null, 10, 0, 0);
 
 INSERT INTO scenes(id, scene_type_enum) VALUES (1, 'MERCADO_DE_LOTHARION'); 
 INSERT INTO scenes(id, scene_type_enum) VALUES (2, 'CAMPO_DE_BATALLA');
@@ -247,6 +238,15 @@ INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUE
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (60, 'TRAMPA', 'ROGUE');
 
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (61, 'DAGA_ELFICA', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (62, 'POCION_CURATIVA', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (63, 'PIEDRA_DE_AMOLAR', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (64, 'VIAL_DE_CONJURACION', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (65, 'ELIXIR_DE_CONCENTRACION', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (66, 'CAPA_ELFICA', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (67, 'ARMADURA_DE_PLACAS', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (68, 'ALABARDA_ORCA', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (69, 'ARCO_COMPUESTO', null);
 
 -- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
 -- Create the initial lobby
@@ -255,17 +255,17 @@ INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players,
 UPDATE users SET lobby = 1 WHERE username = 'pablo';
 UPDATE users SET lobby = 1 WHERE username = 'andres';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (1, 0, 0, 0, 0, 8, 0, 'pablo');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (2, 0, 0, 0, 0, 1, 1, 'andres');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (1, 0, 0, 0, 0, 8, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (2, 0, 0, 0, 0, 1, 1);
+UPDATE users SET player = 1 WHERE username='pablo';
+UPDATE users SET player = 2 WHERE username='andres';
+
 INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (1, true, 1637867168863, 1);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 1 WHERE id = 1;
 -- Add the players to the game
 INSERT INTO games_players(game_id, players_id) VALUES (1, 1);
 INSERT INTO games_players(game_id, players_id) VALUES (1, 2);
--- Also, set the game attribute in each user to reference the game they are in now
-UPDATE users SET game = 1 WHERE username = 'pablo';
-UPDATE users SET game = 1 WHERE username = 'andres';
 
 -- CREATE A GAME FROM A LOBBY WITH 4 PLAYERS
 -- Create the initial lobby
@@ -276,10 +276,15 @@ UPDATE users SET lobby = 2 WHERE username = 'frodo';
 UPDATE users SET lobby = 2 WHERE username = 'legolas';
 UPDATE users SET lobby = 2 WHERE username = 'aragorn';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (3, 0, 0, 0, 0, 1, 1, 'frodo');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (4, 0 ,0, 0, 0 ,3, 0, 'gandalf');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (5, 0, 0, 0, 0, 5, 2, 'legolas');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (6, 0 ,0, 0, 0 ,7, 3, 'aragorn');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (3, 0, 0, 0, 0, 1, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (4, 0 ,0, 0, 0 ,3, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (5, 0, 0, 0, 0, 5, 2);
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (6, 0 ,0, 0, 0 ,7, 3);
+UPDATE users SET player = 3 WHERE username='frodo';
+UPDATE users SET player = 4 WHERE username='gandalf';
+UPDATE users SET player = 5 WHERE username='legolas';
+UPDATE users SET player = 6 WHERE username='aragorn';
+
 INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (2, true, 1637881111234, 3);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 2 WHERE id = 2;
@@ -288,12 +293,6 @@ INSERT INTO games_players(game_id, players_id) VALUES (2, 3);
 INSERT INTO games_players(game_id, players_id) VALUES (2, 4);
 INSERT INTO games_players(game_id, players_id) VALUES (2, 5);
 INSERT INTO games_players(game_id, players_id) VALUES (2, 6);
--- Also, set the game attribute in each user to reference the game they are in now
-UPDATE users SET game = 2 WHERE username = 'gandalf';
-UPDATE users SET game = 2 WHERE username = 'frodo';
-UPDATE users SET game = 2 WHERE username = 'legolas';
-UPDATE users SET game = 2 WHERE username = 'aragorn';
-
 
 -- CREATE A GAME HISTORY FROM A LOBBY WITH 3 PLAYERS
 -- CREATE A GAME FROM A LOBBY WITH 4 PLAYERS
@@ -303,23 +302,19 @@ INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players
 UPDATE users SET lobby = 3 WHERE username = 'stockie';
 UPDATE users SET lobby = 3 WHERE username = 'alejandro';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (7, 0, 0, 0, 0, 2, 1, 'stockie');
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order, user_id) VALUES (8, 0 ,0, 0, 0 ,4, 0, 'alejandro');
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (7, 0, 0, 0, 0, 2, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (8, 0 ,0, 0, 0 ,4, 0);
+UPDATE users SET player = 7 WHERE username = 'stockie';
+UPDATE users SET player = 8 WHERE username = 'alejandro';
+
 INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (3, true, 1637881111234, 8);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 3 WHERE id = 3;
 -- Add the players to the game
 INSERT INTO games_players(game_id, players_id) VALUES (3, 7);
 INSERT INTO games_players(game_id, players_id) VALUES (3, 8);
--- Also, set the game attribute in each user to reference the game they are in now
-UPDATE users SET game = 3 WHERE username = 'stockie';
-UPDATE users SET game = 3 WHERE username = 'alejandro';
 
 INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 1637882596427);
--- Set that the users are not in a game anymore
-UPDATE users set game = null WHERE username = 'stockie';
-UPDATE users set game = null WHERE username = 'alejandro';
-
 
 -- UnregisteredUser for testing
 INSERT INTO unregistered_users(username, creation_time) VALUES ('user0023', 1637882596427);

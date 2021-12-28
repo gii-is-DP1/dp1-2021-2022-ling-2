@@ -53,12 +53,12 @@ public class UserServiceTest {
     @BeforeEach
     public void createUser() {
         User tester = new User();
-        Set<Authorities> userAuthority = userService.findUser("user1").get().getAuthorities();
+        Set<Authorities> userAuthority = userService.findUser("user1").getAuthorities();
         tester.setUsername("antonio");
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
         tester.setAuthorities(userAuthority);
-        userService.saveUser(tester);
+        userService.createUser(tester);
 
         currentUser = tester;
     }
@@ -85,7 +85,7 @@ public class UserServiceTest {
 
     @Test
     public void testfindById() {
-        User tester = this.userService.findUser("stockie").orElse(null);
+        User tester = this.userService.findUser("stockie");
         assertTrue(passwordEncoder.matches("stockie", tester.getPassword()));
         assertEquals("stockie@mail.com", tester.getEmail());
     }

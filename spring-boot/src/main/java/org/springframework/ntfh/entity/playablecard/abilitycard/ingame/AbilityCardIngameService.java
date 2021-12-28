@@ -8,10 +8,13 @@ import java.util.stream.StreamSupport;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ntfh.character.CharacterTypeEnum;
+import org.springframework.dao.DataAccessException;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
+import org.springframework.ntfh.entity.playablecard.marketcard.MarketCard;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,16 @@ public class AbilityCardIngameService {
 
     @Autowired
     private AbilityCardService abilityCardService;
+
+    public AbilityCardIngame findById(int id) {
+        return abilityCardIngameRepository.findById(id)
+                .orElseThrow(() -> new DataAccessException("Ability card not found") {
+                });
+    }
+
+    public void delete(AbilityCardIngame abilityCardIngame) {
+        abilityCardIngameRepository.delete(abilityCardIngame);
+    }
 
     /**
      * Given a game, instantiate the abilityCardIngame entities for each of the
@@ -78,7 +91,6 @@ public class AbilityCardIngameService {
             playerAbilityPile.remove(lastAbilityCardInPile);
             playerHand.add(lastAbilityCardInPile);
         }
-
         player.setAbilityPile(playerAbilityPile);
         player.setHand(playerHand);
     }
@@ -87,6 +99,7 @@ public class AbilityCardIngameService {
      * Given a generic ability card and a player, create the specific Ingame entity
      * for this player
      * 
+     * @author andrsdt
      * @param abilityCard
      * @param player
      * @return
@@ -94,8 +107,26 @@ public class AbilityCardIngameService {
     @Transactional
     private AbilityCardIngame createFromAbilityCard(AbilityCard abilityCard, Player player) {
         AbilityCardIngame abilityCardIngame = new AbilityCardIngame();
+        abilityCardIngame.setPlayer(player);
         abilityCardIngame.setAbilityCard(abilityCard);
         abilityCardIngameRepository.save(abilityCardIngame);
         return abilityCardIngame;
+    }
+
+    /**
+     * Given a market card, transform it into an instance of AbilityCardIngame
+     * 
+     * @author andrsdt
+     * @param abilityCard
+     * @param player
+     * @return
+     */
+    @Transactional
+    public AbilityCardIngame createFromMarketCard(MarketCard marketCard, Player player) {
+        AbilityCardTypeEnum abilityCardTypeEnum = AbilityCardTypeEnum
+                .valueOf(marketCard.getMarketCardTypeEnum().toString());
+        AbilityCard abilityCard = abilityCardService.findByAbilityCardTypeEnum(abilityCardTypeEnum);
+
+        return createFromAbilityCard(abilityCard, player);
     }
 }

@@ -6,8 +6,7 @@ import java.util.Random;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngameService;
-import org.springframework.ntfh.entity.enemy.warlord.ingame.WarlordIngameService;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
@@ -28,10 +27,7 @@ public class TurnService {
     private SceneService sceneService;
 
     @Autowired
-    private HordeEnemyIngameService hordeEnemyIngameService;
-
-    @Autowired
-    private WarlordIngameService warlordIngameService;
+    private EnemyIngameService enemyIngameService;
 
     @Autowired
     private MarketCardIngameService marketCardIngameService;
@@ -83,8 +79,7 @@ public class TurnService {
         }
 
         turn.setGame(game); // TODO needed?
-        hordeEnemyIngameService.initializeFromGame(game);
-        warlordIngameService.initializeFromGame(game);
+        enemyIngameService.initializeFromGame(game);
         marketCardIngameService.initializeFromGame(game);
         abilityCardIngameService.initializeFromGame(game);
         turnRepository.save(turn);

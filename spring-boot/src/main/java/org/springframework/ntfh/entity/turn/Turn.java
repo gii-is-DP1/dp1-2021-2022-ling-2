@@ -32,7 +32,7 @@ public class Turn extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "player_id") // TODO needed?
-    @JsonIgnoreProperties({ "glory", "kills", "gold", "wounds", "user", "characterType" })
+    @JsonIgnoreProperties({ "glory", "kills", "gold", "wounds", "characterType" })
     private Player player;
 
     @ManyToOne(optional = true)
