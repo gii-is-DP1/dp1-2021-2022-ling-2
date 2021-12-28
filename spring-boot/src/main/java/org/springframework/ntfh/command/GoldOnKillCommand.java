@@ -1,7 +1,7 @@
 package org.springframework.ntfh.command;
 
 
-import org.springframework.ntfh.entity.enemy.hordeenemy.ingame.HordeEnemyIngame;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.player.Player;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 public class GoldOnKillCommand implements Command{
 
     private Integer gold;
-    private HordeEnemyIngame targetedEnemy;
+    private EnemyIngame targetedEnemy;
     private Player playerFrom;
 
     @Override
