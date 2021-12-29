@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GolpeDeBaston {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
-        new DealDamageCommand(1, targetedEnemy);
+        new DealDamageCommand(1, targetedEnemy).execute();
         //TODO falta la condición de repetición
     }
 }

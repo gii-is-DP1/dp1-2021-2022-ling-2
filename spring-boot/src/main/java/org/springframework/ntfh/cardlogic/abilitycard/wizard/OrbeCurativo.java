@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrbeCurativo {
     public void execute(Player playerFrom, Game game){
-        new HealCommand(playerFrom);
+        new HealCommand(playerFrom).execute();
         List<Player> targets = game.getPlayers();
         for(Player playerTarget:targets){
             new RecoverCommand(2, playerTarget).execute();

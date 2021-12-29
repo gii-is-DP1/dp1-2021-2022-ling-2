@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class TorrenteDeLuz {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy, Game game){
         new DealDamageCommand(2, targetedEnemy).execute();
-        new GetGloryCommand(1, playerFrom);
+        new GetGloryCommand(1, playerFrom).execute();
         List<Player> targets = game.getPlayers();
         for(Player playerTarget:targets){
             new RecoverCommand(2, playerTarget).execute();

@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class FlechaCorrosiva {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
-        new DealDamageCommand(1, targetedEnemy);
-        new DiscardCommand(1, playerFrom);
+        new DealDamageCommand(1, targetedEnemy).execute();
+        new DiscardCommand(1, playerFrom).execute();
         //TODO condición avanzada incremento de daño de todas las fuentes, podría añadir un atributo al enemigo
         //que se elimine al final del turno que hace que siempre trague uno mas de daño. Aunque esto podría generar
         //problemas
