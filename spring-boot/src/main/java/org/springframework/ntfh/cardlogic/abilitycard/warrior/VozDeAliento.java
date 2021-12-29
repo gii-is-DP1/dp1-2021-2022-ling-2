@@ -13,7 +13,7 @@ import java.util.List;
 public class VozDeAliento {
     public void execute(Player playerFrom, Game game){
         new DrawCommand(1, playerFrom).execute();
-        new GetGloryCommand(1, playerFrom);
+        new GetGloryCommand(1, playerFrom).execute();
         List<Player> players = game.getPlayers();
         for(Player playerTarget:players){
             new RecoverCommand(2, playerTarget).execute();
