@@ -1,0 +1,31 @@
+package org.springframework.ntfh.command;
+
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
+import org.springframework.ntfh.entity.player.Player;
+
+import lombok.AllArgsConstructor;
+
+import java.util.List;
+
+@AllArgsConstructor
+public class RecoverCommand implements Command{
+
+    private Integer numRecovered;
+    private Player playerFrom;
+
+    @Override
+    public void execute() {
+        Integer i = 0;
+        for(i=0; i<numRecovered; i++){
+            List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
+            AbilityCardIngame recoveredCard = listDiscardPile.get(0);
+            listDiscardPile.remove(0);
+            List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
+            listAbilityPile.add(recoveredCard);
+            
+            playerFrom.setAbilityPile(listAbilityPile);
+            playerFrom.setDiscardPile(listDiscardPile);
+        }
+    }
+    
+}
