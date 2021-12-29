@@ -4,7 +4,10 @@ import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.GoldOnKillCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class AtaqueFurtivo{
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
         new DealDamageCommand(2, targetedEnemy).execute();
