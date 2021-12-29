@@ -18,10 +18,10 @@ public class DrawCommand implements Command{
         Integer i = 0;
         for(i=0; i<amount; i++){
             List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
-            AbilityCardIngame discardedCard = listAbilityPile.get(0);
+            AbilityCardIngame drawnCard = listAbilityPile.get(0);
             listAbilityPile.remove(0);
             List<AbilityCardIngame> listHand = playerFrom.getHand();
-            listHand.add(discardedCard);
+            listHand.add(drawnCard);
             
             playerFrom.setAbilityPile(listAbilityPile);
             playerFrom.setDiscardPile(listHand);
