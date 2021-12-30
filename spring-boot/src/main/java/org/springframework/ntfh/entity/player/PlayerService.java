@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PlayerService {
 
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     public PlayerService(PlayerRepository playerRepository) {
@@ -46,10 +50,10 @@ public class PlayerService {
     }
 
     @Transactional
-    public Player findById(int id) throws DataAccessException {
-        Optional<Player> player = playerRepository.findById(id);
+    public Player findById(Integer playerId) throws DataAccessException {
+        Optional<Player> player = playerRepository.findById(playerId);
         if (!player.isPresent())
-            throw new DataAccessException("Player with id " + id + " was not found") {
+            throw new DataAccessException("Player with id " + playerId + " was not found") {
             };
         return player.get();
     }
@@ -71,15 +75,18 @@ public class PlayerService {
         player.setWounds(0);
         player.setTurnOrder(turnOrder);
 
-        // TODO exception if there is no user to associate with the player (should this
-        // happen?)
-        player.setUser(user);
-
         if (user.getCharacter() == null) {
             throw new IllegalArgumentException("User " + user.getUsername() + " has not selected a character");
         }
 
         player.setCharacterType(user.getCharacter());
-        return playerRepository.save(player);
+        player.setUser(user);
+        Player playerDB = playerRepository.save(player);
+
+        user.setPlayer(player);
+        userService.save(user);
+
+        return playerDB;
+
     }
 }
