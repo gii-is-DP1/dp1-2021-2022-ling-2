@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.ntfh.cardlogic.abilitycard.ranger.DisparoRapido;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 
@@ -20,9 +21,10 @@ public class RecoverQSCommand implements Command{
         List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
         List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
         if(listDiscardPile.contains(SearchedCard)){
-            Integer position = listDiscardPile.indexOf(SearchedCard);
+            int position = listDiscardPile.indexOf(SearchedCard);
             AbilityCardIngame toBeReturned = listDiscardPile.get(position);
             listDiscardPile.remove(position);
+            playerFrom.setDiscardPile(listDiscardPile);
             listAbilityPile.add(toBeReturned);
         }
     }    
