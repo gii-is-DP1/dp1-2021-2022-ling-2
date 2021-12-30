@@ -26,6 +26,11 @@ export default function AdminPage() {
   const [currentTable, setCurrentTable] = useState<CurrentTableEnum>("ongoing");
   const [gamesHistory, setGamesHistory] = useState<GameHistory[]>([]);
 
+  const [styleOngoing, setStyleOngoing] = useState("btn-ntfh-light");
+  const [styleHistory, setStyleHistory] = useState("btn-ntfh");
+  const [styleUsers, setStyleUsers] = useState("btn-ntfh");
+  const [styleAchievements, setStyleAchievements] = useState("btn-ntfh");
+
   useEffect(() => {
     const fetchGameHistory = async () => {
       if (currentTable !== "ongoing") return;
@@ -48,6 +53,37 @@ export default function AdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  
+
+  function ongoingFunction() {
+    setCurrentTable("ongoing");
+    setStyleOngoing("btn-ntfh-light");
+    setStyleHistory("btn-ntfh");
+    setStyleUsers("btn-ntfh");
+    setStyleAchievements("btn-ntfh");
+  }
+  function historyFunction() {
+    setCurrentTable("history");
+    setStyleOngoing("btn-ntfh");
+    setStyleHistory("btn-ntfh-light");
+    setStyleUsers("btn-ntfh");
+    setStyleAchievements("btn-ntfh");
+  }
+  function usersFunction() {
+    setCurrentTable("users");
+    setStyleOngoing("btn-ntfh");
+    setStyleHistory("btn-ntfh");
+    setStyleUsers("btn-ntfh-light");
+    setStyleAchievements("btn-ntfh");
+  }
+  function achievementsFunction() {
+    setCurrentTable("achievements");
+    setStyleOngoing("btn-ntfh");
+    setStyleHistory("btn-ntfh");
+    setStyleUsers("btn-ntfh");
+    setStyleAchievements("btn-ntfh-light");
+  }
+
   return (
     <>
       <HomeButton />
@@ -63,29 +99,29 @@ export default function AdminPage() {
           <div className="flex flex-col w-1/4 max-w-1/5 justify-center gap-y-4">
             <button
               type="submit"
-              className="btn-ntfh"
-              onClick={() => setCurrentTable("ongoing")}
+              className={styleOngoing}
+              onClick={() => ongoingFunction()}
             >
               <p className="text-gradient-ntfh">Ongoing games</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
-              onClick={() => setCurrentTable("history")}
+              className={styleHistory}
+              onClick={() => historyFunction()} 
             >
               <p className="text-gradient-ntfh">Game history</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
-              onClick={() => setCurrentTable("users")}
+              className={styleUsers}
+              onClick={() => usersFunction()}
             >
               <p className="text-gradient-ntfh">Users</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
-              onClick={() => setCurrentTable("achievements")}
+              className={styleAchievements}
+              onClick={() => achievementsFunction()}
             >
               <p className="text-gradient-ntfh">Achievements</p>
             </button>
