@@ -11,27 +11,8 @@ public class PlayerState implements TurnState{
     }
 
     @Override
-    public void refreshMarket() {
-        // TODO Auto-generated method stub
-        
+    public void button() {
+        turn.setState(turn.getMarketState()); 
     }
 
-    @Override
-    public void refreshEnemy() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void changePlayer() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void changeScene() {
-        // TODO Auto-generated method stub
-        
-    }
-    
 }

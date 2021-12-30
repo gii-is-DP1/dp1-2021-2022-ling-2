@@ -11,27 +11,13 @@ public class RefreshState implements TurnState {
     }
 
     @Override
-    public void refreshMarket() {
-        // TODO Auto-generated method stub
+    public void button() {
+        // TODO Refresh board for new turn
+
+
         
+        turn.setState(turn.getPlayerState());
     }
 
-    @Override
-    public void refreshEnemy() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void changePlayer() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void changeScene() {
-        // TODO Auto-generated method stub
-        
-    }
     
 }

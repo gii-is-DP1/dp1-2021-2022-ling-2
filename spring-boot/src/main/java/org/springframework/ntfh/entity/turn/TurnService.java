@@ -90,6 +90,8 @@ public class TurnService {
 
     // State functions
 
-    
+    public void stateButton(Turn turn) {
+        turn.state.button();
+    }
 
 }
