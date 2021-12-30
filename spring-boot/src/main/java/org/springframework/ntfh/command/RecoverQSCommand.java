@@ -1,5 +1,6 @@
 package org.springframework.ntfh.command;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.ntfh.cardlogic.abilitycard.ranger.DisparoRapido;
@@ -26,7 +27,7 @@ public class RecoverQSCommand implements Command{
             listDiscardPile.remove(position);
             playerFrom.setDiscardPile(listDiscardPile);
             listAbilityPile.add(toBeReturned);
-            //TODO Shuffle
+            Collections.shuffle(listAbilityPile);
             playerFrom.setAbilityPile(listAbilityPile);
         }
     }    
