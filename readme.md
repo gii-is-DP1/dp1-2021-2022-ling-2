@@ -33,7 +33,7 @@ mvn spring-boot:run
 ```
 From here on out, the spring-boot proyect will be located at localhost:8080/api, with the console at localhost:8080/api/h2-console.
 To access the console follow this image:
-![console-tutorial](/spring-boot/src/main/resources/static/resources/images/consola_db.png)
+![console-tutorial](https://i.imgur.com/rQuYCm4.png)
 
 ### React.js
 Now, for the visual part! Similar to spring-boot, we navigate to the react directory:
