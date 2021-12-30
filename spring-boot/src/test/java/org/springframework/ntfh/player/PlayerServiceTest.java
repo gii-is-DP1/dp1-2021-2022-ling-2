@@ -9,13 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.ntfh.character.CharacterService;
+import org.springframework.context.annotation.Import;
+import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -26,6 +28,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@Import(BCryptPasswordEncoder.class)
 public class PlayerServiceTest {
 
     @Autowired
@@ -54,7 +57,6 @@ public class PlayerServiceTest {
         tester.setWounds(1);
         tester.setTurnOrder(2);
         tester.setCharacterType(characterService.findCharacterById(7).get());
-        tester.setUser(userService.findUser("merlin").get());
         playerService.savePlayer(tester);
 
         currentPlayer = tester;
@@ -79,8 +81,7 @@ public class PlayerServiceTest {
 
     @Test
     public void testFindByPlayerId() {
-        Player tester = this.playerService.findPlayer(currentPlayer.getId()).get();
-        assertEquals("merlin", tester.getUser().getUsername());
+        Player tester = this.playerService.findById(currentPlayer.getId());
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());
         assertEquals(5, tester.getKills());
@@ -93,7 +94,6 @@ public class PlayerServiceTest {
     public void testSavePlayer() {
         // Player created in the BeforeEach
         Player tester = currentPlayer;
-        assertEquals("merlin", tester.getUser().getUsername());
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());
         assertEquals(5, tester.getKills());
@@ -104,11 +104,11 @@ public class PlayerServiceTest {
 
     @Test
     public void testCreateFromUser() {
-        User user = userService.findUser("user4").get();
+        User user = userService.findUser("user4");
         user.setCharacter(characterService.findCharacterById(2).get());
         Lobby lobby = lobbyService.findLobby(3);
         Player tester = playerService.createFromUser(user, lobby, 3);
-        assertEquals("user4", tester.getUser().getUsername());
+        assertEquals(0, tester.getGold());
     }
 
 }

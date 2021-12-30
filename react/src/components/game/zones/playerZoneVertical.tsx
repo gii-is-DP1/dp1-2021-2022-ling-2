@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Player } from "../../../interfaces/Player";
-import AbilityCard from "../elements/abilityCard";
 import CharacterCard from "../elements/characterCard";
+import CountCard from "../elements/countCard";
 import PlaceholderCard from "../elements/placeholderCard";
 import Token from "../elements/token";
 
@@ -12,19 +12,9 @@ type Params = {
 };
 
 export default function PlayerZoneVertical(params: Params) {
-  const [player, setPlayer] = useState(params.player);
+  const [player] = useState(params.player);
   const rotation = params.rotation;
-  const cards = [1, 2, 3, 4]; // Placeholder for cards
   const ccw = params.counterclockwise ?? false; // Clockwise or counter-clockwise rotations
-
-  useEffect(() => {
-    // const fetchPlayer = async (player) => {
-    //   const response = await fetch(`/players/${player}`);
-    //   const data = await response.json();
-    //   setPlayer(data);
-    // };
-    // fetchPlayer();
-  }, []);
 
   return (
     <div className={`flex flex-col space-x-4 items-end`}>
@@ -38,32 +28,45 @@ export default function PlayerZoneVertical(params: Params) {
         <Token type="glory" value={player.glory} counterclockwise={ccw} />
       </div>
       <div
-        className={`grid grid-cols-3 gap-2 items-end justify-items-center transform-gpu ${
+        className={`grid grid-cols-3 gap-2  transform-gpu ${
           ccw ? "-" : ""
         }rotate-${rotation}`}
       >
-        <span className={ccw ? "order-last" : "order-first"}>
+        <span className="invisible">
+          <PlaceholderCard />
+        </span>
+        <span>
+          <CountCard
+            count={player.discardPile.length}
+            zoomDirection="up"
+            counterclockwise={ccw}
+          />
+        </span>
+        <span className="invisible">
+          <PlaceholderCard />
+        </span>
+        <span className={ccw ? "order-3" : ""}>
           <CharacterCard
             character={player.characterType}
             counterclockwise={ccw}
           />
         </span>
-        <span className="order-2 grid grid-rows-2 gap-y-2">
-          <PlaceholderCard counterclockwise={ccw} />
-          <PlaceholderCard counterclockwise={ccw} />
-        </span>
-        <span className={ccw ? "order-first" : "order-last"}>
-          <span className={`flex-1 flex ${ccw ? "flex-row-reverse" : ""}`}>
-            {/* <span className="inline-flex"> */}
-            {cards.map((abilityCard, idx) => (
-              <AbilityCard
-                key={idx}
-                card={abilityCard}
-                position={idx}
-                reverse={ccw}
-              />
-            ))}
-          </span>
+        <h1 className={ccw ? "order-1" : ""}>
+          <CountCard
+            count={player.abilityPile.length}
+            zoomDirection="up"
+            counterclockwise={ccw}
+          />
+        </h1>
+        <span
+          className={`flex-1 flex ${
+            ccw ? "flex-row-reverse" : "flex-row"
+          } -space-x-12 2xl:-space-x-16`}
+        >
+          {ccw && <span>{/* Blank space */}</span>}
+          {player.hand.map((_, idx) => (
+            <PlaceholderCard key={idx} />
+          ))}
         </span>
       </div>
     </div>

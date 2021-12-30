@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { Player } from "../../../interfaces/Player";
-import AbilityCard from "../elements/abilityCard";
 import CharacterCard from "../elements/characterCard";
+import CountCard from "../elements/countCard";
+import PlaceholderCard from "../elements/placeholderCard";
 import Token from "../elements/token";
 
 type Params = {
@@ -10,52 +10,44 @@ type Params = {
 };
 
 export default function PlayerZoneHorizontal(params: Params) {
-  const [player, setPlayer] = useState(params.player);
+  const player = params.player;
   const reverse = params.reverse ?? false;
-  const cards = [1, 2, 3]; // Placeholder for cards
-
-  useEffect(() => {
-    // const fetchPlayer = async (player) => {
-    //   const response = await fetch(`/players/${player.user.username}`);
-    //   const data = await response.json();
-    //   setPlayer(data);
-    // };
-    // fetchPlayer();
-  }, []);
 
   return (
     <div
-      className={`flex flex-row${
-        reverse ? "-reverse" : ""
-      } space-x-4 items-end`}
+      className={`flex ${reverse ? "flex-row-reverse" : ""}
+  space-x-4 items-end`}
     >
-      <div
-        className={`flex flex-col space-y-2 mx-2 h-full justify-end items-baseline`}
-      >
+      <div className={`flex flex-col space-y-2 mx-2 h-full`}>
         <Token type="kill" value={player.kills} />
         <Token type="gold" value={player.gold} />
         <Token type="glory" value={player.glory} />
       </div>
-      <div className="grid grid-cols-3 gap-2 items-end justify-items-center">
-        <span className={reverse ? "order-last" : "order-first"}>
+      <div className="grid grid-cols-3 gap-2">
+        <span className="invisible">
+          <PlaceholderCard />
+        </span>
+        <span>
+          <CountCard count={player.discardPile.length} zoomDirection="up" />
+        </span>
+        <span className="invisible">
+          <PlaceholderCard />
+        </span>
+        <span className={reverse ? "order-3" : ""}>
           <CharacterCard character={player.characterType} />
         </span>
-        <span className="order-2 grid grid-rows-2 gap-y-2">
-          <AbilityCard />
-          <AbilityCard />
+        <span className={reverse ? "order-1" : ""}>
+          <CountCard count={player.abilityPile.length} zoomDirection="up" />
         </span>
-        <span className={reverse ? "order-first" : "order-last"}>
-          <span className={`flex-1 flex flex-row${reverse ? "-reverse" : ""}`}>
-            {/* <span className="inline-flex"> */}
-            {cards.map((abilityCard, idx) => (
-              <AbilityCard
-                key={idx}
-                card={abilityCard}
-                position={idx}
-                reverse={reverse}
-              />
-            ))}
-          </span>
+        <span
+          className={`flex-1 flex ${
+            reverse ? "flex-row-reverse" : "flex-row"
+          } -space-x-12 2xl:-space-x-16`}
+        >
+          {reverse && <span>{/* Blank space */}</span>}
+          {player.hand.map((_, idx) => (
+            <PlaceholderCard key={idx} />
+          ))}
         </span>
       </div>
     </div>

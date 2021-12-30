@@ -1,35 +1,33 @@
- /*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*
+* Copyright 2002-2013 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package org.springframework.ntfh.entity.user;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ntfh.character.Character;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.exceptions.BannedUserException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +44,11 @@ public class UserService {
 	private AuthoritiesService authoritiesService;
 
 	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
 	public UserService(UserRepository userRepository) {
+		// TODO needed?
 		this.userRepository = userRepository;
 	}
 
@@ -58,50 +60,25 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User saveUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+	public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
 		if (userRepository.existsByEmail(user.getEmail()))
 			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
-		Optional<User> userWithSameUsername = userRepository.findById(user.getUsername());
-		if (userWithSameUsername.isPresent())
-			throw new DataIntegrityViolationException("This username is already in use") {
-			};
+		if (userRepository.existsByUsername(user.getUsername()))
+			throw new IllegalArgumentException("There is already a user registered with the username provided");
 
-			Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
-			if (userWithSameEmail.isPresent())
-			throw new DataIntegrityViolationException("This email is already in use") {
-			};
-
-		if (user.getUsername().isEmpty())
-			throw new IllegalArgumentException("The username can not be empty") {
-			};
-		if (user.getPassword().isEmpty())
-			throw new IllegalArgumentException("The password can not be empty") {
-			};
-		if (user.getEmail().isEmpty())
-			throw new IllegalArgumentException("The email can not be empty") {
-			};
-
-		if (user.getPassword() == null || user.getPassword().isEmpty())
-			throw new IllegalArgumentException("A Password is required") {
-			};
-
-		if (user.getPassword().length() < 4)
-			throw new IllegalArgumentException("Password must be at least 8 characters long") {
-			};
-
-		if (user.getUsername().length() < 4)
-			throw new IllegalArgumentException("Username must be at least 4 characters long") {
-			};
-
-		if (user.getUsername().length() > 20)
-			throw new IllegalArgumentException("Username must be at most 20 characters long") {
-			};
+		// encrypt the password using bcrypt
+		String encodedParamPassword = passwordEncoder.encode(user.getPassword());
+		user.setPassword(encodedParamPassword);
 
 		user.setEnabled(true);
-		userRepository.save(user);
+		this.save(user);
 		authoritiesService.saveAuthorities(user.getUsername(), "user");
 		return user;
+	}
+
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 
 	@Transactional(readOnly = true)
@@ -115,9 +92,13 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<User> findUser(String username) {
+	public User findUser(String username) throws DataAccessException {
 		// The username is the id (primary key)
-		return userRepository.findById(username);
+		Optional<User> user = userRepository.findById(username);
+		if (!user.isPresent())
+			throw new DataAccessException("User " + username + " was not found") {
+			};
+		return user.get();
 	}
 
 	@Transactional(readOnly = true)
@@ -143,13 +124,6 @@ public class UserService {
 		if (!sentBySameUser && !sentByAdmin)
 			throw new NonMatchingTokenException("A user's profile can only be updated by him/herself or by an admin");
 
-		Optional<User> userInDatabaseOptional = this.findUser(user.getUsername());
-		if (!userInDatabaseOptional.isPresent())
-			throw new DataAccessException("User not found") {
-			};
-
-		User userInDatabase = userInDatabaseOptional.get();
-
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
 			throw new DataIntegrityViolationException("This email is already in use") {
@@ -158,8 +132,14 @@ public class UserService {
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.
-		if (user.getPassword() == null || user.getPassword().equals("null"))
+		User userInDatabase = this.findUser(user.getUsername());
+		if (user.getPassword() == null || user.getPassword().equals("null")) {
 			user.setPassword(userInDatabase.getPassword());
+		} else {
+			// If there is a new password input, encrypt it using bcrypt
+			String encodedParamPassword = passwordEncoder.encode(user.getPassword());
+			user.setPassword(encodedParamPassword);
+		}
 		if (user.getEmail() == null)
 			user.setEmail(userInDatabase.getEmail());
 		if (user.getEnabled() == null) {
@@ -172,15 +152,18 @@ public class UserService {
 	public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
 		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
 		if (!foundUserOptional.isPresent()) {
+			// TODO move this validation to the findUser method in the service?
 			throw new DataAccessException("User not found") {
 			};
 		}
+
 		User userInDB = foundUserOptional.get();
 		if (!userInDB.getEnabled()) {
 			throw new BannedUserException("This user has been banned") {
 			};
 		}
-		if (!userInDB.getPassword().equals(user.getPassword())) {
+
+		if (!passwordEncoder.matches(user.getPassword(), userInDB.getPassword())) {
 			throw new IllegalArgumentException("Incorrect password") {
 			};
 		}

@@ -1,5 +1,7 @@
 package org.springframework.ntfh.configuration;
 
+import java.security.SecureRandom;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -62,9 +64,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.DELETE, "/lobbies/{lobbyId}/remove/{username}").hasAnyAuthority("user")
 				// GAME ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
-				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
 				.antMatchers(HttpMethod.POST, "/games").hasAnyAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
+				.antMatchers(HttpMethod.GET, "/games/{gameId}/turn").permitAll() // Allow everyone to list the current
+																					// turn info
+				.antMatchers(HttpMethod.POST, "/games/{gameId}/ability-cards/{abilityCardIngameId}")
+				.hasAnyAuthority("user") // Allow users to play cards
+				.antMatchers(HttpMethod.POST, "/games/{gameId}/market-cards/{marketCardIngameId}")
+				.hasAnyAuthority("user") // Allow users to buy cards in the market
 				// GAMEHISTORY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the old games
 				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games
@@ -113,9 +121,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		PasswordEncoder encoder = NoOpPasswordEncoder.getInstance();
-		// store passwords in plain text
-		return encoder;
+		return new BCryptPasswordEncoder(10, new SecureRandom("NTFHseed".getBytes()));
 	}
 
 }

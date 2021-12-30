@@ -1,8 +1,6 @@
 package org.springframework.ntfh.entity.lobby;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -89,11 +87,6 @@ public class LobbyService {
             throw new MaximumLobbyCapacityException("The lobby is full") {
             };
 
-        Optional<User> userOptional = userService.findUser(usernameFromRequest);
-        if (!userOptional.isPresent())
-            throw new DataAccessException("The user who wants to join the lobby does not exist") {
-            };
-
         String usernameFromToken = TokenUtils.usernameFromToken(token);
         if (!usernameFromRequest.equals(usernameFromToken))
             throw new IllegalArgumentException("The Token username and the request one does not coindice") {
@@ -104,7 +97,7 @@ public class LobbyService {
             throw new IllegalArgumentException("The user is already in the lobby") {
             };
 
-        User user = userOptional.get();
+        User user = userService.findUser(usernameFromRequest);
         if (user.getLobby() != null)
             throw new UserAlreadyInLobbyException(
                     String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
@@ -127,13 +120,8 @@ public class LobbyService {
      */
     @Transactional
     public Boolean removeUserFromLobby(Lobby lobby, String username) throws DataAccessException {
-        Optional<User> userOptional = userService.findUser(username);
-        if (!userOptional.isPresent())
-            throw new DataAccessException("The user that is being removed from the lobby does not exist") {
-            };
 
-        User user = userOptional.get();
-
+        User user = userService.findUser(username);
         if (lobby.getHost().getUsername().equals(user.getUsername()))
             // this should be handled by .deleteLobby()
             throw new DataAccessException("The host cannot leave the lobby") {

@@ -9,21 +9,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.ntfh.character.Character;
-import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
+import org.springframework.ntfh.entity.player.Player;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,17 +54,14 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
 
-	// TODO the cascade type is yet to be determined
-	// @OneToOne(mappedBy = "host")
-	@ManyToOne
-	@JoinColumn(name = "game")
-	@JsonIgnore
-	private Game game; // game where the user is currently in
-
 	@ManyToOne
 	@JoinColumn(name = "lobby")
 	@JsonIgnoreProperties({ "users", "host", "leader" })
 	private Lobby lobby; // lobby where the user is currently in
+
+	@OneToOne
+	@JoinColumn(name = "player")
+	private Player player; // Current player
 
 	@ManyToOne // TODO set appropiate cascade type
 	@JoinColumn(name = "character")

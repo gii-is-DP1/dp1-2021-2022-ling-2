@@ -17,8 +17,8 @@ import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
  */
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
-
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
+
   const [lobby, setLobby] = useState<ILobby | null>(null); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
   const { lobbyId } = useParams<{ lobbyId: string }>(); // TODO maybe we should just pass this as a param to the component
@@ -330,7 +330,7 @@ export default function Lobby() {
                     defaultChecked
                     onChange={(e) => setGender("MALE")}
                   ></input>
-                  <label>♂ male</label>
+                  <label>♂ Male</label>
                 </span>
                 <span>
                   <input
