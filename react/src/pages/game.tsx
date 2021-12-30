@@ -85,10 +85,7 @@ export default function Game() {
 
   const handleStateButton = async () => {
     try {
-      const payload = {
-        turn: turn
-      }
-      const response = await axios.post("/turns/button", payload, {
+      const response = await axios.post(`/turns/${gameId}/button`, {
         headers: { Authorization: "Bearer " + userToken },
       });
       setTurn(response.data);

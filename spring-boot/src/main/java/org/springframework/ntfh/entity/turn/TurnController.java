@@ -23,8 +23,9 @@ public class TurnController {
     @Autowired
     private GameService gameService;
 
-    @PostMapping("/button")
-    public ResponseEntity<Turn> pressButton(@RequestBody Turn turn) {
+    @PostMapping("/{gameId}/button")
+    public ResponseEntity<Turn> pressButton(@PathVariable("gameId") Integer gameId) {
+        Turn turn = gameService.getCurrentTurnByGameId(gameId);
         turnService.stateButton(turn);
         return new ResponseEntity<>(turn, HttpStatus.OK);
     }
