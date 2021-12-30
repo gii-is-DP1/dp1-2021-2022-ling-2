@@ -25,6 +25,7 @@ export default function Game() {
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
 
   const history = useHistory();
+  const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
 
   const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
@@ -66,6 +67,7 @@ export default function Game() {
       setGame(_game);
       const sortedPlayers = playersInRenderOrder(_game.players);
       setPlayers(sortedPlayers);
+      setTurn(_game.currentTurn);
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
@@ -80,6 +82,21 @@ export default function Game() {
       toast.error(error?.message);
     }
   };
+
+  const handleStateButton = async () => {
+    try {
+      const payload = {
+        turn: turn
+      }
+      const response = await axios.post("/turns/button", payload, {
+        headers: { Authorization: "Bearer " + userToken },
+      });
+      setTurn(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  }
+
 
   useEffect(() => {
     // TODO extract timer to hook
@@ -119,7 +136,7 @@ export default function Game() {
     // If NOT my turn, do fetch the game
     const fetchTurn = async () => {
       try {
-        const response = await axios.get(`/games/${gameId}/turn`);
+        const response = await axios.get(`/turns/${gameId}`);
         const _turn = response.data;
         setTurn(_turn);
         if (_turn?.player?.user?.username !== loggedUser.username) {
@@ -148,6 +165,14 @@ export default function Game() {
             )}
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
+            {/* Turn state button */}
+            {/* TODO Positioning of button */}
+            {/* TODO Showing only to current player */}
+            <div className="fixed p-8">
+              <button className="btn-ntfh" onClick={handleStateButton}>
+                <p className="text-2xl text-gradient-ntfh">Next State</p>
+              </button>
+            </div>
             {/* Top player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
               <p>{players[3] && players[3].user.username}</p>

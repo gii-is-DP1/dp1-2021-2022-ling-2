@@ -63,12 +63,6 @@ public class GameController {
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
-    @GetMapping("/{gameId}/turn")
-    public ResponseEntity<Turn> getGameTurn(@PathVariable("gameId") Integer gameId) {
-        Turn turn = gameService.getCurrentTurnByGameId(gameId);
-        return new ResponseEntity<>(turn, HttpStatus.OK);
-    }
-
     /**
      * This endpoint will receive the petitions of a player to play a card
      * 
