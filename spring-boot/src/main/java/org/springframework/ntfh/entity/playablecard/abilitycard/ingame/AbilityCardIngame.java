@@ -1,5 +1,7 @@
 package org.springframework.ntfh.entity.playablecard.abilitycard.ingame;
 
+import java.beans.Transient;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -9,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.player.Player;
 
 import lombok.Getter;
@@ -26,4 +29,9 @@ public class AbilityCardIngame extends BaseEntity {
 
     @ManyToOne(optional = false)
     private AbilityCard abilityCard;
+
+    @Transient
+    public AbilityCardTypeEnum getAbilityCardTypeEnum() {
+        return abilityCard.getAbilityCardTypeEnum();
+    }
 }

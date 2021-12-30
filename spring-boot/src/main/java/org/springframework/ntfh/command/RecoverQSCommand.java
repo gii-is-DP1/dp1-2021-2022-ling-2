@@ -26,6 +26,8 @@ public class RecoverQSCommand implements Command{
             listDiscardPile.remove(position);
             playerFrom.setDiscardPile(listDiscardPile);
             listAbilityPile.add(toBeReturned);
+            //TODO Shuffle
+            playerFrom.setAbilityPile(listAbilityPile);
         }
     }    
 }
