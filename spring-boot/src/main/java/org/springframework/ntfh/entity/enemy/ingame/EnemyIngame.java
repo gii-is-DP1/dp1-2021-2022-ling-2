@@ -27,6 +27,9 @@ public class EnemyIngame extends BaseEntity {
     @NotNull
     private Integer currentEndurance;
 
+    @NotNull
+    private Boolean restrained;
+
     @Transient
     public Boolean isWarlord() {
         return enemy.getEnemyCategoryType() == EnemyCategoryType.WARLORD;

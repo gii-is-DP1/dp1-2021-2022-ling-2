@@ -13,6 +13,6 @@ public class LluviaDeFlechas {
         for(EnemyIngame target:targetList){
             new DealDamageCommand(2, target).execute();
         }
-        //TODO daño al aliado con mas vida
+        //TODO daño al aliado con menos heridas en caso de empate elección
     }
 }

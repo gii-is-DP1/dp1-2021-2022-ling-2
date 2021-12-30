@@ -1,6 +1,5 @@
 package org.springframework.ntfh.cardlogic.abilitycard.warrior;
 
-import org.springframework.ntfh.command.DealDamageAOECommand;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.DrawCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
