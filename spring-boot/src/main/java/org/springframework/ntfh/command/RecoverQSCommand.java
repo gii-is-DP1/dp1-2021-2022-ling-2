@@ -3,9 +3,6 @@ package org.springframework.ntfh.command;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.ntfh.cardlogic.abilitycard.ranger.DisparoRapido;
-import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 
