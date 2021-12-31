@@ -13,7 +13,7 @@ public class RefreshState implements TurnState {
     @Override
     public void button() {
         // TODO Refresh board for new turn
-
+        
 
         
         turn.setState(turn.getPlayerState());

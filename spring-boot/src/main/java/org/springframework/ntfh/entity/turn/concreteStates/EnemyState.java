@@ -12,7 +12,7 @@ public class EnemyState implements TurnState {
 
     @Override
     public void button() {
-        // Nothing
+        turn.setState(turn.getRefreshState());
     }
     
 }

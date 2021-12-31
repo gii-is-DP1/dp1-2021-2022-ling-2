@@ -12,6 +12,7 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.scene.Scene;
 import org.springframework.ntfh.entity.scene.SceneService;
+import org.springframework.ntfh.entity.turn.concreteStates.PlayerState;
 import org.springframework.stereotype.Service;
 
 /**
@@ -68,6 +69,7 @@ public class TurnService {
     @Transactional
     public void initializeFromGame(Game game) {
         Turn turn = new Turn();
+        PlayerState initialState = new PlayerState(turn);
         turn.setPlayer(game.getLeader());
         turn.setStage(TurnStageEnum.PLAYER_ATTACK);
 
@@ -79,19 +81,21 @@ public class TurnService {
         }
 
         turn.setGame(game); // TODO needed?
+        turn.setState(initialState);
         enemyIngameService.initializeFromGame(game);
         marketCardIngameService.initializeFromGame(game);
         abilityCardIngameService.initializeFromGame(game);
         turnRepository.save(turn);
+        
 
         // Set a foreign key to the current turn in the game
         game.setCurrentTurn(turn);
     }
 
     // State functions
-
+    @Transactional
     public void stateButton(Turn turn) {
-        turn.state.button();
+        turn.button();
     }
 
 }

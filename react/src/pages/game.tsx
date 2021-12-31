@@ -94,7 +94,6 @@ export default function Game() {
     }
   }
 
-
   useEffect(() => {
     // TODO extract timer to hook
     const interval = setInterval(() => setTime(Date.now()), REFRESH_RATE); // Useful later for fetching lobby users

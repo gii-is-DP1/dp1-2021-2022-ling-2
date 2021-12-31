@@ -52,4 +52,14 @@ public class Turn extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private TurnStageEnum stage;
+
+    @Transient
+    public void setState(TurnState state) {
+        this.state = state;
+    }
+
+    @Transient
+    public void button() {
+        state.button();
+    }
 }
