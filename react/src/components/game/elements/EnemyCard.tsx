@@ -40,6 +40,7 @@ export default function EnemyCard(params: Params) {
 
   return (
     <img
+      draggable={false}
       className={`card zoomable hover:scale-250
       border-2 border-opacity-0
       `}

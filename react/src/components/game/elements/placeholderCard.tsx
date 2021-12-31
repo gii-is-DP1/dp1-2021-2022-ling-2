@@ -11,6 +11,7 @@ export default function PlaceholderCard(params: Params) {
   // TODO replace position translate with -space-x-12 in the renderer
   return (
     <img
+      draggable={false}
       className={`card transform-gpu ${
         counterclockwise !== undefined &&
         (counterclockwise ? "hover:rotate-90" : "hover:-rotate-90")
