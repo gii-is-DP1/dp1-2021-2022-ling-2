@@ -55,8 +55,11 @@ public class LobbyServiceTest {
 
     @AfterEach
     public void teardown() {
-        if (lobbyService.findLobbyById(lobbyTester.getId()).isPresent())
-            lobbyService.deleteLobby(lobbyTester);
+        try {
+            lobbyRepository.delete(lobbyTester);
+        } catch (Exception e) {
+            // do nothing
+        }
     }
 
     @Test
@@ -73,7 +76,7 @@ public class LobbyServiceTest {
 
     @Test
     public void testFindById() {
-        Lobby tester = this.lobbyService.findLobbyById(1).orElse(null);
+        Lobby tester = this.lobbyService.findById(1);
         assertEquals("andres with pablo", tester.getName());
         assertEquals(1, tester.getGame().getId());
         assertEquals(true, tester.getHasScenes());
@@ -100,7 +103,7 @@ public class LobbyServiceTest {
     @Test
     public void testDeleteLobby() {
         lobbyService.deleteLobby(lobbyTester);
-        assertEquals(null, lobbyService.findLobbyById(lobbyTester.getId()).orElse(null));
+        assertEquals(null, lobbyService.findById(lobbyTester.getId()));
     }
 
     @Test
@@ -110,7 +113,7 @@ public class LobbyServiceTest {
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
-        assertEquals(true, lobbyService.findLobbyById(lobbyTesterId).get().getUsers().contains(requester));
+        assertEquals(true, lobbyService.findById(lobbyTesterId).getUsers().contains(requester));
     }
 
     @Test

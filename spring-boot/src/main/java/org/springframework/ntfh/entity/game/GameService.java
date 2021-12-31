@@ -100,7 +100,10 @@ public class GameService {
         game.setStartTime(System.currentTimeMillis());
         game.setHasScenes(lobby.getHasScenes());
 
-        Set<User> users = lobby.getUsers();
+        // We have to use lobbyFromDB since the one from the request does not
+        // contain some user attributes and will set them to null later
+        Lobby lobbyFromDB = lobbyService.findById(lobby.getId());
+        Set<User> users = lobbyFromDB.getUsers();
 
         Integer i = 1;
         List<Player> players = new ArrayList<>();
@@ -243,5 +246,10 @@ public class GameService {
         Game game = player.getGame();
         game.getMarketCardsForSale().remove(marketCardIngame);
         marketCardIngameService.delete(marketCardIngame);
+    }
+
+    @Transactional
+    public void setNextTurnState(Turn turn) {
+        turnService.setNextState(turn);
     }
 }
