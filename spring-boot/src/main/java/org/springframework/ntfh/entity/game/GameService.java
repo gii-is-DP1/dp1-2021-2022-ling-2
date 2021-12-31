@@ -112,10 +112,6 @@ public class GameService {
                 i++;
             Player createdPlayer = playerService.createFromUser(user, lobby, turnOrder);
 
-            // We initialize the cards played in the turn to empty
-            List<AbilityCardIngame> emptyPlayedCardsInTurn= new ArrayList<AbilityCardIngame>();
-            createdPlayer.setPlayedCardsInTurn(emptyPlayedCardsInTurn);
-            
             players.add(createdPlayer);
             // TODO temporary solution. Set the lobby host as the leader. In the real game
             // it is chosen via a "minigame" with cards
@@ -157,10 +153,6 @@ public class GameService {
         Player playerFrom = abilityCardIngame.getPlayer();
         String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
 
-        List<AbilityCardIngame> playedCardsInTurn =playerFrom.getPlayedCardsInTurn();
-
-        playedCardsInTurn.add(abilityCardIngame);
-
         // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
         // DagaElfica)
         String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
@@ -189,23 +181,22 @@ public class GameService {
                 EnemyIngame targetedEnemy = enemyIngameService.findById(abilityCardIngameId);
                 Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
-
             }
-
-            playerFrom.setPlayedCardsInTurn(playedCardsInTurn);//Added the card to the cards that have been played during the turn
-
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
             throw new IllegalArgumentException("Ability card type " + className +
                     " is not implemented");
         }
-        // After playing any card, make sure to move the card to the discard pile
+
+        // After playing any card, add such a card to the list of cards played this turn
+        playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
+
+        // And make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();
         player.getHand().remove(abilityCardIngame);
         player.getDiscardPile().add(abilityCardIngame);
 
         // Check if the card is exiliable and if so, remove it from the discard pile too
-
     }
 
     /**
