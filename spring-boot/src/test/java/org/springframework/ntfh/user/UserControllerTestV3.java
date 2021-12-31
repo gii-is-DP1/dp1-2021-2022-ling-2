@@ -1,5 +1,7 @@
 package org.springframework.ntfh.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -44,9 +46,11 @@ public class UserControllerTestV3 {
       return objectMapper.readValue(json, clazz);
    }
     
-   @Test
-   void testGetUser() throws Exception {
-    MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/")).accept(MediaType.appl)
+    @Test
+    void testGetUser() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
    }
 
 }
