@@ -111,6 +111,11 @@ public class GameService {
             if (!isHost)
                 i++;
             Player createdPlayer = playerService.createFromUser(user, lobby, turnOrder);
+
+            // We initialize the cards played in the turn to empty
+            List<AbilityCardIngame> emptyPlayedCardsInTurn= new ArrayList<AbilityCardIngame>();
+            createdPlayer.setPlayedCardsInTurn(emptyPlayedCardsInTurn);
+            
             players.add(createdPlayer);
             // TODO temporary solution. Set the lobby host as the leader. In the real game
             // it is chosen via a "minigame" with cards
@@ -152,6 +157,10 @@ public class GameService {
         Player playerFrom = abilityCardIngame.getPlayer();
         String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
 
+        List<AbilityCardIngame> playedCardsInTurn =playerFrom.getPlayedCardsInTurn();
+
+        playedCardsInTurn.add(abilityCardIngame);
+
         // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
         // DagaElfica)
         String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
@@ -182,6 +191,9 @@ public class GameService {
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
 
             }
+
+            playerFrom.setPlayedCardsInTurn(playedCardsInTurn);//Added the card to the cards that have been played during the turn
+
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
             throw new IllegalArgumentException("Ability card type " + className +

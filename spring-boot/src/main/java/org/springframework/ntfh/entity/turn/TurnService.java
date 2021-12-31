@@ -88,4 +88,6 @@ public class TurnService {
         game.setCurrentTurn(turn);
     }
 
+
+        //TODO Ending of the turn, make sure to empty the list of cardPlayedInTurn from player (Avoid overlay of effects bettewwnn turns)
 }

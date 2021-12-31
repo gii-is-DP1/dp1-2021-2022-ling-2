@@ -1,5 +1,7 @@
 package org.springframework.ntfh.entity.turn;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.scene.Scene;
 
