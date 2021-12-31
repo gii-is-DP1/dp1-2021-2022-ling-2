@@ -1,6 +1,7 @@
 package org.springframework.ntfh.lobby;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyRepository;
 import org.springframework.ntfh.entity.lobby.LobbyService;
@@ -102,8 +104,9 @@ public class LobbyServiceTest {
 
     @Test
     public void testDeleteLobby() {
+        Integer lobbyId = lobbyTester.getId();
         lobbyService.deleteLobby(lobbyTester);
-        assertEquals(null, lobbyService.findById(lobbyTester.getId()));
+        assertThrows(DataAccessException.class, () -> lobbyService.findById(lobbyId));
     }
 
     @Test
