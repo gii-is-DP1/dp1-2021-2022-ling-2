@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 /**
  * @see https://stackabuse.com/guide-to-unit-testing-spring-boot-rest-apis/
+ * @see https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
  */
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
