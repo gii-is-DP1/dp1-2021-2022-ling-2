@@ -7,8 +7,6 @@ import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,17 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TurnController {
 
     @Autowired
-    private TurnService turnService;
-
-    @Autowired
     private GameService gameService;
-
-    @PostMapping("/{gameId}/button")
-    public ResponseEntity<Turn> pressButton(@PathVariable("gameId") Integer gameId) {
-        Turn turn = gameService.getCurrentTurnByGameId(gameId);
-        turnService.stateButton(turn);
-        return new ResponseEntity<>(turn, HttpStatus.OK);
-    }
 
     @GetMapping("/{gameId}")
     public ResponseEntity<Turn> getTurn(@PathVariable("gameId") Integer gameId) {

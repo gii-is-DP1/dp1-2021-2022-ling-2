@@ -69,7 +69,6 @@ public class TurnService {
     public void initializeFromGame(Game game) {
         Turn turn = new Turn();
         turn.setPlayer(game.getLeader());
-        turn.setStage(TurnStageEnum.PLAYER_ATTACK);
 
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
@@ -79,6 +78,10 @@ public class TurnService {
         }
 
         turn.setGame(game); // TODO needed?
+
+        // Initial state is the state where the player attacks
+        turn.setStateType(TurnStateType.PLAYER_STATE);
+
         enemyIngameService.initializeFromGame(game);
         marketCardIngameService.initializeFromGame(game);
         abilityCardIngameService.initializeFromGame(game);
@@ -89,9 +92,10 @@ public class TurnService {
     }
 
     // State functions
-
-    public void stateButton(Turn turn) {
-        turn.state.button();
+    @Transactional
+    public void setNextState(Turn turn) {
+        TurnStateType nextState = turn.getState().getNextState();
+        turn.setStateType(nextState);
     }
 
 }

@@ -83,17 +83,19 @@ export default function Game() {
     }
   };
 
-  const handleStateButton = async () => {
+  const handleTurnNextState = async () => {
     try {
-      const response = await axios.post(`/turns/${gameId}/button`, {
-        headers: { Authorization: "Bearer " + userToken },
-      });
-      setTurn(response.data);
+      const response = await axios.post(
+        `/games/${gameId}/turn/next`,
+        null, // No body
+        { headers: { Authorization: "Bearer " + userToken } }
+      );
+      const _game = response.data;
+      setGame(_game);
     } catch (error: any) {
       toast.error(error?.message);
     }
-  }
-
+  };
 
   useEffect(() => {
     // TODO extract timer to hook
@@ -165,8 +167,13 @@ export default function Game() {
             {/* Turn state button */}
             {/* TODO Positioning of button */}
             {/* TODO Showing only to current player */}
-            <div className="fixed p-8">
-              <button className="btn-ntfh" onClick={handleStateButton}>
+            <div className="fixed p-8 space-y-2">
+              <div className="btn-ntfh">
+                <p className="text-2xl text-gradient-ntfh">
+                  {game.currentTurn.stateType}
+                </p>
+              </div>
+              <button className="btn-ntfh" onClick={handleTurnNextState}>
                 <p className="text-2xl text-gradient-ntfh">Next State</p>
               </button>
             </div>
