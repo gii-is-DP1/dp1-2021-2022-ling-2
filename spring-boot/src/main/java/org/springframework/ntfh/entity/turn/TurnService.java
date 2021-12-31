@@ -12,7 +12,6 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.scene.Scene;
 import org.springframework.ntfh.entity.scene.SceneService;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.stereotype.Service;
 
 /**
@@ -69,9 +68,7 @@ public class TurnService {
     @Transactional
     public void initializeFromGame(Game game) {
         Turn turn = new Turn();
-        PlayerState initialState = new PlayerState(turn);
         turn.setPlayer(game.getLeader());
-        turn.setStage(TurnStageEnum.PLAYER_ATTACK);
 
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
@@ -81,7 +78,10 @@ public class TurnService {
         }
 
         turn.setGame(game); // TODO needed?
-        turn.setState(initialState);
+
+        // Initial state is the state where the player attacks
+        turn.setStateType(TurnStateType.PLAYER_STATE);
+
         enemyIngameService.initializeFromGame(game);
         marketCardIngameService.initializeFromGame(game);
         abilityCardIngameService.initializeFromGame(game);
@@ -93,8 +93,9 @@ public class TurnService {
 
     // State functions
     @Transactional
-    public void stateButton(Turn turn) {
-        turn.button();
+    public void setNextState(Turn turn) {
+        TurnStateType nextState = turn.getState().getNextState();
+        turn.setStateType(nextState);
     }
 
 }
