@@ -41,14 +41,19 @@ public class Turn extends BaseEntity {
 
     @Transient
     TurnState state;
+
     @Transient
     TurnState EnemyState;
+
     @Transient
     TurnState MarketState;
+
     @Transient
     TurnState PlayerState;
+
     @Transient
     TurnState RefreshState;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private TurnStageEnum stage;
