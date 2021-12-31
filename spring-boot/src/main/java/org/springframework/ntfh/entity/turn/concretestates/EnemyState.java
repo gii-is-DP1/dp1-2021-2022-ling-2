@@ -1,19 +1,13 @@
 package org.springframework.ntfh.entity.turn.concretestates;
 
-import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnState;
+import org.springframework.ntfh.entity.turn.TurnStateType;
 
 public class EnemyState implements TurnState {
 
-    Turn turn;
-
-    public EnemyState(Turn turn) {
-        this.turn = turn;
-    }
-
     @Override
-    public void button() {
-        turn.setState(turn.getRefreshState());
+    public TurnStateType getNextState() {
+        return TurnStateType.REFRESH_STATE;
     }
 
 }
