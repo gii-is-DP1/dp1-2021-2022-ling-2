@@ -87,4 +87,13 @@ public class GameController {
         Game game = gameService.findGameById(gameId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
+
+    @PostMapping("/{gameId}/turn/next")
+    public ResponseEntity<Game> nextTurn(@PathVariable("gameId") Integer gameId) {
+        // TODO check if the player trying to do this is the current player
+        Turn turn = gameService.getCurrentTurnByGameId(gameId);
+        gameService.setNextTurnState(turn);
+        Game game = gameService.findGameById(gameId);
+        return new ResponseEntity<>(game, HttpStatus.OK);
+    }
 }
