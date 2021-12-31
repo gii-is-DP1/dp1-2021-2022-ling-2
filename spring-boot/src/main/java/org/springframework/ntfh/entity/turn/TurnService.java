@@ -12,7 +12,7 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.scene.Scene;
 import org.springframework.ntfh.entity.scene.SceneService;
-import org.springframework.ntfh.entity.turn.concreteStates.PlayerState;
+import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.stereotype.Service;
 
 /**
@@ -86,7 +86,6 @@ public class TurnService {
         marketCardIngameService.initializeFromGame(game);
         abilityCardIngameService.initializeFromGame(game);
         turnRepository.save(turn);
-        
 
         // Set a foreign key to the current turn in the game
         game.setCurrentTurn(turn);

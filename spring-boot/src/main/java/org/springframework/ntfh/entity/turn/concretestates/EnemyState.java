@@ -1,19 +1,19 @@
-package org.springframework.ntfh.entity.turn.concreteStates;
+package org.springframework.ntfh.entity.turn.concretestates;
 
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnState;
 
-public class PlayerState implements TurnState {
+public class EnemyState implements TurnState {
 
     Turn turn;
 
-    public PlayerState(Turn turn) {
+    public EnemyState(Turn turn) {
         this.turn = turn;
     }
 
     @Override
     public void button() {
-        turn.setState(turn.getMarketState());
+        turn.setState(turn.getRefreshState());
     }
 
 }

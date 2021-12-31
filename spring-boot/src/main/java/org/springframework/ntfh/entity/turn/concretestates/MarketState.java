@@ -1,11 +1,12 @@
-package org.springframework.ntfh.entity.turn.concreteStates;
+package org.springframework.ntfh.entity.turn.concretestates;
 
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnState;
 
-public class MarketState implements TurnState{
+public class MarketState implements TurnState {
 
     Turn turn;
+
     public MarketState(Turn turn) {
         this.turn = turn;
     }
