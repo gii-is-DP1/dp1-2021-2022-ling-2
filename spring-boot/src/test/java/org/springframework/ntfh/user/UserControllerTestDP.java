@@ -32,6 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 /**
  * @author alegestor
+ * Descartado porq se usa para controllers, NO RESTCONTROLLER
  */
 
 // @RunWith(SpringRunner.class)
