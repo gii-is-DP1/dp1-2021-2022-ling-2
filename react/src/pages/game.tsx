@@ -167,19 +167,20 @@ export default function Game() {
             )}
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
-            {/* Turn state button */}
             {/* TODO Positioning of button */}
             {/* TODO Showing only to current player */}
-            <div className="fixed p-8 space-y-2">
-              <div className="btn-ntfh">
-                <p className="text-2xl text-gradient-ntfh">
-                  {game.currentTurn.stateType}
-                </p>
+            {isPlayersTurn(turn, loggedUser.username) && (
+              <div className="fixed p-8 space-y-2">
+                <div className="btn-ntfh">
+                  <p className="text-2xl text-gradient-ntfh">
+                    {game.currentTurn.stateType}
+                  </p>
+                </div>
+                <button className="btn-ntfh" onClick={handleTurnNextState}>
+                  <p className="text-2xl text-gradient-ntfh">Next State</p>
+                </button>
               </div>
-              <button className="btn-ntfh" onClick={handleTurnNextState}>
-                <p className="text-2xl text-gradient-ntfh">Next State</p>
-              </button>
-            </div>
+            )}
             {/* Top player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
               <p>{players[3] && players[3].user.username}</p>
