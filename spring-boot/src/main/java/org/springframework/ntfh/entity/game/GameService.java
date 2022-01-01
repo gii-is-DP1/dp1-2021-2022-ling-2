@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -23,14 +22,11 @@ import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
-import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
-import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
-import org.springframework.ntfh.entity.proficiency.Proficiency;
-import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
+import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
@@ -59,9 +55,6 @@ public class GameService {
 
     @Autowired
     private AbilityCardIngameService abilityCardIngameService;
-
-    @Autowired
-    private MarketCardIngameService marketCardIngameService;
 
     @Autowired
     private EnemyIngameService enemyIngameService;
@@ -215,46 +208,12 @@ public class GameService {
      */
     @Transactional
     public void buyMarketCard(Integer marketCardIngameId, String token) {
-
-        // TODO Throw exception if it's not the player's turn
-        // TODO Throw exception if not in the market stage
-
+        // TODO make getting the turn more straightforward, maybe with a custom query
         String username = TokenUtils.usernameFromToken(token);
-        User user = userService.findUser(username);
-        Player player = user.getPlayer();
-
-        MarketCardIngame marketCardIngame = marketCardIngameService.findById(marketCardIngameId);
-
-        Set<ProficiencyTypeEnum> marketCardProficiencies = marketCardIngame.getMarketCard().getProficiencies();
-        Set<ProficiencyTypeEnum> playerProficiencies = player.getCharacterType().getProficiencies().stream()
-                .map(Proficiency::getProficiencyTypeEnum).collect(Collectors.toSet());
-
-        playerProficiencies.retainAll(marketCardProficiencies); // Intersection of both sets
-
-        if (!marketCardProficiencies.isEmpty() && playerProficiencies.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "This card is not available for the " + player.getCharacterTypeEnum().toString().toLowerCase());
-        }
-
-        if (player.getHand().size() >= 4) {
-            throw new IllegalArgumentException("You can't have more than 4 cards in your hand");
-        }
-
-        Integer price = marketCardIngame.getMarketCard().getPrice();
-        if (player.getGold() < price) {
-            throw new IllegalArgumentException("You do not have enough gold to buy this card");
-        }
-
-        player.setGold(player.getGold() - price);
-        AbilityCardIngame marketCardAsAbilityCard = abilityCardIngameService.createFromMarketCard(
-                marketCardIngame.getMarketCard(),
-                player);
-        player.getHand().add(marketCardAsAbilityCard);
-
-        // Remove the card from the For Sale pile and it from the database
-        Game game = player.getGame();
-        game.getMarketCardsForSale().remove(marketCardIngame);
-        marketCardIngameService.delete(marketCardIngame);
+        Player player = userService.findUser(username).getPlayer();
+        Turn currentTurn = player.getGame().getCurrentTurn();
+        TurnState turnState = turnService.getState(currentTurn);
+        turnState.buyMarketCard(marketCardIngameId, token);
     }
 
     @Transactional
