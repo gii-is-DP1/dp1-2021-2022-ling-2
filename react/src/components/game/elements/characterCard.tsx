@@ -11,6 +11,7 @@ export default function CharacterCard(params: Params) {
 
   return (
     <img
+      draggable={false}
       className={`card zoomable hover:scale-500 2xl:hover:scale-350 ${
         counterclockwise === undefined
           ? "hover:-translate-y-40"
