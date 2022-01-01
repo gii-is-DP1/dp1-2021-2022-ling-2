@@ -44,7 +44,6 @@ public class MarketState implements TurnState {
     }
 
     @Override
-    @Transactional
     public void buyMarketCard(Integer marketCardIngameId, String token) {
 
         // TODO Throw exception if it's not the player's turn
