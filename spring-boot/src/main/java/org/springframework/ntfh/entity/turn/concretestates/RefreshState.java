@@ -13,15 +13,13 @@ public class RefreshState implements TurnState {
     }
 
     @Override
-    public void playCard(Integer abilityCardIngameId, Integer enemyId) {
-        // TODO Auto-generated method stub
-
+    public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
+        throw new IllegalStateException("You can't play cards now");
     }
 
     @Override
     public void buyMarketCard(Integer marketCardIngameId, String token) {
-        // TODO Auto-generated method stub
-
+        throw new IllegalStateException("You can't buy cards now");
     }
 
 }

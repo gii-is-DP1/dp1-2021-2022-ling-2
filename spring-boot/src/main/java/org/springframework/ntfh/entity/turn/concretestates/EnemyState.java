@@ -13,13 +13,13 @@ public class EnemyState implements TurnState {
     }
 
     @Override
-    public void playCard(Integer abilityCardIngameId, Integer enemyId) {
-        throw new IllegalStateException("You can't play a card in the enemy attack stage");
+    public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
+        throw new IllegalStateException("You can't play cards now");
     }
 
     @Override
     public void buyMarketCard(Integer marketCardIngameId, String token) {
-        throw new IllegalStateException("You can't buy a card in the enemy attack stage");
+        throw new IllegalStateException("You can't buy cards now");
     }
 
 }

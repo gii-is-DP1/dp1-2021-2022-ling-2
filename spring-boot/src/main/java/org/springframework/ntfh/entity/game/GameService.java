@@ -1,7 +1,5 @@
 package org.springframework.ntfh.entity.game;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,17 +8,10 @@ import java.util.Set;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
-import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
-import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
@@ -34,9 +25,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Autowired
     private GameRepository gameRepository;
@@ -55,9 +43,6 @@ public class GameService {
 
     @Autowired
     private AbilityCardIngameService abilityCardIngameService;
-
-    @Autowired
-    private EnemyIngameService enemyIngameService;
 
     @Transactional
     public Integer gameCount() {
@@ -138,67 +123,13 @@ public class GameService {
     }
 
     @Transactional
-    public void playCard(Integer abilityCardIngameId, Integer enemyId) {
-
-        // TODO throw exception if the one sending the request is not the card owner
-
-        AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
-        AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
-        Player playerFrom = abilityCardIngame.getPlayer();
-        String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
-
-        Turn currentTurn = playerFrom.getGame().getCurrentTurn();
-        if (!currentTurn.getPlayer().getId().equals(playerFrom.getId())) {
-            throw new IllegalArgumentException("It's not your turn");
-        }
-
-        if (!playerFrom.getHand().contains(abilityCardIngame)) {
-            throw new IllegalArgumentException("You don't have that card in your hand");
-        }
-        // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
-        // DagaElfica)
-        String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
-                new char[] { '_' });
-        String completeClassName = String.format("org.springframework.ntfh.cardlogic.abilitycard.%s.%s",
-                characterType,
-                className);
-
-        try {
-            // Get the class from its name
-            Class<?> clazz = Class.forName(completeClassName);
-            // Instantiate an object of the class
-            Object cardCommand = clazz.getDeclaredConstructor().newInstance();
-            // Autowire the new object's dependencies (services used inside)
-            AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
-            factory.autowireBean(cardCommand);
-            factory.initializeBean(cardCommand, className);
-            if (enemyId == null) {
-                // Handle self playable card (does not target a specific enemy)
-                // Get a reference to the method "execute", that receives 2 parameters
-                Method method = clazz.getDeclaredMethod("execute", Player.class);
-                // Execute the method with the parameters
-                method.invoke(cardCommand, playerFrom);
-            } else {
-                // Handle card that targets an enemy
-                EnemyIngame targetedEnemy = enemyIngameService.findById(enemyId);
-                Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
-                method.invoke(cardCommand, playerFrom, targetedEnemy);
-            }
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-            throw new IllegalArgumentException("Ability card type " + className +
-                    " is not implemented");
-        }
-
-        // After playing any card, add such a card to the list of cards played this turn
-        playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
-
-        // And make sure to move the card to the discard pile
-        Player player = abilityCardIngame.getPlayer();
-        player.getHand().remove(abilityCardIngame);
-        player.getDiscardPile().add(abilityCardIngame);
-
-        // Check if the card is exiliable and if so, remove it from the discard pile too
+    public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
+        // TODO make getting the turn more straightforward, maybe with a custom query
+        String username = TokenUtils.usernameFromToken(token);
+        Player player = userService.findUser(username).getPlayer();
+        Turn currentTurn = player.getGame().getCurrentTurn();
+        TurnState turnState = turnService.getState(currentTurn);
+        turnState.playCard(abilityCardIngameId, enemyId, token);
     }
 
     /**
