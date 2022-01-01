@@ -21,7 +21,7 @@ import { User } from "../interfaces/User";
  * @author andrsdt
  */
 export default function Game() {
-  const REFRESH_RATE = 5000; // fetch lobby status every 1000 miliseconds
+  const REFRESH_RATE = 5000; // fetch lobby status every these miliseconds
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
 
   const history = useHistory();
@@ -138,10 +138,10 @@ export default function Game() {
     // If NOT my turn, do fetch the game
     const fetchTurn = async () => {
       try {
-        const response = await axios.get(`/turns/${gameId}`);
+        const response = await axios.get(`/games/${gameId}/turn`);
         const _turn = response.data;
         setTurn(_turn);
-        if (isPlayersTurn(_turn, loggedUser.username)) {
+        if (!isPlayersTurn(_turn, loggedUser.username)) {
           // Fetch the game if it's not my turn
           fetchGame();
         }
@@ -167,19 +167,20 @@ export default function Game() {
             )}
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
-            {/* Turn state button */}
             {/* TODO Positioning of button */}
             {/* TODO Showing only to current player */}
-            <div className="fixed p-8 space-y-2">
-              <div className="btn-ntfh">
-                <p className="text-2xl text-gradient-ntfh">
-                  {game.currentTurn.stateType}
-                </p>
+            {isPlayersTurn(turn, loggedUser.username) && (
+              <div className="fixed p-8 space-y-2">
+                <div className="btn-ntfh">
+                  <p className="text-2xl text-gradient-ntfh">
+                    {game.currentTurn.stateType}
+                  </p>
+                </div>
+                <button className="btn-ntfh" onClick={handleTurnNextState}>
+                  <p className="text-2xl text-gradient-ntfh">Next State</p>
+                </button>
               </div>
-              <button className="btn-ntfh" onClick={handleTurnNextState}>
-                <p className="text-2xl text-gradient-ntfh">Next State</p>
-              </button>
-            </div>
+            )}
             {/* Top player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
               <p>{players[3] && players[3].user.username}</p>
@@ -249,7 +250,7 @@ export default function Game() {
             </div>
             {/* Bottom player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
-              <p>{players[0] && players[0].user.username}</p>
+              <p>{players[0] && players[0].user.username + " (You)"}</p>
               <p>{players[1] && players[1].user.username}</p>
             </div>
           </div>

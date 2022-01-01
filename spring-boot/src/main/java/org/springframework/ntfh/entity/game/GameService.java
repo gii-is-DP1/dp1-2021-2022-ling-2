@@ -1,36 +1,23 @@
 package org.springframework.ntfh.entity.game;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
-import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
-import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
-import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
-import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
-import org.springframework.ntfh.entity.proficiency.Proficiency;
-import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
+import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
@@ -38,9 +25,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Autowired
     private GameRepository gameRepository;
@@ -59,12 +43,6 @@ public class GameService {
 
     @Autowired
     private AbilityCardIngameService abilityCardIngameService;
-
-    @Autowired
-    private MarketCardIngameService marketCardIngameService;
-
-    @Autowired
-    private EnemyIngameService enemyIngameService;
 
     @Transactional
     public Integer gameCount() {
@@ -145,67 +123,13 @@ public class GameService {
     }
 
     @Transactional
-    public void playCard(Integer abilityCardIngameId, Integer enemyId) {
-
-        // TODO throw exception if the one sending the request is not the card owner
-
-        AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
-        AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
-        Player playerFrom = abilityCardIngame.getPlayer();
-        String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
-
-        Turn currentTurn = playerFrom.getGame().getCurrentTurn();
-        if (!currentTurn.getPlayer().getId().equals(playerFrom.getId())) {
-            throw new IllegalArgumentException("It's not your turn");
-        }
-
-        if (!playerFrom.getHand().contains(abilityCardIngame)) {
-            throw new IllegalArgumentException("You don't have that card in your hand");
-        }
-        // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
-        // DagaElfica)
-        String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
-                new char[] { '_' });
-        String completeClassName = String.format("org.springframework.ntfh.cardlogic.abilitycard.%s.%s",
-                characterType,
-                className);
-
-        try {
-            // Get the class from its name
-            Class<?> clazz = Class.forName(completeClassName);
-            // Instantiate an object of the class
-            Object cardCommand = clazz.getDeclaredConstructor().newInstance();
-            // Autowire the new object's dependencies (services used inside)
-            AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
-            factory.autowireBean(cardCommand);
-            factory.initializeBean(cardCommand, className);
-            if (enemyId == null) {
-                // Handle self playable card (does not target a specific enemy)
-                // Get a reference to the method "execute", that receives 2 parameters
-                Method method = clazz.getDeclaredMethod("execute", Player.class);
-                // Execute the method with the parameters
-                method.invoke(cardCommand, playerFrom);
-            } else {
-                // Handle card that targets an enemy
-                EnemyIngame targetedEnemy = enemyIngameService.findById(enemyId);
-                Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
-                method.invoke(cardCommand, playerFrom, targetedEnemy);
-            }
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
-            throw new IllegalArgumentException("Ability card type " + className +
-                    " is not implemented");
-        }
-
-        // After playing any card, add such a card to the list of cards played this turn
-        playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
-
-        // And make sure to move the card to the discard pile
-        Player player = abilityCardIngame.getPlayer();
-        player.getHand().remove(abilityCardIngame);
-        player.getDiscardPile().add(abilityCardIngame);
-
-        // Check if the card is exiliable and if so, remove it from the discard pile too
+    public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
+        // TODO make getting the turn more straightforward, maybe with a custom query
+        String username = TokenUtils.usernameFromToken(token);
+        Player player = userService.findUser(username).getPlayer();
+        Turn currentTurn = player.getGame().getCurrentTurn();
+        TurnState turnState = turnService.getState(currentTurn);
+        turnState.playCard(abilityCardIngameId, enemyId, token);
     }
 
     /**
@@ -215,46 +139,12 @@ public class GameService {
      */
     @Transactional
     public void buyMarketCard(Integer marketCardIngameId, String token) {
-
-        // TODO Throw exception if it's not the player's turn
-        // TODO Throw exception if not in the market stage
-
+        // TODO make getting the turn more straightforward, maybe with a custom query
         String username = TokenUtils.usernameFromToken(token);
-        User user = userService.findUser(username);
-        Player player = user.getPlayer();
-
-        MarketCardIngame marketCardIngame = marketCardIngameService.findById(marketCardIngameId);
-
-        Set<ProficiencyTypeEnum> marketCardProficiencies = marketCardIngame.getMarketCard().getProficiencies();
-        Set<ProficiencyTypeEnum> playerProficiencies = player.getCharacterType().getProficiencies().stream()
-                .map(Proficiency::getProficiencyTypeEnum).collect(Collectors.toSet());
-
-        playerProficiencies.retainAll(marketCardProficiencies); // Intersection of both sets
-
-        if (!marketCardProficiencies.isEmpty() && playerProficiencies.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "This card is not available for the " + player.getCharacterTypeEnum().toString().toLowerCase());
-        }
-
-        if (player.getHand().size() >= 4) {
-            throw new IllegalArgumentException("You can't have more than 4 cards in your hand");
-        }
-
-        Integer price = marketCardIngame.getMarketCard().getPrice();
-        if (player.getGold() < price) {
-            throw new IllegalArgumentException("You do not have enough gold to buy this card");
-        }
-
-        player.setGold(player.getGold() - price);
-        AbilityCardIngame marketCardAsAbilityCard = abilityCardIngameService.createFromMarketCard(
-                marketCardIngame.getMarketCard(),
-                player);
-        player.getHand().add(marketCardAsAbilityCard);
-
-        // Remove the card from the For Sale pile and it from the database
-        Game game = player.getGame();
-        game.getMarketCardsForSale().remove(marketCardIngame);
-        marketCardIngameService.delete(marketCardIngame);
+        Player player = userService.findUser(username).getPlayer();
+        Turn currentTurn = player.getGame().getCurrentTurn();
+        TurnState turnState = turnService.getState(currentTurn);
+        turnState.buyMarketCard(marketCardIngameId, token);
     }
 
     @Transactional
