@@ -34,6 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		// TODO change "hasAnyAuthority" to "hasAuthority" for single values
+
 		http.cors().and() // enable CORS requests
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests() // antMatchers:
@@ -67,8 +69,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/games").hasAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
 				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
-				.antMatchers(HttpMethod.GET, "/games/{gameId}/turn").permitAll() // Allow everyone to list the current
-																					// turn info
+				.antMatchers(HttpMethod.POST, "/games/{gameId}/turn/next").hasAnyAuthority("user") // Allow users to go
+																									// to the next turn
 				.antMatchers(HttpMethod.POST, "/games/{gameId}/ability-cards/{abilityCardIngameId}")
 				.hasAuthority("user") // Allow users to play cards
 				.antMatchers(HttpMethod.POST, "/games/{gameId}/market-cards/{marketCardIngameId}")
@@ -76,8 +78,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// GAMEHISTORY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the old games
 				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games
-																				// have been played
-				// in the game browser are open lobbies
+																				// have been played in the game browser
+																				// are open lobbies
 				// ACHIEVEMENT ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
 				.antMatchers(HttpMethod.PUT, "/achievements").hasAuthority("admin") // Update achievement

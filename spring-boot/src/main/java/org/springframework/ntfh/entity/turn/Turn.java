@@ -1,6 +1,6 @@
 package org.springframework.ntfh.entity.turn;
 
-import java.util.List;
+import java.beans.Transient;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,9 +14,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.scene.Scene;
+import org.springframework.ntfh.entity.turn.concretestates.EnemyState;
+import org.springframework.ntfh.entity.turn.concretestates.MarketState;
+import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.entity.turn.concretestates.RefreshState;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -43,5 +46,20 @@ public class Turn extends BaseEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private TurnStageEnum stage;
+    private TurnStateType stateType;
+
+    @Transient
+    public TurnState getState() {
+        if (stateType == TurnStateType.PLAYER_STATE) {
+            return new PlayerState();
+        } else if (stateType == TurnStateType.MARKET_STATE) {
+            return new MarketState();
+        } else if (stateType == TurnStateType.ENEMY_STATE) {
+            return new EnemyState();
+        } else if (stateType == TurnStateType.REFRESH_STATE) {
+            return new RefreshState();
+        } else {
+            return null;
+        }
+    }
 }

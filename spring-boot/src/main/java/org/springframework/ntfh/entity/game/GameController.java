@@ -63,12 +63,6 @@ public class GameController {
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
-    @GetMapping("/{gameId}/turn")
-    public ResponseEntity<Turn> getGameTurn(@PathVariable("gameId") Integer gameId) {
-        Turn turn = gameService.getCurrentTurnByGameId(gameId);
-        return new ResponseEntity<>(turn, HttpStatus.OK);
-    }
-
     /**
      * This endpoint will receive the petitions of a player to play a card
      * 
@@ -90,6 +84,15 @@ public class GameController {
             @PathVariable("marketCardIngameId") Integer marketCardIngameId,
             @RequestHeader("Authorization") String token) {
         gameService.buyMarketCard(marketCardIngameId, token);
+        Game game = gameService.findGameById(gameId);
+        return new ResponseEntity<>(game, HttpStatus.OK);
+    }
+
+    @PostMapping("/{gameId}/turn/next")
+    public ResponseEntity<Game> nextTurn(@PathVariable("gameId") Integer gameId) {
+        // TODO check if the player trying to do this is the current player
+        Turn turn = gameService.getCurrentTurnByGameId(gameId);
+        gameService.setNextTurnState(turn);
         Game game = gameService.findGameById(gameId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }

@@ -69,7 +69,6 @@ public class TurnService {
     public void initializeFromGame(Game game) {
         Turn turn = new Turn();
         turn.setPlayer(game.getLeader());
-        turn.setStage(TurnStageEnum.PLAYER_ATTACK);
 
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
@@ -79,6 +78,10 @@ public class TurnService {
         }
 
         turn.setGame(game); // TODO needed?
+
+        // Initial state is the state where the player attacks
+        turn.setStateType(TurnStateType.PLAYER_STATE);
+
         enemyIngameService.initializeFromGame(game);
         marketCardIngameService.initializeFromGame(game);
         abilityCardIngameService.initializeFromGame(game);
@@ -86,6 +89,12 @@ public class TurnService {
 
         // Set a foreign key to the current turn in the game
         game.setCurrentTurn(turn);
+    }
+
+    @Transactional
+    public void setNextState(Turn turn) {
+        TurnStateType nextState = turn.getState().getNextState();
+        turn.setStateType(nextState);
     }
 
     // TODO method to create a new turn (not the intial one)

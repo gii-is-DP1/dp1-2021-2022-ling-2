@@ -34,9 +34,12 @@ public class LobbyService {
         return this.lobbyRepository.findAll();
     }
 
-    @Transactional
-    public Optional<Lobby> findLobbyById(int id) {
-        return lobbyRepository.findById(id);
+    public Lobby findById(int id) throws DataAccessException {
+        Optional<Lobby> lobby = lobbyRepository.findById(id);
+        if (!lobby.isPresent())
+            throw new DataAccessException("Lobby with id " + id + " was not found") {
+            };
+        return lobby.get();
     }
 
     @Transactional
