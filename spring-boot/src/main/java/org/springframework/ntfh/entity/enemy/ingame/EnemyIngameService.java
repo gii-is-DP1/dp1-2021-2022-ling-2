@@ -12,7 +12,6 @@ import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

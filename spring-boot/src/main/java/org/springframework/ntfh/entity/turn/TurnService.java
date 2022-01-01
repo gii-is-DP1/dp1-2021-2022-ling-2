@@ -91,11 +91,16 @@ public class TurnService {
         game.setCurrentTurn(turn);
     }
 
-    // State functions
     @Transactional
     public void setNextState(Turn turn) {
         TurnStateType nextState = turn.getState().getNextState();
         turn.setStateType(nextState);
     }
 
+    // TODO method to create a new turn (not the intial one)
+    // In such a method, make sure to set the list of cards played by the player to
+    // an empty list
+
+    // TODO Ending of the turn, make sure to empty the list of cardPlayedInTurn from
+    // player (Avoid overlay of effects bettewwnn turns)
 }

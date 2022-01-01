@@ -114,6 +114,7 @@ public class GameService {
             if (!isHost)
                 i++;
             Player createdPlayer = playerService.createFromUser(user, lobby, turnOrder);
+
             players.add(createdPlayer);
             // TODO temporary solution. Set the lobby host as the leader. In the real game
             // it is chosen via a "minigame" with cards
@@ -146,15 +147,21 @@ public class GameService {
     @Transactional
     public void playCard(Integer abilityCardIngameId, Integer enemyId) {
 
-        // TODO Throw exception if it's not the player's turn
         // TODO throw exception if the one sending the request is not the card owner
-        // TODO throw exception if the card is not in the player's hand
 
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
         String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
 
+        Turn currentTurn = playerFrom.getGame().getCurrentTurn();
+        if (!currentTurn.getPlayer().getId().equals(playerFrom.getId())) {
+            throw new IllegalArgumentException("It's not your turn");
+        }
+
+        if (!playerFrom.getHand().contains(abilityCardIngame)) {
+            throw new IllegalArgumentException("You don't have that card in your hand");
+        }
         // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
         // DagaElfica)
         String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
@@ -180,23 +187,25 @@ public class GameService {
                 method.invoke(cardCommand, playerFrom);
             } else {
                 // Handle card that targets an enemy
-                EnemyIngame targetedEnemy = enemyIngameService.findById(abilityCardIngameId);
+                EnemyIngame targetedEnemy = enemyIngameService.findById(enemyId);
                 Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
-
             }
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
             throw new IllegalArgumentException("Ability card type " + className +
                     " is not implemented");
         }
-        // After playing any card, make sure to move the card to the discard pile
+
+        // After playing any card, add such a card to the list of cards played this turn
+        playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
+
+        // And make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();
         player.getHand().remove(abilityCardIngame);
         player.getDiscardPile().add(abilityCardIngame);
 
         // Check if the card is exiliable and if so, remove it from the discard pile too
-
     }
 
     /**
