@@ -177,7 +177,7 @@ public class GameService {
                 method.invoke(cardCommand, playerFrom);
             } else {
                 // Handle card that targets an enemy
-                EnemyIngame targetedEnemy = enemyIngameService.findById(abilityCardIngameId);
+                EnemyIngame targetedEnemy = enemyIngameService.findById(enemyId);
                 Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
 
@@ -193,7 +193,6 @@ public class GameService {
         player.getDiscardPile().add(abilityCardIngame);
 
         // Check if the card is exiliable and if so, remove it from the discard pile too
-
     }
 
     /**
