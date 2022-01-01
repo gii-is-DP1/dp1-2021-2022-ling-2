@@ -143,15 +143,21 @@ public class GameService {
     @Transactional
     public void playCard(Integer abilityCardIngameId, Integer enemyId) {
 
-        // TODO Throw exception if it's not the player's turn
         // TODO throw exception if the one sending the request is not the card owner
-        // TODO throw exception if the card is not in the player's hand
 
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
         String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
 
+        Turn currentTurn = playerFrom.getGame().getCurrentTurn();
+        if (!currentTurn.getPlayer().getId().equals(playerFrom.getId())) {
+            throw new IllegalArgumentException("It's not your turn");
+        }
+
+        if (!playerFrom.getHand().contains(abilityCardIngame)) {
+            throw new IllegalArgumentException("You don't have that card in your hand");
+        }
         // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
         // DagaElfica)
         String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
