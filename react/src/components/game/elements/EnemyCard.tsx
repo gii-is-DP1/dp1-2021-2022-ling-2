@@ -3,10 +3,11 @@ import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import axios from "../../../api/axiosConfig";
 import { BASE_IMAGE_PATH } from "../../../constants/paths";
+import GameContext from "../../../context/game";
 import UserContext from "../../../context/user";
 import { AbilityCardIngame } from "../../../interfaces/AbilityCardIngame";
 import { EnemyIngame } from "../../../interfaces/EnemyIngame";
-import GameContext from "../../../context/game";
+import Token from "./token";
 
 type Params = {
   enemyIngame: EnemyIngame;
@@ -39,18 +40,21 @@ export default function EnemyCard(params: Params) {
   };
 
   return (
-    <img
+    <div
       draggable={false}
-      className={`card zoomable hover:scale-250
-      border-2 border-opacity-0
-      `}
-      src={`${BASE_IMAGE_PATH}/cards/enemies${
-        flipped
-          ? "/backs/warlord.png"
-          : `/fronts/${enemyIngame.enemy.enemyType.toLowerCase()}.png`
-      }`}
-      alt={enemyIngame.enemy.enemyType}
+      className="card zoomable flex items-center justify-center w-full h-full bg-cover hover:scale-250 border-3 border-black"
       onClick={handleOnClick}
-    ></img>
+      style={{
+        backgroundImage: `url('${BASE_IMAGE_PATH}/cards/enemies${
+          flipped
+            ? "/backs/warlord.png"
+            : `/fronts/${enemyIngame.enemy.enemyType.toLowerCase()}.png`
+        }')`,
+      }}
+    >
+      <div className="transform scale-50 absolute -left-2.5 -top-2.5">
+        <Token type="kill" value={enemyIngame.currentEndurance} />
+      </div>
+    </div>
   );
 }

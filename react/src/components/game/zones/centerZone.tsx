@@ -65,7 +65,10 @@ export default function CenterZone(params: Params) {
         )}
       </span>
       <span className="grid grid-cols-6 gap-2 py-1">
-        <span> {/* Blank space (first col) */} </span>
+        <span className="invisible">
+          {/* Blank space (first col) */}
+          <PlaceholderCard />
+        </span>
         {/* Up to 3 horde enemies and up to 1 Warlord */}
         {enemiesFighting?.map((enemy) => (
           <EnemyCard
