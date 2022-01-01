@@ -21,7 +21,7 @@ import { User } from "../interfaces/User";
  * @author andrsdt
  */
 export default function Game() {
-  const REFRESH_RATE = 5000; // fetch lobby status every 1000 miliseconds
+  const REFRESH_RATE = 5000; // fetch lobby status every these miliseconds
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
 
   const history = useHistory();
