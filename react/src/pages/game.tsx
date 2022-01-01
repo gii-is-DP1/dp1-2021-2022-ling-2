@@ -138,10 +138,10 @@ export default function Game() {
     // If NOT my turn, do fetch the game
     const fetchTurn = async () => {
       try {
-        const response = await axios.get(`/turns/${gameId}`);
+        const response = await axios.get(`/games/${gameId}/turn`);
         const _turn = response.data;
         setTurn(_turn);
-        if (isPlayersTurn(_turn, loggedUser.username)) {
+        if (!isPlayersTurn(_turn, loggedUser.username)) {
           // Fetch the game if it's not my turn
           fetchGame();
         }
@@ -249,7 +249,7 @@ export default function Game() {
             </div>
             {/* Bottom player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
-              <p>{players[0] && players[0].user.username}</p>
+              <p>{players[0] && players[0].user.username + " (You)"}</p>
               <p>{players[1] && players[1].user.username}</p>
             </div>
           </div>
