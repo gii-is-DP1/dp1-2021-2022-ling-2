@@ -27,7 +27,15 @@ public class TokenUtils {
     private static final String SECRET = "VGhpcyBpcyBhIHNlY3JldCBrZXkgZm9yIG91ciBObyBUaW1lIGZvciBIZXJvZXMgZ2FtZS4gWW91IGtub3csIHRoZSBwb2ludCBpcyB0aGF0IHdlIGNhbiB1c2UgdGhpcyB0byB2YWxpZGF0ZSBpZiBhIHRva2VuIGhhcyBiZWVuIGlzc3VlZCBieSB1cyBvciBub3Q=";
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
+    // Used in testing
+    public static final String ADMIN_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImRhdGEiOnsidXNlcm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AbWFpbC5jb20iLCJlbmFibGVkIjpudWxsLCJsb2JieSI6bnVsbCwicGxheWVyIjpudWxsLCJjaGFyYWN0ZXIiOm51bGwsImF1dGhvcml0aWVzIjpbeyJpZCI6MSwiYXV0aG9yaXR5IjoiYWRtaW4iLCJuZXciOmZhbHNlfSx7ImlkIjoyLCJhdXRob3JpdHkiOiJ1c2VyIiwibmV3IjpmYWxzZX1dfSwiYXV0aG9yaXRpZXMiOlsiYWRtaW4iLCJ1c2VyIl0sImlhdCI6MTY0MTEyOTIyN30.srIccHN8asIR4vuHyWP6Uw2lp637nLuAvcG_QqHvSGFwiN8wJJ3uIME4BxE4zu1He554duCpXhyA8HTI1PkNcg";
+
+    // Used in testing
+    public static final String USER_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJVU0VSX1RPS0VOX1JFRkVSRU5DRSIsImRhdGEiOnsidXNlcm5hbWUiOiJVU0VSX1RPS0VOX1JFRkVSRU5DRSIsImVtYWlsIjoiVVNFUl9UT0tFTl9SRUZFUkVOQ0VAbWFpbC5jb20iLCJlbmFibGVkIjpudWxsLCJsb2JieSI6bnVsbCwicGxheWVyIjpudWxsLCJjaGFyYWN0ZXIiOm51bGwsImF1dGhvcml0aWVzIjpbeyJpZCI6MjEsImF1dGhvcml0eSI6InVzZXIiLCJuZXciOmZhbHNlfV19LCJhdXRob3JpdGllcyI6WyJ1c2VyIl0sImlhdCI6MTY0MTEzMjk1Nn0.GG5nzrAWc96SDgMnHhJ6V-U7rvBgey3Nf7QTrlaAY-NBkHbYSrC8cA9c_Kyt09vNwSBapNdCdOoy1DbTSbPzdg";
+
     /**
+     * Generates a JWT token for the given user.
+     * 
      * @author andrsdt
      * @param user that we want to generate the token for
      * @return String token containing user's information
