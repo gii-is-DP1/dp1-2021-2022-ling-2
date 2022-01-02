@@ -54,8 +54,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 																					// history
 				.antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAuthority("user") // Set character
 				// UNREGISTERED USER ENDPOINTS
-				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
-																				// credentials
+				.antMatchers(HttpMethod.POST, "/unregistered-users").permitAll() // Allow to request unregistered user
+																					// credentials
 				// LOBBY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAuthority("user") // Allow users to create new lobbies
