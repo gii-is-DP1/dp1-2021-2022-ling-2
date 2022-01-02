@@ -48,6 +48,7 @@ export default function AbilityCard(params: Params) {
 
   return (
     <img
+      draggable={false}
       className={`card transform-gpu
       border-2 border-opacity-0
       hover:-translate-y-6 

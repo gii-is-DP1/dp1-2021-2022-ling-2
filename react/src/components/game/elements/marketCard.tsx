@@ -38,6 +38,7 @@ export default function MarketCard(params: Params) {
     <>
       {card ? (
         <img
+          draggable={false}
           className="card zoomable hover:scale-250 hover:translate-y-20"
           src={`${BASE_IMAGE_PATH}/cards/items/${card.marketCard.marketCardTypeEnum.toLowerCase()}.png`}
           alt={card.marketCard.marketCardTypeEnum}
@@ -46,6 +47,7 @@ export default function MarketCard(params: Params) {
       ) : (
         count && (
           <div
+            draggable={false}
             className="card zoomable flex items-center justify-center h-full bg-contain bg-no-repeat hover:scale-250 hover:translate-y-20"
             style={{
               backgroundImage: `url('${CARD_BACK}')`,

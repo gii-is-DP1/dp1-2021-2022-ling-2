@@ -12,6 +12,10 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.scene.Scene;
 import org.springframework.ntfh.entity.scene.SceneService;
+import org.springframework.ntfh.entity.turn.concretestates.EnemyState;
+import org.springframework.ntfh.entity.turn.concretestates.MarketState;
+import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.entity.turn.concretestates.RefreshState;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,6 +38,22 @@ public class TurnService {
 
     @Autowired
     private AbilityCardIngameService abilityCardIngameService;
+
+    /************ STATES ************/
+
+    @Autowired
+    private MarketState marketState;
+
+    @Autowired
+    private PlayerState playerState;
+
+    @Autowired
+    private EnemyState enemyState;
+
+    @Autowired
+    private RefreshState refreshState;
+
+    /*******************************/
 
     @Transactional
     public Integer turnCount() {
@@ -69,7 +89,6 @@ public class TurnService {
     public void initializeFromGame(Game game) {
         Turn turn = new Turn();
         turn.setPlayer(game.getLeader());
-        turn.setStage(TurnStageEnum.PLAYER_ATTACK);
 
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
@@ -79,6 +98,10 @@ public class TurnService {
         }
 
         turn.setGame(game); // TODO needed?
+
+        // Initial state is the state where the player attacks
+        turn.setStateType(TurnStateType.PLAYER_STATE);
+
         enemyIngameService.initializeFromGame(game);
         marketCardIngameService.initializeFromGame(game);
         abilityCardIngameService.initializeFromGame(game);
@@ -88,4 +111,31 @@ public class TurnService {
         game.setCurrentTurn(turn);
     }
 
+    public TurnState getState(Turn turn) {
+        TurnStateType stateType = turn.getStateType();
+        if (stateType == TurnStateType.PLAYER_STATE) {
+            return playerState;
+        } else if (stateType == TurnStateType.MARKET_STATE) {
+            return marketState;
+        } else if (stateType == TurnStateType.ENEMY_STATE) {
+            return enemyState;
+        } else if (stateType == TurnStateType.REFRESH_STATE) {
+            return refreshState;
+        } else {
+            return null;
+        }
+    }
+
+    public void setNextState(Turn turn) {
+        TurnState state = getState(turn);
+        TurnStateType nextState = state.getNextState();
+        turn.setStateType(nextState);
+    }
+
+    // TODO method to create a new turn (not the intial one)
+    // In such a method, make sure to set the list of cards played by the player to
+    // an empty list
+
+    // TODO Ending of the turn, make sure to empty the list of cardPlayedInTurn from
+    // player (Avoid overlay of effects bettewwnn turns)
 }

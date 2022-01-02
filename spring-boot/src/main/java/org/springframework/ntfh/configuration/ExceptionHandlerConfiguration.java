@@ -80,6 +80,12 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
         return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Object> illegalStateExceptionHandler(HttpServletRequest request,
+            IllegalStateException ex) {
+        return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(MissingAttributeException.class)
     public ResponseEntity<Object> missingAttributeExceptionHandler(HttpServletRequest request,
             MaximumLobbyCapacityException ex) {

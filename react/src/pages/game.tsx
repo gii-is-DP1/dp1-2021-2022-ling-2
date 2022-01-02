@@ -21,10 +21,11 @@ import { User } from "../interfaces/User";
  * @author andrsdt
  */
 export default function Game() {
-  const REFRESH_RATE = 5000; // fetch lobby status every 1000 miliseconds
+  const REFRESH_RATE = 5000; // fetch lobby status every these miliseconds
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
 
   const history = useHistory();
+  const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
 
   const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
@@ -39,6 +40,9 @@ export default function Game() {
   const isSpectator = (_user: User | null) =>
     !loggedUser.username ||
     (_user && _user?.lobby?.game?.id !== parseInt(gameId));
+
+  const isPlayersTurn = (_turn: Turn | null, username: string) =>
+    _turn && _turn.player.user.username === username;
 
   const playersInRenderOrder = (_players: Player[]) => {
     const orderedPlayerList: Player[] = _players.sort(
@@ -66,6 +70,7 @@ export default function Game() {
       setGame(_game);
       const sortedPlayers = playersInRenderOrder(_game.players);
       setPlayers(sortedPlayers);
+      setTurn(_game.currentTurn);
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
@@ -76,6 +81,20 @@ export default function Game() {
     try {
       const response = await axios.get(`/users/${loggedUser.username}`);
       setUser(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const handleTurnNextState = async () => {
+    try {
+      const response = await axios.post(
+        `/games/${gameId}/turn/next`,
+        null, // No body
+        { headers: { Authorization: "Bearer " + userToken } }
+      );
+      const _game = response.data;
+      setGame(_game);
     } catch (error: any) {
       toast.error(error?.message);
     }
@@ -122,7 +141,7 @@ export default function Game() {
         const response = await axios.get(`/games/${gameId}/turn`);
         const _turn = response.data;
         setTurn(_turn);
-        if (_turn?.player?.user?.username !== loggedUser.username) {
+        if (!isPlayersTurn(_turn, loggedUser.username)) {
           // Fetch the game if it's not my turn
           fetchGame();
         }
@@ -148,6 +167,20 @@ export default function Game() {
             )}
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
+            {/* TODO Positioning of button */}
+            {/* TODO Showing only to current player */}
+            {isPlayersTurn(turn, loggedUser.username) && (
+              <div className="fixed p-8 space-y-2">
+                <div className="btn-ntfh">
+                  <p className="text-2xl text-gradient-ntfh">
+                    {game.currentTurn.stateType}
+                  </p>
+                </div>
+                <button className="btn-ntfh" onClick={handleTurnNextState}>
+                  <p className="text-2xl text-gradient-ntfh">Next State</p>
+                </button>
+              </div>
+            )}
             {/* Top player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
               <p>{players[3] && players[3].user.username}</p>
@@ -156,8 +189,14 @@ export default function Game() {
             {/* Game board (felt part)*/}
             <div className="flex-1 bg-felt bg-repeat-round rounded-3xl">
               <div className="h-full p-2 grid grid-cols-5 gap-4">
-                <div className="row-span-2">
-                  {players[2] && (
+                <div
+                  className={`row-span-2 ${
+                    isPlayersTurn(turn, players[3]?.user?.username)
+                      ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
+                      : ""
+                  }`}
+                >
+                  {players[3] && (
                     <PlayerZoneVertical player={players[3]} rotation={90} />
                   )}
                   {/* Top left */}
@@ -168,8 +207,14 @@ export default function Game() {
                     setSelectedAbilityCard={setSelectedAbilityCard}
                   />
                 </div>
-                <div className="row-span-2">
-                  {players[3] && (
+                <div
+                  className={`row-span-2 ${
+                    isPlayersTurn(turn, players[2]?.user?.username)
+                      ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
+                      : ""
+                  }`}
+                >
+                  {players[2] && (
                     <PlayerZoneVertical
                       player={players[2]}
                       rotation={90}
@@ -178,12 +223,24 @@ export default function Game() {
                   )}
                   {/* Top right */}
                 </div>
-                <div className="col-span-2 self-end max-w-xs 2xl:max-w-sm">
+                <div
+                  className={`col-span-2 self-end max-w-xs 2xl:max-w-sm ${
+                    isPlayersTurn(turn, players[0]?.user?.username)
+                      ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
+                      : ""
+                  }`}
+                >
                   {players[0] && <PlayerZoneHorizontal player={players[0]} />}
                   {/* Bottom left (My hand) */}
                 </div>
                 <div className="self-end">{/* Blank space */}</div>
-                <div className="col-span-2 self-end justify-self-end max-w-xs 2xl:max-w-sm">
+                <div
+                  className={`col-span-2 self-end justify-self-end max-w-xs 2xl:max-w-sm ${
+                    isPlayersTurn(turn, players[1]?.user?.username)
+                      ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
+                      : ""
+                  }`}
+                >
                   {players[1] && (
                     <PlayerZoneHorizontal player={players[1]} reverse />
                   )}
@@ -193,7 +250,7 @@ export default function Game() {
             </div>
             {/* Bottom player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
-              <p>{players[0] && players[0].user.username}</p>
+              <p>{players[0] && players[0].user.username + " (You)"}</p>
               <p>{players[1] && players[1].user.username}</p>
             </div>
           </div>
