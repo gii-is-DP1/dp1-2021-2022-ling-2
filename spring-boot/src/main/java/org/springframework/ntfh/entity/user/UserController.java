@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -45,9 +44,8 @@ public class UserController {
 	private GameHistoryRepository gameHistoryRepository;
 
 	@GetMapping
-	public ResponseEntity<Iterable<User>> getAll(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
-		Page<User> usersPage = this.userService.findAllPage(pageable);
-		List<User> users = usersPage.getContent();
+	public ResponseEntity<Iterable<User>> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+		List<User> users = this.userService.findPage(pageable);
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
