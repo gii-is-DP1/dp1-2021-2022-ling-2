@@ -1,9 +1,7 @@
 package org.springframework.ntfh.entity.user;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ntfh.entity.game.history.GameHistory;
 import org.springframework.ntfh.entity.game.history.GameHistoryRepository;
-import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -85,11 +82,11 @@ public class UserController {
 			@RequestHeader("Authorization") String token) {
 		User updatedUser = userService.updateUser(user, token);
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
-		Boolean editingAdminProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
+		Boolean editingOwnProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
 		Map<String, String> returnBody = null;
 
 		// Don't return a new token if an admin is editing another user's profile
-		if (!sentByAdmin || editingAdminProfile) {
+		if (!sentByAdmin || editingOwnProfile) {
 			String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
 			returnBody = Map.of("authorization", tokenWithUpdatedData);
 		}
