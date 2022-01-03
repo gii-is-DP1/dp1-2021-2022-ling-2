@@ -1,6 +1,7 @@
 package org.springframework.ntfh.lobby;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Set;
 
@@ -13,9 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyRepository;
 import org.springframework.ntfh.entity.lobby.LobbyService;
+import org.springframework.ntfh.entity.turn.concretestates.EnemyState;
+import org.springframework.ntfh.entity.turn.concretestates.MarketState;
+import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.entity.turn.concretestates.RefreshState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
@@ -23,7 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import(BCryptPasswordEncoder.class)
+@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class, EnemyState.class, RefreshState.class })
 public class LobbyServiceTest {
 
     @Autowired
@@ -55,8 +61,11 @@ public class LobbyServiceTest {
 
     @AfterEach
     public void teardown() {
-        if (lobbyService.findLobbyById(lobbyTester.getId()).isPresent())
-            lobbyService.deleteLobby(lobbyTester);
+        try {
+            lobbyRepository.delete(lobbyTester);
+        } catch (Exception e) {
+            // do nothing
+        }
     }
 
     @Test
@@ -73,7 +82,7 @@ public class LobbyServiceTest {
 
     @Test
     public void testFindById() {
-        Lobby tester = this.lobbyService.findLobbyById(1).orElse(null);
+        Lobby tester = this.lobbyService.findById(1);
         assertEquals("andres with pablo", tester.getName());
         assertEquals(1, tester.getGame().getId());
         assertEquals(true, tester.getHasScenes());
@@ -99,8 +108,9 @@ public class LobbyServiceTest {
 
     @Test
     public void testDeleteLobby() {
+        Integer lobbyId = lobbyTester.getId();
         lobbyService.deleteLobby(lobbyTester);
-        assertEquals(null, lobbyService.findLobbyById(lobbyTester.getId()).orElse(null));
+        assertThrows(DataAccessException.class, () -> lobbyService.findById(lobbyId));
     }
 
     @Test
@@ -110,7 +120,7 @@ public class LobbyServiceTest {
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
-        assertEquals(true, lobbyService.findLobbyById(lobbyTesterId).get().getUsers().contains(requester));
+        assertEquals(true, lobbyService.findById(lobbyTesterId).getUsers().contains(requester));
     }
 
     @Test

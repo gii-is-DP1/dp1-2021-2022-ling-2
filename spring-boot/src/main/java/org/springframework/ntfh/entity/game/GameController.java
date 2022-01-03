@@ -63,12 +63,6 @@ public class GameController {
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
-    @GetMapping("/{gameId}/turn")
-    public ResponseEntity<Turn> getGameTurn(@PathVariable("gameId") Integer gameId) {
-        Turn turn = gameService.getCurrentTurnByGameId(gameId);
-        return new ResponseEntity<>(turn, HttpStatus.OK);
-    }
-
     /**
      * This endpoint will receive the petitions of a player to play a card
      * 
@@ -78,9 +72,10 @@ public class GameController {
      */
     @PostMapping("/{gameId}/ability-cards/{abilityCardIngameId}")
     public ResponseEntity<Game> playCard(@PathVariable("gameId") Integer gameId,
-            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body) {
+            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body,
+            @RequestHeader("Authorization") String token) {
         Integer enemyId = body.get("enemyId");
-        gameService.playCard(abilityCardIngameId, enemyId);
+        gameService.playCard(abilityCardIngameId, enemyId, token);
         Game game = gameService.findGameById(gameId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
@@ -90,6 +85,20 @@ public class GameController {
             @PathVariable("marketCardIngameId") Integer marketCardIngameId,
             @RequestHeader("Authorization") String token) {
         gameService.buyMarketCard(marketCardIngameId, token);
+        Game game = gameService.findGameById(gameId);
+        return new ResponseEntity<>(game, HttpStatus.OK);
+    }
+
+    @GetMapping("/{gameId}/turn")
+    public ResponseEntity<Turn> getTurn(@PathVariable("gameId") Integer gameId) {
+        Turn turn = gameService.getCurrentTurnByGameId(gameId);
+        return new ResponseEntity<>(turn, HttpStatus.OK);
+    }
+
+    @PostMapping("/{gameId}/turn/next")
+    public ResponseEntity<Game> nextTurn(@PathVariable("gameId") Integer gameId) {
+        Turn turn = gameService.getCurrentTurnByGameId(gameId);
+        gameService.setNextTurnState(turn);
         Game game = gameService.findGameById(gameId);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }

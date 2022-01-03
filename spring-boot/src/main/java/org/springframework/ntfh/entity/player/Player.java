@@ -12,7 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.ntfh.entity.character.Character;
@@ -67,6 +66,9 @@ public class Player extends BaseEntity {
 
     @OneToMany
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
+
+    @OneToMany
+    private List<AbilityCardIngame> playedCardsInTurn = new ArrayList<>();
 
     @Transient
     public CharacterTypeEnum getCharacterTypeEnum() {

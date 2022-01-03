@@ -10,11 +10,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.achievement.Achievement;
 import org.springframework.ntfh.entity.achievement.AchievementService;
+import org.springframework.ntfh.entity.turn.concretestates.EnemyState;
+import org.springframework.ntfh.entity.turn.concretestates.MarketState;
+import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.entity.turn.concretestates.RefreshState;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import(BCryptPasswordEncoder.class)
+@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class, EnemyState.class, RefreshState.class })
 public class AchievementServiceTest {
 
     @Autowired

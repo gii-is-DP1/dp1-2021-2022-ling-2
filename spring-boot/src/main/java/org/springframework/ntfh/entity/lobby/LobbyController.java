@@ -117,11 +117,8 @@ public class LobbyController {
     public ResponseEntity<Lobby> removeUserFromLobby(@PathVariable("lobbyId") Integer lobbyId,
             @PathVariable("username") String username, @RequestHeader("Authorization") String token) {
 
-        Optional<Lobby> lobbyOptional = lobbyService.findLobbyById(lobbyId);
-        if (!lobbyOptional.isPresent())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        Lobby lobby = lobbyOptional.get();
+        // TODO move the logic and error handling to the service
+        Lobby lobby = lobbyService.findById(lobbyId);
 
         String usernameFromToken = TokenUtils.usernameFromToken(token);
         String usernameFromLobbyHost = lobby.getHost().getUsername();

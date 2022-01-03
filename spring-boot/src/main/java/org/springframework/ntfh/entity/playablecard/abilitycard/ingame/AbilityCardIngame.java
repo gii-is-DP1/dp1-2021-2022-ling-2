@@ -3,7 +3,6 @@ package org.springframework.ntfh.entity.playablecard.abilitycard.ingame;
 import java.beans.Transient;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 

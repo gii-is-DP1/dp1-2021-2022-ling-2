@@ -343,7 +343,7 @@ export default function Lobby() {
                 </span>
               </form>
 
-              {isHost() && (
+              {isHost() && lobby.users.length > 1 && (
                 <button
                   disabled={lobby.users.length < 2}
                   className="btn-ntfh ml-2 mt-6"
