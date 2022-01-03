@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -110,5 +111,16 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(POST_JSON))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void update_by_admin_success() throws Exception {
+        final String PUT_JSON = "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"testing\"}";
+        mockMvc.perform(put("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("authorization",
+                        "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .content(PUT_JSON))
+                .andExpect(status().isOk());
     }
 }
