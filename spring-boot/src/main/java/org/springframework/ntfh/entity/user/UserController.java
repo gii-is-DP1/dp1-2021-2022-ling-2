@@ -36,9 +36,6 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	private AuthoritiesService authoritiesService;
-
-	@Autowired
 	private GameHistoryRepository gameHistoryRepository;
 
 	@GetMapping
@@ -112,6 +109,13 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@PutMapping("{userId}/ban")
+	public ResponseEntity<User> toggleBanUser(@PathVariable("userId") String username,
+			@RequestHeader("Authorization") String token) {
+		userService.toggleBanUser(username, token);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	// TODO make this work
 	// TODO use service instead of repository
 	@GetMapping("{userId}/history")
@@ -120,7 +124,7 @@ public class UserController {
 		return new ResponseEntity<>(gameHistory, HttpStatus.OK);
 	}
 
-	/** 
+	/**
 	 * @author alegestor
 	 */
 	@DeleteMapping("{username}")

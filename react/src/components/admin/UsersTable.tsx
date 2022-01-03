@@ -40,13 +40,8 @@ export default function UsersTable() {
     }
   };
   const handleToggleBan = async (_user: User) => {
-    const payload = {
-      username: _user.username,
-      email: _user.email,
-      enabled: !_user.enabled,
-    };
     try {
-      await axios.put("/users", payload, {
+      await axios.put(`/users/${_user.username}/ban`, null, {
         headers: { Authorization: "Bearer " + userToken },
       });
       fetchUsers();

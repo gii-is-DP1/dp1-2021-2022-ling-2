@@ -121,11 +121,6 @@ public class UserService {
 	@Transactional
 	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
 			NonMatchingTokenException, IllegalArgumentException {
-
-		if (!user.getEnabled()) {
-			return this.banUser(user);
-		}
-
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
 		if (!sentBySameUser && !sentByAdmin)
@@ -177,9 +172,9 @@ public class UserService {
 	}
 
 	@Transactional
-	public User banUser(User user) throws DataAccessException {
-		User userInDB = this.findUser(user.getUsername());
-		userInDB.setEnabled(user.getEnabled());
+	public User toggleBanUser(String username, String token) throws DataAccessException {
+		User userInDB = this.findUser(username);
+		userInDB.setEnabled(!userInDB.getEnabled());
 		return userInDB;
 	}
 
