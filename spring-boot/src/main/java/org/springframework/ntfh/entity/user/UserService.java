@@ -147,6 +147,9 @@ public class UserService {
 		if (user.getEnabled() == null) {
 			user.setEnabled(userInDatabase.getEnabled());
 		}
+		if (user.getAuthorities() == null) {
+			user.setAuthorities(userInDatabase.getAuthorities());
+		}
 		return userRepository.save(user);
 	}
 
@@ -187,19 +190,14 @@ public class UserService {
 
 	@Transactional
 	public User banUser(User user) throws DataAccessException {
-		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
-		if (!foundUserOptional.isPresent()) {
-			throw new DataAccessException("User not found") {
-			};
-		}
-		User userInDB = foundUserOptional.get();
-		userInDB.setEnabled(user.getEnabled());
+		User user2ban = this.findUser(user.getUsername());
+		user2ban.setEnabled(user.getEnabled());
 		return user;
 	}
 
 	@Transactional
 	public void deleteUser(User user) {
-		this.userRepository.deleteById(user.getUsername());
+		this.userRepository.deleteById(user.getUsername());		
 	}
 
 }

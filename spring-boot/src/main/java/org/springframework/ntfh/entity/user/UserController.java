@@ -82,22 +82,13 @@ public class UserController {
 	@PutMapping()
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
-
-		if (user.getEnabled() != null) {
-			userService.banUser(user);
-		} else {
-			userService.updateUser(user, token);
-		}
+		User updatedUser = this.userService.updateUser(user, token);
+		String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
-		Boolean editingAdminProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		if (sentByAdmin && !editingAdminProfile)
-			// Don't return a new token if an admin is editing another user's profile
-			return new ResponseEntity<>(HttpStatus.OK);
-
-		Set<Authorities> authorities = authoritiesService.getAuthorities(user);
-		user.setAuthorities(authorities);
-		String tokenWithUpdatedData = TokenUtils.generateJWTToken(user);
-		return new ResponseEntity<>(Map.of("authorization", tokenWithUpdatedData), HttpStatus.OK);
+		Boolean editingAdminProfile = TokenUtils.usernameFromToken(token).equals(updatedUser.getUsername());
+		// Don't return a new token if an admin is editing another user's profile
+		if (sentByAdmin && !editingAdminProfile) return new ResponseEntity<>(HttpStatus.OK);
+		else return new ResponseEntity<>(Map.of("authorization", tokenWithUpdatedData), HttpStatus.OK);
 	}
 
 	@PostMapping("register")
@@ -134,12 +125,8 @@ public class UserController {
 	public ResponseEntity<User> deleteUser(@PathVariable("username") String username,
 			@RequestHeader("Authorization") String token) {
 		User user = userService.findUser(username);
-		if(user==null) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		} else {
-			userService.deleteUser(user);
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
+		userService.deleteUser(user);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
