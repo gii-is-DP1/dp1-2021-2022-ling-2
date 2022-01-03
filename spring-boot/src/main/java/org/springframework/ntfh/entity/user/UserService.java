@@ -111,16 +111,21 @@ public class UserService {
 	/**
 	 * Update a user's information
 	 * 
+	 * @author andrsdt
 	 * @param user
 	 * @return
 	 * @throws DataAccessException
 	 * @throws NonMatchingTokenException
 	 * @throws DataIntegrityViolationException
-	 * @author andrsdt
 	 */
 	@Transactional
 	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
 			NonMatchingTokenException, IllegalArgumentException {
+
+		if (user.getEnabled() != null) {
+			return this.banUser(user);
+		}
+
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
 		if (!sentBySameUser && !sentByAdmin)
@@ -134,34 +139,25 @@ public class UserService {
 
 		// Before updating, make sure there are no null values. If the user didn't send
 		// them in the form, they must stay the same as they were in the database.
-		User userInDatabase = this.findUser(user.getUsername());
-		if (user.getPassword() == null || user.getPassword().equals("null")) {
-			user.setPassword(userInDatabase.getPassword());
-		} else {
+
+		User userInDB = this.findUser(user.getUsername());
+		if (user.getEmail() != null) {
+			// If there is a new email, set it on the database
+			userInDB.setEmail(user.getEmail());
+		}
+		if (user.getPassword() != null) {
 			// If there is a new password input, encrypt it using bcrypt
 			String encodedParamPassword = passwordEncoder.encode(user.getPassword());
-			user.setPassword(encodedParamPassword);
+			userInDB.setPassword(encodedParamPassword);
 		}
-		if (user.getEmail() == null)
-			user.setEmail(userInDatabase.getEmail());
-		if (user.getEnabled() == null) {
-			user.setEnabled(userInDatabase.getEnabled());
-		}
-		return userRepository.save(user);
+		return userInDB;
 	}
 
 	@Transactional
 	public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
-		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
-		if (!foundUserOptional.isPresent()) {
-			// TODO move this validation to the findUser method in the service?
-			throw new DataAccessException("User not found") {
-			};
-		}
-
-		User userInDB = foundUserOptional.get();
+		User userInDB = this.findUser(user.getUsername());
 		if (!userInDB.getEnabled()) {
-			throw new BannedUserException("This user has been banned") {
+			throw new BannedUserException("You have been banned") {
 			};
 		}
 
@@ -174,27 +170,17 @@ public class UserService {
 
 	@Transactional
 	public User setCharacter(String username, Character character) throws DataAccessException {
-		Optional<User> foundUserOptional = userRepository.findById(username);
-		if (!foundUserOptional.isPresent()) {
-			throw new DataAccessException("User not found") {
-			};
-		}
-		User user = foundUserOptional.get();
-		user.setCharacter(character);
-		return user;
+		User userInDB = this.findUser(username);
+		userInDB.setCharacter(character);
+		return userInDB;
 
 	}
 
 	@Transactional
 	public User banUser(User user) throws DataAccessException {
-		Optional<User> foundUserOptional = userRepository.findById(user.getUsername());
-		if (!foundUserOptional.isPresent()) {
-			throw new DataAccessException("User not found") {
-			};
-		}
-		User userInDB = foundUserOptional.get();
+		User userInDB = this.findUser(user.getUsername());
 		userInDB.setEnabled(user.getEnabled());
-		return user;
+		return userInDB;
 	}
 
 	@Transactional

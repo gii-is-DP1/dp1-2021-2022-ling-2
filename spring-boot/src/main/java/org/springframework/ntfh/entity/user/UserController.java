@@ -1,5 +1,6 @@
 package org.springframework.ntfh.entity.user;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,22 +83,18 @@ public class UserController {
 	@PutMapping()
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
-
-		if (user.getEnabled() != null) {
-			userService.banUser(user);
-		} else {
-			userService.updateUser(user, token);
-		}
+		User updatedUser = userService.updateUser(user, token);
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean editingAdminProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		if (sentByAdmin && !editingAdminProfile)
-			// Don't return a new token if an admin is editing another user's profile
-			return new ResponseEntity<>(HttpStatus.OK);
+		Map<String, String> returnBody = null;
 
-		Set<Authorities> authorities = authoritiesService.getAuthorities(user);
-		user.setAuthorities(authorities);
-		String tokenWithUpdatedData = TokenUtils.generateJWTToken(user);
-		return new ResponseEntity<>(Map.of("authorization", tokenWithUpdatedData), HttpStatus.OK);
+		// Don't return a new token if an admin is editing another user's profile
+		if (!sentByAdmin || editingAdminProfile) {
+			String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
+			returnBody = Map.of("authorization", tokenWithUpdatedData);
+		}
+		return new ResponseEntity<>(returnBody, HttpStatus.OK);
+
 	}
 
 	@PostMapping("register")
