@@ -15,8 +15,7 @@ public class RecoverCommand implements Command{
 
     @Override
     public void execute() {
-        Integer i = 0;
-        for(i=0; i<numRecovered; i++){
+        for(int i=0; i<numRecovered; i++){
             List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
             AbilityCardIngame recoveredCard = listDiscardPile.get(0);
             listDiscardPile.remove(0);

@@ -15,8 +15,7 @@ public class DiscardCommand implements Command{
 
     @Override
     public void execute() {
-        Integer i = 0;
-        for(i=0; i<numDiscards; i++){
+        for(int i=0; i<numDiscards; i++){
             List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
             AbilityCardIngame discardedCard = listAbilityPile.get(0);
             listAbilityPile.remove(0);

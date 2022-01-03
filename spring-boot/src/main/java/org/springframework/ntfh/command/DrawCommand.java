@@ -15,8 +15,7 @@ public class DrawCommand implements Command{
 
     @Override
     public void execute() {
-        Integer i = 0;
-        for(i=0; i<amount; i++){
+        for(int i=0; i<amount; i++){
             List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
             AbilityCardIngame drawnCard = listAbilityPile.get(0);
             listAbilityPile.remove(0);
@@ -24,7 +23,7 @@ public class DrawCommand implements Command{
             listHand.add(drawnCard);
             
             playerFrom.setAbilityPile(listAbilityPile);
-            playerFrom.setDiscardPile(listHand);
+            playerFrom.setHand(listHand);
         }
     }
     
