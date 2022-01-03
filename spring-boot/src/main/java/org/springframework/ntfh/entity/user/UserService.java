@@ -185,7 +185,7 @@ public class UserService {
 
 	@Transactional
 	public void deleteUser(User user) {
-		this.userRepository.deleteById(user.getUsername());
+		this.userRepository.deleteById(user.getUsername());		
 	}
 
 }
