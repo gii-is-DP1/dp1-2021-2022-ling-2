@@ -120,6 +120,7 @@ public class EnemyIngameService {
         EnemyIngame enemyIngame = new EnemyIngame();
         enemyIngame.setEnemy(enemy);
         enemyIngame.setCurrentEndurance(enemy.getEndurance());
+        enemyIngame.setRestrained(false);
         return this.save(enemyIngame);
     }
 }

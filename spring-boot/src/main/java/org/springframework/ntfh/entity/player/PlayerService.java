@@ -73,6 +73,7 @@ public class PlayerService {
         player.setKills(0);
         player.setGold(0);
         player.setWounds(0);
+        player.setGuard(0);
         player.setTurnOrder(turnOrder);
 
         if (user.getCharacter() == null) {

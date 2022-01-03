@@ -47,6 +47,9 @@ public class Player extends BaseEntity {
     private Integer wounds;
 
     @NotNull
+    private Integer guard;
+
+    @NotNull
     private Integer turnOrder; // Order in which the player will take their turn. The leader will be 0 (first)
 
     // Should not change when user's character is changed. Once the

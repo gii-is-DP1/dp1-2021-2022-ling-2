@@ -255,8 +255,8 @@ INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players,
 UPDATE users SET lobby = 1 WHERE username = 'pablo';
 UPDATE users SET lobby = 1 WHERE username = 'andres';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (1, 0, 0, 0, 0, 8, 0);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (2, 0, 0, 0, 0, 1, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (1, 0, 0, 0, 0, 0, 8, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (2, 0, 0, 0, 0, 0, 1, 1);
 UPDATE users SET player = 1 WHERE username='pablo';
 UPDATE users SET player = 2 WHERE username='andres';
 
@@ -276,10 +276,10 @@ UPDATE users SET lobby = 2 WHERE username = 'frodo';
 UPDATE users SET lobby = 2 WHERE username = 'legolas';
 UPDATE users SET lobby = 2 WHERE username = 'aragorn';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (3, 0, 0, 0, 0, 1, 1);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (4, 0 ,0, 0, 0 ,3, 0);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (5, 0, 0, 0, 0, 5, 2);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (6, 0 ,0, 0, 0 ,7, 3);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (3, 0, 0, 0, 0, 0, 1, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (4, 0 ,0, 0, 0, 0, 3, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (5, 0, 0, 0, 0, 0, 5, 2);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (6, 0 ,0, 0, 0, 0, 7, 3);
 UPDATE users SET player = 3 WHERE username='frodo';
 UPDATE users SET player = 4 WHERE username='gandalf';
 UPDATE users SET player = 5 WHERE username='legolas';
@@ -302,8 +302,8 @@ INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players
 UPDATE users SET lobby = 3 WHERE username = 'stockie';
 UPDATE users SET lobby = 3 WHERE username = 'alejandro';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (7, 0, 0, 0, 0, 2, 1);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (8, 0 ,0, 0, 0 ,4, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (7, 0, 0, 0, 0, 0, 2, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (8, 0 ,0, 0, 0, 0, 4, 0);
 UPDATE users SET player = 7 WHERE username = 'stockie';
 UPDATE users SET player = 8 WHERE username = 'alejandro';
 

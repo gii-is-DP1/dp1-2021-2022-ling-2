@@ -6,6 +6,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.github.javafaker.Bool;
+
 import org.springframework.ntfh.entity.model.BaseEntity;
 
 import lombok.Getter;
