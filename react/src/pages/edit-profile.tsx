@@ -57,8 +57,9 @@ export default function EditProfile() {
         headers: { Authorization: "Bearer " + userToken },
       });
 
-      // Issue a new token with the updated user data
-      setUserToken(response.data.authorization);
+      // Issue a new token with the updated user data, in case the one updating the profile is the own user
+      const newToken = response.data.authorization;
+      if (newToken) setUserToken(newToken);
       toast.success("Profile edited successfully");
       sendToProfile();
     } catch (error: any) {
