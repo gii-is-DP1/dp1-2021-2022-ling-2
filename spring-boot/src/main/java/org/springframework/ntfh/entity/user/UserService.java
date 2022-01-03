@@ -122,7 +122,7 @@ public class UserService {
 	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
 			NonMatchingTokenException, IllegalArgumentException {
 
-		if (user.getEnabled() != null) {
+		if (!user.getEnabled()) {
 			return this.banUser(user);
 		}
 
@@ -185,7 +185,7 @@ public class UserService {
 
 	@Transactional
 	public void deleteUser(User user) {
-		this.userRepository.deleteById(user.getUsername());		
+		this.userRepository.deleteById(user.getUsername());
 	}
 
 }
