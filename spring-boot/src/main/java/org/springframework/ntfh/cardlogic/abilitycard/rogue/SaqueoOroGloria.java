@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SaqueoOroGloria {
-    public void execute(Player playerFrom, Game game){
+    public void execute(Player playerFrom){
+        Game game = playerFrom.getGame();
         List<EnemyIngame> listEnemiesFighting = game.getEnemiesFighting();
         Integer nEnemies = listEnemiesFighting.size();
         new GetGoldCommand(nEnemies, playerFrom).execute();

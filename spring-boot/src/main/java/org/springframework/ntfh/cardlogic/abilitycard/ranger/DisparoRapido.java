@@ -9,6 +9,6 @@ public class DisparoRapido {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
         new DealDamageCommand(1, targetedEnemy).execute();
         new DrawCommand(1, playerFrom).execute();
-        //TODO mirar si la carta robada es un disparo rápido, if(n=DisparoRapido){DisparoRapido().execute()}
+        //TODO mirar si la carta robada es un disparo rápido, if(n=DisparoRapido){DisparoRapido().execute() else discard}
     }
 }

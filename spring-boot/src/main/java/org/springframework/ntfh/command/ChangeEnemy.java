@@ -17,15 +17,16 @@ public class ChangeEnemy implements Command{
 
     @Override
     public void execute() {
-        List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
         List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
-        EnemyIngame lastEnemy = enemiesInPile.get(-1);
-        enemiesFighting.remove(targetedEnemy);
-        enemiesFighting.add(lastEnemy);
-        enemiesInPile.remove(lastEnemy);
-        enemiesInPile.add(targetedEnemy);
-        game.setEnemiesFighting(enemiesFighting);
-        game.setEnemiesInPile(enemiesInPile);
+        if(enemiesInPile.size()>=1){
+            List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
+            EnemyIngame lastEnemy = enemiesInPile.get(-1);
+            enemiesFighting.remove(targetedEnemy);
+            enemiesFighting.add(lastEnemy);
+            enemiesInPile.remove(lastEnemy);
+            enemiesInPile.add(targetedEnemy);
+            game.setEnemiesFighting(enemiesFighting);
+            game.setEnemiesInPile(enemiesInPile);
+        }
     }
-    
 }

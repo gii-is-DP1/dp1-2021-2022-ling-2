@@ -17,13 +17,17 @@ public class RecoverCommand implements Command{
     public void execute() {
         for(int i=0; i<numRecovered; i++){
             List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
-            AbilityCardIngame recoveredCard = listDiscardPile.get(0);
-            listDiscardPile.remove(0);
-            List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
-            listAbilityPile.add(recoveredCard);
-            
-            playerFrom.setAbilityPile(listAbilityPile);
-            playerFrom.setDiscardPile(listDiscardPile);
+            if(listDiscardPile.size()>=1){
+                AbilityCardIngame recoveredCard = listDiscardPile.get(0);
+                listDiscardPile.remove(0);
+                List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
+                listAbilityPile.add(recoveredCard);
+                
+                playerFrom.setAbilityPile(listAbilityPile);
+                playerFrom.setDiscardPile(listDiscardPile);
+            } else {
+                break;
+            }
         }
     }
     

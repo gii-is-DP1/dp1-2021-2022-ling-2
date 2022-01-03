@@ -8,9 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Supervivencia {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy, Game game){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+        Game game = playerFrom.getGame();
         new ChangeEnemy(playerFrom, targetedEnemy, game).execute();
     }
 }
-
-//a

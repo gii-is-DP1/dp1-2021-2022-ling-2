@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class VozDeAliento {
-    public void execute(Player playerFrom, Game game){
+    public void execute(Player playerFrom){
+        Game game = playerFrom.getGame();
         new DrawCommand(1, playerFrom).execute();
         new GetGloryCommand(1, playerFrom).execute();
         List<Player> players = game.getPlayers();

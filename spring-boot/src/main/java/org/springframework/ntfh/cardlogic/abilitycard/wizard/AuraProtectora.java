@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuraProtectora {
-    public void execute(Player playerFrom, Game game){
+    public void execute(Player playerFrom){
+        Game game = playerFrom.getGame();
         Integer numDiscards = game.getEnemiesFighting().size();
         new DiscardCommand(numDiscards, playerFrom).execute();
         List<EnemyIngame> targetList = game.getEnemiesFighting();

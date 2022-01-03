@@ -7,7 +7,7 @@ import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Engañar {
+public class Enganar {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
         if(playerFrom.getGold()>=2){
             new GetGoldCommand(-2, playerFrom).execute();

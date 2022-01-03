@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TorrenteDeLuz {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy, Game game){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+        Game game = playerFrom.getGame();
         new DealDamageCommand(2, targetedEnemy).execute();
         new GetGloryCommand(1, playerFrom).execute();
         List<Player> targets = game.getPlayers();

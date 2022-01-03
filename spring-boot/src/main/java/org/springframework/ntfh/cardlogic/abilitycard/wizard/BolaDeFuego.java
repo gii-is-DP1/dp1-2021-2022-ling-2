@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BolaDeFuego {
-    public void execute(Player playerFrom, Game game){
+    public void execute(Player playerFrom){
+        Game game = playerFrom.getGame();
         List<EnemyIngame> targetList = game.getEnemiesFighting();
         for(EnemyIngame target:targetList){
             new DealDamageCommand(2, target).execute();
