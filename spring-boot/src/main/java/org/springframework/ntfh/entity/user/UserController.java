@@ -74,7 +74,7 @@ public class UserController {
 	 * @author andrsdt
 	 * 
 	 */
-	@PutMapping()
+	@PutMapping
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 		User updatedUser = userService.updateUser(user, token);
@@ -83,7 +83,7 @@ public class UserController {
 		Map<String, String> returnBody = null;
 
 		// Don't return a new token if an admin is editing another user's profile
-		if (!sentByAdmin || editingOwnProfile) {
+		if (updatedUser != null && (!sentByAdmin || editingOwnProfile)) {
 			String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
 			returnBody = Map.of("authorization", tokenWithUpdatedData);
 		}
