@@ -25,7 +25,7 @@ export default function Home() {
 
   async function fetchUnregisteredUserData() {
     try {
-      const response = await axios.get("/unregistered-users");
+      const response = await axios.post("/unregistered-users");
       setUnregisteredUser(response.data);
     } catch (error) {}
   }

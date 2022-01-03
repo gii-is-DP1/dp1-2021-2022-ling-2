@@ -15,6 +15,7 @@
 */
 package org.springframework.ntfh.entity.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,8 +88,9 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<User> findAllPage(Pageable pageable) {
-		return userRepository.findAllPage(pageable);
+	public List<User> findPage(Pageable pageable) {
+		Page<User> page = userRepository.findAllPage(pageable);
+		return page.getContent();
 	}
 
 	@Transactional(readOnly = true)

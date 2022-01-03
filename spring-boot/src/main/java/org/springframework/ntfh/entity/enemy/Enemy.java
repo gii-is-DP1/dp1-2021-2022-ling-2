@@ -22,10 +22,10 @@ import lombok.Getter;
 public class Enemy extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
-    private EnemyCategoryType enemyCategoryType;
+    private EnemyType enemyType;
 
     @Enumerated(EnumType.STRING)
-    private EnemyType enemyType;
+    private EnemyCategoryType enemyCategoryType;
 
     @Enumerated(EnumType.STRING)
     private EnemyModifierType enemyModifierType;

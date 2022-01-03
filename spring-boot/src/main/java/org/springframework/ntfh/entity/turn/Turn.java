@@ -40,5 +40,5 @@ public class Turn extends BaseEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private TurnStageEnum stage;
+    private TurnStateType stateType;
 }
