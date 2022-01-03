@@ -64,8 +64,6 @@ public class Player extends BaseEntity {
     @OneToMany
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
-    @OneToMany
-    private List<AbilityCardIngame> playedCardsInTurn = new ArrayList<>();
 
     @Transient
     public CharacterTypeEnum getCharacterTypeEnum() {
