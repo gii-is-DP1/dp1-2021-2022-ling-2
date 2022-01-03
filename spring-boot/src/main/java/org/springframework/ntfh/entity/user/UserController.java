@@ -91,7 +91,6 @@ public class UserController {
 			returnBody = Map.of("authorization", tokenWithUpdatedData);
 		}
 		return new ResponseEntity<>(returnBody, HttpStatus.OK);
-
 	}
 
 	@PostMapping("register")
@@ -121,11 +120,15 @@ public class UserController {
 		return new ResponseEntity<>(gameHistory, HttpStatus.OK);
 	}
 
+	/** 
+	 * @author alegestor
+	 */
 	@DeleteMapping("{username}")
 	public ResponseEntity<User> deleteUser(@PathVariable("username") String username,
 			@RequestHeader("Authorization") String token) {
-		// TODO implement
-		return null;
+		User user = userService.findUser(username);
+		userService.deleteUser(user);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
