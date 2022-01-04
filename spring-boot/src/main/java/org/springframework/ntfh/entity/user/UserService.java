@@ -180,6 +180,9 @@ public class UserService {
 
 	@Transactional
 	public void deleteUser(User user) {
+		if (user.getLobby() != null && user.getLobby().getHasStarted()) {
+			throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
+		}
 		this.userRepository.deleteById(user.getUsername());
 	}
 
