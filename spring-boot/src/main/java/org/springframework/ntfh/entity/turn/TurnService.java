@@ -111,10 +111,6 @@ public class TurnService {
             return playerState;
         } else if (stateType == TurnStateType.MARKET_STATE) {
             return marketState;
-        } else if (stateType == TurnStateType.ENEMY_STATE) {
-            return null;
-        } else if (stateType == TurnStateType.REFRESH_STATE) {
-            return null;
         } else {
             return null;
         }

@@ -38,7 +38,7 @@ public class MarketState implements TurnState {
 
     @Override
     public TurnStateType getNextState() {
-        return TurnStateType.ENEMY_STATE;
+        return TurnStateType.PLAYER_STATE;
     }
 
     @Override
