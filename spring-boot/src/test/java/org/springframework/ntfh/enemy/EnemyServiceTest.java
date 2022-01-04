@@ -2,6 +2,8 @@ package org.springframework.ntfh.enemy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.enemy.Enemy;
+import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
 import org.springframework.ntfh.entity.enemy.EnemyModifierType;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.EnemyType;
@@ -48,6 +51,14 @@ public class EnemyServiceTest {
                 tester.getEnemyModifierType());
         assertEquals(3, tester.getEndurance());
         ;
+    }
+
+    @Test
+    void testEnemyCategoryType() {
+        List<Enemy> warlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
+        assertEquals(3, warlords.size());
+        List<Enemy> enemies = enemyService.findByEnemyCategoryType(EnemyCategoryType.HORDE);
+        assertEquals(27, enemies.size());
     }
 
 }
