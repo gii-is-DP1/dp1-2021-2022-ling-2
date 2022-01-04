@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.player;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +11,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
@@ -76,7 +77,13 @@ public class Player extends BaseEntity {
     }
 
     @Transient
+    @JsonIgnore
     public Game getGame() {
         return user.getLobby().getGame();
+    }
+
+    @Transient
+    public Boolean isDead() {
+        return wounds.equals(characterType.getBaseHealth());
     }
 }
