@@ -1,13 +1,12 @@
 package org.springframework.ntfh.command;
 
-
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.player.Player;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class GoldOnKillCommand implements Command{
+public class GoldOnKillCommand implements Command {
 
     private Integer gold;
     private EnemyIngame targetedEnemy;
@@ -15,10 +14,10 @@ public class GoldOnKillCommand implements Command{
 
     @Override
     public void execute() {
-        if(targetedEnemy.getCurrentEndurance()<=0){
+        if (targetedEnemy.getCurrentEndurance() <= 0) {
             Integer currentGold = playerFrom.getGold();
-            playerFrom.setGold(currentGold+gold);
+            playerFrom.setGold(currentGold + gold);
         }
-        
+
     }
 }

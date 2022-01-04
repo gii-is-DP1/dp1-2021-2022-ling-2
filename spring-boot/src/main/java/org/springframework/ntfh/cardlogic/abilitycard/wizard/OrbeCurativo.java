@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrbeCurativo {
     public void execute(Player playerFrom, AbilityCardIngame cardPlayed) { // cambiar el cardPlayed aquí y en la poción
-        Game game = playerFrom.getGame();
         new HealCommand(playerFrom).execute();
+        Game game = playerFrom.getGame();
         List<Player> targets = game.getPlayers();
         for (Player playerTarget : targets) {
             new RecoverCommand(2, playerTarget).execute();

@@ -9,8 +9,8 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class RecoverQSCommand implements Command{
-    
+public class RecoverQSCommand implements Command {
+
     private Player playerFrom;
 
     @Override
@@ -18,7 +18,7 @@ public class RecoverQSCommand implements Command{
         AbilityCardIngame SearchedCard = null;
         List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
         List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
-        if(listDiscardPile.contains(SearchedCard)){
+        if (listDiscardPile.contains(SearchedCard)) {
             int position = listDiscardPile.indexOf(SearchedCard);
             AbilityCardIngame toBeReturned = listDiscardPile.get(position);
             listDiscardPile.remove(position);
@@ -27,5 +27,5 @@ public class RecoverQSCommand implements Command{
             Collections.shuffle(listAbilityPile);
             playerFrom.setAbilityPile(listAbilityPile);
         }
-    }    
+    }
 }
