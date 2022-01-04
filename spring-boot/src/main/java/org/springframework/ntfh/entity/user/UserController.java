@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ntfh.entity.game.history.GameHistory;
 import org.springframework.ntfh.entity.game.history.GameHistoryRepository;
-import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;

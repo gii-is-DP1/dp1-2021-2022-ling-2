@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
@@ -33,6 +34,17 @@ public class PlayerState implements TurnState {
     @Override
     public TurnStateType getNextState() {
         return TurnStateType.MARKET_STATE;
+    }
+
+    @Override
+    public void preState(Game game) {
+        // TODO auto-generated method stub
+    }
+
+    @Override
+    public void postState(Game game) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
@@ -88,16 +100,13 @@ public class PlayerState implements TurnState {
                     " is not implemented");
         }
 
-        // After playing any card, add such a card to the list of cards played this turn
-        // playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
-        // enemyIngameService.findById(enemyId).getPlayedCardsOnMeInTurn().add(abilityCardIngame); 
-
-        // And make sure to move the card to the discard pile
+        // Make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();
         player.getHand().remove(abilityCardIngame);
         player.getDiscardPile().add(abilityCardIngame);
 
         // Check if the card is exiliable and if so, remove it from the discard pile too
+        // TODO handled already? does it work?
     }
 
     @Override

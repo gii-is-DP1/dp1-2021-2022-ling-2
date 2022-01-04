@@ -14,4 +14,5 @@ export interface Player {
   hand: AbilityCardIngame[];
   discardPile: AbilityCardIngame[];
   abilityPile: AbilityCardIngame[];
+  isDead: boolean;
 }

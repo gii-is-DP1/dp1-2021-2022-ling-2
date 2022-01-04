@@ -1,9 +1,6 @@
 package org.springframework.ntfh.entity.enemy.ingame;
 
-import java.beans.Transient;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -14,18 +11,17 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,21 +43,23 @@ public class EnemyIngame extends BaseEntity {
     @NotNull
     private Integer currentEndurance;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = AbilityCardTypeEnum.class)
-    @CollectionTable(name="CardPlayedOnMe", joinColumns = @JoinColumn(name="enemy_id"))
-    @Column(name="CardPlayedOnMe_type_enum")
-    private Set<AbilityCardTypeEnum> playedCardsOnMeInTurn = new HashSet<AbilityCardTypeEnum>();
-
     @NotNull
     private Boolean restrained;
 
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = AbilityCardTypeEnum.class)
+    @CollectionTable(name = "card_played_on_enemy_in_turn", joinColumns = @JoinColumn(name = "enemy_id"))
+    @Column(name = "ability_card_type_enum")
+    private Set<AbilityCardTypeEnum> playedCardsOnMeInTurn = new HashSet<>();
+
     @Transient
+    @JsonIgnore
     public Boolean isWarlord() {
         return enemy.getEnemyCategoryType() == EnemyCategoryType.WARLORD;
     }
 
     @Transient
+    @JsonIgnore
     public Boolean isHorde() {
         return enemy.getEnemyCategoryType() == EnemyCategoryType.HORDE;
     }

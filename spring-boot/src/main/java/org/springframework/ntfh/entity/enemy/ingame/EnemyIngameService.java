@@ -58,7 +58,7 @@ public class EnemyIngameService {
      * 
      * @author @andrsdt
      */
-    private void refillTableWithEnemies(Game game) {
+    public void refillTableWithEnemies(Game game) {
         List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
         List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
 
