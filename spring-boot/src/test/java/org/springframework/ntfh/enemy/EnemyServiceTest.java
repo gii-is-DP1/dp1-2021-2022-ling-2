@@ -41,13 +41,13 @@ public class EnemyServiceTest {
         // TODO: Delete all and create mock initial data. Then test count.
         // By doing this we will make this test independent of the initial data.
         Integer count = enemyService.count();
-        assertEquals(HORDE_COUNT, count);
+        assertEquals(ENEMY_COUNT, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(enemyService.findAll()).size();
-        assertEquals(HORDE_COUNT, count);
+        assertEquals(ENEMY_COUNT, count);
     }
 
     @Test
@@ -65,9 +65,9 @@ public class EnemyServiceTest {
     @Test
     void testEnemyCategoryType() {
         List<Enemy> warlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
-        assertEquals(3, warlords.size());
+        assertEquals(WARLORD_COUNT, warlords.size());
         List<Enemy> enemies = enemyService.findByEnemyCategoryType(EnemyCategoryType.HORDE);
-        assertEquals(27, enemies.size());
+        assertEquals(HORDE_COUNT, enemies.size());
     }
 
 }
