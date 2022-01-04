@@ -11,15 +11,13 @@ import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterGenderEnum;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
-import org.springframework.ntfh.entity.turn.concretestates.EnemyState;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
-import org.springframework.ntfh.entity.turn.concretestates.RefreshState;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class, EnemyState.class, RefreshState.class })
+@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
 public class CharacterServiceTest {
 
     @Autowired

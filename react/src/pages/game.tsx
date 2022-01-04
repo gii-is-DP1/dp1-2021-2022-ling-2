@@ -68,9 +68,6 @@ export default function Game() {
       const response = await axios.get(`/games/${gameId}`);
       const _game = response.data;
       setGame(_game);
-      const sortedPlayers = playersInRenderOrder(_game.players);
-      setPlayers(sortedPlayers);
-      setTurn(_game.currentTurn);
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
@@ -118,6 +115,14 @@ export default function Game() {
       history.replace(ROUTES.HOME);
     };
   }, []);
+
+  useEffect(() => {
+    // Re-render players and turn state if needed when the game changes
+    if (!game) return;
+    const sortedPlayers = playersInRenderOrder(game.players);
+    setPlayers(sortedPlayers);
+    setTurn(game.currentTurn);
+  }, [game]);
 
   useEffect(() => {
     fetchGame();
@@ -168,12 +173,11 @@ export default function Game() {
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
             {/* TODO Positioning of button */}
-            {/* TODO Showing only to current player */}
             {isPlayersTurn(turn, loggedUser.username) && (
               <div className="fixed p-8 space-y-2">
                 <div className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">
-                    {game.currentTurn.stateType}
+                    {turn?.stateType}
                   </p>
                 </div>
                 <button className="btn-ntfh" onClick={handleTurnNextState}>

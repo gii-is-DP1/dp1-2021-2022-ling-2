@@ -65,6 +65,7 @@ public class GameHistory extends BaseEntity {
      * @return Long duration of the time in seconds
      */
     @Transient
+    @JsonIgnore
     public Long getDuration() {
         if (finishTime == null)
             return null; // To avoid NullPointerException if the game hasn't finished
