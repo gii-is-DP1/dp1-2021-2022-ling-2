@@ -27,18 +27,27 @@ public class EnemyServiceTest {
     @Autowired
     private EnemyService enemyService;
 
+    // Number of enemies in the DB
+    private final Integer ENEMY_COUNT = 30;
+
+    // Number of enemies in the DB
+    private final Integer WARLORD_COUNT = 3;
+
+    // Number of enemies in the DB
+    private final Integer HORDE_COUNT = 27;
+
     @Test
     public void testCountWithInitialData() {
         // TODO: Delete all and create mock initial data. Then test count.
         // By doing this we will make this test independent of the initial data.
         Integer count = enemyService.count();
-        assertEquals(30, count);
+        assertEquals(HORDE_COUNT, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(enemyService.findAll()).size();
-        assertEquals(30, count);
+        assertEquals(HORDE_COUNT, count);
     }
 
     @Test
