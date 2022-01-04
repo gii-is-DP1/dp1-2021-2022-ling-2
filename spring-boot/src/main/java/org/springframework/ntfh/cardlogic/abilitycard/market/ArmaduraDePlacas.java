@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArmaduraDePlacas {
     public void execute(Player playerFrom) {
+        // TODO replace iterator
         Iterator<Proficiency> iterador = playerFrom.getCharacterType().getProficiencies().iterator();
         while (iterador.hasNext()) {
             ProficiencyTypeEnum tipo = iterador.next().getProficiencyTypeEnum();

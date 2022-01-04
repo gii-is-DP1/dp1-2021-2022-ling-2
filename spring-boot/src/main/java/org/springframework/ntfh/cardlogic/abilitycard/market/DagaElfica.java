@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DagaElfica {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy, AbilityCardIngame cardPlayed) {
+        // TODO replace iterator
         // TODO prescindir del atributo cardPlayed de alguna forma. Esto no encaja con
         // ninguna estructura de las que se contemplan en el java reflection así que
         // daría error al ejecutarlo.

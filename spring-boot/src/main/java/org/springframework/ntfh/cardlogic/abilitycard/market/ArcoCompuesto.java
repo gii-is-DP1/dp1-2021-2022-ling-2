@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArcoCompuesto {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
+        // TODO replace iterator
         Iterator<Proficiency> iterador = playerFrom.getCharacterType().getProficiencies().iterator();
         Integer damageModifier = 0;
         while (iterador.hasNext()) {

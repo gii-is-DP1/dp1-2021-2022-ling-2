@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CapaElfica {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
+        // TODO replace iterator
         Iterator<Proficiency> iterador = playerFrom.getCharacterType().getProficiencies().iterator();
         while (iterador.hasNext()) {
             ProficiencyTypeEnum tipo = iterador.next().getProficiencyTypeEnum();
