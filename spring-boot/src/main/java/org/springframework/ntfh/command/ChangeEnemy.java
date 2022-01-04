@@ -11,12 +11,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ChangeEnemy implements Command {
 
-    public Player playerFrom; // puede que no completamente necesario
-    public EnemyIngame targetedEnemy;
-    public Game game;
+    private Player playerFrom; // puede que no completamente necesario
+    private EnemyIngame targetedEnemy;
 
     @Override
     public void execute() {
+        Game game = playerFrom.getGame();
         List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
         if (enemiesInPile.size() >= 1) {
             List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
