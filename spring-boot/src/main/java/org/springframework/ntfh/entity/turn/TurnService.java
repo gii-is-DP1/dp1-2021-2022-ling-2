@@ -151,8 +151,8 @@ public class TurnService {
         // will be the one after the current player, considering they are alive. In case
         // there is no next player, the next player will be the first player (circular
         // list)
-        // ! There will probably be a bug if currentTurn.getPlayer() dies since
-        // he/she won't be in the list anymore and indexOf will return -1
+        // ! There will probably be a bug if currentTurn.getPlayer() dies since he/she
+        // won't be in the list anymore and indexOf will return -1
         List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
         Player nextPlayer = alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size()
                 ? alivePlayers.get(0)
