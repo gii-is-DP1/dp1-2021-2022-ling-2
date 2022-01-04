@@ -11,8 +11,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 
@@ -25,8 +28,13 @@ import lombok.Setter;
 @Table(name = "enemies_ingame")
 public class EnemyIngame extends BaseEntity {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "enemy_id")
+    @JoinColumn(name = "enemy_id") // TODO needed?
     private Enemy enemy;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "game_id") // TODO needed?
+    @JsonIgnore
+    private Game game;
 
     @NotNull
     private Integer currentEndurance;

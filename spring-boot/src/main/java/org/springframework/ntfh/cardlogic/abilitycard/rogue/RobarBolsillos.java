@@ -7,6 +7,7 @@ import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
 /**
+ * Daño: -
  * Roba 1 moneda a cada héroe
  * 
  * @author andrsdt

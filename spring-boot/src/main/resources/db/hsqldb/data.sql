@@ -234,8 +234,8 @@ INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUE
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (55, 'EN_LAS_SOMBRAS', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (56, 'ENGANAR', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (57, 'ROBAR_BOLSILLOS', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (58, 'SAQUEO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (58, 'SAQUEO_ORO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO_ORO_GLORIA', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (60, 'TRAMPA', 'ROGUE');
 
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (61, 'DAGA_ELFICA', null);

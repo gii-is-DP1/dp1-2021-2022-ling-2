@@ -11,7 +11,13 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Daño: 4
+ * Si derrotas un enemigo con este atauqe, ganas 1 Moneda si no has jugado otro
+ * "Al corazón" este turno. Pierdes 1 carta.
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class AlCorazon {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {

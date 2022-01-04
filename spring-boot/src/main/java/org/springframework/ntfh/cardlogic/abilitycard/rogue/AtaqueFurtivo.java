@@ -10,10 +10,16 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Daño: 2
+ * Si derrotas un enemigo con este ataque, ganas 1 Moneda si no has jugado otro
+ * "Ataque furtivo" este turno.
+ * 
+ * @author Pablosancval
+ */
 @Component
-public class AtaqueFurtivo{
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+public class AtaqueFurtivo {
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(2, targetedEnemy).execute();
 
         AbilityCardIngame cardIngame = new AbilityCardIngame();
@@ -32,5 +38,5 @@ public class AtaqueFurtivo{
 
         targetedEnemy.getPlayedCardsOnMeInTurn().add(cardIngame);
     }
-    
+
 }

@@ -10,16 +10,22 @@ import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Daño: 2
+ * El resto de héroes recuperan 2 cartas. Ganas 1 ficha de Gloria.
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class TorrenteDeLuz {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy, Game game){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
+        Game game = playerFrom.getGame();
         new DealDamageCommand(2, targetedEnemy).execute();
         new GetGloryCommand(1, playerFrom).execute();
         List<Player> targets = game.getPlayers();
-        for(Player playerTarget:targets){
+        for (Player playerTarget : targets) {
             new RecoverCommand(2, playerTarget).execute();
         }
     }
-    
+
 }

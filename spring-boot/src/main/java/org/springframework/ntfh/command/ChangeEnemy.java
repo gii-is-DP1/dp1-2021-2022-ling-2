@@ -9,23 +9,25 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ChangeEnemy implements Command{
-    
-    public Player playerFrom; //puede que no completamente necesario
-    public EnemyIngame targetedEnemy;
-    public Game game;
+public class ChangeEnemy implements Command {
+
+    private Player playerFrom; // puede que no completamente necesario
+
+    private EnemyIngame targetedEnemy;
 
     @Override
     public void execute() {
-        List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
+        Game game = playerFrom.getGame();
         List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
-        EnemyIngame lastEnemy = enemiesInPile.get(-1);
-        enemiesFighting.remove(targetedEnemy);
-        enemiesFighting.add(lastEnemy);
-        enemiesInPile.remove(lastEnemy);
-        enemiesInPile.add(targetedEnemy);
-        game.setEnemiesFighting(enemiesFighting);
-        game.setEnemiesInPile(enemiesInPile);
+        if (enemiesInPile.size() >= 1) {
+            List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
+            EnemyIngame lastEnemy = enemiesInPile.get(-1);
+            enemiesFighting.remove(targetedEnemy);
+            enemiesFighting.add(lastEnemy);
+            enemiesInPile.remove(lastEnemy);
+            enemiesInPile.add(targetedEnemy);
+            game.setEnemiesFighting(enemiesFighting);
+            game.setEnemiesInPile(enemiesInPile);
+        }
     }
-    
 }

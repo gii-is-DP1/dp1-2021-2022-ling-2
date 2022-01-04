@@ -3,8 +3,6 @@ package org.springframework.ntfh.entity.turn.concretestates;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
