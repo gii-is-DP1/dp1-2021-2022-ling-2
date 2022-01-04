@@ -43,9 +43,6 @@ public class UserServiceTest {
     private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     // Number of users in the DB
@@ -69,15 +66,7 @@ public class UserServiceTest {
         userService.deleteUser(currentUser);
     }
 
-    @Test
-    public void testPH3E1() {
-        List<User> PetitionUsers = new ArrayList<>();
-        List<User> RepositoryUsers = new ArrayList<>();
-        userService.findAll().forEach(x -> PetitionUsers.add(x));
-        userRepository.findAll().forEach(y -> RepositoryUsers.add(y));
-        assertEquals(RepositoryUsers.size(), PetitionUsers.size());
-    }
-
+    // H3 + E1
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(userService.findAll()).size();
