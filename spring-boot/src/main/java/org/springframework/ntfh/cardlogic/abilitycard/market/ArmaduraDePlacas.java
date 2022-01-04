@@ -8,14 +8,20 @@ import org.springframework.ntfh.entity.proficiency.Proficiency;
 import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Daño: -
+ * Modificador: Melee
+ * Recuperas 4 cartas
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class ArmaduraDePlacas {
-    public void execute(Player playerFrom){
+    public void execute(Player playerFrom) {
         Iterator<Proficiency> iterador = playerFrom.getCharacterType().getProficiencies().iterator();
-        while(iterador.hasNext()){
+        while (iterador.hasNext()) {
             ProficiencyTypeEnum tipo = iterador.next().getProficiencyTypeEnum();
-            if(tipo.equals(ProficiencyTypeEnum.MELEE)){
+            if (tipo.equals(ProficiencyTypeEnum.MELEE)) {
                 new RecoverCommand(4, playerFrom).execute();
             }
         }

@@ -9,13 +9,20 @@ import org.springframework.ntfh.entity.proficiency.Proficiency;
 import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.stereotype.Component;
 
+/**
+ * Daño: -
+ * Modificador: Spell, Ranged
+ * El enemigo seleccionado no causa daño este turno.
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class CapaElfica {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         Iterator<Proficiency> iterador = playerFrom.getCharacterType().getProficiencies().iterator();
-        while(iterador.hasNext()){
+        while (iterador.hasNext()) {
             ProficiencyTypeEnum tipo = iterador.next().getProficiencyTypeEnum();
-            if(tipo.equals(ProficiencyTypeEnum.DEXTERITY) || tipo.equals(ProficiencyTypeEnum.SPELL)){
+            if (tipo.equals(ProficiencyTypeEnum.DEXTERITY) || tipo.equals(ProficiencyTypeEnum.SPELL)) {
                 new RestrainCommand(targetedEnemy).execute();
             }
         }

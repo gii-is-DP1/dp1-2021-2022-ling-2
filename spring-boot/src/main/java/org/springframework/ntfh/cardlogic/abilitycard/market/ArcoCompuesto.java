@@ -9,18 +9,24 @@ import org.springframework.ntfh.entity.proficiency.Proficiency;
 import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.stereotype.Component;
 
+/**
+ * Daño: 4
+ * Modificador: Ranged
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class ArcoCompuesto {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         Iterator<Proficiency> iterador = playerFrom.getCharacterType().getProficiencies().iterator();
         Integer damageModifier = 0;
-        while(iterador.hasNext()){
-            ProficiencyTypeEnum tipo= iterador.next().getProficiencyTypeEnum();
-            if(tipo.equals(ProficiencyTypeEnum.RANGED)){
+        while (iterador.hasNext()) {
+            ProficiencyTypeEnum tipo = iterador.next().getProficiencyTypeEnum();
+            if (tipo.equals(ProficiencyTypeEnum.RANGED)) {
                 damageModifier = iterador.next().getSecondaryDebuff();
                 break;
             }
         }
-        new DealDamageCommand(4-damageModifier, targetedEnemy).execute();
-    }    
+        new DealDamageCommand(4 - damageModifier, targetedEnemy).execute();
+    }
 }

@@ -9,18 +9,23 @@ import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Daño: 2
+ * Daña a todos los enemigos. El resto de héroes sufre 1 de Daño.
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class BolaDeFuego {
-    public void execute(Player playerFrom){
+    public void execute(Player playerFrom) {
         Game game = playerFrom.getGame();
         List<EnemyIngame> targetList = game.getEnemiesFighting();
-        for(EnemyIngame target:targetList){
+        for (EnemyIngame target : targetList) {
             new DealDamageCommand(2, target).execute();
         }
         List<Player> targets = game.getPlayers();
         targets.remove(playerFrom);
-        for(Player target:targets){
+        for (Player target : targets) {
             new DiscardCommand(1, target).execute();
         }
     }

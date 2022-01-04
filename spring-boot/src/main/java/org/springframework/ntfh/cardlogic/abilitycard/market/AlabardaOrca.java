@@ -9,18 +9,25 @@ import org.springframework.ntfh.entity.proficiency.Proficiency;
 import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.stereotype.Component;
 
+/**
+ * Daño: 4
+ * Modificador: Melee
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class AlabardaOrca {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
+        // TODO replace iterator
         Iterator<Proficiency> iterador = playerFrom.getCharacterType().getProficiencies().iterator();
         Integer damageModifier = 0;
-        while(iterador.hasNext()){
-            ProficiencyTypeEnum tipo= iterador.next().getProficiencyTypeEnum();
-            if(tipo.equals(ProficiencyTypeEnum.MELEE)){
+        while (iterador.hasNext()) {
+            ProficiencyTypeEnum tipo = iterador.next().getProficiencyTypeEnum();
+            if (tipo.equals(ProficiencyTypeEnum.MELEE)) {
                 damageModifier = iterador.next().getSecondaryDebuff();
                 break;
             }
         }
-        new DealDamageCommand(4+damageModifier, targetedEnemy).execute();
-    }    
+        new DealDamageCommand(4 + damageModifier, targetedEnemy).execute();
+    }
 }

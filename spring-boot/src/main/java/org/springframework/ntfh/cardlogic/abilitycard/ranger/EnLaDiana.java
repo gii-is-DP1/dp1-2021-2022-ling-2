@@ -7,10 +7,15 @@ import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Daño: 4
+ * Gana 1 ficha de Gloria. Pierdes 1 carta.
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class EnLaDiana {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(4, targetedEnemy).execute();
         new GetGloryCommand(1, playerFrom).execute();
         new DiscardCommand(1, playerFrom).execute();

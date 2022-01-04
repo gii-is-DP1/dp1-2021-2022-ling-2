@@ -10,14 +10,20 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * (Exiliable)
+ * Daño: -
+ * Todos los Héores recuperan 2 cartas. Eliminas 1 herida de tu Héroe.
+ * 
+ * @author Pablosancval
+ */
 @Component
 public class OrbeCurativo {
-    public void execute(Player playerFrom, AbilityCardIngame cardPlayed){ //cambiar el cardPlayed aquí y en la poción
+    public void execute(Player playerFrom, AbilityCardIngame cardPlayed) { // cambiar el cardPlayed aquí y en la poción
         Game game = playerFrom.getGame();
         new HealCommand(playerFrom).execute();
         List<Player> targets = game.getPlayers();
-        for(Player playerTarget:targets){
+        for (Player playerTarget : targets) {
             new RecoverCommand(2, playerTarget).execute();
         }
         new ExileCommand(playerFrom, cardPlayed).execute();
