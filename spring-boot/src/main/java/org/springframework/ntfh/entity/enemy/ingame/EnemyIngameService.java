@@ -119,7 +119,9 @@ public class EnemyIngameService {
     public EnemyIngame createFromEnemy(Enemy enemy, Game game) {
         EnemyIngame enemyIngame = new EnemyIngame();
         enemyIngame.setEnemy(enemy);
+        enemyIngame.setGame(game);
         enemyIngame.setCurrentEndurance(enemy.getEndurance());
+        enemyIngame.setRestrained(false);
         return this.save(enemyIngame);
     }
 }
