@@ -1,6 +1,14 @@
 package org.springframework.ntfh.entity.enemy.ingame;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -13,6 +21,7 @@ import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +45,12 @@ public class EnemyIngame extends BaseEntity {
 
     @NotNull
     private Boolean restrained;
+
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = AbilityCardTypeEnum.class)
+    @CollectionTable(name = "card_played_on_enemy_in_turn", joinColumns = @JoinColumn(name = "enemy_id"))
+    @Column(name = "ability_card_type_enum")
+    private Set<AbilityCardTypeEnum> playedCardsOnMeInTurn = new HashSet<>();
 
     @Transient
     @JsonIgnore
