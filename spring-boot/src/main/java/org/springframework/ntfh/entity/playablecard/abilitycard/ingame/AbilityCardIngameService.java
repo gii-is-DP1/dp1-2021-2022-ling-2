@@ -87,6 +87,8 @@ public class AbilityCardIngameService {
         List<AbilityCardIngame> playerHand = player.getHand();
 
         while (!playerAbilityPile.isEmpty() && playerHand.size() < 4) {
+            // TODO handle give wound if needed every time cards are removed from the
+            // abilityPile
             AbilityCardIngame lastAbilityCardInPile = playerAbilityPile.get(0);
             playerAbilityPile.remove(lastAbilityCardInPile);
             playerHand.add(lastAbilityCardInPile);
