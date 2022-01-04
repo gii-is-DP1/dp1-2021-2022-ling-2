@@ -69,6 +69,7 @@ public class Player extends BaseEntity {
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
     @OneToMany
+    @JsonIgnore
     private List<AbilityCardIngame> playedCardsInTurn = new ArrayList<>();
 
     @Transient
