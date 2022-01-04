@@ -63,9 +63,7 @@ public class UserServiceTest {
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
         tester.setAuthorities(userAuthority);
-        userService.createUser(tester);
-
-        currentUser = tester;
+        currentUser = userService.createUser(tester);
     }
 
     @AfterEach
@@ -107,9 +105,9 @@ public class UserServiceTest {
     @Test
     public void testUpdateUser() {
         User tester = currentUser;
+        String testerToken = TokenUtils.generateJWTToken(tester);
         String newPassword = "newPassword";
         tester.setPassword(newPassword);
-        String testerToken = TokenUtils.generateJWTToken(tester);
         User updatedTester = userService.updateUser(tester, testerToken);
         assertTrue(passwordEncoder.matches(newPassword, updatedTester.getPassword()));
     }
