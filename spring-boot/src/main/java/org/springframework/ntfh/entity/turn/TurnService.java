@@ -144,8 +144,7 @@ public class TurnService {
             nextTurn.setCurrentScene(randomScene);
         }
 
-        Player currentPlayer = currentTurn.getPlayer();
-        currentPlayer.getPlayedCardsInTurn().clear();
+        game.getEnemiesFighting().forEach(e -> e.getPlayedCardsOnMeInTurn().clear());
 
         // Get the next player. Following the previously set turnOrder, the next player
         // will be the one after the current player, considering they are alive. In case
