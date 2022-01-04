@@ -81,7 +81,7 @@ public class AbilityCardIngameService {
      * 
      * @param player
      */
-    private void refillHandWithCards(Player player) {
+    public void refillHandWithCards(Player player) {
 
         List<AbilityCardIngame> playerAbilityPile = player.getAbilityPile();
         List<AbilityCardIngame> playerHand = player.getHand();

@@ -16,6 +16,7 @@ export const SelfPlayableCards = [
 
   // ROGUE
   "ROBAR_BOLSILLOS",
-  "SAQUEO",
+  "SAQUEO_ORO",
+  "SAQUEO_ORO_GLORIA",
   "TRAMPA",
 ];

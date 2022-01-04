@@ -62,7 +62,8 @@ public class GameService {
     }
 
     public Turn getCurrentTurnByGameId(Integer gameId) {
-        return gameRepository.getCurrentTurnByGameId(gameId);
+        List<Turn> turns = gameRepository.getTurnsByGameId(gameId);
+        return turns.isEmpty() ? null : turns.get(turns.size() - 1);
     }
 
     @Transactional
