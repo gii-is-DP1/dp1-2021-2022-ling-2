@@ -59,14 +59,14 @@ INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (4
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (5, 'RANGED', -1);
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (6, 'SPELL', 0);
 
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (1, 'RANGER','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (2, 'RANGER','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (3, 'ROGUE','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (4, 'ROGUE','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (5, 'WARRIOR','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (6, 'WARRIOR','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (7, 'WIZARD','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (8, 'WIZARD','FEMALE');
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (1, 'RANGER','MALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (2, 'RANGER','FEMALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (3, 'ROGUE','MALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (4, 'ROGUE','FEMALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (5, 'WARRIOR','MALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (6, 'WARRIOR','FEMALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (7, 'WIZARD','MALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (8, 'WIZARD','FEMALE', 2);
 
 -- Character RANGER has proficiencies melee-1, ranged
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (1, 3);

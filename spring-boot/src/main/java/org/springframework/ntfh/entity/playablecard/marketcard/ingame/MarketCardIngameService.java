@@ -52,7 +52,7 @@ public class MarketCardIngameService {
      * 
      * @author andrsdt
      */
-    private void refillMarketWithCards(Game game) {
+    public void refillMarketWithCards(Game game) {
         // Get a list of
         List<MarketCardIngame> marketCardsInPile = game.getMarketCardsInPile();
         List<MarketCardIngame> marketCardsForSale = game.getMarketCardsForSale();
