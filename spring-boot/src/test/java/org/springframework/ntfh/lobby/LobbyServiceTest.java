@@ -114,13 +114,29 @@ public class LobbyServiceTest {
     }
 
     @Test
-    public void testJoinToLobby() {
+    public void testJoinToLobby_Success() {
         Integer lobbyTesterId = lobbyTester.getId();
         User requester = userService.findUser("merlin");
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
         assertEquals(true, lobbyService.findById(lobbyTesterId).getUsers().contains(requester));
+    }
+
+    // H8 - E1
+    @Test
+    public void testJoinToLobby_Failure() {
+        Lobby fullLobby = lobbyService.findLobby(2);
+        Integer fullLobbyId = fullLobby.getId();
+        User requester = userService.findUser("ezio");
+        String requesterString = requester.getUsername();
+        String reqToken = TokenUtils.generateJWTToken(requester);
+        try {
+            lobbyService.joinLobby(fullLobbyId, requesterString, reqToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertThrows(Exception.class, () -> {lobbyService.joinLobby(fullLobbyId, requesterString, reqToken);});
     }
 
     @Test
