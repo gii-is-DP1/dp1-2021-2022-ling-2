@@ -33,7 +33,7 @@ public class EnemyIngame extends BaseEntity {
 
     @OneToMany
     private List<AbilityCardIngame> playedCardsOnMeInTurn = new ArrayList<>();
-    
+
     @NotNull
     private Boolean restrained;
 

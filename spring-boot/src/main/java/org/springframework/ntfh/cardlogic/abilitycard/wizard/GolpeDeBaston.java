@@ -1,7 +1,11 @@
 package org.springframework.ntfh.cardlogic.abilitycard.wizard;
 
 import org.springframework.ntfh.command.DealDamageCommand;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +13,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class GolpeDeBaston {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
-        new DealDamageCommand(1, targetedEnemy).execute();
-        //TODO falta la condición de repetición
+        
+
+        AbilityCardIngame cardIngame = new AbilityCardIngame();
+        cardIngame.setId(36);
+        cardIngame.setPlayer(playerFrom);
+
+        AbilityCard card=new AbilityCard();
+        card.setAbilityCardTypeEnum(AbilityCardTypeEnum.GOLPE_DE_BASTON);
+        card.setCharacterTypeEnum(CharacterTypeEnum.WIZARD);
+    
+        cardIngame.setAbilityCard(card);
+
+        if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(cardIngame)){
+            new DealDamageCommand(2, targetedEnemy).execute();
+        }else{
+            new DealDamageCommand(1, targetedEnemy).execute();
+        }
+
+        targetedEnemy.getPlayedCardsOnMeInTurn().add(cardIngame);
     }
 }
