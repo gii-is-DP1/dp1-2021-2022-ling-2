@@ -107,16 +107,23 @@ public class GameServiceTest {
         assertEquals(4, count);
     }
 
+    // H1+
     @Test
-    public void testfindAllListVersion() {
-        // H1
+    public void testfindAllListVersion_Success() {
         List<Game> gamesServiceList = new ArrayList<>();
         gameService.findAll().forEach(g -> gamesServiceList.add(g));
 
-        List<Game> gamesRepoList = new ArrayList<>();
-        gameRepository.findAll().forEach(g -> gamesRepoList.add(g));
+        assertEquals(false, gamesServiceList.isEmpty());
+    }
 
-        assertEquals(gamesServiceList, gamesRepoList);
+    // H1- Possibly delete
+    @Test
+    public void testfindAllListVersion_Failure() {
+        List<Game> gamesServiceList = new ArrayList<>();
+        gameService.findAll().forEach(g -> gamesServiceList.add(g));
+        gamesServiceList.clear();
+
+        assertEquals(0, gamesServiceList.size());
     }
 
     @Test
@@ -133,6 +140,7 @@ public class GameServiceTest {
         gameService.delete(tester);
     }
 
+    // H7 - E1
     @Test
     public void testCreateFromLobbyNotEnoughPlayers() {
         User user2 = userService.findUser("user2");
@@ -141,7 +149,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testSaveGame() {
+    public void testSaveGame_success() {
         // Test made in the init
         assertEquals(gameRepository.findById(gameTester.getId()).get().getId(), gameTester.getId());
     }
