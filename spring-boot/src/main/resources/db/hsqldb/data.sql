@@ -59,14 +59,14 @@ INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (4
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (5, 'RANGED', -1);
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (6, 'SPELL', 0);
 
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (1, 'RANGER','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (2, 'RANGER','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (3, 'ROGUE','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (4, 'ROGUE','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (5, 'WARRIOR','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (6, 'WARRIOR','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (7, 'WIZARD','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (8, 'WIZARD','FEMALE');
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (1, 'RANGER','MALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (2, 'RANGER','FEMALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (3, 'ROGUE','MALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (4, 'ROGUE','FEMALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (5, 'WARRIOR','MALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (6, 'WARRIOR','FEMALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (7, 'WIZARD','MALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (8, 'WIZARD','FEMALE', 2);
 
 -- Character RANGER has proficiencies melee-1, ranged
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (1, 3);
@@ -234,8 +234,8 @@ INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUE
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (55, 'EN_LAS_SOMBRAS', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (56, 'ENGANAR', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (57, 'ROBAR_BOLSILLOS', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (58, 'SAQUEO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (58, 'SAQUEO_ORO', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO_ORO_GLORIA', 'ROGUE');
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (60, 'TRAMPA', 'ROGUE');
 
 INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (61, 'DAGA_ELFICA', null);
@@ -255,8 +255,8 @@ INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players,
 UPDATE users SET lobby = 1 WHERE username = 'pablo';
 UPDATE users SET lobby = 1 WHERE username = 'andres';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (1, 0, 0, 0, 0, 8, 0);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (2, 0, 0, 0, 0, 1, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (1, 0, 0, 0, 0, 0, 8, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (2, 0, 0, 0, 0, 0, 1, 1);
 UPDATE users SET player = 1 WHERE username='pablo';
 UPDATE users SET player = 2 WHERE username='andres';
 
@@ -276,10 +276,10 @@ UPDATE users SET lobby = 2 WHERE username = 'frodo';
 UPDATE users SET lobby = 2 WHERE username = 'legolas';
 UPDATE users SET lobby = 2 WHERE username = 'aragorn';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (3, 0, 0, 0, 0, 1, 1);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (4, 0 ,0, 0, 0 ,3, 0);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (5, 0, 0, 0, 0, 5, 2);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (6, 0 ,0, 0, 0 ,7, 3);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (3, 0, 0, 0, 0, 0, 1, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (4, 0 ,0, 0, 0, 0, 3, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (5, 0, 0, 0, 0, 0, 5, 2);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (6, 0 ,0, 0, 0, 0, 7, 3);
 UPDATE users SET player = 3 WHERE username='frodo';
 UPDATE users SET player = 4 WHERE username='gandalf';
 UPDATE users SET player = 5 WHERE username='legolas';
@@ -302,8 +302,8 @@ INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players
 UPDATE users SET lobby = 3 WHERE username = 'stockie';
 UPDATE users SET lobby = 3 WHERE username = 'alejandro';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (7, 0, 0, 0, 0, 2, 1);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (8, 0 ,0, 0, 0 ,4, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (7, 0, 0, 0, 0, 0, 2, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (8, 0 ,0, 0, 0, 0, 4, 0);
 UPDATE users SET player = 7 WHERE username = 'stockie';
 UPDATE users SET player = 8 WHERE username = 'alejandro';
 

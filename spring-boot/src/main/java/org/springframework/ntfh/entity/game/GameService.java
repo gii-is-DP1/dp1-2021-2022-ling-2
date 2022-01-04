@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.Turn;
@@ -41,9 +40,6 @@ public class GameService {
     @Autowired
     private TurnService turnService;
 
-    @Autowired
-    private AbilityCardIngameService abilityCardIngameService;
-
     @Transactional
     public Integer gameCount() {
         return (int) gameRepository.count();
@@ -66,7 +62,8 @@ public class GameService {
     }
 
     public Turn getCurrentTurnByGameId(Integer gameId) {
-        return gameRepository.getCurrentTurnByGameId(gameId);
+        List<Turn> turns = gameRepository.getTurnsByGameId(gameId);
+        return turns.isEmpty() ? null : turns.get(turns.size() - 1);
     }
 
     @Transactional

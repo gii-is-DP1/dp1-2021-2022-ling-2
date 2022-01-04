@@ -58,7 +58,7 @@ public class EnemyIngameService {
      * 
      * @author @andrsdt
      */
-    private void refillTableWithEnemies(Game game) {
+    public void refillTableWithEnemies(Game game) {
         List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
         List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
 
@@ -119,7 +119,9 @@ public class EnemyIngameService {
     public EnemyIngame createFromEnemy(Enemy enemy, Game game) {
         EnemyIngame enemyIngame = new EnemyIngame();
         enemyIngame.setEnemy(enemy);
+        enemyIngame.setGame(game);
         enemyIngame.setCurrentEndurance(enemy.getEndurance());
+        enemyIngame.setRestrained(false);
         return this.save(enemyIngame);
     }
 }

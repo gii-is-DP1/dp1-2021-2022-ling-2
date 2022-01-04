@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.lobby;
 
-import java.beans.Transient;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,8 +11,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.NamedEntity;
 import org.springframework.ntfh.entity.user.User;
@@ -91,6 +92,7 @@ public class Lobby extends NamedEntity {
     }
 
     @Transient
+    @JsonIgnore
     public boolean getHasStarted() {
         return this.game != null;
     }

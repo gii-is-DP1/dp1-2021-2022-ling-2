@@ -50,12 +50,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.PUT, "/users/character").hasAuthority("user") // Update user's current
 																						// character
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
+				.antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority("admin") // An admin can delete a user
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority("admin") // An admin can ban a user
 				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll() // Everyone can see a user's match
 																					// history
 				.antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAuthority("user") // Set character
 				// UNREGISTERED USER ENDPOINTS
-				.antMatchers(HttpMethod.GET, "/unregistered-users").permitAll() // Allow to request unregistered user
-																				// credentials
+				.antMatchers(HttpMethod.POST, "/unregistered-users").permitAll() // Allow to request unregistered user
+																					// credentials
 				// LOBBY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAuthority("user") // Allow users to create new lobbies

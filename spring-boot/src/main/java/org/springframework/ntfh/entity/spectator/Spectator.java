@@ -27,16 +27,16 @@ public class Spectator extends BaseEntity {
     @Column(columnDefinition = "integer default 0")
     private Date entryTime;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL) // TODO not oneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "username")
     private User user; // User who is this spectator
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL) // TODO not oneToOne
     @JoinColumn(name = "unregistered_user_id", referencedColumnName = "username")
     private UnregisteredUser unregisteredUser; // UnregisteredUser who is this spectator
 
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL) // TODO not oneToOne
     @JoinColumn(name = "game_id", referencedColumnName = "id")
     private Game game; // Game this spectator watches
 

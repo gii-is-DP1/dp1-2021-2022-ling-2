@@ -23,6 +23,9 @@ import lombok.Getter;
 public class Character extends BaseEntity {
 
     @NotNull
+    private Integer baseHealth;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     private CharacterTypeEnum characterTypeEnum;
 
