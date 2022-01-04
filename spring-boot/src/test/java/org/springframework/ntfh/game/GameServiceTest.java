@@ -18,12 +18,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.command.DiscardCommand;
+import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
@@ -68,6 +71,9 @@ public class GameServiceTest {
 
     @Autowired
     private TurnService turnService;
+
+    @Autowired
+    private AbilityCardIngameService abilityCardIngameService;
 
     private Game gameTester;
 
@@ -180,6 +186,17 @@ public class GameServiceTest {
         assertThrows(DataAccessException.class, () -> {
             gameService.findGameById(tester.getId());
         });
+    }
+
+    // H24 + E1
+    @Test
+    void testRestorePlayerHand() {
+        turnService.initializeFromGame(gameTester);
+        abilityCardIngameService.refillHandWithCards(playerTester);
+        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0)).execute();;
+        assertEquals(3, playerTester.getHand().size());
+        abilityCardIngameService.refillHandWithCards(playerTester);
+        assertEquals(4, playerTester.getHand().size());
     }
 
     // H26 + E1
