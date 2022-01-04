@@ -136,6 +136,6 @@ public class TurnService {
     // In such a method, make sure to set the list of cards played by the player to
     // an empty list
 
-    // TODO Ending of the turn, make sure to empty the list of cardPlayedOnMeInTurn from
+    // TODO Ending of the turn, make sure to empty the set of cardPlayedOnMeInTurn from
     // enemyinGame for all the enemies (Avoid overlay of effects bettewwnn turns)
 }

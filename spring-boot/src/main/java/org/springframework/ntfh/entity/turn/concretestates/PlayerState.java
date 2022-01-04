@@ -90,7 +90,7 @@ public class PlayerState implements TurnState {
 
         // After playing any card, add such a card to the list of cards played this turn
         // playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
-        enemyIngameService.findById(enemyId).getPlayedCardsOnMeInTurn().add(abilityCardIngame); 
+        // enemyIngameService.findById(enemyId).getPlayedCardsOnMeInTurn().add(abilityCardIngame); 
 
         // And make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();

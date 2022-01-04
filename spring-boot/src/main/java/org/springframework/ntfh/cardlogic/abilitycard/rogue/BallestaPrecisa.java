@@ -21,22 +21,12 @@ public class BallestaPrecisa {
 
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         
-        AbilityCardIngame cardIngame = new AbilityCardIngame();
-        cardIngame.setId(51);
-        cardIngame.setPlayer(playerFrom);
-
-        AbilityCard card=new AbilityCard();
-        card.setAbilityCardTypeEnum(AbilityCardTypeEnum.BALLESTA_PRECISA);
-        card.setCharacterTypeEnum(CharacterTypeEnum.ROGUE);
-    
-        cardIngame.setAbilityCard(card);
-
-        if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(cardIngame)){
+        if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.BALLESTA_PRECISA)){
             new DealDamageCommand(3, targetedEnemy).execute();
         }else{
             new DealDamageCommand(2, targetedEnemy).execute();
         }
 
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(cardIngame);
+        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.BALLESTA_PRECISA);
     }
 }

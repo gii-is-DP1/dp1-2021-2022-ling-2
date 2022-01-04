@@ -22,21 +22,11 @@ public class AtaqueFurtivo {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(2, targetedEnemy).execute();
 
-        AbilityCardIngame cardIngame = new AbilityCardIngame();
-        cardIngame.setId(48);
-        cardIngame.setPlayer(playerFrom);
-
-        AbilityCard card=new AbilityCard();
-        card.setAbilityCardTypeEnum(AbilityCardTypeEnum.ATAQUE_FURTIVO);
-        card.setCharacterTypeEnum(CharacterTypeEnum.ROGUE);
-    
-        cardIngame.setAbilityCard(card);
-
-        if(!targetedEnemy.getPlayedCardsOnMeInTurn().contains(cardIngame)){
+        if(!targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.ATAQUE_FURTIVO)){
             new GoldOnKillCommand(1, targetedEnemy, playerFrom).execute();
         }
 
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(cardIngame);
+        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.ATAQUE_FURTIVO);
     }
 
 }

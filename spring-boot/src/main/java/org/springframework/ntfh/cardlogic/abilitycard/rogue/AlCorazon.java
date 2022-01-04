@@ -23,22 +23,12 @@ public class AlCorazon {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(4, targetedEnemy).execute();
 
-        AbilityCardIngame cardIngame = new AbilityCardIngame();
-        cardIngame.setId(46);
-        cardIngame.setPlayer(playerFrom);
 
-        AbilityCard card=new AbilityCard();
-        card.setAbilityCardTypeEnum(AbilityCardTypeEnum.AL_CORAZON);
-        card.setCharacterTypeEnum(CharacterTypeEnum.ROGUE);
-    
-        cardIngame.setAbilityCard(card);
-
-
-        if(!targetedEnemy.getPlayedCardsOnMeInTurn().contains(cardIngame)){
+        if(!targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.AL_CORAZON)){
             new GoldOnKillCommand(1, targetedEnemy, playerFrom).execute();
         }
 
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(cardIngame);
+        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.AL_CORAZON);
         new DiscardCommand(1, playerFrom).execute();
     }
 }
