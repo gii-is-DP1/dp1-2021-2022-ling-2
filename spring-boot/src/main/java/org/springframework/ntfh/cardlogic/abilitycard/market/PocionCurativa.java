@@ -6,10 +6,16 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * (Exiliable)
+ * Daño: -
+ * Modificador: -
+ * Retira una ficha de Herida de tu Héroe
+ * 
+ */
 @Component
 public class PocionCurativa {
-    public void execute(Player playerFrom, AbilityCardIngame cardPlayed){
+    public void execute(Player playerFrom, AbilityCardIngame cardPlayed) {
         new HealCommand(playerFrom).execute();
         new ExileCommand(playerFrom, cardPlayed).execute();
     }

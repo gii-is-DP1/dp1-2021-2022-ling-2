@@ -6,6 +6,7 @@ import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
 /**
+ * Daño: 2
  * Si ya utilizaste una "Ballesta precisa" contra este mismo enemigo, el daño de
  * esta carta es 3.
  * 

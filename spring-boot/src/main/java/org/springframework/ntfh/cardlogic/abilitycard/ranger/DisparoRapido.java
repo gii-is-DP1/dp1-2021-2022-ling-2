@@ -5,10 +5,18 @@ import org.springframework.ntfh.command.DrawCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.player.Player;
 
+/**
+ * Daño: 1
+ * Roba una carta. Si es "disparo rápido", úsala. Si no, ponla en el fondo de tu
+ * mazo de Habilidad.
+ * 
+ * @author Pablosancval
+ */
 public class DisparoRapido {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(1, targetedEnemy).execute();
         new DrawCommand(1, playerFrom).execute();
-        //TODO mirar si la carta robada es un disparo rápido, if(n=DisparoRapido){DisparoRapido().execute() else discard}
+        // TODO mirar si la carta robada es un disparo rápido,
+        // if(n=DisparoRapido){DisparoRapido().execute() else discard}
     }
 }

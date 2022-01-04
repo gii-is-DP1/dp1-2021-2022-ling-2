@@ -4,9 +4,8 @@ import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 
 import lombok.AllArgsConstructor;
 
-
 @AllArgsConstructor
-public class RestrainCommand implements Command{
+public class RestrainCommand implements Command {
 
     private EnemyIngame targetedEnemy;
 

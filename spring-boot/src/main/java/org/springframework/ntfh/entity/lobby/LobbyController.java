@@ -1,7 +1,6 @@
 package org.springframework.ntfh.entity.lobby;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
