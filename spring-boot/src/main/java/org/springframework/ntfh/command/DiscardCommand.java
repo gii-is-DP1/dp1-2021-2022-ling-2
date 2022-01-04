@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 public class DiscardCommand implements Command {
 
     private Integer numDiscards;
+
     private Player playerFrom;
 
     @Override

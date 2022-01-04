@@ -11,13 +11,14 @@ import java.util.List;
 public class RecoverCommand implements Command {
 
     private Integer numRecovered;
+
     private Player playerFrom;
 
     @Override
     public void execute() {
         for (int i = 0; i < numRecovered; i++) {
             List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
-            if (listDiscardPile.size() >= 1) {
+            if (!listDiscardPile.isEmpty()) {
                 AbilityCardIngame recoveredCard = listDiscardPile.get(0);
                 listDiscardPile.remove(0);
                 List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();

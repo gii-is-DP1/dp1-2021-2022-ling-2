@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 public class ReturnedToAbilityPileCommand implements Command {
 
     private Player playerFrom;
+
     private AbilityCardIngame cardPlayed;
 
     @Override

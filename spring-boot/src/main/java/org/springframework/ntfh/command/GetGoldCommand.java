@@ -7,8 +7,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class GetGoldCommand implements Command {
 
-    public Integer gold;
-    public Player playerFrom;
+    private Integer gold;
+
+    private Player playerFrom;
 
     @Override
     public void execute() {

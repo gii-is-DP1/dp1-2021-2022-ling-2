@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 public class GetGuardCommand implements Command {
 
     private Integer guard;
+
     private Player playerFrom;
 
     @Override

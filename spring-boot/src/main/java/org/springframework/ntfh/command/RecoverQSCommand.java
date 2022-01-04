@@ -15,11 +15,11 @@ public class RecoverQSCommand implements Command {
 
     @Override
     public void execute() {
-        AbilityCardIngame SearchedCard = null;
+        AbilityCardIngame searchedCard = null;
         List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
         List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
-        if (listDiscardPile.contains(SearchedCard)) {
-            int position = listDiscardPile.indexOf(SearchedCard);
+        if (listDiscardPile.contains(searchedCard)) {
+            int position = listDiscardPile.indexOf(searchedCard);
             AbilityCardIngame toBeReturned = listDiscardPile.get(position);
             listDiscardPile.remove(position);
             playerFrom.setDiscardPile(listDiscardPile);

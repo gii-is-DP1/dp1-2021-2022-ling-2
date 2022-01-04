@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 public class ChangeEnemy implements Command {
 
     private Player playerFrom; // puede que no completamente necesario
+
     private EnemyIngame targetedEnemy;
 
     @Override

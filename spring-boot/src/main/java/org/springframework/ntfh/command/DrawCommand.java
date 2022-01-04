@@ -11,6 +11,7 @@ import java.util.List;
 public class DrawCommand implements Command {
 
     private Integer amount;
+
     private Player playerFrom;
 
     @Override

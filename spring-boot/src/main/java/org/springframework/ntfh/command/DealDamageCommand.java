@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 public class DealDamageCommand implements Command {
 
     private Integer damage;
+
     private EnemyIngame targetedEnemy;
 
     @Override
