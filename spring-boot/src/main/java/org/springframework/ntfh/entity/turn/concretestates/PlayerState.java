@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
@@ -33,6 +34,11 @@ public class PlayerState implements TurnState {
     @Override
     public TurnStateType getNextState() {
         return TurnStateType.MARKET_STATE;
+    }
+
+    @Override
+    public void execute(Game game) {
+        // TODO auto-generated method stub
     }
 
     @Override

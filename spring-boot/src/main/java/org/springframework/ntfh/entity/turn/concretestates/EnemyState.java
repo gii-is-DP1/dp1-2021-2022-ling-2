@@ -1,5 +1,6 @@
 package org.springframework.ntfh.entity.turn.concretestates;
 
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,11 @@ public class EnemyState implements TurnState {
     }
 
     @Override
+    public void execute(Game game) {
+        // TODO implement horde attack
+    }
+
+    @Override
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
         throw new IllegalStateException("You can't play cards now");
     }
@@ -21,5 +27,4 @@ public class EnemyState implements TurnState {
     public void buyMarketCard(Integer marketCardIngameId, String token) {
         throw new IllegalStateException("You can't buy cards now");
     }
-
 }

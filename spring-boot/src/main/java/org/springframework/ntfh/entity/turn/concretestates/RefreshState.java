@@ -1,5 +1,6 @@
 package org.springframework.ntfh.entity.turn.concretestates;
 
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,11 @@ public class RefreshState implements TurnState {
     @Override
     public TurnStateType getNextState() {
         return TurnStateType.PLAYER_STATE;
+    }
+
+    @Override
+    public void execute(Game game) {
+        // TODO implement refreshing and auto creating and setting new turn
     }
 
     @Override

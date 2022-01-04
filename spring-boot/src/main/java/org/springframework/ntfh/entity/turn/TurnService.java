@@ -130,6 +130,8 @@ public class TurnService {
         TurnState state = getState(turn);
         TurnStateType nextState = state.getNextState();
         turn.setStateType(nextState);
+        TurnState newState = getState(turn);
+        newState.execute(turn.getGame());
     }
 
     // TODO method to create a new turn (not the intial one)

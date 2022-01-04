@@ -1,9 +1,13 @@
 package org.springframework.ntfh.entity.turn;
 
+import org.springframework.ntfh.entity.game.Game;
+
 public interface TurnState {
-    TurnStateType getNextState();
+    public void execute(Game game);
 
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token);
 
     public void buyMarketCard(Integer marketCardIngameId, String token);
+
+    public TurnStateType getNextState();
 }

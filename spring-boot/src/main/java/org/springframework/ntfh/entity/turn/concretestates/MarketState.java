@@ -37,6 +37,11 @@ public class MarketState implements TurnState {
     }
 
     @Override
+    public void execute(Game game) {
+        // TODO auto-generated method stub
+    }
+
+    @Override
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
         throw new IllegalStateException("You can't play cards now");
     }
