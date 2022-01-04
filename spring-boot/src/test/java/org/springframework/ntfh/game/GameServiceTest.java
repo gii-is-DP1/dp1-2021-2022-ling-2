@@ -17,18 +17,24 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
+import org.springframework.ntfh.command.DiscardCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
+import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
+import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,9 +60,20 @@ public class GameServiceTest {
     @Autowired
     private CharacterService characterService;
 
+    @Autowired
+    private MarketCardService marketCardService;
+
+    @Autowired
+    private MarketCardIngameService marketCardIngameService;
+
+    @Autowired
+    private TurnService turnService;
+
     private Game gameTester;
 
     protected Lobby lobbyTester;
+
+    private Player playerTester;
 
     @BeforeEach
     public void init() {
@@ -80,12 +97,16 @@ public class GameServiceTest {
         Player player2 = playerService.createFromUser(user1, lobbyTester, 1);
         List<Player> players = Lists.list(player1, player2);
 
-        gameTester = new Game();
-        gameTester.setStartTime(System.currentTimeMillis());
-        gameTester.setHasScenes(true);
-        gameTester.setPlayers(players);
-        gameTester.setLeader(player1);
-        gameService.save(gameTester);
+        // gameTester = new Game();
+        // gameTester.setStartTime(System.currentTimeMillis());
+        // gameTester.setHasScenes(true);
+        // gameTester.setPlayers(players);
+        // gameTester.setLeader(player1);
+        // gameService.save(gameTester);
+
+        gameTester = gameService.createFromLobby(lobbyTester);
+        user1.setLobby(lobbyTester);
+        playerTester = gameTester.getPlayers().get(0);
     }
 
     @AfterEach
@@ -159,6 +180,38 @@ public class GameServiceTest {
         assertThrows(DataAccessException.class, () -> {
             gameService.findGameById(tester.getId());
         });
+    }
+
+    // H26 + E1
+    @Test
+    void testBuyMarketCard_Success() {
+        MarketCardIngame marketCardIngame = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        Integer marketCardIngameId = marketCardIngame.getId();
+        playerTester.setGold(10);
+        String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
+        turnService.initializeFromGame(gameTester);
+        gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
+        gameService.buyMarketCard(marketCardIngameId, playerToken);
+
+        assertEquals(2, playerTester.getGold());
+    }
+
+    // H26 - E1
+    @Test
+    void testBuyMarketCard_Failure() {
+        MarketCardIngame marketCardIngame = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        Integer marketCardIngameId = marketCardIngame.getId();
+        playerTester.setGold(4);
+        String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
+        turnService.initializeFromGame(gameTester);
+        gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
+        try {
+            gameService.buyMarketCard(marketCardIngameId, playerToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(Exception.class, () -> {gameService.buyMarketCard(marketCardIngameId, playerToken);});
     }
 
 }
