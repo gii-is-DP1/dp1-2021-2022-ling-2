@@ -127,8 +127,8 @@ public class UserController {
 	/**
 	 * @author alegestor
 	 */
-	@DeleteMapping("{username}")
-	public ResponseEntity<User> deleteUser(@PathVariable("username") String username,
+	@DeleteMapping("{userId}")
+	public ResponseEntity<User> deleteUser(@PathVariable("userId") String username,
 			@RequestHeader("Authorization") String token) {
 		User user = userService.findUser(username);
 		userService.deleteUser(user);
