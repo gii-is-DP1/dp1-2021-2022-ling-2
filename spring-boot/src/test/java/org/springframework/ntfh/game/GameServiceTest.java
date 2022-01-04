@@ -18,7 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.DiscardCommand;
 import org.springframework.ntfh.command.GoldOnKillCommand;
 import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
@@ -30,13 +29,11 @@ import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
@@ -61,9 +58,6 @@ public class GameServiceTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PlayerService playerService;
 
     @Autowired
     private CharacterService characterService;
@@ -110,17 +104,7 @@ public class GameServiceTest {
 
         user1.setCharacter(characterService.findCharacterById(2).get());
         user2.setCharacter(characterService.findCharacterById(4).get());
-        Player player1 = playerService.createFromUser(user1, lobbyTester, 0);
-        Player player2 = playerService.createFromUser(user1, lobbyTester, 1);
-        List<Player> players = Lists.list(player1, player2);
-
-        // gameTester = new Game();
-        // gameTester.setStartTime(System.currentTimeMillis());
-        // gameTester.setHasScenes(true);
-        // gameTester.setPlayers(players);
-        // gameTester.setLeader(player1);
-        // gameService.save(gameTester);
-
+        
         gameTester = gameService.createFromLobby(lobbyTester);
         user1.setLobby(lobbyTester);
         playerTester = gameTester.getPlayers().get(0);
@@ -150,16 +134,6 @@ public class GameServiceTest {
         gameService.findAll().forEach(g -> gamesServiceList.add(g));
 
         assertEquals(false, gamesServiceList.isEmpty());
-    }
-
-    // H1- Possibly delete
-    @Test
-    public void testfindAllListVersion_Failure() {
-        List<Game> gamesServiceList = new ArrayList<>();
-        gameService.findAll().forEach(g -> gamesServiceList.add(g));
-        gamesServiceList.clear();
-
-        assertEquals(0, gamesServiceList.size());
     }
 
     @Test
@@ -213,10 +187,10 @@ public class GameServiceTest {
     // H25 + E1
     @Test
     void testRegularBountyCollection() {
-        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(1).get(), gameTester);
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(3).get(), gameTester);
         new DealDamageCommand(8000, enemyIngame).execute();
-        new GoldOnKillCommand(5, enemyIngame, playerTester).execute();
-        assertEquals(5, playerTester.getGold());
+        new GoldOnKillCommand(enemyIngame.getEnemy().getGold(), enemyIngame, playerTester).execute();
+        assertEquals(1, playerTester.getGold());
     }
 
     // H26 + E1
