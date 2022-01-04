@@ -1,6 +1,7 @@
 package org.springframework.ntfh.cardlogic.abilitycard.warrior;
 
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.ntfh.command.DealDamageCommand;
@@ -39,7 +40,8 @@ public class Espadazo {
             new DrawCommand(1, playerFrom).execute();
         }
         
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(cardIngame);
-        //TODO condición de repetición
+        playerFrom.getGame().getEnemiesFighting().stream().forEach(x-> x.getPlayedCardsOnMeInTurn().add(cardIngame));
+
+        
     }
 }
