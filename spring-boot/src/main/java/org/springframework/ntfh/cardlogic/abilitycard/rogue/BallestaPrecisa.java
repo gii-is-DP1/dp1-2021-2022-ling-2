@@ -6,6 +6,7 @@ import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
 /**
+ * Daño: 2
  * Si ya utilizaste una "Ballesta precisa" contra este mismo enemigo, el daño de
  * esta carta es 3.
  * 
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class BallestaPrecisa {
 
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        // TODO missing the complex condition
+        // TODO missing the damage increment
         new DealDamageCommand(2, targetedEnemy).execute();
     }
 }

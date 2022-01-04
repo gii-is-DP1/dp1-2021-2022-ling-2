@@ -2,7 +2,6 @@ package org.springframework.ntfh.entity.user;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ntfh.entity.game.history.GameHistory;
 import org.springframework.ntfh.entity.game.history.GameHistoryRepository;
-import org.springframework.ntfh.entity.user.authorities.Authorities;
-import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,9 +33,6 @@ public class UserController {
 	// an action is accessing his data or not
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private AuthoritiesService authoritiesService;
 
 	@Autowired
 	private GameHistoryRepository gameHistoryRepository;
@@ -79,25 +73,20 @@ public class UserController {
 	 * @author andrsdt
 	 * 
 	 */
-	@PutMapping()
+	@PutMapping
 	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
-
-		if (user.getEnabled() != null) {
-			userService.banUser(user);
-		} else {
-			userService.updateUser(user, token);
-		}
+		User updatedUser = userService.updateUser(user, token);
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
-		Boolean editingAdminProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		if (sentByAdmin && !editingAdminProfile)
-			// Don't return a new token if an admin is editing another user's profile
-			return new ResponseEntity<>(HttpStatus.OK);
+		Boolean editingOwnProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
+		Map<String, String> returnBody = null;
 
-		Set<Authorities> authorities = authoritiesService.getAuthorities(user);
-		user.setAuthorities(authorities);
-		String tokenWithUpdatedData = TokenUtils.generateJWTToken(user);
-		return new ResponseEntity<>(Map.of("authorization", tokenWithUpdatedData), HttpStatus.OK);
+		// Don't return a new token if an admin is editing another user's profile
+		if (updatedUser != null && (!sentByAdmin || editingOwnProfile)) {
+			String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
+			returnBody = Map.of("authorization", tokenWithUpdatedData);
+		}
+		return new ResponseEntity<>(returnBody, HttpStatus.OK);
 	}
 
 	@PostMapping("register")
@@ -119,6 +108,13 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@PutMapping("{userId}/ban")
+	public ResponseEntity<User> toggleBanUser(@PathVariable("userId") String username,
+			@RequestHeader("Authorization") String token) {
+		userService.toggleBanUser(username, token);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	// TODO make this work
 	// TODO use service instead of repository
 	@GetMapping("{userId}/history")
@@ -127,11 +123,15 @@ public class UserController {
 		return new ResponseEntity<>(gameHistory, HttpStatus.OK);
 	}
 
-	@DeleteMapping("{username}")
-	public ResponseEntity<User> deleteUser(@PathVariable("username") String username,
+	/**
+	 * @author alegestor
+	 */
+	@DeleteMapping("{userId}")
+	public ResponseEntity<User> deleteUser(@PathVariable("userId") String username,
 			@RequestHeader("Authorization") String token) {
-		// TODO implement
-		return null;
+		User user = userService.findUser(username);
+		userService.deleteUser(user);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
