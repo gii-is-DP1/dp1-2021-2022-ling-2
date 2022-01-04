@@ -17,9 +17,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
+import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.DiscardCommand;
+import org.springframework.ntfh.command.GoldOnKillCommand;
 import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
+import org.springframework.ntfh.entity.enemy.EnemyService;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
@@ -74,6 +79,12 @@ public class GameServiceTest {
 
     @Autowired
     private AbilityCardIngameService abilityCardIngameService;
+
+    @Autowired
+    private EnemyService enemyService;
+    
+    @Autowired
+    private EnemyIngameService enemyIngameService;
 
     private Game gameTester;
 
@@ -197,6 +208,15 @@ public class GameServiceTest {
         assertEquals(3, playerTester.getHand().size());
         abilityCardIngameService.refillHandWithCards(playerTester);
         assertEquals(4, playerTester.getHand().size());
+    }
+
+    // H25 + E1
+    @Test
+    void testRegularBountyCollection() {
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(1).get(), gameTester);
+        new DealDamageCommand(8000, enemyIngame).execute();
+        new GoldOnKillCommand(5, enemyIngame, playerTester).execute();
+        assertEquals(5, playerTester.getGold());
     }
 
     // H26 + E1
