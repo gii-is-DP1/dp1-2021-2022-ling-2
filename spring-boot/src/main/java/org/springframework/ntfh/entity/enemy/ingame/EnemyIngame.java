@@ -43,14 +43,14 @@ public class EnemyIngame extends BaseEntity {
     @NotNull
     private Integer currentEndurance;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = AbilityCardTypeEnum.class)
-    @CollectionTable(name = "CardPlayedOnMe", joinColumns = @JoinColumn(name = "enemy_id"))
-    @Column(name = "CardPlayedOnMe_type_enum")
-    private Set<AbilityCardTypeEnum> playedCardsOnMeInTurn = new HashSet<AbilityCardTypeEnum>();
-
     @NotNull
     private Boolean restrained;
+
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = AbilityCardTypeEnum.class)
+    @CollectionTable(name = "card_played_on_enemy_in_turn", joinColumns = @JoinColumn(name = "enemy_id"))
+    @Column(name = "ability_card_type_enum")
+    private Set<AbilityCardTypeEnum> playedCardsOnMeInTurn = new HashSet<>();
 
     @Transient
     @JsonIgnore

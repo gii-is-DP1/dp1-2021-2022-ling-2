@@ -100,16 +100,13 @@ public class PlayerState implements TurnState {
                     " is not implemented");
         }
 
-        // After playing any card, add such a card to the list of cards played this turn
-        // playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
-        // enemyIngameService.findById(enemyId).getPlayedCardsOnMeInTurn().add(abilityCardIngame); 
-
-        // And make sure to move the card to the discard pile
+        // Make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();
         player.getHand().remove(abilityCardIngame);
         player.getDiscardPile().add(abilityCardIngame);
 
         // Check if the card is exiliable and if so, remove it from the discard pile too
+        // TODO handled already? does it work?
     }
 
     @Override

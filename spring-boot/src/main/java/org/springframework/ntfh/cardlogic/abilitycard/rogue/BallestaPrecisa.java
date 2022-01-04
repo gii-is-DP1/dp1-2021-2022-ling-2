@@ -20,12 +20,12 @@ import org.springframework.stereotype.Component;
 public class BallestaPrecisa {
 
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        
-        if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.BALLESTA_PRECISA)){
-            new DealDamageCommand(3, targetedEnemy).execute();
-        }else{
-            new DealDamageCommand(2, targetedEnemy).execute();
-        }
+        Integer damage = 2;
+
+        if (targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.BALLESTA_PRECISA))
+            damage = 3;
+
+        new DealDamageCommand(damage, targetedEnemy).execute();
 
         targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.BALLESTA_PRECISA);
     }
