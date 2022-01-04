@@ -37,8 +37,14 @@ public class PlayerState implements TurnState {
     }
 
     @Override
-    public void execute(Game game) {
+    public void preState(Game game) {
         // TODO auto-generated method stub
+    }
+
+    @Override
+    public void postState(Game game) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override

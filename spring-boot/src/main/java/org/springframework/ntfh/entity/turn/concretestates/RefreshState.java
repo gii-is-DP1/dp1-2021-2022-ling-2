@@ -14,8 +14,15 @@ public class RefreshState implements TurnState {
     }
 
     @Override
-    public void execute(Game game) {
-        // TODO implement refreshing and auto creating and setting new turn
+    public void preState(Game game) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void postState(Game game) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override

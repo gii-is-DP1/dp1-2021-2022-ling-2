@@ -14,8 +14,15 @@ public class EnemyState implements TurnState {
     }
 
     @Override
-    public void execute(Game game) {
-        // TODO implement horde attack
+    public void preState(Game game) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void postState(Game game) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
