@@ -122,7 +122,6 @@ public class TurnService {
         TurnStateType nextState = state.getNextState();
         turn.setStateType(nextState);
         TurnState newState = getState(turn);
-        newState.preState(turn.getGame()); // Execute the pre-state method of the new state right after setting it
     }
 
     /**
