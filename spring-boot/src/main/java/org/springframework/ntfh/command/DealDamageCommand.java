@@ -9,16 +9,19 @@ import lombok.AllArgsConstructor;
 public class DealDamageCommand implements Command {
 
     private Integer damage;
-    //private Player playerFrom;
+    // private Player playerFrom;
     private EnemyIngame targetedEnemy;
 
     @Override
     public void execute() {
+        // TODO move this to somewhere else, not scalable
         Integer currentEndurance = targetedEnemy.getCurrentEndurance();
-        Boolean whetstoneCondition = targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
-        Boolean corrosiveArrow = targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
-        if(whetstoneCondition || corrosiveArrow){
-            damage = damage+1;
+        Boolean whetstoneCondition = targetedEnemy.getPlayedCardsOnMeInTurn()
+                .contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
+        Boolean corrosiveArrow = targetedEnemy.getPlayedCardsOnMeInTurn()
+                .contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
+        if (whetstoneCondition || corrosiveArrow) {
+            damage++;
         }
 
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
@@ -27,8 +30,8 @@ public class DealDamageCommand implements Command {
         if (dead) {
             targetedEnemy.setCurrentEndurance(0);
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
-            //Integer playerKillCount = playerFrom.getKills();
-            //playerFrom.setKills(playerKillCount+1);
+            // Integer playerKillCount = playerFrom.getKills();
+            // playerFrom.setKills(playerKillCount+1);
         }
     }
 }
