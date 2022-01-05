@@ -16,7 +16,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.GoldOnKillCommand;
+import org.springframework.ntfh.command.GetGloryCommand;
+import org.springframework.ntfh.command.GetGoldCommand;
 import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
@@ -124,7 +125,7 @@ public class GameServiceTest {
         assertEquals(INITIAL_GAMES_COUNT+1, count);
     }
 
-    // H1+
+    // H1 + E1
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
@@ -164,7 +165,7 @@ public class GameServiceTest {
         Game tester = gameService.createFromLobby(lobbyTester);
         gameService.delete(tester);
         assertThrows(DataAccessException.class, () -> {
-            gameService.findGameById(tester.getId());
+                gameService.findGameById(tester.getId());
         });
     }
 
@@ -182,10 +183,15 @@ public class GameServiceTest {
     // H25 + E1
     @Test
     void testRegularBountyCollection() {
-        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(3).get(), gameTester);
-        new DealDamageCommand(8000, enemyIngame).execute();
-        new GoldOnKillCommand(enemyIngame.getEnemy().getGold(), enemyIngame, playerTester).execute();
+        // Slinger de 2 de vida
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        turnService.initializeFromGame(gameTester);
+        new DealDamageCommand(2, enemyIngame);
+        new GetGoldCommand(enemyIngame.getEnemy().getGold(), playerTester).execute();
+        new GetGloryCommand(enemyIngame.getEnemy().getExtraGlory(), playerTester).execute();
+        
         assertEquals(1, playerTester.getGold());
+        assertEquals(1, playerTester.getGlory());
     }
 
     // H26 + E1
@@ -210,7 +216,7 @@ public class GameServiceTest {
         playerTester.setGold(4);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
         turnService.initializeFromGame(gameTester);
-        gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
+        gameService.setNextTurnState(gameTester.getCurrentTurn());
 
         assertThrows(IllegalArgumentException.class, () -> {gameService.buyMarketCard(marketCardIngameId, playerToken);});
     }
