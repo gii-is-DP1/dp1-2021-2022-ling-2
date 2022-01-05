@@ -19,9 +19,9 @@ public class GolpeDeBaston {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
         
         if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.GOLPE_DE_BASTON)){
-            new DealDamageCommand(2, targetedEnemy).execute();
+            new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
         }else{
-            new DealDamageCommand(1, targetedEnemy).execute();
+            new DealDamageCommand(1, playerFrom, targetedEnemy).execute();
         }
 
         playerFrom.getGame().getEnemiesFighting()

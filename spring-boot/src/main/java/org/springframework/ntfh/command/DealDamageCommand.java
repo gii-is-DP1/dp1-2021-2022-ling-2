@@ -2,6 +2,7 @@ package org.springframework.ntfh.command;
 
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
+import org.springframework.ntfh.entity.player.Player;
 
 import lombok.AllArgsConstructor;
 
@@ -9,7 +10,7 @@ import lombok.AllArgsConstructor;
 public class DealDamageCommand implements Command {
 
     private Integer damage;
-    //private Player playerFrom;
+    private Player playerFrom;
     private EnemyIngame targetedEnemy;
 
     @Override
@@ -27,8 +28,12 @@ public class DealDamageCommand implements Command {
         if (dead) {
             targetedEnemy.setCurrentEndurance(0);
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
-            //Integer playerKillCount = playerFrom.getKills();
-            //playerFrom.setKills(playerKillCount+1);
+            Integer playerKillCount = playerFrom.getKills();
+            Integer enemyDefeatedGlory = targetedEnemy.getEnemy().getBaseGlory() + targetedEnemy.getEnemy().getExtraGlory();
+            Integer enemyDefeatedGold = targetedEnemy.getEnemy().getGold();
+            playerFrom.setKills(playerKillCount+1);
+            new GiveGloryCommand(enemyDefeatedGlory, playerFrom).execute();
+            new GiveGoldCommand(enemyDefeatedGold, playerFrom).execute();
         }
     }
 }

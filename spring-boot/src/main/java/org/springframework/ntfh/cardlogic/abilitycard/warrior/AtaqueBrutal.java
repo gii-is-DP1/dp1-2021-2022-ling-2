@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AtaqueBrutal {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(3, targetedEnemy).execute();
+        new DealDamageCommand(3, playerFrom, targetedEnemy).execute();
         new DiscardCommand(1, playerFrom).execute();
     }
 }

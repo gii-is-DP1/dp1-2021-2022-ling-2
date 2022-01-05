@@ -23,7 +23,7 @@ public class BallestaPrecisa {
             damage = 3;
         }
 
-        new DealDamageCommand(damage, targetedEnemy).execute();
+        new DealDamageCommand(damage, playerFrom, targetedEnemy).execute();
 
         playerFrom.getGame().getEnemiesFighting()
                 .forEach(x -> x.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.BALLESTA_PRECISA));

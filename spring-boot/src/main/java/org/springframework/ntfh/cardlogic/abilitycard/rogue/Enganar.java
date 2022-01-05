@@ -1,6 +1,6 @@
 package org.springframework.ntfh.cardlogic.abilitycard.rogue;
 
-import org.springframework.ntfh.command.GetGoldCommand;
+import org.springframework.ntfh.command.GiveGoldCommand;
 import org.springframework.ntfh.command.RestrainCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.player.Player;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class Enganar {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         if (playerFrom.getGold() >= 2) {
-            new GetGoldCommand(-2, playerFrom).execute();
+            new GiveGoldCommand(-2, playerFrom).execute();
             new RestrainCommand(targetedEnemy).execute();
         } else {
             throw new IllegalStateException("You don't have enough gold to play this card");

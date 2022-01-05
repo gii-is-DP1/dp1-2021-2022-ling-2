@@ -5,7 +5,7 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class GetGloryCommand implements Command {
+public class GiveGloryCommand implements Command {
 
     private Integer glory;
     private Player playerFrom;

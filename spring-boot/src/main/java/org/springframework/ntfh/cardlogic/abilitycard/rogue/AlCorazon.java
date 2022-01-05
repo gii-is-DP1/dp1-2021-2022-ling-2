@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlCorazon {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(4, targetedEnemy).execute();
+        new DealDamageCommand(4, playerFrom, targetedEnemy).execute();
 
         if(!targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.AL_CORAZON)){
             new GoldOnKillCommand(1, targetedEnemy, playerFrom).execute();

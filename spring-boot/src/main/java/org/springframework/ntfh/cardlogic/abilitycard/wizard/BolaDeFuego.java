@@ -21,7 +21,7 @@ public class BolaDeFuego {
         Game game = playerFrom.getGame();
         List<EnemyIngame> targetList = game.getEnemiesFighting();
         for (EnemyIngame target : targetList) {
-            new DealDamageCommand(2, target).execute();
+            new DealDamageCommand(2, playerFrom, target).execute();
         }
         List<Player> targets = game.getPlayers();
         targets.remove(playerFrom);

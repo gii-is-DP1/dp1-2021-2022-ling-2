@@ -21,7 +21,7 @@ public class DisparoCertero {
     GameService gameService;
 
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(3, targetedEnemy).execute();
+        new DealDamageCommand(3, playerFrom, targetedEnemy).execute();
         new AttackPhaseEnd(gameService, playerFrom).execute();
     }
 }

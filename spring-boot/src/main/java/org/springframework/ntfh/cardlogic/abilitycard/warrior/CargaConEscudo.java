@@ -1,7 +1,7 @@
 package org.springframework.ntfh.cardlogic.abilitycard.warrior;
 
 import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.GetGuardCommand;
+import org.springframework.ntfh.command.GiveGuardCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CargaConEscudo {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(2, targetedEnemy).execute();
-        new GetGuardCommand(2, playerFrom).execute();
+        new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
+        new GiveGuardCommand(2, playerFrom).execute();
     }
 }

@@ -21,6 +21,6 @@ public class ArcoCompuesto {
         Integer damageModifier = playerFrom.getCharacterType().getProficiencies().stream()
                 .filter(proficiency -> neededProfs.contains(proficiency.getProficiencyTypeEnum()))
                 .findFirst().orElseThrow().getSecondaryDebuff();
-        new DealDamageCommand(4 + damageModifier, targetedEnemy).execute();
+        new DealDamageCommand(4 + damageModifier, playerFrom, targetedEnemy).execute();
     }
 }
