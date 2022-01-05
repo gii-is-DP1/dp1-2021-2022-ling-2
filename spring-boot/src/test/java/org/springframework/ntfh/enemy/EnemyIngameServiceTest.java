@@ -29,7 +29,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class EnemyIngameServiceTest extends IngameServiceTest{
+public class EnemyIngameServiceTest {
     
     @Autowired
     private EnemyService enemyService;
