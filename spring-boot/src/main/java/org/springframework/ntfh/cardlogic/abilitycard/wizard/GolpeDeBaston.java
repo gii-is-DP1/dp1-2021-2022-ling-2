@@ -1,10 +1,7 @@
 package org.springframework.ntfh.cardlogic.abilitycard.wizard;
 
-import java.util.List;
-
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
-import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;

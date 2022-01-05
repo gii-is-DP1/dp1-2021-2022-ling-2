@@ -2,7 +2,6 @@ package org.springframework.ntfh.command;
 
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
-import org.springframework.ntfh.entity.player.Player;
 
 import lombok.AllArgsConstructor;
 
