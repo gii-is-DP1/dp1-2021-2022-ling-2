@@ -150,6 +150,9 @@ public class TurnService {
         game.getEnemiesFighting().forEach(e -> {
             e.getPlayedCardsOnMeInTurn().clear();
             e.setRestrained(false);
+
+            //TODO el efecto de la carta de trampa funciona cuando le da la gana y cuando no no. REVISAR
+            //aqui no afecta nunca porque se limpiarán las cartas del enemigo antes, así que al menos no dará problemas
             if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
                 Player playerFrom = game.getPlayers().stream().filter(player -> 
                     player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);

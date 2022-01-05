@@ -25,6 +25,5 @@ export const SelfPlayableCards = [
   "PIEDRA_DE_AMOLAR",
   "VIAL_DE_CONJURACION",
   "ELIXIR_DE_CONCENTRACION",
-  "CAPA_ELFICA",
   "ARMADURA_DE_PLACAS",
 ];
