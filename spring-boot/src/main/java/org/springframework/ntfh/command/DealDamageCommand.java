@@ -15,11 +15,14 @@ public class DealDamageCommand implements Command {
 
     @Override
     public void execute() {
+        // TODO move this to somewhere else, not scalable
         Integer currentEndurance = targetedEnemy.getCurrentEndurance();
-        Boolean whetstoneCondition = targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
-        Boolean corrosiveArrowCondition = targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
-        if(whetstoneCondition || corrosiveArrowCondition){
-            damage = damage+1;
+        Boolean whetstoneCondition = targetedEnemy.getPlayedCardsOnMeInTurn()
+                .contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
+        Boolean corrosiveArrow = targetedEnemy.getPlayedCardsOnMeInTurn()
+                .contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
+        if (whetstoneCondition || corrosiveArrow) {
+            damage++;
         }
 
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
@@ -29,9 +32,10 @@ public class DealDamageCommand implements Command {
             targetedEnemy.setCurrentEndurance(0);
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
             Integer playerKillCount = playerFrom.getKills();
-            Integer enemyDefeatedGlory = targetedEnemy.getEnemy().getBaseGlory() + targetedEnemy.getEnemy().getExtraGlory();
+            Integer enemyDefeatedGlory = targetedEnemy.getEnemy().getBaseGlory()
+                    + targetedEnemy.getEnemy().getExtraGlory();
             Integer enemyDefeatedGold = targetedEnemy.getEnemy().getGold();
-            playerFrom.setKills(playerKillCount+1);
+            playerFrom.setKills(playerKillCount + 1);
             new GiveGloryCommand(enemyDefeatedGlory, playerFrom).execute();
             new GiveGoldCommand(enemyDefeatedGold, playerFrom).execute();
         }

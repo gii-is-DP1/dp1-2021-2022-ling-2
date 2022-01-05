@@ -62,14 +62,21 @@ public class EnemyIngameService {
         List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
         List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
 
-        while (!enemiesInPile.isEmpty() && enemiesFighting.size() < 3) {
+        // If there area already 3 enemies (or even 4 considering a warlord), there is
+        // no need to refill
+        if (enemiesFighting.size() >= 3)
+            return;
+
+        Integer enemiesToRefill = enemiesFighting.isEmpty() ? 3 : 1;
+
+        while (!enemiesInPile.isEmpty() && enemiesToRefill > 0) {
             // The game rules tell us that the horde enemy cards have to be taken from the
             // bottom of the pile
             EnemyIngame lastEnemyInPile = enemiesInPile.get(0);
             enemiesInPile.remove(lastEnemyInPile);
             enemiesFighting.add(lastEnemyInPile);
+            enemiesToRefill--;
         }
-        // TODO do we have to .save() something as we were doing before?
     }
 
     @Transactional

@@ -7,6 +7,7 @@ export interface Player {
   glory: number;
   kills: number;
   gold: number;
+  dead: boolean;
   wounds: number;
   turnOrder: number;
   user: User;
@@ -14,5 +15,4 @@ export interface Player {
   hand: AbilityCardIngame[];
   discardPile: AbilityCardIngame[];
   abilityPile: AbilityCardIngame[];
-  isDead: boolean;
 }
