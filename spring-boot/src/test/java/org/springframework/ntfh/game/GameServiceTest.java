@@ -217,4 +217,14 @@ public class GameServiceTest {
         assertThrows(IllegalArgumentException.class, () -> {gameService.buyMarketCard(marketCardIngameId, playerToken);});
     }
 
+    // H27 + E1
+    @Test
+    void testKillCount() {
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        turnService.initializeFromGame(gameTester);
+        new DealDamageCommand(2, playerTester, enemyIngame).execute();
+    
+        assertEquals(1, playerTester.getKills());
+    }
+
 }
