@@ -19,7 +19,6 @@ export const SelfPlayableCards = [
   "ROBAR_BOLSILLOS",
   "SAQUEO_ORO",
   "SAQUEO_ORO_GLORIA",
-  "TRAMPA",
 
   // MARKET
   "POCION_CURATIVA",

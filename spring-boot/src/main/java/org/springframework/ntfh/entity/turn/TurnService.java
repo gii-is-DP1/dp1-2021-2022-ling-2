@@ -7,8 +7,11 @@ import java.util.Random;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ntfh.command.DealDamageCommand;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
@@ -147,6 +150,11 @@ public class TurnService {
         game.getEnemiesFighting().forEach(e -> {
             e.getPlayedCardsOnMeInTurn().clear();
             e.setRestrained(false);
+            if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
+                Player playerFrom = game.getPlayers().stream().filter(player -> 
+                    player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
+                new DealDamageCommand(100, playerFrom, e).execute();
+            }
         });
 
         // Get the next player. Following the previously set turnOrder, the next player
