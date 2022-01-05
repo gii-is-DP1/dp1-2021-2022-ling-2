@@ -1,7 +1,8 @@
 package org.springframework.ntfh.cardlogic.abilitycard.ranger;
 
-import org.springframework.ntfh.command.GetGoldCommand;
-import org.springframework.ntfh.command.RecoverQSCommand;
+import org.springframework.ntfh.command.GiveGoldCommand;
+import org.springframework.ntfh.command.RecoverCardCommand;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.player.Player;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.ntfh.entity.player.Player;
  */
 public class RecogerFlechas {
     public void execute(Player playerFrom) {
-        new GetGoldCommand(1, playerFrom).execute();
-        new RecoverQSCommand(playerFrom).execute();
+        new GiveGoldCommand(1, playerFrom).execute();
+        new RecoverCardCommand(playerFrom, AbilityCardTypeEnum.DISPARO_RAPIDO).execute();
     }
 }

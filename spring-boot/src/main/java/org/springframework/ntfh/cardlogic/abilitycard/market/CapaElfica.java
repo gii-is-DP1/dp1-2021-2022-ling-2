@@ -15,8 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CapaElfica {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        // We don't need to check for proficiencies, because the player must have had
-        // the necessary proficiency to buy this card
         new RestrainCommand(targetedEnemy).execute();
     }
 }

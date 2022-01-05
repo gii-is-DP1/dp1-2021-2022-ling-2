@@ -5,15 +5,15 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class GetGloryCommand implements Command {
+public class GiveGoldCommand implements Command {
 
-    private Integer glory;
+    private Integer gold;
 
     private Player playerFrom;
 
     @Override
     public void execute() {
-        Integer currentGlory = playerFrom.getGlory();
-        playerFrom.setGlory(currentGlory + glory);
+        Integer currentGold = playerFrom.getGold();
+        playerFrom.setGold(currentGold + gold);
     }
 }

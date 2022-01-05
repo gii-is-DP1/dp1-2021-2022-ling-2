@@ -16,8 +16,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.GetGloryCommand;
-import org.springframework.ntfh.command.GetGoldCommand;
 import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
@@ -174,7 +172,7 @@ public class GameServiceTest {
     void testRestorePlayerHand() {
         turnService.initializeFromGame(gameTester);
         abilityCardIngameService.refillHandWithCards(playerTester);
-        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0)).execute();;
+        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0).getAbilityCardTypeEnum()).execute();
         assertEquals(3, playerTester.getHand().size());
         abilityCardIngameService.refillHandWithCards(playerTester);
         assertEquals(4, playerTester.getHand().size());
@@ -186,10 +184,8 @@ public class GameServiceTest {
         // Slinger de 2 de vida
         EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         turnService.initializeFromGame(gameTester);
-        new DealDamageCommand(2, enemyIngame);
-        new GetGoldCommand(enemyIngame.getEnemy().getGold(), playerTester).execute();
-        new GetGloryCommand(enemyIngame.getEnemy().getExtraGlory(), playerTester).execute();
-        
+        new DealDamageCommand(2, playerTester, enemyIngame).execute();
+    
         assertEquals(1, playerTester.getGold());
         assertEquals(1, playerTester.getGlory());
     }

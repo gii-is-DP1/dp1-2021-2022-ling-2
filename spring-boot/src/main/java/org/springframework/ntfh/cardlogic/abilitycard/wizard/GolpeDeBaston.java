@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GolpeDeBaston {
-    public void execute(Player playerFrom, EnemyIngame targetedEnemy){
-        
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
 
-        if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.GOLPE_DE_BASTON)){
-            new DealDamageCommand(2, targetedEnemy).execute();
-        }else{
-            new DealDamageCommand(1, targetedEnemy).execute();
-        }
+        Integer damage = 1;
+
+        if (targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.GOLPE_DE_BASTON))
+            damage = 2;
+
+        new DealDamageCommand(damage, playerFrom, targetedEnemy).execute();
 
         targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.GOLPE_DE_BASTON);
     }

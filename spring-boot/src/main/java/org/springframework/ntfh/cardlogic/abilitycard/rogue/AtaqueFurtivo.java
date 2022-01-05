@@ -17,13 +17,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AtaqueFurtivo {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(2, targetedEnemy).execute();
+        new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
 
         if(!targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.ATAQUE_FURTIVO)){
             new GoldOnKillCommand(1, targetedEnemy, playerFrom).execute();
         }
 
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.ATAQUE_FURTIVO);
+        playerFrom.getGame().getEnemiesFighting()
+                .forEach(x -> x.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.ATAQUE_FURTIVO));
     }
 
 }

@@ -19,11 +19,13 @@ public class BallestaPrecisa {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         Integer damage = 2;
 
-        if (targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.BALLESTA_PRECISA))
+        if (targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.BALLESTA_PRECISA)){
             damage = 3;
+        }
 
-        new DealDamageCommand(damage, targetedEnemy).execute();
+        new DealDamageCommand(damage, playerFrom, targetedEnemy).execute();
 
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.BALLESTA_PRECISA);
+        playerFrom.getGame().getEnemiesFighting()
+                .forEach(x -> x.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.BALLESTA_PRECISA));
     }
 }

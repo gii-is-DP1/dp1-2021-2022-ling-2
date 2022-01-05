@@ -19,7 +19,7 @@ public class LluviaDeFlechas {
         Game game = playerFrom.getGame();
         List<EnemyIngame> targetList = game.getEnemiesFighting();
         for (EnemyIngame target : targetList) {
-            new DealDamageCommand(2, target).execute();
+            new DealDamageCommand(2, playerFrom, target).execute();
         }
         // TODO daño al aliado con menos heridas en caso de empate elección
     }

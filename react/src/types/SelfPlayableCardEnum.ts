@@ -7,6 +7,7 @@ export const SelfPlayableCards = [
   // WARRIOR
   "PASO_ATRAS",
   "VOZ_DE_ALIENTO",
+  "LLUVIA_DE_FLECHAS",
 
   // WIZARD
   "AURA_PROTECTORA",
@@ -18,5 +19,11 @@ export const SelfPlayableCards = [
   "ROBAR_BOLSILLOS",
   "SAQUEO_ORO",
   "SAQUEO_ORO_GLORIA",
-  "TRAMPA",
+
+  // MARKET
+  "POCION_CURATIVA",
+  "PIEDRA_DE_AMOLAR",
+  "VIAL_DE_CONJURACION",
+  "ELIXIR_DE_CONCENTRACION",
+  "ARMADURA_DE_PLACAS",
 ];

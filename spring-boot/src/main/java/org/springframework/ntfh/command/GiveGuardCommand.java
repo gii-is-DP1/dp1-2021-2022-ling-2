@@ -5,7 +5,7 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class GetGuardCommand implements Command {
+public class GiveGuardCommand implements Command {
 
     private Integer guard;
 
