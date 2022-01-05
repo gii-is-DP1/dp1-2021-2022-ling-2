@@ -172,7 +172,7 @@ public class GameServiceTest {
     void testRestorePlayerHand() {
         turnService.initializeFromGame(gameTester);
         abilityCardIngameService.refillHandWithCards(playerTester);
-        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0)).execute();;
+        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0).getAbilityCardTypeEnum()).execute();
         assertEquals(3, playerTester.getHand().size());
         abilityCardIngameService.refillHandWithCards(playerTester);
         assertEquals(4, playerTester.getHand().size());
