@@ -88,10 +88,6 @@ public class MarketState implements TurnState {
                     "This card is not available for the " + player.getCharacterTypeEnum().toString().toLowerCase());
         }
 
-        if (player.getHand().size() >= 4) {
-            throw new IllegalArgumentException("You can't have more than 4 cards in your hand");
-        }
-
         Integer price = marketCardIngame.getMarketCard().getPrice();
         if (player.getGold() < price) {
             throw new IllegalArgumentException("You do not have enough gold to buy this card");

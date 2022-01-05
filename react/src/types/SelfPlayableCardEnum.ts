@@ -7,6 +7,7 @@ export const SelfPlayableCards = [
   // WARRIOR
   "PASO_ATRAS",
   "VOZ_DE_ALIENTO",
+  "LLUVIA_DE_FLECHAS",
 
   // WIZARD
   "AURA_PROTECTORA",

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FlechaCorrosiva {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(1, targetedEnemy).execute();
+        new DealDamageCommand(1, playerFrom, targetedEnemy).execute();
         new DiscardCommand(1, playerFrom).execute();
         targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.FLECHA_CORROSIVA);
     }

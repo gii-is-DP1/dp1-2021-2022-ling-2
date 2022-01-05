@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DisparoGelido {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(1, targetedEnemy).execute();
+        new DealDamageCommand(1, playerFrom, targetedEnemy).execute();
         new DrawCommand(1, playerFrom).execute();
         new RestrainCommand(targetedEnemy).execute();
     }

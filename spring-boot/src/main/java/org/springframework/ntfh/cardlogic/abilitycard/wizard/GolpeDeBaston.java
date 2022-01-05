@@ -22,7 +22,7 @@ public class GolpeDeBaston {
         if (targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.GOLPE_DE_BASTON))
             damage = 2;
 
-        new DealDamageCommand(damage, targetedEnemy).execute();
+        new DealDamageCommand(damage, playerFrom, targetedEnemy).execute();
 
         targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.GOLPE_DE_BASTON);
     }

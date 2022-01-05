@@ -22,7 +22,7 @@ public class DagaElfica {
         // TODO prescindir del atributo cardPlayed de alguna forma. Esto no encaja con
         // ninguna estructura de las que se contemplan en el java reflection así que
         // daría error al ejecutarlo.
-        new DealDamageCommand(2, targetedEnemy).execute();
+        new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
 
         Boolean hasDexterity = playerFrom.getCharacterType().getProficiencies().stream()
                 .anyMatch(proficiency -> proficiency.getProficiencyTypeEnum().equals(ProficiencyTypeEnum.DEXTERITY));

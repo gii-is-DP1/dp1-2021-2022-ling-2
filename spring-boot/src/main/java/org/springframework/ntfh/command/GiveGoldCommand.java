@@ -5,7 +5,7 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class GetGoldCommand implements Command {
+public class GiveGoldCommand implements Command {
 
     private Integer gold;
 

@@ -17,7 +17,7 @@ import org.springframework.ntfh.entity.player.Player;
  */
 public class DisparoRapido {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(1, targetedEnemy).execute();
+        new DealDamageCommand(1, playerFrom, targetedEnemy).execute();
         new DrawCommand(1, playerFrom).execute();
         AbilityCardIngame cartaRobada = playerFrom.getHand().get(-1);
         if(cartaRobada.getAbilityCardTypeEnum().equals(AbilityCardTypeEnum.DISPARO_RAPIDO)){
