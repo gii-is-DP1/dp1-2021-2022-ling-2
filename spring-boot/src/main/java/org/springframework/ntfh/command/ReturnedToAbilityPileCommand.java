@@ -12,19 +12,19 @@ import lombok.AllArgsConstructor;
 public class ReturnedToAbilityPileCommand implements Command {
 
     private Player playerFrom;
-    private AbilityCardIngame cardPlayed;
+    private AbilityCardTypeEnum cardToReturn;
 
     @Override
     public void execute() {
         List<AbilityCardIngame> inHand = playerFrom.getHand();
         List<AbilityCardIngame> abilityPile = playerFrom.getAbilityPile();
-        AbilityCardTypeEnum cardPlayedEnum = cardPlayed.getAbilityCardTypeEnum();
         for (AbilityCardIngame card : inHand) {
             AbilityCardTypeEnum cardEnum = card.getAbilityCardTypeEnum();
-            if (cardEnum.equals(cardPlayedEnum)) {
-                abilityPile.add(cardPlayed);
+            if (cardEnum == cardToReturn) {
+                abilityPile.add(card);
                 playerFrom.setAbilityPile(abilityPile);
-                inHand.remove(cardPlayed);
+                inHand.remove(card);
+                playerFrom.setHand(inHand);
                 break;
             }
         }

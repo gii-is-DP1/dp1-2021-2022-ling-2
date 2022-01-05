@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Daño: -
  * Modificador: -
  * Roba 3 cartas.
- * 
+ *  
  * @author Pablosancval
  */
 @Component

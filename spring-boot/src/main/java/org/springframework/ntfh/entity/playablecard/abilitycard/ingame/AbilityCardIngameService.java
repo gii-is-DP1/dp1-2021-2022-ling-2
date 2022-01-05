@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.ntfh.command.GiveWoundCommand;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
@@ -89,6 +90,9 @@ public class AbilityCardIngameService {
         while (!playerAbilityPile.isEmpty() && playerHand.size() < 4) {
             AbilityCardIngame lastAbilityCardInPile = playerAbilityPile.get(0);
             playerAbilityPile.remove(lastAbilityCardInPile);
+            if (playerAbilityPile.isEmpty())
+                new GiveWoundCommand(player).execute();
+
             playerHand.add(lastAbilityCardInPile);
         }
         player.setAbilityPile(playerAbilityPile);

@@ -7,8 +7,11 @@ import java.util.Random;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ntfh.command.DealDamageCommand;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
@@ -144,7 +147,18 @@ public class TurnService {
             nextTurn.setCurrentScene(randomScene);
         }
 
-        game.getEnemiesFighting().forEach(e -> e.getPlayedCardsOnMeInTurn().clear());
+        game.getEnemiesFighting().forEach(e -> {
+            e.getPlayedCardsOnMeInTurn().clear();
+            e.setRestrained(false);
+
+            //TODO el efecto de la carta de trampa funciona cuando le da la gana y cuando no no. REVISAR
+            //aqui no afecta nunca porque se limpiarán las cartas del enemigo antes, así que al menos no dará problemas
+            if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
+                Player playerFrom = game.getPlayers().stream().filter(player -> 
+                    player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
+                new DealDamageCommand(100, playerFrom, e).execute();
+            }
+        });
 
         // Get the next player. Following the previously set turnOrder, the next player
         // will be the one after the current player, considering they are alive. In case
@@ -153,6 +167,12 @@ public class TurnService {
         // ! There will probably be a bug if currentTurn.getPlayer() dies since he/she
         // won't be in the list anymore and indexOf will return -1
         List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
+        if (alivePlayers.isEmpty()) {
+            // If there are no alive players, the game is over
+            // TODO make the game finish early if everybody dies. Right now this returns an
+            // IndexOutOfBoundsException because of the following line "alivePlayers.get(0)"
+            return;
+        }
         Player nextPlayer = alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size()
                 ? alivePlayers.get(0)
                 : alivePlayers.get(alivePlayers.indexOf(currentTurn.getPlayer()) + 1);
