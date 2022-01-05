@@ -80,13 +80,13 @@ INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (3, 5)
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (4, 1);
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (4, 5);
 
--- Character WIZARD has proficiency spell
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (5, 6);
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (6, 6);
-
 -- Character WARRIOR has proficiency melee
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (7, 2);
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (8, 2);
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (5, 2);
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (6, 2);
+
+-- Character WIZARD has proficiency spell
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (7, 6);
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (8, 6);
 
 INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (1, 'HORDE', 'WARRIOR', null, 4, 0, 2, 0);
 INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (2, 'HORDE', 'WARRIOR', null, 4, 0, 2, 0);
