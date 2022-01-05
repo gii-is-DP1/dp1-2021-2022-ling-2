@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 public class GetGloryCommand implements Command {
 
     private Integer glory;
-
     private Player playerFrom;
 
     @Override
