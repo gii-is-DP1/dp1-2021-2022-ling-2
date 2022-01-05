@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.ntfh.IngameServiceTest;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyService;
