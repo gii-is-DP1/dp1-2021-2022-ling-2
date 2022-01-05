@@ -41,10 +41,6 @@ public class MarketState implements TurnState {
         return TurnStateType.PLAYER_STATE;
     }
 
-    @Override
-    public void preState(Game game) {
-        // TODO auto-generated method stub
-    }
 
     @Override
     public void postState(Game game) {
