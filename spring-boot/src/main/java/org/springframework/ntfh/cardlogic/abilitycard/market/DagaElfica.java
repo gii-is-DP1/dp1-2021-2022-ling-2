@@ -19,9 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DagaElfica {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy, AbilityCardIngame cardPlayed) {
-        // TODO prescindir del atributo cardPlayed de alguna forma. Esto no encaja con
-        // ninguna estructura de las que se contemplan en el java reflection así que
-        // daría error al ejecutarlo.
+        // TODO considerar atributo "cardPlayed" en el resto de cartas e incorporarlo en
+        // el reflection
         new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
 
         Boolean hasDexterity = playerFrom.getCharacterType().getProficiencies().stream()
