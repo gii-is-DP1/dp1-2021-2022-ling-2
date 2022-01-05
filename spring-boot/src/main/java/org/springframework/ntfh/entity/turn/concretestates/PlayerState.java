@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.turn.concretestates;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.text.CaseUtils;
@@ -98,8 +97,7 @@ public class PlayerState implements TurnState {
                 Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
             }
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Ability card type " + className +
                     " is not implemented");
         }
