@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArmaduraDePlacas {
     public void execute(Player playerFrom) {
-        // We don't need to check for proficiencies, because the player must have had
-        // the necessary proficiency to buy this card
         new RecoverCommand(4, playerFrom).execute();
     }
 }

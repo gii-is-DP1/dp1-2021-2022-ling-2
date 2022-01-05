@@ -23,7 +23,8 @@ public class AtaqueFurtivo {
             new GoldOnKillCommand(1, targetedEnemy, playerFrom).execute();
         }
 
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.ATAQUE_FURTIVO);
+        playerFrom.getGame().getEnemiesFighting()
+                .forEach(x -> x.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.ATAQUE_FURTIVO));
     }
 
 }

@@ -1,5 +1,7 @@
 package org.springframework.ntfh.cardlogic.abilitycard.wizard;
 
+import java.util.List;
+
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.game.Game;
@@ -16,17 +18,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GolpeDeBaston {
+
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
         
-
         if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.GOLPE_DE_BASTON)){
             new DealDamageCommand(2, targetedEnemy).execute();
         }else{
             new DealDamageCommand(1, targetedEnemy).execute();
         }
 
-        Game game = playerFrom.getGame();
-        
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.GOLPE_DE_BASTON);
+        playerFrom.getGame().getEnemiesFighting()
+                .forEach(x -> x.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.GOLPE_DE_BASTON));
     }
 }
