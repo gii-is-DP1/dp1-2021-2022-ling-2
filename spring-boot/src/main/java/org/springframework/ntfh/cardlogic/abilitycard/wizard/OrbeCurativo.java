@@ -1,6 +1,6 @@
 package org.springframework.ntfh.cardlogic.abilitycard.wizard;
 
-import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.ntfh.command.ExileCommand;
 import org.springframework.ntfh.command.HealCommand;
@@ -22,10 +22,7 @@ public class OrbeCurativo {
     public void execute(Player playerFrom, AbilityCardIngame cardPlayed) { // cambiar el cardPlayed aquí y en la poción
         new HealCommand(playerFrom).execute();
         Game game = playerFrom.getGame();
-        List<Player> targets = game.getPlayers();
-        for (Player playerTarget : targets) {
-            new RecoverCommand(2, playerTarget).execute();
-        }
+        game.getPlayers().forEach(player -> IntStream.range(0, 2).forEach(i -> new RecoverCommand(player).execute()));
         new ExileCommand(playerFrom, cardPlayed).execute();
     }
 }

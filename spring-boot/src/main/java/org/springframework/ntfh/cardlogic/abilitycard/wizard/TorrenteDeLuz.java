@@ -1,6 +1,6 @@
 package org.springframework.ntfh.cardlogic.abilitycard.wizard;
 
-import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.GetGloryCommand;
@@ -22,10 +22,8 @@ public class TorrenteDeLuz {
         Game game = playerFrom.getGame();
         new DealDamageCommand(2, targetedEnemy).execute();
         new GetGloryCommand(1, playerFrom).execute();
-        List<Player> targets = game.getPlayers();
-        for (Player playerTarget : targets) {
-            new RecoverCommand(2, playerTarget).execute();
-        }
+        game.getPlayers()
+                .forEach(
+                        targetPlayer -> IntStream.range(0, 2).forEach(i -> new RecoverCommand(targetPlayer).execute()));
     }
-
 }
