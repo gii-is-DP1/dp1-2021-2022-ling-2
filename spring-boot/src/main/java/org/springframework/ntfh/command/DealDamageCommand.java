@@ -16,8 +16,8 @@ public class DealDamageCommand implements Command {
     public void execute() {
         Integer currentEndurance = targetedEnemy.getCurrentEndurance();
         Boolean whetstoneCondition = targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
-        Boolean corrosiveArrow = targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
-        if(whetstoneCondition || corrosiveArrow){
+        Boolean corrosiveArrowCondition = targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
+        if(whetstoneCondition || corrosiveArrowCondition){
             damage = damage+1;
         }
 
