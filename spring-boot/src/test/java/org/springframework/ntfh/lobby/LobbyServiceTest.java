@@ -22,10 +22,14 @@ import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
 public class LobbyServiceTest {
@@ -40,6 +44,8 @@ public class LobbyServiceTest {
     private LobbyRepository lobbyRepository;
 
     private Lobby lobbyTester;
+
+    private Integer INITIAL_LOBBY_COUNT = 3;
 
     @BeforeEach
     public void init() {
@@ -69,13 +75,13 @@ public class LobbyServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = lobbyService.lobbyCount();
-        assertEquals(4, count);
+        assertEquals(INITIAL_LOBBY_COUNT+1, count);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
-        assertEquals(4, count);
+        assertEquals(INITIAL_LOBBY_COUNT+1, count);
     }
 
     @Test
@@ -97,11 +103,9 @@ public class LobbyServiceTest {
     @Test
     public void testSave() {
         // Test made in the init
-        // TODO hacer un test q cuente antes y despues de añadir un dato, asi en el
-        // assert q compruebe q el
-        // contador inicial sea igual al final +1
-        assertEquals(lobbyRepository.findById(lobbyTester.getId()).get().getId(), lobbyTester.getId());
-
+        assertEquals(lobbyService.findById(lobbyTester.getId()).getId(), lobbyTester.getId());
+        Integer count = Lists.newArrayList(lobbyService.findAll()).size();
+        assertEquals(INITIAL_LOBBY_COUNT+1, count);
     }
 
     @Test
@@ -111,14 +115,27 @@ public class LobbyServiceTest {
         assertThrows(DataAccessException.class, () -> lobbyService.findById(lobbyId));
     }
 
+    // H8 + E1
     @Test
-    public void testJoinToLobby() {
+    public void testJoinToLobby_Success() {
         Integer lobbyTesterId = lobbyTester.getId();
         User requester = userService.findUser("merlin");
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
         assertEquals(true, lobbyService.findById(lobbyTesterId).getUsers().contains(requester));
+    }
+
+    // H8 - E1
+    @Test
+    public void testJoinToLobby_Failure() {
+        Lobby fullLobby = lobbyService.findLobby(2);
+        Integer fullLobbyId = fullLobby.getId();
+        User requester = userService.findUser("ezio");
+        String requesterString = requester.getUsername();
+        String reqToken = TokenUtils.generateJWTToken(requester);
+
+        assertThrows(MaximumLobbyCapacityException.class, () -> {lobbyService.joinLobby(fullLobbyId, requesterString, reqToken);});
     }
 
     @Test
@@ -132,8 +149,9 @@ public class LobbyServiceTest {
         assertEquals(false, lobbyTester.getUsers().contains(requester));
     }
 
+    // H14 + E1
     @Test
-    public void testH14E1() {
+    public void testGetNumberOfPlayersInLobby() {
         User user1 = userService.findUser("user1");
         lobbyTester.addUser(user1);
         Integer numUsersInLobby = lobbyTester.getUsers().size();
