@@ -34,6 +34,8 @@ public class DealDamageCommand implements Command {
             playerFrom.setKills(playerKillCount+1);
             new GiveGloryCommand(enemyDefeatedGlory, playerFrom).execute();
             new GiveGoldCommand(enemyDefeatedGold, playerFrom).execute();
+
+            //este es el comit
         }
     }
 }
