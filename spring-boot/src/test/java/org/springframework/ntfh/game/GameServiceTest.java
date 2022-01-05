@@ -82,7 +82,7 @@ public class GameServiceTest {
 
     @Autowired
     private EnemyService enemyService;
-    
+
     @Autowired
     private EnemyIngameService enemyIngameService;
 
@@ -115,7 +115,7 @@ public class GameServiceTest {
 
         user1.setCharacter(characterService.findCharacterById(2).get());
         user2.setCharacter(characterService.findCharacterById(4).get());
-        
+
         gameTester = gameService.createFromLobby(lobbyTester);
         user1.setLobby(lobbyTester);
         playerTester = gameTester.getPlayers().get(0);
@@ -129,7 +129,7 @@ public class GameServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(INITIAL_GAMES_COUNT+1, count);
+        assertEquals(INITIAL_GAMES_COUNT + 1, count);
     }
 
     @Test
@@ -144,13 +144,15 @@ public class GameServiceTest {
         List<Player> testerList = gameService.findPlayersByGameId(1);
         assertEquals(2, testerList.size());
     }
-//////////////
+
+    //////////////
     @Test
     void testGetCurrentTurnByGameId() {
         Integer tester = gameService.getCurrentTurnByGameId(gameTester.getId()).getId();
         assertEquals(1, tester);
     }
-///////////////
+
+    ///////////////
     @Test
     public void testSaveGame_success() {
         // Test made in the init
@@ -162,7 +164,7 @@ public class GameServiceTest {
         Game tester = gameService.createFromLobby(lobbyTester);
         gameService.delete(tester);
         assertThrows(DataAccessException.class, () -> {
-                gameService.findGameById(tester.getId());
+            gameService.findGameById(tester.getId());
         });
     }
 
@@ -186,14 +188,14 @@ public class GameServiceTest {
         gameService.setNextTurnState(gameTester.getCurrentTurn());
         String market_state = gameTester.getCurrentTurn().getStateType().toString();
         assertEquals("MARKET_STATE", market_state);
-        
+
     }
 
     // H1 + E1
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
-        assertEquals(INITIAL_GAMES_COUNT+1, count);
+        assertEquals(INITIAL_GAMES_COUNT + 1, count);
     }
 
     // H7 + E1
@@ -203,7 +205,7 @@ public class GameServiceTest {
         assertEquals(gameService.findGameById(tester.getId()).getId(), tester.getId());
         gameService.delete(tester);
     }
-   
+
     // H7 - E1
     @Test
     public void testCreateFromLobbyNotEnoughPlayers() {
@@ -217,7 +219,8 @@ public class GameServiceTest {
     void testRestorePlayerHand() {
         turnService.initializeFromGame(gameTester);
         abilityCardIngameService.refillHandWithCards(playerTester);
-        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0)).execute();
+        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0).getAbilityCardTypeEnum())
+                .execute();
         assertEquals(3, playerTester.getHand().size());
         abilityCardIngameService.refillHandWithCards(playerTester);
         assertEquals(4, playerTester.getHand().size());
@@ -230,7 +233,7 @@ public class GameServiceTest {
         EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         turnService.initializeFromGame(gameTester);
         new DealDamageCommand(2, playerTester, enemyIngame).execute();
-    
+
         assertEquals(1, playerTester.getGold());
         assertEquals(1, playerTester.getGlory());
     }
@@ -238,7 +241,8 @@ public class GameServiceTest {
     // H26 + E1
     @Test
     void testBuyMarketCard_Success() {
-        MarketCardIngame marketCardIngame = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame = marketCardIngameService
+                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(10);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -252,14 +256,17 @@ public class GameServiceTest {
     // H26 - E1
     @Test
     void testBuyMarketCard_Failure() {
-        MarketCardIngame marketCardIngame = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame = marketCardIngameService
+                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(4);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
         turnService.initializeFromGame(gameTester);
         gameService.setNextTurnState(gameTester.getCurrentTurn());
 
-        assertThrows(IllegalArgumentException.class, () -> {gameService.buyMarketCard(marketCardIngameId, playerToken);});
+        assertThrows(IllegalArgumentException.class, () -> {
+            gameService.buyMarketCard(marketCardIngameId, playerToken);
+        });
     }
 
     // H27 + E1
@@ -268,7 +275,7 @@ public class GameServiceTest {
         EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         turnService.initializeFromGame(gameTester);
         new DealDamageCommand(2, playerTester, enemyIngame).execute();
-    
+
         assertEquals(1, playerTester.getKills());
     }
 

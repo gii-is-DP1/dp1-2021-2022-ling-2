@@ -18,14 +18,14 @@ public class DrawCommand implements Command {
     public void execute() {
         for (int i = 0; i < amount; i++) {
             List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
-            if (listAbilityPile.size() >= 1) {
+            if (!listAbilityPile.isEmpty()) {
                 AbilityCardIngame drawnCard = listAbilityPile.get(0);
-                listAbilityPile.remove(0);
-                List<AbilityCardIngame> listHand = playerFrom.getHand();
-                listHand.add(drawnCard);
 
-                playerFrom.setAbilityPile(listAbilityPile);
-                playerFrom.setHand(listHand);
+                listAbilityPile.remove(drawnCard);
+                if (listAbilityPile.isEmpty())
+                    new GiveWoundCommand(playerFrom).execute();
+
+                playerFrom.getHand().add(drawnCard);
             } else {
                 break;
             }

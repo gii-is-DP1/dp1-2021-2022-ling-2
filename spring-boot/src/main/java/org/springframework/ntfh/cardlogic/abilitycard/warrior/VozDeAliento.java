@@ -1,6 +1,6 @@
 package org.springframework.ntfh.cardlogic.abilitycard.warrior;
 
-import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.ntfh.command.DrawCommand;
 import org.springframework.ntfh.command.GiveGloryCommand;
@@ -21,9 +21,6 @@ public class VozDeAliento {
         Game game = playerFrom.getGame();
         new DrawCommand(1, playerFrom).execute();
         new GiveGloryCommand(1, playerFrom).execute();
-        List<Player> players = game.getPlayers();
-        for (Player playerTarget : players) {
-            new RecoverCommand(2, playerTarget).execute();
-        }
+        game.getPlayers().forEach(player -> IntStream.range(0, 2).forEach(i -> new RecoverCommand(player).execute()));
     }
 }
