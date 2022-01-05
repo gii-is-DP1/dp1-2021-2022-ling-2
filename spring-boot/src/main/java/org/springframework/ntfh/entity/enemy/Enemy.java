@@ -37,5 +37,8 @@ public class Enemy extends BaseEntity {
     private Integer gold;
 
     @NotNull
+    private Integer baseGlory;
+
+    @NotNull
     private Integer extraGlory;
 }

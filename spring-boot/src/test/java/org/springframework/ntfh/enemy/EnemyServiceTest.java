@@ -53,7 +53,8 @@ public class EnemyServiceTest {
         Enemy tester = this.enemyService.findEnemyById(17).orElse(null);
         assertEquals(EnemyType.REGEN, tester.getEnemyType());
         assertEquals(0, tester.getGold());
-        assertEquals(2, tester.getExtraGlory());
+        assertEquals(2, tester.getBaseGlory());
+        assertEquals(0, tester.getExtraGlory());
         assertEquals(EnemyModifierType.HEALING_CAPABILITIES,
                 tester.getEnemyModifierType());
         assertEquals(3, tester.getEndurance());

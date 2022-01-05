@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DobleEspadazo {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(2, targetedEnemy).execute();
+        new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
         new DiscardCommand(1, playerFrom).execute();
     }
 }

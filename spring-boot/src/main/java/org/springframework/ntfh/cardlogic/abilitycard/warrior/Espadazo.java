@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class Espadazo {
 
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        new DealDamageCommand(1, targetedEnemy).execute();
+        new DealDamageCommand(1, playerFrom, targetedEnemy).execute();
 
         if (!targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.ESPADAZO)) {
             new DrawCommand(1, playerFrom).execute();

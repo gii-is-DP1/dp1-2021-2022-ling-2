@@ -9,9 +9,7 @@ import lombok.AllArgsConstructor;
 public class GoldOnKillCommand implements Command {
 
     private Integer gold;
-
     private EnemyIngame targetedEnemy;
-
     private Player playerFrom;
 
     @Override
