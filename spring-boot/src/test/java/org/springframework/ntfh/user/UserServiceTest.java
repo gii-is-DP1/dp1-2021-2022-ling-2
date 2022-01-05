@@ -3,8 +3,6 @@ package org.springframework.ntfh.user;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.util.Lists;
@@ -18,7 +16,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
-import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.util.TokenUtils;
@@ -41,9 +38,6 @@ public class UserServiceTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -69,15 +63,7 @@ public class UserServiceTest {
         userService.deleteUser(currentUser);
     }
 
-    @Test
-    public void testPH3E1() {
-        List<User> PetitionUsers = new ArrayList<>();
-        List<User> RepositoryUsers = new ArrayList<>();
-        userService.findAll().forEach(x -> PetitionUsers.add(x));
-        userRepository.findAll().forEach(y -> RepositoryUsers.add(y));
-        assertEquals(RepositoryUsers.size(), PetitionUsers.size());
-    }
-
+    // H3 + E1
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(userService.findAll()).size();

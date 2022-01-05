@@ -3,8 +3,6 @@ package org.springframework.ntfh.game;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.util.Lists;
@@ -17,21 +15,36 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
+import org.springframework.ntfh.command.DealDamageCommand;
+import org.springframework.ntfh.command.GetGloryCommand;
+import org.springframework.ntfh.command.GetGoldCommand;
+import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
+import org.springframework.ntfh.entity.enemy.EnemyService;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
+import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
+import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
+import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.player.PlayerService;
+import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
 public class GameServiceTest {
@@ -49,14 +62,33 @@ public class GameServiceTest {
     private UserService userService;
 
     @Autowired
-    private PlayerService playerService;
+    private CharacterService characterService;
 
     @Autowired
-    private CharacterService characterService;
+    private MarketCardService marketCardService;
+
+    @Autowired
+    private MarketCardIngameService marketCardIngameService;
+
+    @Autowired
+    private TurnService turnService;
+
+    @Autowired
+    private AbilityCardIngameService abilityCardIngameService;
+
+    @Autowired
+    private EnemyService enemyService;
+    
+    @Autowired
+    private EnemyIngameService enemyIngameService;
 
     private Game gameTester;
 
     protected Lobby lobbyTester;
+
+    private Player playerTester;
+
+    private Integer INITIAL_GAMES_COUNT = 3;
 
     @BeforeEach
     public void init() {
@@ -76,16 +108,10 @@ public class GameServiceTest {
 
         user1.setCharacter(characterService.findCharacterById(2).get());
         user2.setCharacter(characterService.findCharacterById(4).get());
-        Player player1 = playerService.createFromUser(user1, lobbyTester, 0);
-        Player player2 = playerService.createFromUser(user1, lobbyTester, 1);
-        List<Player> players = Lists.list(player1, player2);
-
-        gameTester = new Game();
-        gameTester.setStartTime(System.currentTimeMillis());
-        gameTester.setHasScenes(true);
-        gameTester.setPlayers(players);
-        gameTester.setLeader(player1);
-        gameService.save(gameTester);
+        
+        gameTester = gameService.createFromLobby(lobbyTester);
+        user1.setLobby(lobbyTester);
+        playerTester = gameTester.getPlayers().get(0);
     }
 
     @AfterEach
@@ -96,25 +122,14 @@ public class GameServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(4, count);
+        assertEquals(INITIAL_GAMES_COUNT+1, count);
     }
 
+    // H1 + E1
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
-        assertEquals(4, count);
-    }
-
-    @Test
-    public void testfindAllListVersion() {
-        // H1
-        List<Game> gamesServiceList = new ArrayList<>();
-        gameService.findAll().forEach(g -> gamesServiceList.add(g));
-
-        List<Game> gamesRepoList = new ArrayList<>();
-        gameRepository.findAll().forEach(g -> gamesRepoList.add(g));
-
-        assertEquals(gamesServiceList, gamesRepoList);
+        assertEquals(INITIAL_GAMES_COUNT+1, count);
     }
 
     @Test
@@ -131,6 +146,7 @@ public class GameServiceTest {
         gameService.delete(tester);
     }
 
+    // H7 - E1
     @Test
     public void testCreateFromLobbyNotEnoughPlayers() {
         User user2 = userService.findUser("user2");
@@ -139,7 +155,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testSaveGame() {
+    public void testSaveGame_success() {
         // Test made in the init
         assertEquals(gameRepository.findById(gameTester.getId()).get().getId(), gameTester.getId());
     }
@@ -149,8 +165,60 @@ public class GameServiceTest {
         Game tester = gameService.createFromLobby(lobbyTester);
         gameService.delete(tester);
         assertThrows(DataAccessException.class, () -> {
-            gameService.findGameById(tester.getId());
+                gameService.findGameById(tester.getId());
         });
+    }
+
+    // H24 + E1
+    @Test
+    void testRestorePlayerHand() {
+        turnService.initializeFromGame(gameTester);
+        abilityCardIngameService.refillHandWithCards(playerTester);
+        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0)).execute();;
+        assertEquals(3, playerTester.getHand().size());
+        abilityCardIngameService.refillHandWithCards(playerTester);
+        assertEquals(4, playerTester.getHand().size());
+    }
+
+    // H25 + E1
+    @Test
+    void testRegularBountyCollection() {
+        // Slinger de 2 de vida
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        turnService.initializeFromGame(gameTester);
+        new DealDamageCommand(2, enemyIngame);
+        new GetGoldCommand(enemyIngame.getEnemy().getGold(), playerTester).execute();
+        new GetGloryCommand(enemyIngame.getEnemy().getExtraGlory(), playerTester).execute();
+        
+        assertEquals(1, playerTester.getGold());
+        assertEquals(1, playerTester.getGlory());
+    }
+
+    // H26 + E1
+    @Test
+    void testBuyMarketCard_Success() {
+        MarketCardIngame marketCardIngame = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        Integer marketCardIngameId = marketCardIngame.getId();
+        playerTester.setGold(10);
+        String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
+        turnService.initializeFromGame(gameTester);
+        gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
+        gameService.buyMarketCard(marketCardIngameId, playerToken);
+
+        assertEquals(2, playerTester.getGold());
+    }
+
+    // H26 - E1
+    @Test
+    void testBuyMarketCard_Failure() {
+        MarketCardIngame marketCardIngame = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        Integer marketCardIngameId = marketCardIngame.getId();
+        playerTester.setGold(4);
+        String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
+        turnService.initializeFromGame(gameTester);
+        gameService.setNextTurnState(gameTester.getCurrentTurn());
+
+        assertThrows(IllegalArgumentException.class, () -> {gameService.buyMarketCard(marketCardIngameId, playerToken);});
     }
 
 }

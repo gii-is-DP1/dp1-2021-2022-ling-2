@@ -90,7 +90,7 @@ public class MarketCardIngameService {
     }
 
     @Transactional
-    private MarketCardIngame createFromMarketCard(MarketCard marketCard, Game game) {
+    public MarketCardIngame createFromMarketCard(MarketCard marketCard, Game game) {
         MarketCardIngame marketCardIngame = new MarketCardIngame();
         marketCardIngame.setMarketCard(marketCard);
         this.save(marketCardIngame);
