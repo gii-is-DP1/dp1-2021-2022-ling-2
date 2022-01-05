@@ -144,7 +144,10 @@ public class TurnService {
             nextTurn.setCurrentScene(randomScene);
         }
 
-        game.getEnemiesFighting().forEach(e -> e.getPlayedCardsOnMeInTurn().clear());
+        game.getEnemiesFighting().forEach(e -> {
+            e.getPlayedCardsOnMeInTurn().clear();
+            e.setRestrained(false);
+        });
 
         // Get the next player. Following the previously set turnOrder, the next player
         // will be the one after the current player, considering they are alive. In case
@@ -153,6 +156,12 @@ public class TurnService {
         // ! There will probably be a bug if currentTurn.getPlayer() dies since he/she
         // won't be in the list anymore and indexOf will return -1
         List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
+        if (alivePlayers.isEmpty()) {
+            // If there are no alive players, the game is over
+            // TODO make the game finish early if everybody dies. Right now this returns an
+            // IndexOutOfBoundsException because of the following line "alivePlayers.get(0)"
+            return;
+        }
         Player nextPlayer = alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size()
                 ? alivePlayers.get(0)
                 : alivePlayers.get(alivePlayers.indexOf(currentTurn.getPlayer()) + 1);
