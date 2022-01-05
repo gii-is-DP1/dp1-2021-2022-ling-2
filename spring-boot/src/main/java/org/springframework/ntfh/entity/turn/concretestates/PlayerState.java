@@ -7,6 +7,7 @@ import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
@@ -55,7 +56,10 @@ public class PlayerState implements TurnState {
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
-        String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
+        CharacterTypeEnum characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum();
+
+        // If the card does not belong to any type of character, it is a market card
+        String characterTypeName = (characterType == null) ? "market" : characterType.toString().toLowerCase();
 
         Turn currentTurn = playerFrom.getGame().getCurrentTurn();
         if (!currentTurn.getPlayer().getId().equals(playerFrom.getId())) {
@@ -70,7 +74,7 @@ public class PlayerState implements TurnState {
         String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
                 new char[] { '_' });
         String completeClassName = String.format("org.springframework.ntfh.cardlogic.abilitycard.%s.%s",
-                characterType,
+                characterTypeName,
                 className);
 
         try {
