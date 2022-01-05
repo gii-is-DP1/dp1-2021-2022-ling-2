@@ -18,14 +18,13 @@ public class DiscardCommand implements Command {
     public void execute() {
         for (int i = 0; i < numDiscards; i++) {
             List<AbilityCardIngame> listAbilityPile = playerFrom.getAbilityPile();
-            if (listAbilityPile.size() >= 1) {
+            if (!listAbilityPile.isEmpty()) {
                 AbilityCardIngame discardedCard = listAbilityPile.get(0);
-                listAbilityPile.remove(0);
-                List<AbilityCardIngame> listDiscardPile = playerFrom.getDiscardPile();
-                listDiscardPile.add(discardedCard);
+                listAbilityPile.remove(discardedCard);
+                if (listAbilityPile.isEmpty())
+                    new GiveWoundCommand(playerFrom).execute();
 
-                playerFrom.setAbilityPile(listAbilityPile);
-                playerFrom.setDiscardPile(listDiscardPile);
+                playerFrom.getDiscardPile().add(discardedCard);
             } else {
                 break;
             }
