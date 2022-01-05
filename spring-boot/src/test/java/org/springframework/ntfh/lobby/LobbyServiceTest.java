@@ -149,8 +149,9 @@ public class LobbyServiceTest {
         assertEquals(false, lobbyTester.getUsers().contains(requester));
     }
 
+    // H14 + E1
     @Test
-    public void testH14E1() {
+    public void testGetNumberOfPlayersInLobby() {
         User user1 = userService.findUser("user1");
         lobbyTester.addUser(user1);
         Integer numUsersInLobby = lobbyTester.getUsers().size();
