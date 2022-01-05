@@ -3,8 +3,6 @@ package org.springframework.ntfh.user;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.util.Lists;
@@ -18,7 +16,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
-import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.util.TokenUtils;

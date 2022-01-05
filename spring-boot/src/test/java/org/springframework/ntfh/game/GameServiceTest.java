@@ -3,8 +3,6 @@ package org.springframework.ntfh.game;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.util.Lists;
@@ -42,7 +40,10 @@ import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
 public class GameServiceTest {
@@ -86,6 +87,8 @@ public class GameServiceTest {
 
     private Player playerTester;
 
+    private Integer INITIAL_GAMES_COUNT = 3;
+
     @BeforeEach
     public void init() {
         User user1 = userService.findUser("user1");
@@ -118,22 +121,14 @@ public class GameServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(4, count);
-    }
-
-    @Test
-    public void testfindAll() {
-        Integer count = Lists.newArrayList(gameService.findAll()).size();
-        assertEquals(4, count);
+        assertEquals(INITIAL_GAMES_COUNT+1, count);
     }
 
     // H1+
     @Test
-    public void testfindAllListVersion_Success() {
-        List<Game> gamesServiceList = new ArrayList<>();
-        gameService.findAll().forEach(g -> gamesServiceList.add(g));
-
-        assertEquals(false, gamesServiceList.isEmpty());
+    public void testfindAll() {
+        Integer count = Lists.newArrayList(gameService.findAll()).size();
+        assertEquals(INITIAL_GAMES_COUNT+1, count);
     }
 
     @Test
@@ -216,13 +211,8 @@ public class GameServiceTest {
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
         turnService.initializeFromGame(gameTester);
         gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
-        try {
-            gameService.buyMarketCard(marketCardIngameId, playerToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        assertThrows(Exception.class, () -> {gameService.buyMarketCard(marketCardIngameId, playerToken);});
+        assertThrows(IllegalArgumentException.class, () -> {gameService.buyMarketCard(marketCardIngameId, playerToken);});
     }
 
 }
