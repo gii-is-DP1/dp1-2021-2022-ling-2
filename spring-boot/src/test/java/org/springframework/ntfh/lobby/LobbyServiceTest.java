@@ -103,7 +103,7 @@ public class LobbyServiceTest {
     @Test
     public void testSave() {
         // Test made in the init
-        assertEquals(lobbyRepository.findById(lobbyTester.getId()).get().getId(), lobbyTester.getId());
+        assertEquals(lobbyService.findById(lobbyTester.getId()).getId(), lobbyTester.getId());
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
         assertEquals(INITIAL_LOBBY_COUNT+1, count);
     }
