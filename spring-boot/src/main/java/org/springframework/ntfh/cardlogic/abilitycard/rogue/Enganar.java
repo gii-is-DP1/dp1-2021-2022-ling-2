@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Enganar {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        if (playerFrom.getGold() < 2) {
+        if (playerFrom.getGold() >= 2) {
             new GetGoldCommand(-2, playerFrom).execute();
             new RestrainCommand(targetedEnemy).execute();
         } else {
