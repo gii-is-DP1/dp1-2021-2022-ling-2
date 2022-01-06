@@ -2,7 +2,6 @@
 export const SelfPlayableCards = [
   // ROGUE
   "RECOGER_FLECHAS",
-  "SUPERVIVENCIA",
 
   // WARRIOR
   "PASO_ATRAS",
