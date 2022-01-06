@@ -96,6 +96,43 @@ public class LobbyServiceTest {
         assertEquals(userService.findUser("andres"), tester.getLeader());
     }
 
+    @Test
+    void testFindLobby() {
+        Lobby tester = this.lobbyService.findLobby(1);
+        assertEquals("andres with pablo", tester.getName());
+        assertEquals(1, tester.getGame().getId());
+        assertEquals(true, tester.getHasScenes());
+        assertEquals(true, tester.getSpectatorsAllowed());
+        assertEquals(2, tester.getMaxPlayers());
+        assertEquals(userService.findUser("andres"), tester.getHost());
+        assertEquals(userService.findUser("andres"), tester.getLeader());
+    }
+
+    @Test
+    public void testDeleteLobby() {
+        Integer lobbyId = lobbyTester.getId();
+        lobbyService.deleteLobby(lobbyTester);
+        assertThrows(DataAccessException.class, () -> lobbyService.findById(lobbyId));
+    }
+
+    @Test
+    public void testRemoveUserFromLobby() {
+        Integer lobbyTesterId = lobbyTester.getId();
+        User requester = userService.findUser("merlin");
+        String requesterString = requester.getUsername();
+        String reqToken = TokenUtils.generateJWTToken(requester);
+        lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
+        lobbyService.removeUserFromLobby(lobbyTester, requesterString);
+        assertEquals(false, lobbyTester.getUsers().contains(requester));
+    }
+
+    @Test
+    void testUpdateLobby() {
+        lobbyTester.setName("name");
+        lobbyService.updateLobby(lobbyTester);
+        assertEquals("name", lobbyTester.getName());
+    }
+
     // H7
     // Un user no crea el lobby en si, sino que a traves del botón de crear una
     // partida tiene acceso a la creación, por lo tanto la
@@ -106,13 +143,6 @@ public class LobbyServiceTest {
         assertEquals(lobbyService.findById(lobbyTester.getId()).getId(), lobbyTester.getId());
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
         assertEquals(INITIAL_LOBBY_COUNT+1, count);
-    }
-
-    @Test
-    public void testDeleteLobby() {
-        Integer lobbyId = lobbyTester.getId();
-        lobbyService.deleteLobby(lobbyTester);
-        assertThrows(DataAccessException.class, () -> lobbyService.findById(lobbyId));
     }
 
     // H8 + E1
@@ -136,17 +166,6 @@ public class LobbyServiceTest {
         String reqToken = TokenUtils.generateJWTToken(requester);
 
         assertThrows(MaximumLobbyCapacityException.class, () -> {lobbyService.joinLobby(fullLobbyId, requesterString, reqToken);});
-    }
-
-    @Test
-    public void testRemoveUserFromLobby() {
-        Integer lobbyTesterId = lobbyTester.getId();
-        User requester = userService.findUser("merlin");
-        String requesterString = requester.getUsername();
-        String reqToken = TokenUtils.generateJWTToken(requester);
-        lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
-        lobbyService.removeUserFromLobby(lobbyTester, requesterString);
-        assertEquals(false, lobbyTester.getUsers().contains(requester));
     }
 
     // H14 + E1

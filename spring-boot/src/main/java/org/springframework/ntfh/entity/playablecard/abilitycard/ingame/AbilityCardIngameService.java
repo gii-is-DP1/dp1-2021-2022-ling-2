@@ -109,7 +109,7 @@ public class AbilityCardIngameService {
      * @return
      */
     @Transactional
-    private AbilityCardIngame createFromAbilityCard(AbilityCard abilityCard, Player player) {
+    public AbilityCardIngame createFromAbilityCard(AbilityCard abilityCard, Player player) {
         AbilityCardIngame abilityCardIngame = new AbilityCardIngame();
         abilityCardIngame.setPlayer(player);
         abilityCardIngame.setAbilityCard(abilityCard);
