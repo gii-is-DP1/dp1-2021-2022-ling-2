@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
+import org.springframework.ntfh.entity.enemy.EnemyModifierType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
@@ -150,6 +151,9 @@ public class TurnService {
 
             e.getPlayedCardsOnMeInTurn().clear();
             e.setRestrained(false);
+            if(e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
+                e.setCurrentEndurance(3);
+            }
             
             if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
                 Player playerFrom = game.getPlayers().stream().filter(player -> 

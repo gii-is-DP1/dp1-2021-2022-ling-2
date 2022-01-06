@@ -113,13 +113,13 @@ INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, en
 INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (20, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 1, 2, 0);
 INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (21, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 2, 2, 1);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (22, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 0, 2, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (23, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 2, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (24, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 2, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (25, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 2, 1);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (22, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 0, 3, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (23, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 2, 3, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (24, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 2, 3, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (25, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 2, 3, 1);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (26, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER', 3, 1, 3, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (27, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER', 3, 2, 3, 1);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (26, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER_1', 3, 1, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (27, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER_1', 3, 2, 1, 1);
 
 INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (28, 'WARLORD', 'GURDRUG', null, 8, 0, 0, 0);
 INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (29, 'WARLORD', 'ROGHKILLER', null, 9, 0, 0, 0);
