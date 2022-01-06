@@ -214,18 +214,6 @@ public class GameServiceTest {
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
-    // H24 + E1
-    @Test
-    void testRestorePlayerHand() {
-        turnService.initializeFromGame(gameTester);
-        abilityCardIngameService.refillHandWithCards(playerTester);
-        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0).getAbilityCardTypeEnum())
-                .execute();
-        assertEquals(3, playerTester.getHand().size());
-        abilityCardIngameService.refillHandWithCards(playerTester);
-        assertEquals(4, playerTester.getHand().size());
-    }
-
     // H25 + E1
     @Test
     void testRegularBountyCollection() {
