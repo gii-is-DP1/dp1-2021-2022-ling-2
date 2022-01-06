@@ -1,6 +1,7 @@
 package org.springframework.ntfh.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
@@ -66,14 +67,42 @@ public class PlayerServiceTest {
     }
 
     @AfterEach
-    void deletePlayer() {
-        playerService.delete(currentPlayer);
+    void teardown() {
+        try{
+            playerService.delete(currentPlayer);
+        } catch (Exception exception){}
+        
     }
 
     @Test
     public void testCountWithInitialData() {
         Integer count = playerService.playerCount();
         assertEquals(INITIAL_COUNT + 1, count);
+    }
+
+    @Test
+    public void testSavePlayer() {
+        // Player created in the BeforeEach
+        Player tester = currentPlayer;
+        assertEquals(1, tester.getGlory());
+        assertEquals(4, tester.getGold());
+        assertEquals(5, tester.getKills());
+        assertEquals(2, tester.getTurnOrder());
+        assertEquals(1, tester.getWounds());
+        assertEquals(characterService.findCharacterById(7).get(), tester.getCharacterType());
+    }
+
+
+    @Test
+    void testDelete() {
+        playerService.delete(currentPlayer);
+        assertThrows(Exception.class, () -> {playerService.findById(currentPlayer.getId());});
+    }
+
+    @Test
+    void testDeleteById() {
+        playerService.deleteById(currentPlayer.getId());
+        assertThrows(Exception.class, () -> {playerService.findById(currentPlayer.getId());});
     }
 
     @Test
@@ -85,18 +114,6 @@ public class PlayerServiceTest {
     @Test
     public void testFindByPlayerId() {
         Player tester = this.playerService.findById(currentPlayer.getId());
-        assertEquals(1, tester.getGlory());
-        assertEquals(4, tester.getGold());
-        assertEquals(5, tester.getKills());
-        assertEquals(2, tester.getTurnOrder());
-        assertEquals(1, tester.getWounds());
-        assertEquals(characterService.findCharacterById(7).get(), tester.getCharacterType());
-    }
-
-    @Test
-    public void testSavePlayer() {
-        // Player created in the BeforeEach
-        Player tester = currentPlayer;
         assertEquals(1, tester.getGlory());
         assertEquals(4, tester.getGold());
         assertEquals(5, tester.getKills());

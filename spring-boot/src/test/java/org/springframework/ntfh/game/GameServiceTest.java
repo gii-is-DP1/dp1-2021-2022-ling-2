@@ -18,7 +18,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
@@ -212,18 +211,6 @@ public class GameServiceTest {
         User user2 = userService.findUser("user2");
         lobbyTester.removeUser(user2);
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
-    }
-
-    // H24 + E1
-    @Test
-    void testRestorePlayerHand() {
-        turnService.initializeFromGame(gameTester);
-        abilityCardIngameService.refillHandWithCards(playerTester);
-        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0).getAbilityCardTypeEnum())
-                .execute();
-        assertEquals(3, playerTester.getHand().size());
-        abilityCardIngameService.refillHandWithCards(playerTester);
-        assertEquals(4, playerTester.getHand().size());
     }
 
     // H25 + E1
