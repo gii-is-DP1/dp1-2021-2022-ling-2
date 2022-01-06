@@ -37,7 +37,7 @@ public class MarketCardServiceTest {
 
     @Test
     public void testfindById() {
-        MarketCard tester = this.marketCardService.findMarketCardById(6).orElse(null);
+        MarketCard tester = this.marketCardService.findMarketCardById(6).get();
         assertEquals(MarketCardTypeEnum.PIEDRA_DE_AMOLAR, tester.getMarketCardTypeEnum());
         assertEquals(4, tester.getPrice());
     }
