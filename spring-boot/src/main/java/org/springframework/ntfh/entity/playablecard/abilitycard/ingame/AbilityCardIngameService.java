@@ -113,6 +113,7 @@ public class AbilityCardIngameService {
         AbilityCardIngame abilityCardIngame = new AbilityCardIngame();
         abilityCardIngame.setPlayer(player);
         abilityCardIngame.setAbilityCard(abilityCard);
+        abilityCardIngame.setBaseDamage(abilityCard.getBaseDamage());
         abilityCardIngameRepository.save(abilityCardIngame);
         return abilityCardIngame;
     }

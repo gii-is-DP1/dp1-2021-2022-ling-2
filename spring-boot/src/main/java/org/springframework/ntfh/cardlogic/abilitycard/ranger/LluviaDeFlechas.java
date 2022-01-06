@@ -1,11 +1,13 @@
 package org.springframework.ntfh.cardlogic.abilitycard.ranger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.stereotype.Component;
 
 /**
  * Daño: 2
@@ -14,10 +16,15 @@ import org.springframework.ntfh.entity.player.Player;
  * 
  * @author Pablosancval
  */
+@Component
 public class LluviaDeFlechas {
     public void execute(Player playerFrom) {
         Game game = playerFrom.getGame();
-        List<EnemyIngame> targetList = game.getEnemiesFighting();
+        List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
+        List<EnemyIngame> targetList = new ArrayList<>();
+        for(EnemyIngame enemy : enemiesFighting){
+            targetList.add(enemy);
+        }
         for (EnemyIngame target : targetList) {
             new DealDamageCommand(2, playerFrom, target).execute();
         }

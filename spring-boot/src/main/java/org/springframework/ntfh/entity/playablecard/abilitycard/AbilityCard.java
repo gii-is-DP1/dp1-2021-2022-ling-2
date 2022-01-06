@@ -25,4 +25,7 @@ public class AbilityCard extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CharacterTypeEnum characterTypeEnum;
 
+    @NotNull
+    private Integer baseDamage;
+
 }
