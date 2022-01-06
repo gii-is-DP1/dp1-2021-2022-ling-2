@@ -34,6 +34,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "users")
 public class User {
 	@Id
@@ -74,4 +75,6 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnoreProperties({ "user" })
 	private Set<Authorities> authorities;
+
+	
 }

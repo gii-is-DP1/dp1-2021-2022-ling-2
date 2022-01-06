@@ -22,6 +22,9 @@ import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class GameService {
 
@@ -106,6 +109,7 @@ public class GameService {
         // Once the game is in the database, we update the lobby with a FK to it
         lobby.setGame(game);
         lobbyService.save(lobby);
+        log.info("Game created with id: " + game.getId() + "by user: " + game.getLeader());
         return savedGame;
     }
 

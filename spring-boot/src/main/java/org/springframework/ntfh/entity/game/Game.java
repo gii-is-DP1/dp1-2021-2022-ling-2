@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.model.BaseEntity;
@@ -31,6 +33,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "games")
 public class Game extends BaseEntity {
 
@@ -42,28 +45,35 @@ public class Game extends BaseEntity {
 
     // Set from Lobby by creating Players instances from users
     @OneToMany
+    @NotAudited
     @JsonIgnoreProperties({ "game", "lobby" })
     private List<Player> players;
 
     @OneToOne
+    @NotAudited
     @JsonIgnoreProperties({ "game" })
     // TODO JsonIgnore?
     private Player leader;
 
     @OneToMany(mappedBy = "game")
+    @NotAudited
     @JsonIgnore
     private List<Turn> turns = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<EnemyIngame> enemiesInPile = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<EnemyIngame> enemiesFighting = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<MarketCardIngame> marketCardsInPile = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
 
     /**

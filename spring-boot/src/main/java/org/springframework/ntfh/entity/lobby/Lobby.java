@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.NamedEntity;
@@ -31,6 +33,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "lobbies")
 public class Lobby extends NamedEntity {
 

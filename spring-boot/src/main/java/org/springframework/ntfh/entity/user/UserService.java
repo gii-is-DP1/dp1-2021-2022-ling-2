@@ -32,9 +32,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author andrsdt
  */
+@Slf4j
 @Service
 public class UserService {
 
@@ -75,6 +78,7 @@ public class UserService {
 		user.setEnabled(true);
 		this.save(user);
 		authoritiesService.saveAuthorities(user.getUsername(), "user");
+		log.info("User " + user.getUsername() + " created");
 		return user;
 	}
 
