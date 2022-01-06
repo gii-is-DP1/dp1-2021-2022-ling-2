@@ -152,7 +152,7 @@ public class TurnService {
             e.getPlayedCardsOnMeInTurn().clear();
             e.setRestrained(false);
             if(e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
-                e.setCurrentEndurance(3);
+                e.setCurrentEndurance(e.getEnemy().getEndurance());
             }
             
             if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
