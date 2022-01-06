@@ -1,4 +1,4 @@
-package org.springframework.ntfh.marketcard;
+package org.springframework.ntfh.playablecard.marketcard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
