@@ -1,7 +1,7 @@
 package org.springframework.ntfh.cardlogic.abilitycard.ranger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ntfh.command.AttackPhaseEnd;
+import org.springframework.ntfh.command.AttackPhaseEndCommand;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.game.GameService;
@@ -22,6 +22,6 @@ public class DisparoCertero {
 
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(3, playerFrom, targetedEnemy).execute();
-        new AttackPhaseEnd(gameService, playerFrom).execute();
+        new AttackPhaseEndCommand(gameService, playerFrom).execute();
     }
 }

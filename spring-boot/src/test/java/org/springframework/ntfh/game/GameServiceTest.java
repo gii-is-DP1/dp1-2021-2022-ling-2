@@ -16,7 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
+import org.springframework.ntfh.command.HandToAbilityPileCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
@@ -172,7 +172,7 @@ public class GameServiceTest {
     void testRestorePlayerHand() {
         turnService.initializeFromGame(gameTester);
         abilityCardIngameService.refillHandWithCards(playerTester);
-        new ReturnedToAbilityPileCommand(playerTester, playerTester.getHand().get(0).getAbilityCardTypeEnum()).execute();
+        new HandToAbilityPileCommand(playerTester, playerTester.getHand().get(0).getAbilityCardTypeEnum()).execute();
         assertEquals(3, playerTester.getHand().size());
         abilityCardIngameService.refillHandWithCards(playerTester);
         assertEquals(4, playerTester.getHand().size());

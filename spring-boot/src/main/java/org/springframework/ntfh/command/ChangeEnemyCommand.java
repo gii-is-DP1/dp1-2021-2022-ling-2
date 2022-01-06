@@ -9,7 +9,7 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ChangeEnemy implements Command {
+public class ChangeEnemyCommand implements Command {
 
     private Player playerFrom; // puede que no completamente necesario
 
