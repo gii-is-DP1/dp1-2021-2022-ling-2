@@ -3,6 +3,8 @@ package org.springframework.ntfh.playablecard.marketcard;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,7 +69,6 @@ public class MarketCardIngameServiceTest {
         cardTester = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(1).get(), gameService.findGameById(1));
         marketCardIngameService.save(cardTester);
         assertEquals(MarketCardTypeEnum.DAGA_ELFICA, marketCardIngameService.findById(cardTester.getId()).getMarketCard().getMarketCardTypeEnum());
-        cardTester = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameService.findGameById(1));
     }
 
     @Test
@@ -77,7 +78,7 @@ public class MarketCardIngameServiceTest {
     } 
     
     @Test
-    void testRefillMarketWithCards() {
+    void testRefillMarketWithCards() {  
         gameService.findGameById(1).getLeader().setGold(10);
         String playerToken = TokenUtils.generateJWTToken(gameService.findGameById(1).getLeader().getUser());
         turnService.initializeFromGame(gameService.findGameById(1));
@@ -85,7 +86,9 @@ public class MarketCardIngameServiceTest {
         gameService.setNextTurnState(gameService.getCurrentTurnByGameId(1));
 
         assertEquals(5, gameService.findGameById(1).getMarketCardsForSale().size());
-        gameService.buyMarketCard(gameService.findGameById(1).getMarketCardsForSale().get(0).getId(), playerToken);
+        List<MarketCardIngame> market = gameService.findGameById(1).getMarketCardsForSale();
+        market.get(0).setMarketCard(cardTester.getMarketCard());
+        gameService.buyMarketCard(market.get(0).getId(), playerToken);
         assertEquals(4, gameService.findGameById(1).getMarketCardsForSale().size());
         marketCardIngameService.refillMarketWithCards(gameService.findGameById(1));
         assertEquals(5, gameService.findGameById(1).getMarketCardsForSale().size());
