@@ -147,13 +147,15 @@ public class TurnService {
         }
 
         game.getEnemiesFighting().forEach(e -> {
+
+            e.getPlayedCardsOnMeInTurn().clear();
+            e.setRestrained(false);
+            
             if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
                 Player playerFrom = game.getPlayers().stream().filter(player -> 
                     player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
                 new DealDamageCommand(100, playerFrom, e).execute();
             } else {
-                e.getPlayedCardsOnMeInTurn().clear();
-                e.setRestrained(false);
             }
         });
 
