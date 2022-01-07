@@ -11,6 +11,9 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class PlayerService {
 
@@ -87,6 +90,7 @@ public class PlayerService {
         user.setPlayer(player);
         userService.save(user);
 
+        log.info("Player created by user " + user.getUsername() + " in lobby id " + lobby.getId());
         return playerDB;
 
     }

@@ -6,6 +6,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import org.hibernate.envers.Audited;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.user.User;
 
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "authorities")
 public class Authorities extends BaseEntity {
 
