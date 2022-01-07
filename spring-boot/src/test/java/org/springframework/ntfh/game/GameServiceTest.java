@@ -214,7 +214,7 @@ public class GameServiceTest {
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
-    // H25 + E1
+    // H21 + E1
     @Test
     void testRegularBountyCollection() {
         // Slinger de 2 de vida
@@ -226,8 +226,7 @@ public class GameServiceTest {
         assertEquals(1, playerTester.getGlory());
     }
 
-    // H25 + E2
-    @Disabled
+    // H21 + E2
     @Test
     void testBountyBehaviourWithTrampaCard() {
         turnService.initializeFromGame(gameTester);
@@ -248,18 +247,12 @@ public class GameServiceTest {
 
         gameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
 
-        // gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
-        // gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
-        // gameService.setNextTurnState(gameTester.getCurrentTurn());
-        // gameService.setNextTurnState(gameTester.getCurrentTurn());
-        // turnService.setNextState(gameService.getCurrentTurnByGameId(1));
-        // turnService.setNextState(gameService.getCurrentTurnByGameId(1));
         turnService.createNextTurn(gameTester);
 
-        assertEquals(false, gameTester.getEnemiesFighting().get(0));
+        assertEquals(false, gameTester.getEnemiesFighting().contains(enemyIngame));
     }
 
-    // H26 + E1
+    // H22 + E1
     @Test
     void testBuyMarketCard_Success() {
         MarketCardIngame marketCardIngame = marketCardIngameService
@@ -274,7 +267,7 @@ public class GameServiceTest {
         assertEquals(2, playerTester.getGold());
     }
 
-    // H26 - E1
+    // H22 - E1
     @Test
     void testBuyMarketCard_Failure() {
         MarketCardIngame marketCardIngame = marketCardIngameService
@@ -290,7 +283,7 @@ public class GameServiceTest {
         });
     }
 
-    // H27 + E1
+    // H23 + E1
     @Test
     void testKillCount() {
         EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
