@@ -32,9 +32,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author andrsdt
  */
+@Slf4j
 @Service
 public class UserService {
 
@@ -75,6 +78,7 @@ public class UserService {
 		user.setEnabled(true);
 		this.save(user);
 		authoritiesService.saveAuthorities(user.getUsername(), "user");
+		log.info("User " + user.getUsername() + " created");
 		return user;
 	}
 
@@ -123,8 +127,11 @@ public class UserService {
 			NonMatchingTokenException, IllegalArgumentException {
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		if (!sentBySameUser && !sentByAdmin)
+		if (!sentBySameUser && !sentByAdmin) {
+			log.warn("User " + user.getUsername() + " unauthorized update by token " + token);
 			throw new NonMatchingTokenException("A user's profile can only be updated by him/herself or by an admin");
+		}
+			
 
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
@@ -139,12 +146,16 @@ public class UserService {
 		if (user.getEmail() != null) {
 			// If there is a new email, set it on the database
 			userInDB.setEmail(user.getEmail());
+			log.info("Email " + user.getEmail() + " added to database");
 		}
 		if (user.getPassword() != null) {
 			// If there is a new password input, encrypt it using bcrypt
 			String encodedParamPassword = passwordEncoder.encode(user.getPassword());
 			userInDB.setPassword(encodedParamPassword);
+			log.info("Password updated for user " + user.getUsername());
 		}
+
+		log.info("User " + user.getUsername() + " updated by user with token " + token);
 		return userInDB;
 	}
 
@@ -160,6 +171,7 @@ public class UserService {
 			throw new IllegalArgumentException("Incorrect password") {
 			};
 		}
+		log.info("User " + user.getUsername() + " logged in");
 		return TokenUtils.generateJWTToken(userInDB);
 	}
 
@@ -175,15 +187,18 @@ public class UserService {
 	public User toggleBanUser(String username, String token) throws DataAccessException {
 		User userInDB = this.findUser(username);
 		userInDB.setEnabled(!userInDB.getEnabled());
+		log.info("User " + username + " ban toggled. Current status: " + userInDB.getEnabled());
 		return userInDB;
 	}
 
 	@Transactional
 	public void deleteUser(User user) {
 		if (user.getLobby() != null && user.getLobby().getHasStarted()) {
+			log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
 			throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
 		}
 		this.userRepository.deleteById(user.getUsername());
+		log.info("User " + user.getUsername() + " deleted");
 	}
 
 }

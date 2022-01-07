@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author andrsdt
  */
+@Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/lobbies")
@@ -49,6 +52,7 @@ public class LobbyController {
     @PostMapping
     public ResponseEntity<Map<String, Integer>> createLobby(@RequestBody Lobby lobby) {
         Lobby createdLobby = lobbyService.save(lobby);
+        log.info("Lobby with id " + lobby.getId() + " created");
         return new ResponseEntity<>(Map.of("lobbyId", createdLobby.getId()), HttpStatus.CREATED);
     }
 
@@ -93,8 +97,8 @@ public class LobbyController {
         // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
         String usernameFromRequest = body.get("username");
         lobbyService.joinLobby(lobbyId, usernameFromRequest, token);
+        log.info("User " + usernameFromRequest + " joined lobby with id " + lobbyId);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
     /**
@@ -124,8 +128,10 @@ public class LobbyController {
 
         Boolean requestByUserLeaving = usernameFromToken.equals(username);
         Boolean requestByHost = usernameFromToken.equals(usernameFromLobbyHost);
-        if (!requestByHost && !requestByUserLeaving)
+        if (!requestByHost && !requestByUserLeaving) {
+            log.warn("User " + usernameFromToken + " unauthorized removal attempt from lobby id " + lobbyId);
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         if (requestByHost && usernameFromLobbyHost.equals(username)) {
             // If the host is the one who wanted to leave, then delete the lobby
@@ -133,6 +139,7 @@ public class LobbyController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         if (lobbyService.removeUserFromLobby(lobby, username)) {
+            log.info("User " + username + " was removed from lobby id " + lobby.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
@@ -155,6 +162,7 @@ public class LobbyController {
             @RequestHeader("Authorization") String token) {
         // TODO implement? currently delegated to removeUserFromLobby() when the one
         // leaving is the host. Kind of violates the single responsibility principle
+        log.info("Lobby id " + lobbyId + " was deleted");
         return null;
     }
 
