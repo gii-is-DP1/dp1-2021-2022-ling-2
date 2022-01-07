@@ -151,7 +151,7 @@ public class TurnService {
 
             e.getPlayedCardsOnMeInTurn().clear();
             e.setRestrained(false);
-            if(e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
+            if(e.getEnemy().getEnemyModifierType() != null && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
                 e.setCurrentEndurance(e.getEnemy().getEndurance());
             }
             
