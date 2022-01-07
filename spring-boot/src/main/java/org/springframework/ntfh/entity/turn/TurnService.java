@@ -145,12 +145,6 @@ public class TurnService {
         }
 
         game.getEnemiesFighting().forEach(e -> {
-
-            // TODO el efecto de la carta de trampa funciona cuando le da la gana y cuando
-            // no no. REVISAR
-            // aqui no afecta nunca porque se limpiarán las cartas del enemigo antes, así
-            // que al menos no dará problemas
-
             e.getPlayedCardsOnMeInTurn().clear();
             e.setRestrained(false);
             if(e.getEnemy().getEnemyModifierType() != null && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){

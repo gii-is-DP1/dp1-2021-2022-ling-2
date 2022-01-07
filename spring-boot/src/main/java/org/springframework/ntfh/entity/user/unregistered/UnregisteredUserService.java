@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author jstockwell
  * @author andrsdt
  */
+@Slf4j
 @Service
 public class UnregisteredUserService {
 
@@ -33,6 +36,7 @@ public class UnregisteredUserService {
     @Transactional
     public void delete(UnregisteredUser unregisteredUser) {
         unregisteredUserRepository.delete(unregisteredUser);
+        log.info("Unregistered user " + unregisteredUser.getUsername() + " deleted");
     }
 
     @Transactional
@@ -52,6 +56,7 @@ public class UnregisteredUserService {
         unregisteredUser.setUsername(username);
         unregisteredUser.setCreationTime(creationTime);
         unregisteredUserRepository.save(unregisteredUser);
+        log.info("Unregistered user " + unregisteredUser.getUsername() + " created");
         return unregisteredUser; // so the users can store the info on their LocalStorage
     }
 }

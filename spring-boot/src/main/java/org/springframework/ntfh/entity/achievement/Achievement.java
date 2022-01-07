@@ -8,7 +8,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.ntfh.entity.model.NamedEntity;
 
 import lombok.Getter;
