@@ -92,7 +92,8 @@ public class TurnService {
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).get(); // DB indexes start in 1
+                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null); // DB indexes start in
+                                                                                                 // 1
             turn.setCurrentScene(randomScene);
         }
 
@@ -126,7 +127,6 @@ public class TurnService {
         state.postState(turn.getGame()); // Execute the post-state method of the current state before changing it
         TurnStateType nextState = state.getNextState();
         turn.setStateType(nextState);
-        TurnState newState = getState(turn);
     }
 
     /**
@@ -144,22 +144,24 @@ public class TurnService {
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).get(); // DB indexes start in 1
+                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null);
             nextTurn.setCurrentScene(randomScene);
         }
 
         game.getEnemiesFighting().forEach(e -> {
 
-            if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
-                Player playerFrom = game.getPlayers().stream().filter(player -> 
-                    player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
-                new TrapCommand(playerFrom, e).execute();
+            // TODO el efecto de la carta de trampa funciona cuando le da la gana y cuando
+            // no no. REVISAR
+            // aqui no afecta nunca porque se limpiarán las cartas del enemigo antes, así
+            // que al menos no dará problemas
+            if (e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)) {
+                Player playerFrom = game.getPlayers().stream()
+                        .filter(player -> player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny()
+                        .orElse(null);
+                new DealDamageCommand(100, playerFrom, e).execute();
             } else {
                 e.getPlayedCardsOnMeInTurn().clear();
                 e.setRestrained(false);
-                if(e.getEnemy().getEnemyModifierType() != null && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
-                    e.setCurrentEndurance(e.getEnemy().getEndurance());
-                }
             }
         });
 

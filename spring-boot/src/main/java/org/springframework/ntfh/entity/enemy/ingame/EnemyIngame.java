@@ -65,4 +65,14 @@ public class EnemyIngame extends BaseEntity {
     public Boolean isHorde() {
         return enemy.getEnemyCategoryType() == EnemyCategoryType.HORDE;
     }
+
+    @Transient
+    @JsonIgnore
+    public Boolean isDead() {
+        return currentEndurance <= 0;
+    }
+
+    public void setCurrentEndurance(Integer currentEndurance) {
+        this.currentEndurance = currentEndurance < 0 ? 0 : currentEndurance;
+    }
 }
