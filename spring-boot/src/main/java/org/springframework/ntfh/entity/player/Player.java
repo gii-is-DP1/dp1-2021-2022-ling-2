@@ -89,6 +89,6 @@ public class Player extends BaseEntity {
 
     @Transient
     public Boolean isDead() {
-        return wounds.equals(characterType.getBaseHealth());
+        return wounds>=characterType.getBaseHealth();
     }
 }
