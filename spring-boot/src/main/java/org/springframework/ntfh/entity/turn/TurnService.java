@@ -145,11 +145,11 @@ public class TurnService {
         }
 
         game.getEnemiesFighting().forEach(e -> {
-            e.getPlayedCardsOnMeInTurn().clear();
-            e.setRestrained(false);
             if(e.getEnemy().getEnemyModifierType() != null && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
                 e.setCurrentEndurance(e.getEnemy().getEndurance());
             }
+            e.getPlayedCardsOnMeInTurn().clear();
+            e.setRestrained(false);
         });
 
         // Get the next player. Following the previously set turnOrder, the next player
