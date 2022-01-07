@@ -15,6 +15,7 @@ import org.springframework.ntfh.entity.player.Player;
  * 
  * @author Pablosancval
  */
+
 public class DisparoRapido {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(1, playerFrom, targetedEnemy).execute();
@@ -23,9 +24,6 @@ public class DisparoRapido {
         AbilityCardIngame cartaRobada = playerFrom.getHand().get(posicion);
         if(cartaRobada.getAbilityCardTypeEnum().equals(AbilityCardTypeEnum.DISPARO_RAPIDO)){
             execute(playerFrom, targetedEnemy);
-        //La carta por algún motivo ejecuta las instancias de la misma pero no son handleadas para que se
-        //descarten como la carta jugada, propongo únicamente dejarla en la mano y que el jugador la juegue
-        //de manera regular. También al parecer ignora el
         } else {
             new HandToAbilityPileCommand(playerFrom, cartaRobada.getAbilityCardTypeEnum()).execute();
         }

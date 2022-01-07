@@ -28,6 +28,7 @@ public class DealDamageCommand implements Command {
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
         if (targetedEnemy.isDead()) {
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
+            int playerKillCount = playerFrom.getKills();
             playerFrom.setKills(playerKillCount + 1);
 
             if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
