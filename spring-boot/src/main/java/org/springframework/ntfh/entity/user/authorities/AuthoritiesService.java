@@ -11,6 +11,9 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AuthoritiesService {
 
@@ -30,6 +33,7 @@ public class AuthoritiesService {
     @Transactional
     public void saveAuthorities(Authorities authorities) throws DataAccessException {
         authoritiesRepository.save(authorities);
+        log.info("Authority " + authorities.getAuthority() + " created");
     }
 
     @Transactional
@@ -41,6 +45,7 @@ public class AuthoritiesService {
             authority.setUser(user.get());
             authority.setAuthority(role);
             authoritiesRepository.save(authority);
+            log.info("Authority " + role + " added to user " + username);
         } else {
             throw new DataAccessException("User '" + user.getClass().getName() + "' not found!") {
             };
