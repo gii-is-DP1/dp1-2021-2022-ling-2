@@ -24,6 +24,7 @@ public class GolpeDeBaston {
 
         new DealDamageCommand(damage, playerFrom, targetedEnemy).execute();
 
-        targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.GOLPE_DE_BASTON);
+        playerFrom.getGame().getEnemiesFighting()
+                .forEach(x -> x.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.GOLPE_DE_BASTON));
     }
 }

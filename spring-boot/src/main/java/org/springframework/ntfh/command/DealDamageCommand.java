@@ -28,13 +28,20 @@ public class DealDamageCommand implements Command {
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
         if (targetedEnemy.isDead()) {
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
-            Integer playerKillCount = playerFrom.getKills();
-            Integer enemyDefeatedGlory = targetedEnemy.getEnemy().getBaseGlory()
-                    + targetedEnemy.getEnemy().getExtraGlory();
-            Integer enemyDefeatedGold = targetedEnemy.getEnemy().getGold();
+            int playerKillCount = playerFrom.getKills();
             playerFrom.setKills(playerKillCount + 1);
-            new GiveGloryCommand(enemyDefeatedGlory, playerFrom).execute();
-            new GiveGoldCommand(enemyDefeatedGold, playerFrom).execute();
+
+            if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
+                Integer enemyDefeatedGlory = targetedEnemy.getEnemy().getBaseGlory();
+                new GiveGloryCommand(enemyDefeatedGlory, playerFrom);
+
+            } else {
+
+                Integer enemyDefeatedGlory = targetedEnemy.getEnemy().getBaseGlory() + targetedEnemy.getEnemy().getExtraGlory();
+                Integer enemyDefeatedGold = targetedEnemy.getEnemy().getGold();
+                new GiveGloryCommand(enemyDefeatedGlory, playerFrom).execute();
+                new GiveGoldCommand(enemyDefeatedGold, playerFrom).execute();
+            }
         }
     }
 }

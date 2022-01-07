@@ -1,5 +1,7 @@
 package org.springframework.ntfh.command;
 
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
+import org.springframework.ntfh.entity.enemy.EnemyModifierType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
@@ -18,12 +20,20 @@ public class ReceiveDamageCommand implements Command {
     @Override
     public void execute() {
         Integer guard = playerTo.getGuard();
+        EnemyModifierType enemyModifier = enemyFrom.getEnemy().getEnemyModifierType();
+        CharacterTypeEnum characterClass = playerTo.getCharacterTypeEnum();
         if (enemyFrom.getRestrained())
             damage = 0;
 
+        if (enemyModifier.equals(EnemyModifierType.MAGIC_ATTACKER_1) && characterClass.equals(CharacterTypeEnum.WIZARD)){
+            damage = damage-1;
+        } else if (enemyModifier.equals(EnemyModifierType.MAGIC_ATTACKER_2) && characterClass.equals(CharacterTypeEnum.WIZARD)){
+            damage = damage-2;
+        }
+
         if (damage >= guard){
             damage = damage-guard;
-        } else {
+        } else if (guard>0){
             damage = 0;
             guard = guard-damage;
             playerTo.setGuard(guard);

@@ -9,7 +9,7 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ReturnedToAbilityPileCommand implements Command {
+public class HandToAbilityPileCommand implements Command {
 
     private Player playerFrom;
     private AbilityCardTypeEnum cardToReturn;

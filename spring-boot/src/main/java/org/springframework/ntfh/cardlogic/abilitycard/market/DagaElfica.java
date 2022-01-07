@@ -1,7 +1,7 @@
 package org.springframework.ntfh.cardlogic.abilitycard.market;
 
 import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
+import org.springframework.ntfh.command.HandToAbilityPileCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.player.Player;
@@ -28,6 +28,6 @@ public class DagaElfica {
                 .anyMatch(proficiency -> proficiency.getProficiencyTypeEnum().equals(ProficiencyTypeEnum.DEXTERITY));
 
         if (hasDexterity)
-            new ReturnedToAbilityPileCommand(playerFrom, AbilityCardTypeEnum.DAGA_ELFICA).execute();
+            new HandToAbilityPileCommand(playerFrom, AbilityCardTypeEnum.DAGA_ELFICA).execute();
     }
 }
