@@ -149,17 +149,17 @@ public class TurnService {
 
         game.getEnemiesFighting().forEach(e -> {
 
-            e.getPlayedCardsOnMeInTurn().clear();
-            e.setRestrained(false);
-            if(e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
-                e.setCurrentEndurance(e.getEnemy().getEndurance());
+            if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
+                Player playerFrom = game.getPlayers().stream().filter(player -> 
+                    player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
+                new DealDamageCommand(100, playerFrom, e).execute();
+            } else {
+                e.getPlayedCardsOnMeInTurn().clear();
+                e.setRestrained(false);
+                if(e.getEnemy().getEnemyModifierType() != null && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
+                    e.setCurrentEndurance(e.getEnemy().getEndurance());
+                }
             }
-            
-            // if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
-            //     Player playerFrom = game.getPlayers().stream().filter(player -> 
-            //         player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
-            //     new DealDamageCommand(100, playerFrom, e).execute();
-            // }
         });
 
         // Get the next player. Following the previously set turnOrder, the next player
