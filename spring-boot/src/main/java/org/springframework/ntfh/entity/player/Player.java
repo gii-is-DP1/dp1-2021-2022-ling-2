@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
@@ -28,6 +30,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "players")
 public class Player extends BaseEntity {
 
@@ -60,12 +63,15 @@ public class Player extends BaseEntity {
     private Character characterType;
 
     @OneToMany
+    @NotAudited
     private List<AbilityCardIngame> hand = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<AbilityCardIngame> abilityPile = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
     // Make playerCardsInTurn transient?
