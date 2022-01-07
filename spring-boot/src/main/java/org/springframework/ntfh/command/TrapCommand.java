@@ -15,8 +15,7 @@ public class TrapCommand implements Command{
     public void execute() {
         Integer gloryToGain = targetedEnemy.getEnemy().getBaseGlory();
         Integer currentGlory = playerFrom.getGlory();
-        Boolean dead = true;
-        targetedEnemy.setCurrentEndurance(0);
+        targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
         playerFrom.setGlory(currentGlory+gloryToGain);
     }
 }
