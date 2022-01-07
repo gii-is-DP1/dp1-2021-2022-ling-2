@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.command.DealDamageCommand;
+import org.springframework.ntfh.command.TrapCommand;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.EnemyModifierType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
@@ -152,7 +153,7 @@ public class TurnService {
             if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
                 Player playerFrom = game.getPlayers().stream().filter(player -> 
                     player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
-                new DealDamageCommand(100, playerFrom, e).execute();
+                new TrapCommand(playerFrom, e).execute();
             } else {
                 e.getPlayedCardsOnMeInTurn().clear();
                 e.setRestrained(false);
