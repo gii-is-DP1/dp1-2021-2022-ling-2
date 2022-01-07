@@ -13,16 +13,15 @@ public class ExileCommand implements Command {
 
     private Player playerFrom;
 
-    private AbilityCardIngame cardPlayed;
+    private AbilityCardTypeEnum cardPlayed;
 
     @Override
     public void execute() {
         List<AbilityCardIngame> hand = playerFrom.getHand();
-        AbilityCardTypeEnum cardPlayedEnum = cardPlayed.getAbilityCardTypeEnum();
         for (AbilityCardIngame card : hand) {
             AbilityCardTypeEnum carta = card.getAbilityCardTypeEnum();
-            if (carta.equals(cardPlayedEnum)) {
-                hand.remove(cardPlayed);
+            if (carta.equals(cardPlayed)) {
+                hand.remove(card);
                 break;
             }
         }

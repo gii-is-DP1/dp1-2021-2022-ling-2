@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.ntfh.command.ReturnedToAbilityPileCommand;
+import org.springframework.ntfh.command.HandToAbilityPileCommand;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
@@ -98,7 +98,7 @@ public class AbilityCardIngameServiceTest {
     @Test
     void testRefillHandWithCards() {
         turnService.initializeFromGame(gameService.findGameById(1));
-        new ReturnedToAbilityPileCommand(gameService.findGameById(1).getLeader(), gameService.findGameById(1).getLeader().getHand().get(0).getAbilityCardTypeEnum())
+        new HandToAbilityPileCommand(gameService.findGameById(1).getLeader(), gameService.findGameById(1).getLeader().getHand().get(0).getAbilityCardTypeEnum())
                 .execute();
         assertEquals(3, gameService.findGameById(1).getLeader().getHand().size());
         abilityCardIngameService.refillHandWithCards(gameService.findGameById(1).getLeader());

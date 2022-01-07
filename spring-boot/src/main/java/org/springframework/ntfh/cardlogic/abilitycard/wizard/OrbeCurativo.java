@@ -6,7 +6,7 @@ import org.springframework.ntfh.command.ExileCommand;
 import org.springframework.ntfh.command.HealCommand;
 import org.springframework.ntfh.command.RecoverCommand;
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +19,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OrbeCurativo {
-    public void execute(Player playerFrom, AbilityCardIngame cardPlayed) { // cambiar el cardPlayed aquí y en la poción
+    public void execute(Player playerFrom) { // cambiar el cardPlayed aquí y en la poción
         new HealCommand(playerFrom).execute();
         Game game = playerFrom.getGame();
         game.getPlayers().forEach(player -> IntStream.range(0, 2).forEach(i -> new RecoverCommand(player).execute()));
-        new ExileCommand(playerFrom, cardPlayed).execute();
+        new ExileCommand(playerFrom, AbilityCardTypeEnum.ORBE_CURATIVO).execute();
     }
 }

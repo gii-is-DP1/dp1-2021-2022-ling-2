@@ -7,7 +7,7 @@ import org.springframework.ntfh.entity.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class AttackPhaseEnd implements Command{
+public class AttackPhaseEndCommand implements Command{
 
     @Autowired
     GameService gameService;
