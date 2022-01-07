@@ -25,6 +25,9 @@ import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.entity.player.Player;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +37,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "users")
 public class User {
 	@Id
@@ -55,15 +59,18 @@ public class User {
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
 
 	@ManyToOne
+	@NotAudited
 	@JoinColumn(name = "lobby")
 	@JsonIgnoreProperties({ "users", "host", "leader" })
 	private Lobby lobby; // lobby where the user is currently in
 
 	@OneToOne
+	@NotAudited
 	@JoinColumn(name = "player")
 	private Player player; // Current player
 
 	@ManyToOne // TODO set appropiate cascade type
+	@NotAudited
 	@JoinColumn(name = "character")
 	private Character character;
 	// Character that the user has currently selected. Will be set during a lobby,
@@ -72,6 +79,7 @@ public class User {
 	// in your current game)
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	@NotAudited
 	@JsonIgnoreProperties({ "user" })
 	private Set<Authorities> authorities;
 }

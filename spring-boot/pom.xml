@@ -212,6 +212,13 @@
             <artifactId>commons-text</artifactId>
             <version>1.9</version>
         </dependency>
+
+        <!-- Hibernate Envers for auditing -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-envers</artifactId>
+            <version>5.6.2.Final</version>
+        </dependency>
     </dependencies>
 
     <build>
