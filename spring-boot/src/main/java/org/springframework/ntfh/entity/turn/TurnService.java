@@ -90,7 +90,8 @@ public class TurnService {
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).get(); // DB indexes start in 1
+                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null); // DB indexes start in
+                                                                                                 // 1
             turn.setCurrentScene(randomScene);
         }
 
@@ -124,7 +125,6 @@ public class TurnService {
         state.postState(turn.getGame()); // Execute the post-state method of the current state before changing it
         TurnStateType nextState = state.getNextState();
         turn.setStateType(nextState);
-        TurnState newState = getState(turn);
     }
 
     /**
@@ -142,7 +142,7 @@ public class TurnService {
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).get(); // DB indexes start in 1
+                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null);
             nextTurn.setCurrentScene(randomScene);
         }
 
@@ -150,11 +150,14 @@ public class TurnService {
             e.getPlayedCardsOnMeInTurn().clear();
             e.setRestrained(false);
 
-            //TODO el efecto de la carta de trampa funciona cuando le da la gana y cuando no no. REVISAR
-            //aqui no afecta nunca porque se limpiarán las cartas del enemigo antes, así que al menos no dará problemas
-            if(e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){
-                Player playerFrom = game.getPlayers().stream().filter(player -> 
-                    player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny().orElse(null);
+            // TODO el efecto de la carta de trampa funciona cuando le da la gana y cuando
+            // no no. REVISAR
+            // aqui no afecta nunca porque se limpiarán las cartas del enemigo antes, así
+            // que al menos no dará problemas
+            if (e.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)) {
+                Player playerFrom = game.getPlayers().stream()
+                        .filter(player -> player.getCharacterTypeEnum().equals(CharacterTypeEnum.ROGUE)).findAny()
+                        .orElse(null);
                 new DealDamageCommand(100, playerFrom, e).execute();
             }
         });
