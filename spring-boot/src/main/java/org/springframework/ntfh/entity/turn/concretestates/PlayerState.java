@@ -99,7 +99,7 @@ public class PlayerState implements TurnState {
 
         // Make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();
-        if(player.getHand().contains(abilityCardIngame)){
+        if (player.getHand().contains(abilityCardIngame)) {
             player.getHand().remove(abilityCardIngame);
             player.getDiscardPile().add(abilityCardIngame);
         } else {
@@ -108,8 +108,9 @@ public class PlayerState implements TurnState {
 
         // Check if the card is exiliable and if so, remove it from the discard pile too
         // TODO handled already? does it work?
-        
-        // The exile already manages the deletion of the card of the hand, so does the return to ability pile from hand
+
+        // The exile already manages the deletion of the card of the hand, so does the
+        // return to ability pile from hand
         // thats why i added the condition
     }
 

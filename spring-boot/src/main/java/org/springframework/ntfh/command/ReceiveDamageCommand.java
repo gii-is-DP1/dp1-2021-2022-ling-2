@@ -25,17 +25,19 @@ public class ReceiveDamageCommand implements Command {
         if (enemyFrom.getRestrained())
             damage = 0;
 
-        if (enemyModifier.equals(EnemyModifierType.MAGIC_ATTACKER_1) && characterClass.equals(CharacterTypeEnum.WIZARD)){
-            damage = damage-1;
-        } else if (enemyModifier.equals(EnemyModifierType.MAGIC_ATTACKER_2) && characterClass.equals(CharacterTypeEnum.WIZARD)){
-            damage = damage-2;
+        if (enemyModifier != null && enemyModifier.equals(EnemyModifierType.MAGIC_ATTACKER_1)
+                && characterClass.equals(CharacterTypeEnum.WIZARD)) {
+            damage -= 1;
+        } else if (enemyModifier != null && enemyModifier.equals(EnemyModifierType.MAGIC_ATTACKER_2)
+                && characterClass.equals(CharacterTypeEnum.WIZARD)) {
+            damage -= 2;
         }
 
-        if (damage >= guard){
-            damage = damage-guard;
-        } else if (guard>0){
+        if (damage >= guard) {
+            damage -= guard;
+        } else if (guard > 0) {
             damage = 0;
-            guard = guard-damage;
+            guard -= damage;
             playerTo.setGuard(guard);
         }
 
