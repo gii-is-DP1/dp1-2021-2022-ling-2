@@ -63,12 +63,10 @@ public class AbilityCardServiceTest {
         assertEquals(true, testerList.contains(abilityCardService.findById(15)));
     }
 
-    // TODO repasar querys, da error
-    @Disabled
     @Test
     void testFindByAbilityCardTypeEnum() {
-        AbilityCard tester = abilityCardService.findByAbilityCardTypeEnum(AbilityCardTypeEnum.ESPADAZO);
-        assertEquals(AbilityCardTypeEnum.ESPADAZO, tester.getAbilityCardTypeEnum());
+        AbilityCard tester = abilityCardService.findByAbilityCardTypeEnum(AbilityCardTypeEnum.POCION_CURATIVA);
+        assertEquals(AbilityCardTypeEnum.POCION_CURATIVA, tester.getAbilityCardTypeEnum());
     }
     
 }

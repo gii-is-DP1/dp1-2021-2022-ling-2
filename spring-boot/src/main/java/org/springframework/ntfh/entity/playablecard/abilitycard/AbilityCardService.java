@@ -33,7 +33,7 @@ public class AbilityCardService {
     }
 
     public AbilityCard findByAbilityCardTypeEnum(AbilityCardTypeEnum abilityCardTypeEnum) {
-        return abilityCardRepository.findByAbilityCardTypeEnum(abilityCardTypeEnum);
+        return abilityCardRepository.findByAbilityCardTypeEnum(abilityCardTypeEnum).iterator().next();
     }
 
 }
