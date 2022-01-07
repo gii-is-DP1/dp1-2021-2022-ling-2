@@ -17,6 +17,7 @@ public class DealDamageCommand implements Command {
     public void execute() {
         // TODO move this to somewhere else, not scalable
         Integer currentEndurance = targetedEnemy.getCurrentEndurance();
+        Integer playerKillCount = playerFrom.getKills();
         Boolean whetstoneCondition = targetedEnemy.getPlayedCardsOnMeInTurn()
                 .contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
         Boolean corrosiveArrow = targetedEnemy.getPlayedCardsOnMeInTurn()
@@ -28,7 +29,6 @@ public class DealDamageCommand implements Command {
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
         if (targetedEnemy.isDead()) {
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
-            int playerKillCount = playerFrom.getKills();
             playerFrom.setKills(playerKillCount + 1);
 
             if(targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)){

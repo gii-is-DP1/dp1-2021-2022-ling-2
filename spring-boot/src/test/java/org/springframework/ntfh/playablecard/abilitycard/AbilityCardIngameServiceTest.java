@@ -94,7 +94,7 @@ public class AbilityCardIngameServiceTest {
         assertEquals(MarketCardTypeEnum.POCION_CURATIVA.toString(), cardTester.getAbilityCardTypeEnum().toString());
     }
 
-    // H24 + E1
+    // H20 + E1
     @Test
     void testRefillHandWithCards() {
         turnService.initializeFromGame(gameService.findGameById(1));

@@ -10,6 +10,7 @@ import java.util.Set;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -213,7 +214,7 @@ public class GameServiceTest {
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
     }
 
-    // H25 + E1
+    // H21 + E1
     @Test
     void testRegularBountyCollection() {
         // Slinger de 2 de vida
@@ -225,7 +226,33 @@ public class GameServiceTest {
         assertEquals(1, playerTester.getGlory());
     }
 
-    // H26 + E1
+    // H21 + E2
+    @Test
+    void testBountyBehaviourWithTrampaCard() {
+        turnService.initializeFromGame(gameTester);
+        gameTester.getLeader().setCharacterType(characterService.findCharacterById(3).get());
+        AbilityCard trampa = abilityCardService.findById(60);
+        AbilityCardIngame trampaIngame = abilityCardIngameService.createFromAbilityCard(trampa, playerTester);
+        String token = TokenUtils.generateJWTToken(playerTester.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(trampaIngame);
+        playerTester.setHand(hand);
+
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        List<EnemyIngame> enemiesFighting = new ArrayList<>();
+        enemiesFighting.add(enemyIngame);
+        gameTester.setEnemiesFighting(enemiesFighting);
+
+        assertEquals(true, gameTester.getEnemiesFighting().contains(enemyIngame));
+
+        gameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
+
+        turnService.createNextTurn(gameTester);
+
+        assertEquals(false, gameTester.getEnemiesFighting().contains(enemyIngame));
+    }
+
+    // H22 + E1
     @Test
     void testBuyMarketCard_Success() {
         MarketCardIngame marketCardIngame = marketCardIngameService
@@ -240,7 +267,7 @@ public class GameServiceTest {
         assertEquals(2, playerTester.getGold());
     }
 
-    // H26 - E1
+    // H22 - E1
     @Test
     void testBuyMarketCard_Failure() {
         MarketCardIngame marketCardIngame = marketCardIngameService
@@ -256,7 +283,7 @@ public class GameServiceTest {
         });
     }
 
-    // H27 + E1
+    // H23 + E1
     @Test
     void testKillCount() {
         EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
