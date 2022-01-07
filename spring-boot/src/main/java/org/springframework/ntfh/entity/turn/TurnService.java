@@ -163,7 +163,7 @@ public class TurnService {
             // If there are no alive players, the game is over
             // TODO make the game finish early if everybody dies. Right now this returns an
             // IndexOutOfBoundsException because of the following line "alivePlayers.get(0)"
-            return;
+                throw new IllegalArgumentException("All players are dead");
         }
         Player nextPlayer = alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size()
                 ? alivePlayers.get(0)
