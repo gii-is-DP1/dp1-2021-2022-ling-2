@@ -225,6 +225,32 @@ public class GameServiceTest {
         assertEquals(1, playerTester.getGlory());
     }
 
+    // H25 + E2
+    @Test
+    void testBountyBehaviourWithTrampaCard() {
+        turnService.initializeFromGame(gameTester);
+        gameTester.getLeader().setCharacterType(characterService.findCharacterById(3).get());
+        AbilityCard trampa = abilityCardService.findById(60);
+        AbilityCardIngame trampaIngame = abilityCardIngameService.createFromAbilityCard(trampa, playerTester);
+        String token = TokenUtils.generateJWTToken(playerTester.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(trampaIngame);
+        playerTester.setHand(hand);
+
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        List<EnemyIngame> enemiesFighting = new ArrayList<>();
+        enemiesFighting.add(enemyIngame);
+        gameTester.setEnemiesFighting(enemiesFighting);
+
+        assertEquals(true, gameTester.getEnemiesFighting().contains(enemyIngame));
+
+        gameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
+
+        turnService.createNextTurn(gameTester);
+
+        assertEquals(false, gameTester.getEnemiesFighting().contains(enemyIngame));
+    }    
+
     // H26 + E1
     @Test
     void testBuyMarketCard_Success() {
