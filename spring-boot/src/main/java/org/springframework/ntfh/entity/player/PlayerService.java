@@ -27,7 +27,6 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    @Transactional
     public Integer playerCount() {
         return (int) playerRepository.count();
     }
@@ -47,12 +46,10 @@ public class PlayerService {
         playerRepository.deleteById(id);
     }
 
-    @Transactional
     public Iterable<Player> findAll() {
         return playerRepository.findAll();
     }
 
-    @Transactional
     public Player findById(Integer playerId) throws DataAccessException {
         Optional<Player> player = playerRepository.findById(playerId);
         if (!player.isPresent())

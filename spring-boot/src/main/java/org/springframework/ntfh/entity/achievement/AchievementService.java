@@ -18,17 +18,14 @@ public class AchievementService {
     @Autowired
     private AchievementRepository achievementRepository;
 
-    @Transactional
     public Integer achievementCount() {
         return (int) achievementRepository.count();
     }
 
-    @Transactional
     public Iterable<Achievement> findAll() {
         return achievementRepository.findAll();
     }
 
-    @Transactional
     public Optional<Achievement> findAchievementById(Integer id) {
         return achievementRepository.findById(id);
     }
@@ -60,5 +57,4 @@ public class AchievementService {
         log.info("Admin with token " + token + " has updated achievement with ID: " + achievement.getId());
         return achievementRepository.save(achievement);
     }
-
 }

@@ -82,22 +82,15 @@ public class UserService {
 		return user;
 	}
 
-	public User save(User user) {
-		return userRepository.save(user);
-	}
-
-	@Transactional(readOnly = true)
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
 	}
 
-	@Transactional(readOnly = true)
 	public List<User> findPage(Pageable pageable) {
 		Page<User> page = userRepository.findAllPage(pageable);
 		return page.getContent();
 	}
 
-	@Transactional(readOnly = true)
 	public User findUser(String username) throws DataAccessException {
 		// The username is the id (primary key)
 		Optional<User> user = userRepository.findById(username);
@@ -107,9 +100,13 @@ public class UserService {
 		return user.get();
 	}
 
-	@Transactional(readOnly = true)
 	public Integer count() {
 		return (int) userRepository.count();
+	}
+
+	@Transactional
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 
 	/**
@@ -131,7 +128,6 @@ public class UserService {
 			log.warn("User " + user.getUsername() + " unauthorized update by token " + token);
 			throw new NonMatchingTokenException("A user's profile can only be updated by him/herself or by an admin");
 		}
-			
 
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
 		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
