@@ -50,17 +50,14 @@ public class TurnService {
 
     /*******************************/
 
-    @Transactional
     public Integer turnCount() {
         return (int) turnRepository.count();
     }
 
-    @Transactional
     public Iterable<Turn> findAll() {
         return turnRepository.findAll();
     }
 
-    @Transactional
     public Optional<Turn> findturnById(Integer id) {
         return turnRepository.findById(id);
     }
@@ -70,6 +67,7 @@ public class TurnService {
         turnRepository.save(turn);
     }
 
+    @Transactional
     public void delete(int turnId) {
         turnRepository.deleteById(turnId);
     }
@@ -118,6 +116,7 @@ public class TurnService {
         }
     }
 
+    @Transactional
     public void setNextState(Turn turn) {
         TurnState state = getState(turn);
         state.postState(turn.getGame()); // Execute the post-state method of the current state before changing it
@@ -145,7 +144,8 @@ public class TurnService {
         }
 
         game.getEnemiesFighting().forEach(e -> {
-            if(e.getEnemy().getEnemyModifierType() != null && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)){
+            if (e.getEnemy().getEnemyModifierType() != null
+                    && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)) {
                 e.setCurrentEndurance(e.getEnemy().getEndurance());
             }
             e.getPlayedCardsOnMeInTurn().clear();
@@ -163,7 +163,7 @@ public class TurnService {
             // If there are no alive players, the game is over
             // TODO make the game finish early if everybody dies. Right now this returns an
             // IndexOutOfBoundsException because of the following line "alivePlayers.get(0)"
-                throw new IllegalArgumentException("All players are dead");
+            throw new IllegalArgumentException("All players are dead");
         }
         Player nextPlayer = alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size()
                 ? alivePlayers.get(0)

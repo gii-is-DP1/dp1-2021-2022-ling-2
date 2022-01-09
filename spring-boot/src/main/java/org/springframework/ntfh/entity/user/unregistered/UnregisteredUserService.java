@@ -18,17 +18,16 @@ public class UnregisteredUserService {
 
     private UnregisteredUserRepository unregisteredUserRepository;
 
+    // TODO needed?
     @Autowired
     public UnregisteredUserService(UnregisteredUserRepository unregisteredUserRepository) {
         this.unregisteredUserRepository = unregisteredUserRepository;
     }
 
-    @Transactional(readOnly = true)
-	public Iterable<UnregisteredUser> findAll() {
-		return unregisteredUserRepository.findAll();
-	}
+    public Iterable<UnregisteredUser> findAll() {
+        return unregisteredUserRepository.findAll();
+    }
 
-    @Transactional(readOnly = true)
     public Optional<UnregisteredUser> findUnregisteredUserById(String username) {
         return this.unregisteredUserRepository.findById(username);
     }

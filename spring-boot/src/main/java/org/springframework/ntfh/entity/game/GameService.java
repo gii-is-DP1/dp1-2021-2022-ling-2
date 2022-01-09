@@ -43,7 +43,6 @@ public class GameService {
     @Autowired
     private TurnService turnService;
 
-    @Transactional
     public Integer gameCount() {
         return (int) gameRepository.count();
     }
@@ -56,8 +55,9 @@ public class GameService {
         Optional<Game> game = gameRepository.findById(id);
         if (!game.isPresent()) {
             log.error("Game with id " + id + " was not found");
-            throw new DataAccessException("Game with id " + id + " was not found") {};
-        }    
+            throw new DataAccessException("Game with id " + id + " was not found") {
+            };
+        }
         return game.get();
     }
 
@@ -120,6 +120,7 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    @Transactional
     public void delete(Game game) {
         gameRepository.delete(game);
     }
