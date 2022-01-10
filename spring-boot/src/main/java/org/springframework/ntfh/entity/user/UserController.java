@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -90,9 +91,10 @@ public class UserController {
 	}
 
 	@PostMapping("register")
-	public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
+	@ResponseStatus(HttpStatus.CREATED)
+	// TODO 🔼 do this in the rest of controllers that return no body
+	public void register(@RequestBody User user) {
 		this.userService.createUser(user);
-		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@PostMapping("login")
@@ -102,17 +104,16 @@ public class UserController {
 	}
 
 	@PutMapping("character")
-	public ResponseEntity<Map<String, String>> setCharacter(@RequestBody User user,
-			@RequestHeader("Authorization") String token) {
+	@ResponseStatus(HttpStatus.OK)
+	public void setCharacter(@RequestBody User user, @RequestHeader("Authorization") String token) {
 		userService.setCharacter(user.getUsername(), user.getCharacter());
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@PutMapping("{userId}/ban")
-	public ResponseEntity<User> toggleBanUser(@PathVariable("userId") String username,
+	@ResponseStatus(HttpStatus.OK)
+	public void toggleBanUser(@PathVariable("userId") String username,
 			@RequestHeader("Authorization") String token) {
 		userService.toggleBanUser(username, token);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// TODO make this work
@@ -127,11 +128,12 @@ public class UserController {
 	 * @author alegestor
 	 */
 	@DeleteMapping("{userId}")
-	public ResponseEntity<User> deleteUser(@PathVariable("userId") String username,
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteUser(@PathVariable("userId") String username,
 			@RequestHeader("Authorization") String token) {
+		// TODO better parse username to user with a converter? saw that in the slides
 		User user = userService.findUser(username);
 		userService.deleteUser(user);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }
