@@ -49,8 +49,7 @@ public class Game extends BaseEntity {
     private List<Player> players;
 
     @OneToOne
-    @JsonIgnoreProperties({ "game" })
-    // TODO JsonIgnore?
+    @JsonIgnore
     private Player leader;
 
     @OneToMany(mappedBy = "game")
@@ -58,6 +57,7 @@ public class Game extends BaseEntity {
     @JsonIgnore
     private List<Turn> turns = new ArrayList<>();
 
+    // TODO should these be not audited?
     @OneToMany
     @NotAudited
     private List<EnemyIngame> enemiesInPile = new ArrayList<>();

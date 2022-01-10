@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -53,7 +52,8 @@ public class AbilityCardServiceTest {
 
     @Test
     void testFindByCharacterTypeEnum() {
-        List<AbilityCard> testerList = Lists.newArrayList(abilityCardService.findByCharacterTypeEnum(CharacterTypeEnum.RANGER));
+        List<AbilityCard> testerList = Lists
+                .newArrayList(abilityCardService.findByCharacterTypeEnum(CharacterTypeEnum.RANGER));
         assertEquals(true, testerList.contains(abilityCardService.findById(1)));
         assertEquals(true, testerList.contains(abilityCardService.findById(2)));
         assertEquals(true, testerList.contains(abilityCardService.findById(4)));
@@ -68,5 +68,5 @@ public class AbilityCardServiceTest {
         AbilityCard tester = abilityCardService.findByAbilityCardTypeEnum(AbilityCardTypeEnum.POCION_CURATIVA);
         assertEquals(AbilityCardTypeEnum.POCION_CURATIVA, tester.getAbilityCardTypeEnum());
     }
-    
+
 }
