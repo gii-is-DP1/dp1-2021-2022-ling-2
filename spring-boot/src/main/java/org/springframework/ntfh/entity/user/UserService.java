@@ -52,7 +52,6 @@ public class UserService {
 
 	@Autowired
 	public UserService(UserRepository userRepository) {
-		// TODO needed?
 		this.userRepository = userRepository;
 	}
 

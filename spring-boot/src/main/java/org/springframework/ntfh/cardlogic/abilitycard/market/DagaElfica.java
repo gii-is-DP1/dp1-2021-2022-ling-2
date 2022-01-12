@@ -19,9 +19,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DagaElfica {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        // TODO considerar atributo "cardPlayed" en el resto de cartas e incorporarlo en
-        // el reflection
-        // puede que esté resuelto
         new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
 
         Boolean hasDexterity = playerFrom.getCharacterType().getProficiencies().stream()

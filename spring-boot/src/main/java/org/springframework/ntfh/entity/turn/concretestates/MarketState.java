@@ -41,7 +41,6 @@ public class MarketState implements TurnState {
         return TurnStateType.PLAYER_STATE;
     }
 
-
     @Override
     public void postState(Game game) {
         // After the market state, the player will receive damage from the horde
@@ -64,8 +63,7 @@ public class MarketState implements TurnState {
     @Override
     public void buyMarketCard(Integer marketCardIngameId, String token) {
 
-        // TODO Throw exception if it's not the player's turn
-        // TODO Throw exception if not in the market stage
+        // TODO throw exception if not player's turn?
 
         String username = TokenUtils.usernameFromToken(token);
         User user = userService.findUser(username);

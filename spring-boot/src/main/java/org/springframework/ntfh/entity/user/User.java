@@ -26,7 +26,6 @@ import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.entity.player.Player;
 
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import lombok.Getter;
 import lombok.Setter;

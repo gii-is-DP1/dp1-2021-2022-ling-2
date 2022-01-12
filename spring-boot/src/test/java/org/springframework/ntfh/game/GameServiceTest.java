@@ -10,7 +10,6 @@ import java.util.Set;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,9 +161,10 @@ public class GameServiceTest {
     @Test
     public void testDeleteGame() {
         Game tester = gameService.createFromLobby(lobbyTester);
+        Integer gameId = tester.getId();
         gameService.delete(tester);
         assertThrows(DataAccessException.class, () -> {
-            gameService.findGameById(tester.getId());
+            gameService.findGameById(gameId);
         });
     }
 
