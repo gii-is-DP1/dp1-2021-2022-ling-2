@@ -1,6 +1,7 @@
 package org.springframework.ntfh.entity.user.unregistered;
 
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ public class UnregisteredUserService {
 
     private UnregisteredUserRepository unregisteredUserRepository;
 
-    // TODO needed?
     @Autowired
     public UnregisteredUserService(UnregisteredUserRepository unregisteredUserRepository) {
         this.unregisteredUserRepository = unregisteredUserRepository;
@@ -45,7 +45,7 @@ public class UnregisteredUserService {
         // generate a random username
         String username;
         do {
-            Integer randomFourDigits = (int) (Math.random() * 10000);
+            Integer randomFourDigits = (int) (new Random().nextInt() % 10000);
             username = String.format("user%04d", randomFourDigits);
         } while (this.unregisteredUserRepository.findById(username).isPresent());
 
