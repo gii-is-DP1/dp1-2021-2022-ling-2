@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.entity.enemy.EnemyModifierType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
@@ -27,6 +28,9 @@ public class TurnService {
 
     @Autowired
     private TurnRepository turnRepository;
+
+    @Autowired
+    private GameService gameService;
 
     @Autowired
     private SceneService sceneService;
@@ -161,7 +165,7 @@ public class TurnService {
         List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
         if (alivePlayers.isEmpty()) {
             // If there are no alive players, the game is over
-            game.setFinishTime(System.currentTimeMillis());
+            gameService.finishGame(game);
             return;
         }
         Player nextPlayer = alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size()
