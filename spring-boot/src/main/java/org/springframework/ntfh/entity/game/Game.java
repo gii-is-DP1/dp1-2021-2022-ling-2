@@ -38,7 +38,9 @@ import lombok.Setter;
 public class Game extends BaseEntity {
 
     @NotNull // Set by the server to Time.now()
-    private Long startTime; // unix timestamp
+    private Long startTime; // TODO change to datetime?
+
+    private Long finishTime; // TODO change to datetime?
 
     @NotNull // Set from Lobby
     private Boolean hasScenes;
