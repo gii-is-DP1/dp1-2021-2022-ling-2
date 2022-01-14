@@ -29,12 +29,12 @@ export default function UsersInLobby(props: Props) {
     "wizard",
     "wizard",
   ];
-  const getCharacterFromId = (id: number): string => {
+  const getCharacterFromId = (id: number | undefined): string => {
     if (id === undefined) return "none";
     return characters[id - 1];
   };
 
-  const getGenderFromId = (id: number): string => {
+  const getGenderFromId = (id: number | undefined): string => {
     if (id === undefined) return "";
     return id % 2 ? "♂ " : "♀ ";
   };
@@ -60,8 +60,8 @@ export default function UsersInLobby(props: Props) {
             {isHost(user) && <span className="m-0 p-1">👑</span>}{" "}
             {user.username +
               " — " +
-              getGenderFromId(user.character?.id) +
-              capitalize(getCharacterFromId(user.character?.id))}
+              getGenderFromId(user?.character?.id) +
+              capitalize(getCharacterFromId(user?.character?.id))}
           </li>
         ))}
     </ul>

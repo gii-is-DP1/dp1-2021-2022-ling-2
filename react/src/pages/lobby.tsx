@@ -66,7 +66,7 @@ export default function Lobby() {
       setLobby(newLobby);
       setFullLobby(newLobby.maxPlayers === newLobby.users.length);
       const takenCharacters: CharacterTypeEnum[] = newLobby.users.map(
-        (_user) => _user.character?.characterTypeEnum
+        (_user) => _user?.character?.characterTypeEnum
       );
       setCharactersTaken(takenCharacters);
       return newLobby;

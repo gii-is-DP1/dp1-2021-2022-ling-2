@@ -43,7 +43,7 @@ export default function Game() {
     (_user && _user?.lobby?.game?.id !== parseInt(gameId));
 
   const isPlayersTurn = (_turn: Turn | null, username: string) =>
-    _turn && _turn.player.user.username === username;
+    _turn && _turn.player.user?.username === username;
 
   const playersInRenderOrder = (_players: Player[]) => {
     const orderedPlayerList: Player[] = _players.sort(
