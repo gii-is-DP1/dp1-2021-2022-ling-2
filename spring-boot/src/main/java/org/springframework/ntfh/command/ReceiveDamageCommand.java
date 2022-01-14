@@ -19,7 +19,6 @@ public class ReceiveDamageCommand implements Command {
 
     @Override
     public void execute() {
-        Integer guard = playerTo.getGuard();
         EnemyModifierType enemyModifier = enemyFrom.getEnemy().getEnemyModifierType();
         CharacterTypeEnum characterClass = playerTo.getCharacterTypeEnum();
         if (enemyFrom.getRestrained())
@@ -33,15 +32,13 @@ public class ReceiveDamageCommand implements Command {
             damage -= 2;
         }
 
-        if (damage >= guard) {
-            damage -= guard;
-        } else if (guard > 0) {
-            damage = 0;
-            guard -= damage;
-            playerTo.setGuard(guard);
-        }
-
         for (int i = 0; i < damage; i++) {
+            Integer guard = playerTo.getGuard();
+            if (guard > 0) {
+                playerTo.setGuard(guard - 1);
+                break;
+            }
+
             // "Top card" is the last card in the abilityPile list
             Integer topCardIndex = playerTo.getAbilityPile().size() - 1;
             AbilityCardIngame topCard = playerTo.getAbilityPile().get(topCardIndex);
@@ -51,7 +48,8 @@ public class ReceiveDamageCommand implements Command {
 
             if (playerTo.getAbilityPile().isEmpty()) {
                 new GiveWoundCommand(playerTo).execute();
-                break;
+                // break; // TODO remove this break so the player can receive damage on his new
+                // cards
             }
         }
     }
