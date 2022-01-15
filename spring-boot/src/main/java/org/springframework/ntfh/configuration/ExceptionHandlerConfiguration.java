@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -119,11 +120,9 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers,
             HttpStatus status, WebRequest request) {
-        String message = ex.getBindingResult().getAllErrors().stream().map(e -> e.getDefaultMessage())
+        String message = ex.getBindingResult().getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .reduce((s1, s2) -> s1 + ". " + s2).orElse("");
         return buildResponseEntity(message, HttpStatus.BAD_REQUEST);
     }
-
-    // TODO add more custom exceptions here. The structure is the same, the only
-    // thing changing should be the HttpStatus
 }

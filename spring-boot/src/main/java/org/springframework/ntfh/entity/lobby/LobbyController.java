@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -92,13 +93,12 @@ public class LobbyController {
      * @author andrsdt
      */
     @PostMapping("{lobbyId}/join") // TODO refactor to "{lobbyId}/add/{username}"
-    public ResponseEntity<Lobby> joinLobby(@PathVariable("lobbyId") Integer lobbyId,
+    @ResponseStatus(HttpStatus.OK)
+    public void joinLobby(@PathVariable("lobbyId") Integer lobbyId,
             @RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
-        // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
         String usernameFromRequest = body.get("username");
         lobbyService.joinLobby(lobbyId, usernameFromRequest, token);
         log.info("User " + usernameFromRequest + " joined lobby with id " + lobbyId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -143,6 +143,7 @@ public class LobbyController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
+        // TODO replace with throw exception (probably on service)
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
