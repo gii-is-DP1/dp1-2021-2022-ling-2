@@ -49,7 +49,6 @@ public class Game extends BaseEntity {
     private List<Player> players;
 
     @OneToOne
-    @JsonIgnore
     private Player leader;
 
     @OneToMany(mappedBy = "game")
