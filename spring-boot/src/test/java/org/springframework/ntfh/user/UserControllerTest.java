@@ -2,6 +2,7 @@ package org.springframework.ntfh.user;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * @see https://dimitr.im/testing-your-rest-controllers-and-clients-with-spring
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc()
 public class UserControllerTest {
 
     @Autowired
@@ -101,6 +102,17 @@ public class UserControllerTest {
     }
 
     @Test
+    void update_by_admin_success() throws Exception {
+        final String PUT_JSON = "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"testing\"}";
+        mockMvc.perform(put("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("authorization",
+                        "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .content(PUT_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void register_success() throws Exception {
         final String POST_JSON = "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
         mockMvc.perform(post("/users/register")
@@ -110,8 +122,32 @@ public class UserControllerTest {
     }
 
     @Test
-    void update_by_admin_success() throws Exception {
-        final String PUT_JSON = "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"testing\"}";
+    void login_success() throws Exception {
+        when(userService.loginUser(any(User.class))).thenReturn(TokenUtils.USER_TOKEN);
+        final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
+        mockMvc.perform(post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("authorization",
+                        "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .content(POST_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
+    }
+
+    @Test
+    void testSetCharacter_Success() throws Exception {
+        final String PUT_JSON = "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"enabled\":true,\"character\":{\"id\":5,\"baseHealth\":3,\"characterTypeEnum\":\"WARRIOR\",\"characterGenderEnum\":\"MALE\",\"proficiencies\":[{\"id\":2,\"proficiencyTypeEnum\":\"MELEE\",\"secondaryDebuff\":0}]},\"authorities\":[{\"id\":15,\"authority\":\"user\"}]}";
+        mockMvc.perform(put("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("authorization",
+                        "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .content(PUT_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testToggleBanUser_Success() throws Exception {
+        final String PUT_JSON = "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"password\":\"user1\",\"enabled\":false}";
         mockMvc.perform(put("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("authorization",
