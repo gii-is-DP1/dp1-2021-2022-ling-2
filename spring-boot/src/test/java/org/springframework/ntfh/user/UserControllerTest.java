@@ -2,10 +2,12 @@ package org.springframework.ntfh.user;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,6 +29,7 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 /**
  * @see https://stackabuse.com/guide-to-unit-testing-spring-boot-rest-apis/
@@ -46,7 +49,7 @@ public class UserControllerTest {
     @MockBean
     UserService userService;
 
-    static User user1, user2, user3, user4;
+    static User user1, user2, user3, user4, user5;
 
     @BeforeAll
     static void setup() {
@@ -123,6 +126,19 @@ public class UserControllerTest {
                         "Bearer " + TokenUtils.ADMIN_TOKEN)
                 .content(PUT_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testDeleteUser() throws Exception{
+        user5 = new User();
+        user5.setUsername("user5");
+        user5.setPassword("user5");
+        user5.setEmail("user5");
+        user5.setEnabled(true);
+        
+        String DeletedUsername = "user5";
+        mockMvc.perform(delete("/users/" + DeletedUsername).header("authorization",
+        "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk());
     }
 
 }
