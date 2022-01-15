@@ -28,17 +28,14 @@ public class EnemyIngameService {
     @Autowired
     private EnemyService enemyService;
 
-    @Transactional
     public Integer enemyIngameCount() {
         return (int) enemyIngameRepository.count();
     }
 
-    @Transactional
     public Iterable<EnemyIngame> findAll() {
         return enemyIngameRepository.findAll();
     }
 
-    @Transactional
     public EnemyIngame findById(Integer id) throws DataAccessException {
         Optional<EnemyIngame> enemyIngame = enemyIngameRepository.findById(id);
         if (!enemyIngame.isPresent())
@@ -50,26 +47,6 @@ public class EnemyIngameService {
     @Transactional
     public EnemyIngame save(EnemyIngame enemyIngame) throws DataAccessException {
         return enemyIngameRepository.save(enemyIngame);
-    }
-
-    /**
-     * Keep taking enemies from the pile and adding them to the fighting area while
-     * there are less than 3
-     * 
-     * @author @andrsdt
-     */
-    private void refillTableWithEnemies(Game game) {
-        List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
-        List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
-
-        while (!enemiesInPile.isEmpty() && enemiesFighting.size() < 3) {
-            // The game rules tell us that the horde enemy cards have to be taken from the
-            // bottom of the pile
-            EnemyIngame lastEnemyInPile = enemiesInPile.get(0);
-            enemiesInPile.remove(lastEnemyInPile);
-            enemiesFighting.add(lastEnemyInPile);
-        }
-        // TODO do we have to .save() something as we were doing before?
     }
 
     @Transactional
@@ -87,6 +64,8 @@ public class EnemyIngameService {
      * @param game that the horde enemies will be created for
      * @return
      */
+    // TODO should this be transactional? It's called from a transactional method
+    @Transactional
     private void initializeHordeEnemies(Game game) {
         Integer numPlayers = game.getPlayers().size();
         Map<Integer, Integer> numEnemies = Map.of(
@@ -107,6 +86,8 @@ public class EnemyIngameService {
 
     }
 
+    // TODO should this be transactional? It's called from a transactional method
+    @Transactional
     private void initializeWarlord(Game game) {
         List<Enemy> allWarlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
         Collections.shuffle(allWarlords);
@@ -115,11 +96,43 @@ public class EnemyIngameService {
         game.getEnemiesInPile().add(warlordEntity);
     }
 
+    /**
+     * Keep taking enemies from the pile and adding them to the fighting area while
+     * there are less than 3
+     * 
+     * @author @andrsdt
+     */
+    // TODO should this be transactional? It's called from a transactional method
+    @Transactional
+    public void refillTableWithEnemies(Game game) {
+        List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
+        List<EnemyIngame> enemiesFighting = game.getEnemiesFighting();
+
+        // If there area already 3 enemies (or even 4 considering a warlord), there is
+        // no need to refill
+        if (enemiesFighting.size() >= 3)
+            return;
+
+        Integer enemiesToRefill = enemiesFighting.isEmpty() ? 3 : 1;
+
+        while (!enemiesInPile.isEmpty() && enemiesToRefill > 0) {
+            // The game rules tell us that the horde enemy cards have to be taken from the
+            // bottom of the pile
+            EnemyIngame lastEnemyInPile = enemiesInPile.get(0);
+            enemiesInPile.remove(lastEnemyInPile);
+            enemiesFighting.add(lastEnemyInPile);
+            enemiesToRefill--;
+        }
+    }
+
+    // TODO should this be transactional? It's called from a transactional method
     @Transactional
     public EnemyIngame createFromEnemy(Enemy enemy, Game game) {
         EnemyIngame enemyIngame = new EnemyIngame();
         enemyIngame.setEnemy(enemy);
+        enemyIngame.setGame(game);
         enemyIngame.setCurrentEndurance(enemy.getEndurance());
+        enemyIngame.setRestrained(false);
         return this.save(enemyIngame);
     }
 }

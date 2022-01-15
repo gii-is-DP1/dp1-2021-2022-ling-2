@@ -1,15 +1,19 @@
 package org.springframework.ntfh.entity.user.unregistered;
 
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author jstockwell
  * @author andrsdt
  */
+@Slf4j
 @Service
 public class UnregisteredUserService {
 
@@ -20,12 +24,10 @@ public class UnregisteredUserService {
         this.unregisteredUserRepository = unregisteredUserRepository;
     }
 
-    @Transactional(readOnly = true)
-	public Iterable<UnregisteredUser> findAll() {
-		return unregisteredUserRepository.findAll();
-	}
+    public Iterable<UnregisteredUser> findAll() {
+        return unregisteredUserRepository.findAll();
+    }
 
-    @Transactional(readOnly = true)
     public Optional<UnregisteredUser> findUnregisteredUserById(String username) {
         return this.unregisteredUserRepository.findById(username);
     }
@@ -33,6 +35,7 @@ public class UnregisteredUserService {
     @Transactional
     public void delete(UnregisteredUser unregisteredUser) {
         unregisteredUserRepository.delete(unregisteredUser);
+        log.info("Unregistered user " + unregisteredUser.getUsername() + " deleted");
     }
 
     @Transactional
@@ -42,7 +45,7 @@ public class UnregisteredUserService {
         // generate a random username
         String username;
         do {
-            Integer randomFourDigits = (int) (Math.random() * 10000);
+            Integer randomFourDigits = (int) (new Random().nextInt() % 10000);
             username = String.format("user%04d", randomFourDigits);
         } while (this.unregisteredUserRepository.findById(username).isPresent());
 
@@ -52,6 +55,7 @@ public class UnregisteredUserService {
         unregisteredUser.setUsername(username);
         unregisteredUser.setCreationTime(creationTime);
         unregisteredUserRepository.save(unregisteredUser);
+        log.info("Unregistered user " + unregisteredUser.getUsername() + " created");
         return unregisteredUser; // so the users can store the info on their LocalStorage
     }
 }

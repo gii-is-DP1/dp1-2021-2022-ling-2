@@ -1,7 +1,6 @@
 package org.springframework.ntfh.entity.lobby;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author andrsdt
  */
+@Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/lobbies")
@@ -50,6 +53,7 @@ public class LobbyController {
     @PostMapping
     public ResponseEntity<Map<String, Integer>> createLobby(@RequestBody Lobby lobby) {
         Lobby createdLobby = lobbyService.save(lobby);
+        log.info("Lobby with id " + lobby.getId() + " created");
         return new ResponseEntity<>(Map.of("lobbyId", createdLobby.getId()), HttpStatus.CREATED);
     }
 
@@ -89,13 +93,12 @@ public class LobbyController {
      * @author andrsdt
      */
     @PostMapping("{lobbyId}/join") // TODO refactor to "{lobbyId}/add/{username}"
-    public ResponseEntity<Lobby> joinLobby(@PathVariable("lobbyId") Integer lobbyId,
+    @ResponseStatus(HttpStatus.OK)
+    public void joinLobby(@PathVariable("lobbyId") Integer lobbyId,
             @RequestBody Map<String, String> body, @RequestHeader("Authorization") String token) {
-        // TODO replace ResponseEntity<Lobby> returns with throwing exceptions?
         String usernameFromRequest = body.get("username");
         lobbyService.joinLobby(lobbyId, usernameFromRequest, token);
-        return new ResponseEntity<>(HttpStatus.OK);
-
+        log.info("User " + usernameFromRequest + " joined lobby with id " + lobbyId);
     }
 
     /**
@@ -125,8 +128,10 @@ public class LobbyController {
 
         Boolean requestByUserLeaving = usernameFromToken.equals(username);
         Boolean requestByHost = usernameFromToken.equals(usernameFromLobbyHost);
-        if (!requestByHost && !requestByUserLeaving)
+        if (!requestByHost && !requestByUserLeaving) {
+            log.warn("User " + usernameFromToken + " unauthorized removal attempt from lobby id " + lobbyId);
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         if (requestByHost && usernameFromLobbyHost.equals(username)) {
             // If the host is the one who wanted to leave, then delete the lobby
@@ -134,9 +139,11 @@ public class LobbyController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         if (lobbyService.removeUserFromLobby(lobby, username)) {
+            log.info("User " + username + " was removed from lobby id " + lobby.getId());
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
+        // TODO replace with throw exception (probably on service)
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
@@ -156,6 +163,7 @@ public class LobbyController {
             @RequestHeader("Authorization") String token) {
         // TODO implement? currently delegated to removeUserFromLobby() when the one
         // leaving is the host. Kind of violates the single responsibility principle
+        log.info("Lobby id " + lobbyId + " was deleted");
         return null;
     }
 

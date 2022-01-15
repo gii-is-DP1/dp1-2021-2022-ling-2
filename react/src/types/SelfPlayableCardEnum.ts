@@ -1,8 +1,8 @@
 // This array represents those cards that don't require any argument for being played
 export const SelfPlayableCards = [
-  // ROGUE
+  // RANGER
   "RECOGER_FLECHAS",
-  "SUPERVIVENCIA",
+  "LLUVIA_DE_FLECHAS",
 
   // WARRIOR
   "PASO_ATRAS",
@@ -16,6 +16,13 @@ export const SelfPlayableCards = [
 
   // ROGUE
   "ROBAR_BOLSILLOS",
-  "SAQUEO",
-  "TRAMPA",
+  "SAQUEO_ORO",
+  "SAQUEO_ORO_GLORIA",
+
+  // MARKET
+  "POCION_CURATIVA",
+  "PIEDRA_DE_AMOLAR",
+  "VIAL_DE_CONJURACION",
+  "ELIXIR_DE_CONCENTRACION",
+  "ARMADURA_DE_PLACAS",
 ];

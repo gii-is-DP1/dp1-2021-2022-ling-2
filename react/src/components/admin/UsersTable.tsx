@@ -39,18 +39,26 @@ export default function UsersTable() {
       toast.error(error?.message);
     }
   };
+
   const handleToggleBan = async (_user: User) => {
-    const payload = {
-      username: _user.username,
-      email: _user.email,
-      enabled: !_user.enabled,
-    };
     try {
-      await axios.put("/users", payload, {
+      await axios.put(`/users/${_user.username}/ban`, null, {
         headers: { Authorization: "Bearer " + userToken },
       });
       fetchUsers();
-      toast.success(_user.username + " has been banned");
+      toast.success(_user.username + " has been banned/unbanned");
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const handleDeleteUser = async (_user: User) => {
+    try {
+      await axios.delete(`/users/${_user.username}`, {
+        headers: { Authorization: "Bearer " + userToken },
+      });
+      fetchUsers();
+      toast.success(_user.username + " has been deleted");
     } catch (error: any) {
       toast.error(error?.message);
     }
@@ -65,7 +73,6 @@ export default function UsersTable() {
   useEffect(() => {
     // Fetch users every time the page changes
     fetchUsers();
-    // TODO wrap fetchUsers() definition in useCallback? would improve performance
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, setPage]);
 
@@ -114,14 +121,6 @@ export default function UsersTable() {
                       {user.enabled ? "🟢" : "🔴"}
                     </td>
                     <td className="space-x-4">
-                      {hasAuthority(loggedUser, "admin") && (
-                        <button
-                          className="btn btn-red"
-                          onClick={() => handleToggleBan(user)}
-                        >
-                          Ban
-                        </button>
-                      )}
                       <button
                         className="btn btn-blue"
                         onClick={() =>
@@ -129,6 +128,26 @@ export default function UsersTable() {
                         }
                       >
                         Edit
+                      </button>
+                      <button
+                        className={`btn btn-yellow ${
+                          user.username === loggedUser?.username
+                            ? "invisible"
+                            : ""
+                        } `}
+                        onClick={() => handleToggleBan(user)}
+                      >
+                        Ban
+                      </button>
+                      <button
+                        className={`btn btn-red ${
+                          user.username === loggedUser?.username
+                            ? "invisible"
+                            : ""
+                        } `}
+                        onClick={() => handleDeleteUser(user)}
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>

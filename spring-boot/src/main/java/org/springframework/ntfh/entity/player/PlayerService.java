@@ -11,6 +11,9 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class PlayerService {
 
@@ -24,7 +27,6 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    @Transactional
     public Integer playerCount() {
         return (int) playerRepository.count();
     }
@@ -44,12 +46,10 @@ public class PlayerService {
         playerRepository.deleteById(id);
     }
 
-    @Transactional
     public Iterable<Player> findAll() {
         return playerRepository.findAll();
     }
 
-    @Transactional
     public Player findById(Integer playerId) throws DataAccessException {
         Optional<Player> player = playerRepository.findById(playerId);
         if (!player.isPresent())
@@ -73,6 +73,7 @@ public class PlayerService {
         player.setKills(0);
         player.setGold(0);
         player.setWounds(0);
+        player.setGuard(0);
         player.setTurnOrder(turnOrder);
 
         if (user.getCharacter() == null) {
@@ -86,6 +87,7 @@ public class PlayerService {
         user.setPlayer(player);
         userService.save(user);
 
+        log.info("Player created by user " + user.getUsername() + " in lobby id " + lobby.getId());
         return playerDB;
 
     }

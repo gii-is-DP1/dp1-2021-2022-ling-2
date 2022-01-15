@@ -5,9 +5,9 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.ntfh.entity.game.Game;
@@ -23,10 +23,10 @@ import lombok.Setter;
 @Entity
 public class Turn extends BaseEntity {
 
-    // TODO is this bidirectionality needed? I don't think so
-    @OneToOne(optional = false)
+    // TODO is this bidirectionality needed? I think yes
+    @ManyToOne
     @JoinColumn(name = "game_id") // TODO needed?
-    @JsonIgnoreProperties({ "startTime" })
+    @JsonIgnore
     private Game game;
 
     @ManyToOne

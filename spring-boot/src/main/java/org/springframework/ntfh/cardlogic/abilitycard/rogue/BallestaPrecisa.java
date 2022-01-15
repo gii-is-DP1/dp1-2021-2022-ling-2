@@ -2,10 +2,12 @@ package org.springframework.ntfh.cardlogic.abilitycard.rogue;
 
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
 /**
+ * Daño: 2
  * Si ya utilizaste una "Ballesta precisa" contra este mismo enemigo, el daño de
  * esta carta es 3.
  * 
@@ -15,7 +17,15 @@ import org.springframework.stereotype.Component;
 public class BallestaPrecisa {
 
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
-        // TODO missing the complex condition
-        new DealDamageCommand(2, targetedEnemy).execute();
+        Integer damage = 2;
+
+        if (targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.BALLESTA_PRECISA)){
+            damage = 3;
+        }
+
+        new DealDamageCommand(damage, playerFrom, targetedEnemy).execute();
+
+        playerFrom.getGame().getEnemiesFighting()
+                .forEach(x -> x.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.BALLESTA_PRECISA));
     }
 }

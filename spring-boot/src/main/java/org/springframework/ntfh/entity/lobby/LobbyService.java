@@ -24,12 +24,10 @@ public class LobbyService {
     @Autowired
     private UserService userService;
 
-    @Transactional
     public Integer lobbyCount() {
         return (int) lobbyRepository.count();
     }
 
-    @Transactional
     public Iterable<Lobby> findAll() {
         return this.lobbyRepository.findAll();
     }
@@ -42,7 +40,6 @@ public class LobbyService {
         return lobby.get();
     }
 
-    @Transactional
     public Lobby findLobby(Integer lobbyId) {
         return lobbyRepository.findById(lobbyId).orElseThrow(() -> new DataAccessException("Lobby not found") {
         });

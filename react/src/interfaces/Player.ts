@@ -7,6 +7,7 @@ export interface Player {
   glory: number;
   kills: number;
   gold: number;
+  dead: boolean;
   wounds: number;
   turnOrder: number;
   user: User;

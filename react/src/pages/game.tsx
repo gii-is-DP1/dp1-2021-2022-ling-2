@@ -21,7 +21,7 @@ import { User } from "../interfaces/User";
  * @author andrsdt
  */
 export default function Game() {
-  const REFRESH_RATE = 5000; // fetch lobby status every these miliseconds
+  const REFRESH_RATE = 2000; // fetch lobby status every these miliseconds
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
 
   const history = useHistory();
@@ -31,6 +31,7 @@ export default function Game() {
   const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
   const [game, setGame] = useState<IGame | null>(null);
   const [turn, setTurn] = useState<Turn | null>(null);
+  const [isNewTurn, setIsNewTurn] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
 
@@ -68,9 +69,6 @@ export default function Game() {
       const response = await axios.get(`/games/${gameId}`);
       const _game = response.data;
       setGame(_game);
-      const sortedPlayers = playersInRenderOrder(_game.players);
-      setPlayers(sortedPlayers);
-      setTurn(_game.currentTurn);
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
@@ -120,6 +118,14 @@ export default function Game() {
   }, []);
 
   useEffect(() => {
+    // Re-render players and turn state if needed when the game changes
+    if (!game) return;
+    const sortedPlayers = playersInRenderOrder(game.players);
+    setPlayers(sortedPlayers);
+    setTurn(game.currentTurn);
+  }, [game]);
+
+  useEffect(() => {
     fetchGame();
     if (isSpectator(user)) {
       // if user is spectator, render a toast
@@ -141,9 +147,16 @@ export default function Game() {
         const response = await axios.get(`/games/${gameId}/turn`);
         const _turn = response.data;
         setTurn(_turn);
+
+        // Fetch the game if it's not my turn, or if it's the first time the turn has changed to me
         if (!isPlayersTurn(_turn, loggedUser.username)) {
-          // Fetch the game if it's not my turn
           fetchGame();
+          setIsNewTurn(true);
+        } else {
+          if (isNewTurn) {
+            fetchGame();
+            setIsNewTurn(false);
+          }
         }
       } catch (error: any) {
         toast.error(error?.message);
@@ -168,12 +181,11 @@ export default function Game() {
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
             {/* TODO Positioning of button */}
-            {/* TODO Showing only to current player */}
             {isPlayersTurn(turn, loggedUser.username) && (
               <div className="fixed p-8 space-y-2">
                 <div className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">
-                    {game.currentTurn.stateType}
+                    {turn?.stateType}
                   </p>
                 </div>
                 <button className="btn-ntfh" onClick={handleTurnNextState}>
@@ -195,6 +207,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
+                  style={players[3]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[3] && (
                     <PlayerZoneVertical player={players[3]} rotation={90} />
@@ -213,6 +226,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
+                  style={players[2]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[2] && (
                     <PlayerZoneVertical
@@ -229,6 +243,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
+                  style={players[0]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[0] && <PlayerZoneHorizontal player={players[0]} />}
                   {/* Bottom left (My hand) */}
@@ -240,6 +255,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
+                  style={players[1]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[1] && (
                     <PlayerZoneHorizontal player={players[1]} reverse />

@@ -14,18 +14,16 @@ public class SpectatorService {
     @Autowired
     private SpectatorRepository spectatorRepository;
 
-    @Transactional
-    public void saveSpectator(Spectator spectator) throws DataAccessException {
-        spectatorRepository.save(spectator);
-    }
-
-    @Transactional
     public Iterable<Spectator> findAll() {
         return spectatorRepository.findAll();
     }
 
-    @Transactional
     public Optional<Spectator> findSpectator(String id) {
         return spectatorRepository.findById(id);
+    }
+
+    @Transactional
+    public void saveSpectator(Spectator spectator) throws DataAccessException {
+        spectatorRepository.save(spectator);
     }
 }

@@ -1,4 +1,4 @@
-package org.springframework.ntfh.marketcard;
+package org.springframework.ntfh.playablecard.marketcard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -11,15 +11,13 @@ import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCard;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardTypeEnum;
-import org.springframework.ntfh.entity.turn.concretestates.EnemyState;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
-import org.springframework.ntfh.entity.turn.concretestates.RefreshState;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class, EnemyState.class, RefreshState.class })
+@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
 public class MarketCardServiceTest {
 
     @Autowired
@@ -39,7 +37,7 @@ public class MarketCardServiceTest {
 
     @Test
     public void testfindById() {
-        MarketCard tester = this.marketCardService.findMarketCardById(6).orElse(null);
+        MarketCard tester = this.marketCardService.findMarketCardById(6).get();
         assertEquals(MarketCardTypeEnum.PIEDRA_DE_AMOLAR, tester.getMarketCardTypeEnum());
         assertEquals(4, tester.getPrice());
     }

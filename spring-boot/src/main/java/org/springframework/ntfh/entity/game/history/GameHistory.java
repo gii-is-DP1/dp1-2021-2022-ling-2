@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.game.history;
 
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,7 +15,6 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.comment.Comment;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
-import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 
 import lombok.Getter;
@@ -46,9 +44,8 @@ public class GameHistory extends BaseEntity {
     @OneToOne
     private Player winner;
 
-    // TODO hacer la asociacion tambien desde parte de comments? bidireccional?
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     // orphanRemoval: The "comment" rows will be deleted when the game is deleted
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Comment> comments;
 
@@ -67,6 +64,7 @@ public class GameHistory extends BaseEntity {
      * @return Long duration of the time in seconds
      */
     @Transient
+    @JsonIgnore
     public Long getDuration() {
         if (finishTime == null)
             return null; // To avoid NullPointerException if the game hasn't finished

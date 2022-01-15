@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.game;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +9,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
@@ -28,6 +33,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Audited
 @Table(name = "games")
 public class Game extends BaseEntity {
 
@@ -44,22 +50,28 @@ public class Game extends BaseEntity {
 
     @OneToOne
     @JsonIgnoreProperties({ "game" })
+    // TODO JsonIgnore?
     private Player leader;
 
-    @OneToOne
-    @JsonIgnoreProperties({ "game" })
-    private Turn currentTurn;
+    @OneToMany(mappedBy = "game")
+    @NotAudited
+    @JsonIgnore
+    private List<Turn> turns = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<EnemyIngame> enemiesInPile = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<EnemyIngame> enemiesFighting = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<MarketCardIngame> marketCardsInPile = new ArrayList<>();
 
     @OneToMany
+    @NotAudited
     private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
 
     /**
@@ -68,8 +80,19 @@ public class Game extends BaseEntity {
      * @return A list of the players in the game sorted by their turn order
      */
     @Transient
-    public List<Player> getTurnOrder() {
-        return players.stream().sorted((p1, p2) -> p1.getTurnOrder() - p2.getTurnOrder()).collect(
-                java.util.stream.Collectors.toList());
+    @JsonIgnore
+    public List<Player> getAlivePlayersInTurnOrder() {
+        return players.stream()
+                .filter(p -> !p.isDead())
+                .sorted((p1, p2) -> p1.getTurnOrder() - p2.getTurnOrder())
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Transient
+    @JsonSerialize
+    @JsonDeserialize
+    @JsonIgnoreProperties({ "game" })
+    public Turn getCurrentTurn() {
+        return turns.isEmpty() ? null : turns.get(turns.size() - 1);
     }
 }

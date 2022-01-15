@@ -1,14 +1,15 @@
 package org.springframework.ntfh.entity.turn.concretestates;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
@@ -36,6 +37,12 @@ public class PlayerState implements TurnState {
     }
 
     @Override
+    public void postState(Game game) {
+        // PlayerState has no post state (it doesn't need to perforn any action before
+        // the state changes to the market state)
+    }
+
+    @Override
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
 
         // TODO throw exception if the one sending the request is not the card owner
@@ -43,7 +50,10 @@ public class PlayerState implements TurnState {
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
-        String characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum().toString().toLowerCase();
+        CharacterTypeEnum characterType = abilityCardIngame.getAbilityCard().getCharacterTypeEnum();
+
+        // If the card does not belong to any type of character, it is a market card
+        String characterTypeName = (characterType == null) ? "market" : characterType.toString().toLowerCase();
 
         Turn currentTurn = playerFrom.getGame().getCurrentTurn();
         if (!currentTurn.getPlayer().getId().equals(playerFrom.getId())) {
@@ -58,7 +68,7 @@ public class PlayerState implements TurnState {
         String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
                 new char[] { '_' });
         String completeClassName = String.format("org.springframework.ntfh.cardlogic.abilitycard.%s.%s",
-                characterType,
+                characterTypeName,
                 className);
 
         try {
@@ -82,21 +92,17 @@ public class PlayerState implements TurnState {
                 Method method = clazz.getDeclaredMethod("execute", Player.class, EnemyIngame.class);
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
             }
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException | InstantiationException e) {
+        } catch (Exception e) {
             throw new IllegalArgumentException("Ability card type " + className +
                     " is not implemented");
         }
 
-        // After playing any card, add such a card to the list of cards played this turn
-        playerFrom.getPlayedCardsInTurn().add(abilityCardIngame);
-
-        // And make sure to move the card to the discard pile
+        // Make sure to move the card to the discard pile
         Player player = abilityCardIngame.getPlayer();
-        player.getHand().remove(abilityCardIngame);
-        player.getDiscardPile().add(abilityCardIngame);
-
-        // Check if the card is exiliable and if so, remove it from the discard pile too
+        if (player.getHand().contains(abilityCardIngame)) {
+            player.getHand().remove(abilityCardIngame);
+            player.getDiscardPile().add(abilityCardIngame);
+        }
     }
 
     @Override

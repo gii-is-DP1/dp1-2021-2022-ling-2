@@ -34,8 +34,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// TODO change "hasAnyAuthority" to "hasAuthority" for single values
-
 		http.cors().and() // enable CORS requests
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests() // antMatchers:
@@ -50,6 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.PUT, "/users/character").hasAuthority("user") // Update user's current
 																						// character
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
+				.antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority("admin") // An admin can delete a user
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority("admin") // An admin can ban a user
 				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll() // Everyone can see a user's match
 																					// history
 				.antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAuthority("user") // Set character

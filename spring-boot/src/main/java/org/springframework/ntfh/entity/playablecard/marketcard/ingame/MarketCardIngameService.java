@@ -27,7 +27,6 @@ public class MarketCardIngameService {
     @Autowired
     private MarketCardService marketCardService;
 
-    @Transactional
     public MarketCardIngame findById(Integer id) throws DataAccessException {
         Optional<MarketCardIngame> enemyIngame = marketCardIngameRepository.findById(id);
         if (!enemyIngame.isPresent())
@@ -52,7 +51,8 @@ public class MarketCardIngameService {
      * 
      * @author andrsdt
      */
-    private void refillMarketWithCards(Game game) {
+    @Transactional
+    public void refillMarketWithCards(Game game) {
         // Get a list of
         List<MarketCardIngame> marketCardsInPile = game.getMarketCardsInPile();
         List<MarketCardIngame> marketCardsForSale = game.getMarketCardsForSale();
@@ -62,7 +62,6 @@ public class MarketCardIngameService {
             marketCardsInPile.remove(lastMarketCardInPile);
             marketCardsForSale.add(lastMarketCardInPile);
         }
-        // TODO do we need to .save()?
     }
 
     /**
@@ -90,7 +89,7 @@ public class MarketCardIngameService {
     }
 
     @Transactional
-    private MarketCardIngame createFromMarketCard(MarketCard marketCard, Game game) {
+    public MarketCardIngame createFromMarketCard(MarketCard marketCard, Game game) {
         MarketCardIngame marketCardIngame = new MarketCardIngame();
         marketCardIngame.setMarketCard(marketCard);
         this.save(marketCardIngame);

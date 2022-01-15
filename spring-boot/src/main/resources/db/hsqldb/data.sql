@@ -59,14 +59,14 @@ INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (4
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (5, 'RANGED', -1);
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (6, 'SPELL', 0);
 
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (1, 'RANGER','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (2, 'RANGER','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (3, 'ROGUE','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (4, 'ROGUE','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (5, 'WARRIOR','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (6, 'WARRIOR','FEMALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (7, 'WIZARD','MALE');
-INSERT INTO characters(id, character_type_enum, character_gender_enum) VALUES (8, 'WIZARD','FEMALE');
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (1, 'RANGER','MALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (2, 'RANGER','FEMALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (3, 'ROGUE','MALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (4, 'ROGUE','FEMALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (5, 'WARRIOR','MALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (6, 'WARRIOR','FEMALE', 3);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (7, 'WIZARD','MALE', 2);
+INSERT INTO characters(id, character_type_enum, character_gender_enum, base_health) VALUES (8, 'WIZARD','FEMALE', 2);
 
 -- Character RANGER has proficiencies melee-1, ranged
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (1, 3);
@@ -80,50 +80,50 @@ INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (3, 5)
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (4, 1);
 INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (4, 5);
 
--- Character WIZARD has proficiency spell
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (5, 6);
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (6, 6);
-
 -- Character WARRIOR has proficiency melee
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (7, 2);
-INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (8, 2);
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (5, 2);
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (6, 2);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (1, 'HORDE', 'WARRIOR', null, 4, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (2, 'HORDE', 'WARRIOR', null, 4, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (3, 'HORDE', 'WARRIOR', null, 4, 1, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (4, 'HORDE', 'WARRIOR', null, 4, 1, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (5, 'HORDE', 'WARRIOR', null, 4, 1, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (6, 'HORDE', 'WARRIOR', null, 4, 2, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (7, 'HORDE', 'WARRIOR', null, 4, 2, 1);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (8, 'HORDE', 'WARRIOR', null, 4, 2, 1);
+-- Character WIZARD has proficiency spell
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (7, 6);
+INSERT INTO characters_proficiencies(character_id, proficiency_id) VALUES (8, 6);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (9, 'HORDE', 'SLINGER', null, 2, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (10, 'HORDE', 'SLINGER', null, 2, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (11, 'HORDE', 'SLINGER', null, 2, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (12, 'HORDE', 'SLINGER', null, 2, 1, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (13, 'HORDE', 'SLINGER', null, 2, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (1, 'HORDE', 'WARRIOR', null, 4, 0, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (2, 'HORDE', 'WARRIOR', null, 4, 0, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (3, 'HORDE', 'WARRIOR', null, 4, 1, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (4, 'HORDE', 'WARRIOR', null, 4, 1, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (5, 'HORDE', 'WARRIOR', null, 4, 1, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (6, 'HORDE', 'WARRIOR', null, 4, 2, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (7, 'HORDE', 'WARRIOR', null, 4, 2, 2, 1);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (8, 'HORDE', 'WARRIOR', null, 4, 2, 2, 1);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (14, 'HORDE', 'BERSERKER', null, 6, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (15, 'HORDE', 'BERSERKER', null, 6, 1, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (16, 'HORDE', 'BERSERKER', null, 6, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (9, 'HORDE', 'SLINGER', null, 2, 0, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (10, 'HORDE', 'SLINGER', null, 2, 0, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (11, 'HORDE', 'SLINGER', null, 2, 0, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (12, 'HORDE', 'SLINGER', null, 2, 1, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (13, 'HORDE', 'SLINGER', null, 2, 1, 1, 0);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (17, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (18, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (19, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (20, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 1, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (21, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 2, 1);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (14, 'HORDE', 'BERSERKER', null, 6, 0, 4, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (15, 'HORDE', 'BERSERKER', null, 6, 1, 4, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (16, 'HORDE', 'BERSERKER', null, 6, 1, 4, 0);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (22, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (23, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (24, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (25, 'HORDE', 'MAGE', 'MAGIC_ATTACKER', 5, 2, 1);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (17, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (18, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (19, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 0, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (20, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 1, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (21, 'HORDE', 'REGEN', 'HEALING_CAPABILITIES', 3, 2, 2, 1);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (26, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER', 5, 1, 1);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (27, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER', 5, 2, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (22, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 0, 3, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (23, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 2, 3, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (24, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 2, 3, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (25, 'HORDE', 'MAGE', 'MAGIC_ATTACKER_2', 5, 2, 3, 1);
 
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (28, 'WARLORD', 'GURDRUG', null, 8, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (29, 'WARLORD', 'ROGHKILLER', null, 9, 0, 0);
-INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, extra_glory) VALUES (30, 'WARLORD', 'SHRIEKKNIFER', null, 10, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (26, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER_1', 3, 1, 1, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (27, 'HORDE', 'SHAMAN', 'MAGIC_ATTACKER_1', 3, 2, 1, 1);
+
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (28, 'WARLORD', 'GURDRUG', null, 8, 0, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (29, 'WARLORD', 'ROGHKILLER', null, 9, 0, 0, 0);
+INSERT INTO enemies(id, enemy_category_type, enemy_type, enemy_modifier_type, endurance, gold, base_glory, extra_glory) VALUES (30, 'WARLORD', 'SHRIEKKNIFER', null, 10, 0, 0, 0);
 
 INSERT INTO scenes(id, scene_type_enum) VALUES (1, 'MERCADO_DE_LOTHARION'); 
 INSERT INTO scenes(id, scene_type_enum) VALUES (2, 'CAMPO_DE_BATALLA');
@@ -174,79 +174,79 @@ INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VAL
 -- ARCO COMPUESTO can be used by characters with ranged
 INSERT INTO marketcards_proficiencies(market_card_id, proficiency_type_enum) VALUES (14, 'RANGED');
 
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (1, 'COMPANERO_LOBO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (2, 'DISPARO_CERTERO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (3, 'DISPARO_CERTERO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (4, 'DISPARO_RAPIDO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (5, 'DISPARO_RAPIDO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (6, 'DISPARO_RAPIDO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (7, 'DISPARO_RAPIDO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (8, 'DISPARO_RAPIDO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (9, 'DISPARO_RAPIDO', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (10, 'EN_LA_DIANA', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (11, 'LLUVIA_DE_FLECHAS', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (12, 'LLUVIA_DE_FLECHAS', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (13, 'RECOGER_FLECHAS', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (14, 'RECOGER_FLECHAS', 'RANGER');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (15, 'SUPERVIVENCIA', 'RANGER');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (1, 'COMPANERO_LOBO', 'RANGER', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (2, 'DISPARO_CERTERO', 'RANGER', 3);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (3, 'DISPARO_CERTERO', 'RANGER', 3);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (4, 'DISPARO_RAPIDO', 'RANGER', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (5, 'DISPARO_RAPIDO', 'RANGER', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (6, 'DISPARO_RAPIDO', 'RANGER', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (7, 'DISPARO_RAPIDO', 'RANGER', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (8, 'DISPARO_RAPIDO', 'RANGER', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (9, 'DISPARO_RAPIDO', 'RANGER', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (10, 'EN_LA_DIANA', 'RANGER', 4);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (11, 'LLUVIA_DE_FLECHAS', 'RANGER', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (12, 'LLUVIA_DE_FLECHAS', 'RANGER', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (13, 'RECOGER_FLECHAS', 'RANGER', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (14, 'RECOGER_FLECHAS', 'RANGER', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (15, 'SUPERVIVENCIA', 'RANGER', 0);
 
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (16, 'ATAQUE_BRUTAL', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (17, 'ATAQUE_BRUTAL', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (18, 'CARGA_CON_ESCUDO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (19, 'DOBLE_ESPADAZO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (20, 'DOBLE_ESPADAZO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (21, 'ESCUDO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (22, 'ESCUDO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (23, 'ESPADAZO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (24, 'ESPADAZO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (25, 'ESPADAZO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (26, 'ESPADAZO', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (27, 'PASO_ATRAS', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (28, 'PASO_ATRAS', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (29, 'TODO_O_NADA', 'WARRIOR');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (30, 'VOZ_DE_ALIENTO', 'WARRIOR');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (16, 'ATAQUE_BRUTAL', 'WARRIOR', 3);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (17, 'ATAQUE_BRUTAL', 'WARRIOR', 3);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (18, 'CARGA_CON_ESCUDO', 'WARRIOR', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (19, 'DOBLE_ESPADAZO', 'WARRIOR', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (20, 'DOBLE_ESPADAZO', 'WARRIOR', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (21, 'ESCUDO', 'WARRIOR', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (22, 'ESCUDO', 'WARRIOR', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (23, 'ESPADAZO', 'WARRIOR', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (24, 'ESPADAZO', 'WARRIOR', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (25, 'ESPADAZO', 'WARRIOR', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (26, 'ESPADAZO', 'WARRIOR', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (27, 'PASO_ATRAS', 'WARRIOR', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (28, 'PASO_ATRAS', 'WARRIOR', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (29, 'TODO_O_NADA', 'WARRIOR', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (30, 'VOZ_DE_ALIENTO', 'WARRIOR', 0);
 
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (31, 'AURA_PROTECTORA', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (32, 'BOLA_DE_FUEGO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (33, 'DISPARO_GELIDO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (34, 'DISPARO_GELIDO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (35, 'FLECHA_CORROSIVA', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (36, 'GOLPE_DE_BASTON', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (37, 'GOLPE_DE_BASTON', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (38, 'GOLPE_DE_BASTON', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (39, 'GOLPE_DE_BASTON', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (40, 'ORBE_CURATIVO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (41, 'PROYECTIL_IGNEO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (42, 'PROYECTIL_IGNEO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (43, 'PROYECTIL_IGNEO', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (44, 'RECONSTITUCION', 'WIZARD');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (45, 'TORRENTE_DE_LUZ', 'WIZARD');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (31, 'AURA_PROTECTORA', 'WIZARD', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (32, 'BOLA_DE_FUEGO', 'WIZARD', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (33, 'DISPARO_GELIDO', 'WIZARD', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (34, 'DISPARO_GELIDO', 'WIZARD', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (35, 'FLECHA_CORROSIVA', 'WIZARD', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (36, 'GOLPE_DE_BASTON', 'WIZARD', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (37, 'GOLPE_DE_BASTON', 'WIZARD', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (38, 'GOLPE_DE_BASTON', 'WIZARD', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (39, 'GOLPE_DE_BASTON', 'WIZARD', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (40, 'ORBE_CURATIVO', 'WIZARD', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (41, 'PROYECTIL_IGNEO', 'WIZARD', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (42, 'PROYECTIL_IGNEO', 'WIZARD', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (43, 'PROYECTIL_IGNEO', 'WIZARD', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (44, 'RECONSTITUCION', 'WIZARD', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (45, 'TORRENTE_DE_LUZ', 'WIZARD', 2);
 
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (46, 'AL_CORAZON', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (47, 'AL_CORAZON', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (48, 'ATAQUE_FURTIVO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (49, 'ATAQUE_FURTIVO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (50, 'ATAQUE_FURTIVO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (51, 'BALLESTA_PRECISA', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (52, 'BALLESTA_PRECISA', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (53, 'BALLESTA_PRECISA', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (54, 'EN_LAS_SOMBRAS', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (55, 'EN_LAS_SOMBRAS', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (56, 'ENGANAR', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (57, 'ROBAR_BOLSILLOS', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (58, 'SAQUEO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (59, 'SAQUEO', 'ROGUE');
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (60, 'TRAMPA', 'ROGUE');
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (46, 'AL_CORAZON', 'ROGUE', 4);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (47, 'AL_CORAZON', 'ROGUE', 4);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (48, 'ATAQUE_FURTIVO', 'ROGUE', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (49, 'ATAQUE_FURTIVO', 'ROGUE', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (50, 'ATAQUE_FURTIVO', 'ROGUE', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (51, 'BALLESTA_PRECISA', 'ROGUE', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (52, 'BALLESTA_PRECISA', 'ROGUE', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (53, 'BALLESTA_PRECISA', 'ROGUE', 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (54, 'EN_LAS_SOMBRAS', 'ROGUE', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (55, 'EN_LAS_SOMBRAS', 'ROGUE', 1);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (56, 'ENGANAR', 'ROGUE', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (57, 'ROBAR_BOLSILLOS', 'ROGUE', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (58, 'SAQUEO_ORO', 'ROGUE', 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (59, 'SAQUEO_ORO_GLORIA', 'ROGUE',0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (60, 'TRAMPA', 'ROGUE', 0);
 
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (61, 'DAGA_ELFICA', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (62, 'POCION_CURATIVA', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (63, 'PIEDRA_DE_AMOLAR', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (64, 'VIAL_DE_CONJURACION', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (65, 'ELIXIR_DE_CONCENTRACION', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (66, 'CAPA_ELFICA', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (67, 'ARMADURA_DE_PLACAS', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (68, 'ALABARDA_ORCA', null);
-INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum) VALUES (69, 'ARCO_COMPUESTO', null);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (61, 'DAGA_ELFICA', null, 2);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (62, 'POCION_CURATIVA', null, 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (63, 'PIEDRA_DE_AMOLAR', null, 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (64, 'VIAL_DE_CONJURACION', null, 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (65, 'ELIXIR_DE_CONCENTRACION', null, 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (66, 'CAPA_ELFICA', null, 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (67, 'ARMADURA_DE_PLACAS', null, 0);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (68, 'ALABARDA_ORCA', null, 4);
+INSERT INTO ability_cards(id, ability_card_type_enum, character_type_enum, base_damage) VALUES (69, 'ARCO_COMPUESTO', null, 4);
 
 -- CREATE A GAME FROM A LOBBY WITH 2 PLAYERS
 -- Create the initial lobby
@@ -255,8 +255,8 @@ INSERT INTO lobbies(id, name, game, has_scenes, spectators_allowed, max_players,
 UPDATE users SET lobby = 1 WHERE username = 'pablo';
 UPDATE users SET lobby = 1 WHERE username = 'andres';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (1, 0, 0, 0, 0, 8, 0);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (2, 0, 0, 0, 0, 1, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (1, 0, 0, 0, 0, 0, 8, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (2, 0, 0, 0, 0, 0, 1, 1);
 UPDATE users SET player = 1 WHERE username='pablo';
 UPDATE users SET player = 2 WHERE username='andres';
 
@@ -276,10 +276,10 @@ UPDATE users SET lobby = 2 WHERE username = 'frodo';
 UPDATE users SET lobby = 2 WHERE username = 'legolas';
 UPDATE users SET lobby = 2 WHERE username = 'aragorn';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (3, 0, 0, 0, 0, 1, 1);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (4, 0 ,0, 0, 0 ,3, 0);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (5, 0, 0, 0, 0, 5, 2);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (6, 0 ,0, 0, 0 ,7, 3);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (3, 0, 0, 0, 0, 0, 1, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (4, 0 ,0, 0, 0, 0, 3, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (5, 0, 0, 0, 0, 0, 5, 2);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (6, 0 ,0, 0, 0, 0, 7, 3);
 UPDATE users SET player = 3 WHERE username='frodo';
 UPDATE users SET player = 4 WHERE username='gandalf';
 UPDATE users SET player = 5 WHERE username='legolas';
@@ -302,8 +302,8 @@ INSERT INTO lobbies (id, name, game, has_scenes, spectators_allowed, max_players
 UPDATE users SET lobby = 3 WHERE username = 'stockie';
 UPDATE users SET lobby = 3 WHERE username = 'alejandro';
 -- create the players instances and then a game
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (7, 0, 0, 0, 0, 2, 1);
-INSERT INTO players(id, glory, gold, kills, wounds, character_id, turn_order) VALUES (8, 0 ,0, 0, 0 ,4, 0);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (7, 0, 0, 0, 0, 0, 2, 1);
+INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_order) VALUES (8, 0 ,0, 0, 0, 0, 4, 0);
 UPDATE users SET player = 7 WHERE username = 'stockie';
 UPDATE users SET player = 8 WHERE username = 'alejandro';
 

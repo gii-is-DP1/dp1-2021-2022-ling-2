@@ -3,9 +3,8 @@ package org.springframework.ntfh.entity.turn.concretestates;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ntfh.command.ReceiveDamageCommand;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
@@ -14,6 +13,7 @@ import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCard
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.proficiency.Proficiency;
 import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
+import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.ntfh.entity.user.User;
@@ -28,6 +28,9 @@ public class MarketState implements TurnState {
     UserService userService;
 
     @Autowired
+    TurnService turnService;
+
+    @Autowired
     MarketCardIngameService marketCardIngameService;
 
     @Autowired
@@ -35,7 +38,21 @@ public class MarketState implements TurnState {
 
     @Override
     public TurnStateType getNextState() {
-        return TurnStateType.ENEMY_STATE;
+        return TurnStateType.PLAYER_STATE;
+    }
+
+    @Override
+    public void postState(Game game) {
+        // After the market state, the player will receive damage from the horde
+        // and then a new turn will be created
+        Player currentPlayer = game.getCurrentTurn().getPlayer();
+        game.getEnemiesFighting().forEach(enemy -> {
+            Integer damage = enemy.getCurrentEndurance();
+            new ReceiveDamageCommand(damage, enemy, currentPlayer).execute();
+        });
+
+        turnService.createNextTurn(game);
+
     }
 
     @Override
@@ -46,8 +63,7 @@ public class MarketState implements TurnState {
     @Override
     public void buyMarketCard(Integer marketCardIngameId, String token) {
 
-        // TODO Throw exception if it's not the player's turn
-        // TODO Throw exception if not in the market stage
+        // TODO throw exception if not player's turn?
 
         String username = TokenUtils.usernameFromToken(token);
         User user = userService.findUser(username);
@@ -64,10 +80,6 @@ public class MarketState implements TurnState {
         if (!marketCardProficiencies.isEmpty() && playerProficiencies.isEmpty()) {
             throw new IllegalArgumentException(
                     "This card is not available for the " + player.getCharacterTypeEnum().toString().toLowerCase());
-        }
-
-        if (player.getHand().size() >= 4) {
-            throw new IllegalArgumentException("You can't have more than 4 cards in your hand");
         }
 
         Integer price = marketCardIngame.getMarketCard().getPrice();

@@ -9,23 +9,23 @@ import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AchievementService {
 
     @Autowired
     private AchievementRepository achievementRepository;
 
-    @Transactional
     public Integer achievementCount() {
         return (int) achievementRepository.count();
     }
 
-    @Transactional
     public Iterable<Achievement> findAll() {
         return achievementRepository.findAll();
     }
 
-    @Transactional
     public Optional<Achievement> findAchievementById(Integer id) {
         return achievementRepository.findById(id);
     }
@@ -54,7 +54,7 @@ public class AchievementService {
 
         Optional<Achievement> achievementFromRepo = achievementRepository.findById(achievement.getId());
         achievement.setType(achievementFromRepo.get().getType());
+        log.info("Admin with token " + token + " has updated achievement with ID: " + achievement.getId());
         return achievementRepository.save(achievement);
     }
-
 }
