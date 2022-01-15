@@ -27,7 +27,7 @@ export default function CountCard(params: Params) {
     <div
       draggable={false}
       className={
-        `card zoomable flex items-center justify-center w-full h-full bg-contain bg-no-repeat hover:scale-250 ${zoomDirectionClassname}
+        `card zoomable flex items-center justify-center h-full bg-contain bg-no-repeat hover:scale-250 ${zoomDirectionClassname}
       ${
         counterclockwise !== undefined &&
         (counterclockwise

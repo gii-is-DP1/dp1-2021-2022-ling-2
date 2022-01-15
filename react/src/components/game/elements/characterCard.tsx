@@ -23,7 +23,9 @@ export default function CharacterCard(params: Params) {
           ? "transform-gpu hover:rotate-90 hover:-translate-y-20 hover:-translate-x-20"
           : "transform-gpu hover:-rotate-90 hover:-translate-y-20 hover:translate-x-20")
       }`}
-      src={`${CHARACTER_IMAGE_PATH}/${character.characterTypeEnum.toLowerCase()}_${character.characterGenderEnum.toLowerCase()}.png`}
+      src={`${CHARACTER_IMAGE_PATH}/${
+        character?.characterTypeEnum?.toLowerCase() || ""
+      }_${character.characterGenderEnum.toLowerCase()}.png`}
       alt={`${character.characterTypeEnum} ${character.characterGenderEnum}`}
     ></img>
   );

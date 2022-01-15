@@ -26,7 +26,6 @@ import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.entity.player.Player;
 
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -67,7 +66,7 @@ public class User {
 	@JoinColumn(name = "player")
 	private Player player; // Current player
 
-	@ManyToOne // TODO set appropiate cascade type
+	@ManyToOne
 	@JoinColumn(name = "character")
 	private Character character;
 	// Character that the user has currently selected. Will be set during a lobby,
