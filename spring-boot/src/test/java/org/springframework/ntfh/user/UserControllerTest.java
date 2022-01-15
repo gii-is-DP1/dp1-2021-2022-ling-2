@@ -2,6 +2,7 @@ package org.springframework.ntfh.user;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -121,6 +122,17 @@ public class UserControllerTest {
                 .header("authorization",
                         "Bearer " + TokenUtils.ADMIN_TOKEN)
                 .content(PUT_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void login_success() throws Exception {
+        final String PUT_JSON = "{\"username\":\"andres\",\"password\":\"andres\"}";
+        when(userService.loginUser(any(User.class))).thenReturn(TokenUtils.USER_TOKEN);
+        mockMvc.perform(post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(PUT_JSON))
+                .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)))
                 .andExpect(status().isOk());
     }
 }

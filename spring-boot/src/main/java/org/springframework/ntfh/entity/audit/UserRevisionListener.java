@@ -15,7 +15,7 @@ public class UserRevisionListener implements RevisionListener {
         String username = "";
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        if(principal != null && principal instanceof UserDetails)
+        if (principal instanceof UserDetails)
             username = ((UserDetails) principal).getUsername();
         else if (principal != null)
             username = principal.toString();

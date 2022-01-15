@@ -83,6 +83,8 @@ public class AbilityCardIngameService {
      * @param player
      */
     public void refillHandWithCards(Player player) {
+        if (player.isDead())
+            return;
 
         List<AbilityCardIngame> playerAbilityPile = player.getAbilityPile();
         List<AbilityCardIngame> playerHand = player.getHand();

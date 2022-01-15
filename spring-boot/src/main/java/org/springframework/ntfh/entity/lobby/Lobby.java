@@ -66,12 +66,7 @@ public class Lobby extends NamedEntity {
     @NotNull
     @ManyToOne()
     @JoinColumn(name = "host", referencedColumnName = "username")
-    private User host;// The host column in the game will only have the host's
-    // username
-    // private String host; // TODO why is the former not working? Shouldnt "host"
-    // be a FK to user table?
-    // See:
-    // https://stackoverflow.com/questions/54523524/json-parse-error-cannot-construct-instance-of-custom-object-while-dealing-wit
+    private User host;
 
     /**
      * Add a user to the set of users in the lobby

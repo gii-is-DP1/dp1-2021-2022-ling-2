@@ -43,7 +43,7 @@ export default function Game() {
     (_user && _user?.lobby?.game?.id !== parseInt(gameId));
 
   const isPlayersTurn = (_turn: Turn | null, username: string) =>
-    _turn && _turn.player.user.username === username;
+    _turn && _turn.player.user?.username === username;
 
   const playersInRenderOrder = (_players: Player[]) => {
     const orderedPlayerList: Player[] = _players.sort(
@@ -67,20 +67,12 @@ export default function Game() {
   const fetchGame = async () => {
     try {
       const response = await axios.get(`/games/${gameId}`);
-      const _game = response.data;
+      const _game: IGame = response.data;
       setGame(_game);
+      if (_game.finishTime) history.push(ROUTES.HOME); // TODO redirect to endgame summary
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
-    }
-  };
-
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(`/users/${loggedUser.username}`);
-      setUser(response.data);
-    } catch (error: any) {
-      toast.error(error?.message);
     }
   };
 
@@ -107,6 +99,15 @@ export default function Game() {
   }, []); // Update "time" state every second
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`/users/${loggedUser.username}`);
+        setUser(response.data);
+      } catch (error: any) {
+        toast.error(error?.message);
+      }
+    };
+    history.push(ROUTES.GAME_SUMMARY.replace(":gameId", gameId));
     document.title = "NTFH - Game " + gameId;
     loggedUser.username && fetchUser();
     return function cleanup() {
@@ -126,7 +127,7 @@ export default function Game() {
   }, [game]);
 
   useEffect(() => {
-    fetchGame();
+    fetchGame(); // TODO needed?
     if (isSpectator(user)) {
       // if user is spectator, render a toast
       toast("Spectator", {
@@ -145,11 +146,11 @@ export default function Game() {
     const fetchTurn = async () => {
       try {
         const response = await axios.get(`/games/${gameId}/turn`);
-        const _turn = response.data;
+        const _turn: Turn = response.data;
         setTurn(_turn);
 
         // Fetch the game if it's not my turn, or if it's the first time the turn has changed to me
-        if (!isPlayersTurn(_turn, loggedUser.username)) {
+        if (!isPlayersTurn(_turn, loggedUser.username) || _turn.player.dead) {
           fetchGame();
           setIsNewTurn(true);
         } else {
