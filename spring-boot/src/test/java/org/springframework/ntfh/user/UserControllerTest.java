@@ -46,7 +46,7 @@ public class UserControllerTest {
     @MockBean
     UserService userService;
 
-    static User user1, user2, user3, user4, user5;
+    static User user1, user2, user3, user4;
 
     @BeforeAll
     static void setup() {
@@ -127,7 +127,7 @@ public class UserControllerTest {
 
     @Test
     void testDeleteUser() throws Exception{
-        user5 = new User();
+        User user5 = new User();
         user5.setUsername("user5");
         user5.setPassword("user5");
         user5.setEmail("user5");
