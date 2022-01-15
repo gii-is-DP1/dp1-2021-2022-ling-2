@@ -120,7 +120,10 @@ export default function Home() {
           )}
           {user && userInLobby() && !userInGame() && (
             <Link
-              to={ROUTES.LOBBY.replace(":lobbyId", user?.lobby.id.toString())}
+              to={ROUTES.LOBBY.replace(
+                ":lobbyId",
+                user?.lobby?.id?.toString() || ""
+              )}
             >
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Rejoin Lobby</p>
@@ -129,7 +132,10 @@ export default function Home() {
           )}
           {user && userInGame() && (
             <Link
-              to={ROUTES.GAME.replace(":gameId", user.lobby.game.id.toString())}
+              to={ROUTES.GAME.replace(
+                ":gameId",
+                user?.lobby?.game?.id?.toString() || ""
+              )}
             >
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Rejoin Game</p>

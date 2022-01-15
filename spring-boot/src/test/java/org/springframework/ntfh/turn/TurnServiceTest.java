@@ -28,7 +28,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class turnServiceTest {
+public class TurnServiceTest {
 
     @Autowired
     private TurnService turnService;
@@ -48,7 +48,8 @@ public class turnServiceTest {
     void teardown() {
         try {
             turnService.delete(turnService.findturnById(1).get().getId());
-        } catch(Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Test
@@ -80,7 +81,9 @@ public class turnServiceTest {
     @Test
     void testDelete() {
         turnService.delete(turnService.findturnById(1).get().getId());
-        assertThrows(Exception.class, () -> {turnService.findturnById(1).get();});
+        assertThrows(Exception.class, () -> {
+            turnService.findturnById(1).get();
+        });
     }
 
     @Test
@@ -92,7 +95,8 @@ public class turnServiceTest {
     @Test
     void testGetState() {
         // TODO Needs improvement
-        assertEquals(TurnStateType.MARKET_STATE, turnService.getState(turnService.findturnById(1).get()).getNextState());
+        assertEquals(TurnStateType.MARKET_STATE,
+                turnService.getState(turnService.findturnById(1).get()).getNextState());
     }
 
     @Test
@@ -106,5 +110,5 @@ public class turnServiceTest {
         turnService.createNextTurn(gameService.findGameById(1));
         assertEquals(gameService.findGameById(1).getPlayers().get(1), turnService.findturnById(2).get().getPlayer());
     }
-    
+
 }

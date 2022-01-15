@@ -38,7 +38,9 @@ import lombok.Setter;
 public class Game extends BaseEntity {
 
     @NotNull // Set by the server to Time.now()
-    private Long startTime; // unix timestamp
+    private Long startTime; // TODO change to datetime?
+
+    private Long finishTime; // TODO change to datetime?
 
     @NotNull // Set from Lobby
     private Boolean hasScenes;
@@ -49,8 +51,6 @@ public class Game extends BaseEntity {
     private List<Player> players;
 
     @OneToOne
-    @JsonIgnoreProperties({ "game" })
-    // TODO JsonIgnore?
     private Player leader;
 
     @OneToMany(mappedBy = "game")
@@ -58,6 +58,7 @@ public class Game extends BaseEntity {
     @JsonIgnore
     private List<Turn> turns = new ArrayList<>();
 
+    // TODO should these be not audited?
     @OneToMany
     @NotAudited
     private List<EnemyIngame> enemiesInPile = new ArrayList<>();

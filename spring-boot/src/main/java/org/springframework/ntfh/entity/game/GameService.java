@@ -154,4 +154,20 @@ public class GameService {
     public void setNextTurnState(Turn turn) {
         turnService.setNextState(turn);
     }
+
+    /**
+     * Executed then some conditions lead to the finish of the game
+     * 
+     * @author andrsdt
+     */
+    @Transactional
+    public void finishGame(Game game) {
+        game.setFinishTime(System.currentTimeMillis());
+        game.getPlayers().forEach(p -> {
+            User user = p.getUser();
+            user.setLobby(null);
+            user.setPlayer(null);
+            user.setCharacter(null);
+        });
+    }
 }
