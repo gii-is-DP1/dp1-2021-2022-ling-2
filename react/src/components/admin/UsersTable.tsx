@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { useHistory } from "react-router";
 import axios from "../../api/axiosConfig";
 import UserContext from "../../context/user";
-import hasAuthority from "../../helpers/hasAuthority";
 import tokenParser from "../../helpers/tokenParser";
 import { User } from "../../interfaces/User";
 
@@ -34,7 +33,7 @@ export default function UsersTable() {
       const response = await axios.get("users/count");
       const usersPerPage = 10;
       const userCount = response.data;
-      setTotalPages(Math.ceil(userCount / usersPerPage));
+      setTotalPages(Math.floor(userCount / usersPerPage));
     } catch (error: any) {
       toast.error(error?.message);
     }
