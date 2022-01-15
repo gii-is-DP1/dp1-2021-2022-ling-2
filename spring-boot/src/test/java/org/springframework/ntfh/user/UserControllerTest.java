@@ -132,6 +132,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(PUT_JSON))
+                .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)))
                 .andExpect(status().isOk());
     }
 }
