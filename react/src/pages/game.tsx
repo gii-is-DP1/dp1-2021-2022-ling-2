@@ -75,15 +75,6 @@ export default function Game() {
     }
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(`/users/${loggedUser.username}`);
-      setUser(response.data);
-    } catch (error: any) {
-      toast.error(error?.message);
-    }
-  };
-
   const handleTurnNextState = async () => {
     try {
       const response = await axios.post(
@@ -107,6 +98,15 @@ export default function Game() {
   }, []); // Update "time" state every second
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`/users/${loggedUser.username}`);
+        setUser(response.data);
+      } catch (error: any) {
+        toast.error(error?.message);
+      }
+    };
+    history.push(ROUTES.GAME_SUMMARY.replace(":gameId", gameId));
     document.title = "NTFH - Game " + gameId;
     loggedUser.username && fetchUser();
     return function cleanup() {
@@ -126,7 +126,7 @@ export default function Game() {
   }, [game]);
 
   useEffect(() => {
-    fetchGame();
+    fetchGame(); // TODO needed?
     if (isSpectator(user)) {
       // if user is spectator, render a toast
       toast("Spectator", {
