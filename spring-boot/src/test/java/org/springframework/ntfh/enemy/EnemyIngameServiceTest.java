@@ -1,6 +1,6 @@
 package org.springframework.ntfh.enemy;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,23 +61,23 @@ public class EnemyIngameServiceTest {
     @Test
     void testEnemyIngameCount() {
         Integer counter = enemyIngameService.enemyIngameCount();
-        assertEquals(INITIAL_ENEMIESINGAME_COUNT, counter);
+        assertThat(counter).isEqualTo(INITIAL_ENEMIESINGAME_COUNT);
     }
 
     @Test
     void testFindAll() {
         Integer counter = Lists.newArrayList(enemyIngameService.findAll()).size();
-        assertEquals(INITIAL_ENEMIESINGAME_COUNT, counter);
+        assertThat(counter).isEqualTo(INITIAL_ENEMIESINGAME_COUNT);
     }
 
     @Test
     void testFindById() {
         Enemy enemyTester = enemyService.findEnemyById(1).get();
         enemyIngameTester = enemyIngameService.createFromEnemy(enemyTester, gameTester);
-        assertEquals(4, enemyIngameTester.getCurrentEndurance());
-        assertEquals(true, enemyIngameTester.isHorde());
-        assertEquals(gameTester, enemyIngameTester.getGame());
-        assertEquals(enemyTester, enemyIngameTester.getEnemy());
+        assertThat(enemyIngameTester.getCurrentEndurance()).isEqualTo(4);
+        assertThat(enemyIngameTester.isHorde()).isTrue();
+        assertThat(enemyIngameTester.getGame()).isEqualTo(gameTester);
+        assertThat(enemyIngameTester.getEnemy()).isEqualTo(enemyTester);
     }
    
     @Test
@@ -90,7 +90,7 @@ public class EnemyIngameServiceTest {
         testSave.setRestrained(false);
         enemyIngameService.save(testSave);
 
-        assertEquals(21, testSave.getId());
+        assertThat(testSave.getId()).isEqualTo(21);
         enemyIngameRepository.delete(testSave);
     }
 
@@ -98,15 +98,15 @@ public class EnemyIngameServiceTest {
     void testRefillTableWithEnemies() {
         turnService.initializeFromGame(gameTester);
         new DealDamageCommand(50, gameTester.getPlayers().get(0), gameTester.getEnemiesFighting().get(0)).execute();
-        assertEquals(2, gameTester.getEnemiesFighting().size());
+        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(2);
         enemyIngameService.refillTableWithEnemies(gameTester);
-        assertEquals(3, gameTester.getEnemiesFighting().size());
+        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(3);
     }
 
     @Test
     void testInitializeFromGame() {
         // Method made in the BeforeEach
-        assertEquals(INITIAL_ENEMIESINGAME_COUNT, enemyIngameService.enemyIngameCount());
+        assertThat(enemyIngameService.enemyIngameCount()).isEqualTo(INITIAL_ENEMIESINGAME_COUNT);
     }
 
 }
