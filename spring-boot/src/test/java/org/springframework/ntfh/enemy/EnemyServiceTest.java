@@ -1,6 +1,6 @@
 package org.springframework.ntfh.enemy;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -39,34 +39,33 @@ public class EnemyServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = enemyService.count();
-        assertEquals(ENEMY_COUNT, count);
+        assertThat(count).isEqualTo(ENEMY_COUNT);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(enemyService.findAll()).size();
-        assertEquals(ENEMY_COUNT, count);
+        assertThat(count).isEqualTo(ENEMY_COUNT);
     }
 
     @Test
     public void testfindById() {
         Enemy tester = this.enemyService.findEnemyById(17).orElse(null);
-        assertEquals(EnemyType.REGEN, tester.getEnemyType());
-        assertEquals(0, tester.getGold());
-        assertEquals(2, tester.getBaseGlory());
-        assertEquals(0, tester.getExtraGlory());
-        assertEquals(EnemyModifierType.HEALING_CAPABILITIES,
-                tester.getEnemyModifierType());
-        assertEquals(3, tester.getEndurance());
+        assertThat(tester.getEnemyType()).isEqualTo(EnemyType.REGEN);
+        assertThat(tester.getGold()).isZero();
+        assertThat(tester.getBaseGlory()).isEqualTo(2);
+        assertThat(tester.getExtraGlory()).isZero();
+        assertThat(tester.getEnemyModifierType()).isEqualTo(EnemyModifierType.HEALING_CAPABILITIES);
+        assertThat(tester.getEndurance()).isEqualTo(3);
         ;
     }
 
     @Test
     void testEnemyCategoryType() {
         List<Enemy> warlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
-        assertEquals(WARLORD_COUNT, warlords.size());
+        assertThat(warlords.size()).isEqualTo(WARLORD_COUNT);
         List<Enemy> enemies = enemyService.findByEnemyCategoryType(EnemyCategoryType.HORDE);
-        assertEquals(HORDE_COUNT, enemies.size());
+        assertThat(enemies.size()).isEqualTo(HORDE_COUNT);
     }
 
 }
