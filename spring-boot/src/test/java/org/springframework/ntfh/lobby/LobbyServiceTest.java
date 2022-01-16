@@ -1,6 +1,6 @@
 package org.springframework.ntfh.lobby;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Set;
@@ -75,37 +75,37 @@ public class LobbyServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = lobbyService.lobbyCount();
-        assertEquals(INITIAL_LOBBY_COUNT+1, count);
+        assertThat(count).isEqualTo(INITIAL_LOBBY_COUNT+1);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
-        assertEquals(INITIAL_LOBBY_COUNT+1, count);
+        assertThat(count).isEqualTo(INITIAL_LOBBY_COUNT+1);
     }
 
     @Test
     public void testFindById() {
         Lobby tester = this.lobbyService.findById(1);
-        assertEquals("andres with pablo", tester.getName());
-        assertEquals(1, tester.getGame().getId());
-        assertEquals(true, tester.getHasScenes());
-        assertEquals(true, tester.getSpectatorsAllowed());
-        assertEquals(2, tester.getMaxPlayers());
-        assertEquals(userService.findUser("andres"), tester.getHost());
-        assertEquals(userService.findUser("andres"), tester.getLeader());
+        assertThat(tester.getName()).isEqualTo("andres with pablo");
+        assertThat(tester.getGame().getId()).isEqualTo(1);
+        assertThat(tester.getHasScenes()).isTrue();
+        assertThat(tester.getSpectatorsAllowed()).isTrue();
+        assertThat(tester.getMaxPlayers()).isEqualTo(2);
+        assertThat(tester.getHost()).isEqualTo(userService.findUser("andres"));
+        assertThat(tester.getLeader()).isEqualTo(userService.findUser("andres"));
     }
 
     @Test
     void testFindLobby() {
         Lobby tester = this.lobbyService.findLobby(1);
-        assertEquals("andres with pablo", tester.getName());
-        assertEquals(1, tester.getGame().getId());
-        assertEquals(true, tester.getHasScenes());
-        assertEquals(true, tester.getSpectatorsAllowed());
-        assertEquals(2, tester.getMaxPlayers());
-        assertEquals(userService.findUser("andres"), tester.getHost());
-        assertEquals(userService.findUser("andres"), tester.getLeader());
+        assertThat(tester.getName()).isEqualTo("andres with pablo");
+        assertThat(tester.getGame().getId()).isEqualTo(1);
+        assertThat(tester.getHasScenes()).isTrue();
+        assertThat(tester.getSpectatorsAllowed()).isTrue();
+        assertThat(tester.getMaxPlayers()).isEqualTo(2);
+        assertThat(tester.getHost()).isEqualTo(userService.findUser("andres"));
+        assertThat(tester.getLeader()).isEqualTo(userService.findUser("andres"));
     }
 
     @Test
@@ -123,14 +123,14 @@ public class LobbyServiceTest {
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
         lobbyService.removeUserFromLobby(lobbyTester, requesterString);
-        assertEquals(false, lobbyTester.getUsers().contains(requester));
+        assertThat(lobbyTester.getUsers().contains(requester)).isFalse();
     }
 
     @Test
     void testUpdateLobby() {
         lobbyTester.setName("name");
         lobbyService.updateLobby(lobbyTester);
-        assertEquals("name", lobbyTester.getName());
+        assertThat(lobbyTester.getName()).isEqualTo("name");
     }
 
     // H7
@@ -140,9 +140,9 @@ public class LobbyServiceTest {
     @Test
     public void testSave() {
         // Test made in the init
-        assertEquals(lobbyService.findById(lobbyTester.getId()).getId(), lobbyTester.getId());
+        assertThat(lobbyTester.getId()).isEqualTo(lobbyService.findById(lobbyTester.getId()).getId());
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
-        assertEquals(INITIAL_LOBBY_COUNT+1, count);
+        assertThat(count).isEqualTo(INITIAL_LOBBY_COUNT+1);
     }
 
     // H8 + E1
@@ -153,7 +153,7 @@ public class LobbyServiceTest {
         String requesterString = requester.getUsername();
         String reqToken = TokenUtils.generateJWTToken(requester);
         lobbyService.joinLobby(lobbyTesterId, requesterString, reqToken);
-        assertEquals(true, lobbyService.findById(lobbyTesterId).getUsers().contains(requester));
+        assertThat(lobbyService.findById(lobbyTesterId).getUsers().contains(requester)).isTrue();
     }
 
     // H8 - E1
@@ -174,7 +174,7 @@ public class LobbyServiceTest {
         User user1 = userService.findUser("user1");
         lobbyTester.addUser(user1);
         Integer numUsersInLobby = lobbyTester.getUsers().size();
-        assertEquals(1, numUsersInLobby);
+        assertThat(numUsersInLobby).isEqualTo(1);
     }
 
 }
