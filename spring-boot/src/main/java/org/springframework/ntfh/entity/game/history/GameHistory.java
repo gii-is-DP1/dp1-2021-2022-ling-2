@@ -18,6 +18,7 @@ import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.player.Player;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This table will store data about games that have already finished and want to
@@ -29,6 +30,7 @@ import lombok.Getter;
  * @author andrsdt
  */
 @Getter
+@Setter
 @Entity
 @Table(name = "games_history")
 public class GameHistory extends BaseEntity {

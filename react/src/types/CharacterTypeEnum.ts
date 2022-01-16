@@ -1,1 +1,6 @@
-export type CharacterTypeEnum = "WARRIOR" | "RANGER" | "ROGUE" | "WIZARD";
+export type CharacterTypeEnum =
+  | "WARRIOR"
+  | "RANGER"
+  | "ROGUE"
+  | "WIZARD"
+  | undefined;

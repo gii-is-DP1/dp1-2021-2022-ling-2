@@ -6,6 +6,7 @@ import { Turn } from "./Turn";
 export interface Game {
   id: number;
   startTime: number;
+  finishTime: number;
   hasScenes: boolean;
   players: Player[];
   leader: Player;

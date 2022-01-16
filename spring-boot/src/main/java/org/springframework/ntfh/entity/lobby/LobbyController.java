@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -120,7 +121,6 @@ public class LobbyController {
     public ResponseEntity<Lobby> removeUserFromLobby(@PathVariable("lobbyId") Integer lobbyId,
             @PathVariable("username") String username, @RequestHeader("Authorization") String token) {
 
-        // TODO move the logic and error handling to the service
         Lobby lobby = lobbyService.findById(lobbyId);
 
         String usernameFromToken = TokenUtils.usernameFromToken(token);
@@ -129,22 +129,19 @@ public class LobbyController {
         Boolean requestByUserLeaving = usernameFromToken.equals(username);
         Boolean requestByHost = usernameFromToken.equals(usernameFromLobbyHost);
         if (!requestByHost && !requestByUserLeaving) {
-            log.warn("User " + usernameFromToken + " unauthorized removal attempt from lobby id " + lobbyId);
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new NonMatchingTokenException(
+                    "User " + usernameFromToken + " unauthorized removal attempt from lobby id " + lobbyId);
         }
 
+        // TODO divide in two methods
         if (requestByHost && usernameFromLobbyHost.equals(username)) {
             // If the host is the one who wanted to leave, then delete the lobby
             lobbyService.deleteLobby(lobby);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
         if (lobbyService.removeUserFromLobby(lobby, username)) {
             log.info("User " + username + " was removed from lobby id " + lobby.getId());
-            return new ResponseEntity<>(HttpStatus.OK);
         }
-
-        // TODO replace with throw exception (probably on service)
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

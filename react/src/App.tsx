@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import * as ROUTES from "./constants/routes";
@@ -10,6 +11,7 @@ import CreateLobby from "./pages/create-lobby";
 import EditAchievement from "./pages/edit-achievement";
 import EditProfile from "./pages/edit-profile";
 import Game from "./pages/game";
+import GameSummary from "./pages/game-summary";
 import Home from "./pages/home";
 import Lobby from "./pages/lobby";
 import LobbyBrowser from "./pages/lobby-browser";
@@ -18,7 +20,6 @@ import NotFound from "./pages/not-found";
 import Profile from "./pages/profile";
 import SignUp from "./pages/signup";
 import Statistics from "./pages/statistics";
-import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const [userToken, setUserToken] = useLocalStorage("token", null);
@@ -55,6 +56,7 @@ export default function App() {
               component={LobbyBrowser}
             />
             <Route exact path={ROUTES.GAME} component={Game} />
+            <Route exact path={ROUTES.GAME_SUMMARY} component={GameSummary} />
             <Route exact path={ROUTES.ADMIN_PAGE} component={AdminPage} />
             <Route component={NotFound} />
             {/* All routes have "exact" since that means that the path has to match the exact string. If a route is not correct, the fallback is ROUTES.NOT_FOUND since it's the only one without "exact" */}

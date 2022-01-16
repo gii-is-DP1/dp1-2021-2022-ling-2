@@ -66,7 +66,7 @@ public class User {
 	@JoinColumn(name = "player")
 	private Player player; // Current player
 
-	@ManyToOne // TODO set appropiate cascade type
+	@ManyToOne
 	@JoinColumn(name = "character")
 	private Character character;
 	// Character that the user has currently selected. Will be set during a lobby,
