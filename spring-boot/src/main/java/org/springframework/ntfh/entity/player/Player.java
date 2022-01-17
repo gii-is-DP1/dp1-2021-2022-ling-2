@@ -2,7 +2,6 @@ package org.springframework.ntfh.entity.player;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
@@ -23,7 +21,6 @@ import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.user.User;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,8 +32,7 @@ import lombok.Setter;
 public class Player extends BaseEntity {
 
     @OneToOne(mappedBy = "player")
-    @JsonIgnoreProperties({"password", "email", "enabled", "lobby", "game", "player", "character",
-            "authorities"})
+    @JsonIgnoreProperties({"password", "email", "enabled", "lobby", "game", "player", "character", "authorities"})
     private User user;
 
     @NotNull
@@ -68,7 +64,7 @@ public class Player extends BaseEntity {
     // row is created in the databse, it stays the same
     @ManyToOne(optional = false)
     @JoinColumn(name = "character_id", referencedColumnName = "id")
-    private Character characterType;
+    private Character character;
 
     @OneToMany
     @NotAudited
@@ -86,17 +82,17 @@ public class Player extends BaseEntity {
 
     @Transient
     public CharacterTypeEnum getCharacterTypeEnum() {
-        return characterType.getCharacterTypeEnum();
+        return character.getCharacterTypeEnum();
+    }
+
+    @Transient
+    public Boolean isDead() {
+        return wounds >= character.getBaseHealth();
     }
 
     @Transient
     @JsonIgnore
     public Game getGame() {
-        return user.getLobby().getGame();
-    }
-
-    @Transient
-    public Boolean isDead() {
-        return wounds >= characterType.getBaseHealth();
+        return this.user.getGame();
     }
 }
