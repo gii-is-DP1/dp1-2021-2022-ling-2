@@ -314,7 +314,5 @@ UPDATE lobbies SET game = 3 WHERE id = 3;
 INSERT INTO games_players(game_id, players_id) VALUES (3, 7);
 INSERT INTO games_players(game_id, players_id) VALUES (3, 8);
 
-INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 1637882596427);
-
 -- UnregisteredUser for testing
 INSERT INTO unregistered_users(username, creation_time) VALUES ('user0023', 1637882596427);
