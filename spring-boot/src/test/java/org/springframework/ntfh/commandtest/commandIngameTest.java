@@ -18,6 +18,10 @@ import org.springframework.ntfh.command.AttackPhaseEndCommand;
 import org.springframework.ntfh.command.ChangeEnemyCommand;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.DiscardCommand;
+import org.springframework.ntfh.command.DrawCommand;
+import org.springframework.ntfh.command.ExileCommand;
+import org.springframework.ntfh.command.GiveGloryCommand;
+import org.springframework.ntfh.command.GiveGoldCommand;
 import org.springframework.ntfh.command.GiveGuardCommand;
 import org.springframework.ntfh.command.GiveWoundCommand;
 import org.springframework.ntfh.command.GoldOnKillCommand;
@@ -28,10 +32,6 @@ import org.springframework.ntfh.command.RecoverCardCommand;
 import org.springframework.ntfh.command.RecoverCommand;
 import org.springframework.ntfh.command.RestrainCommand;
 import org.springframework.ntfh.command.StealCoinCommand;
-import org.springframework.ntfh.command.DrawCommand;
-import org.springframework.ntfh.command.ExileCommand;
-import org.springframework.ntfh.command.GiveGloryCommand;
-import org.springframework.ntfh.command.GiveGoldCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
@@ -134,6 +134,7 @@ public class CommandIngameTest {
         gameService.delete(gameTester);
     }
 
+    //este se ejecuta y ya, no tiene mucho caso negativo, toma la fase de turno y la pasa
     @Test
     void testAttackPhaseEndCommand(){
         turnService.initializeFromGame(gameTester);
@@ -145,6 +146,7 @@ public class CommandIngameTest {
         assertThat(initialTurn.getStateType()).isNotEqualTo(initialTurnState);
     }
 
+    // podríamos comprobar que el enemigo no sea un warlord pero eso puede generar problemas si por lo que fuera se jugara la carta en una mesa con un warlord
     @Test
     void testChangeEnemyCommand(){
         enemyIngameService.initializeFromGame(gameTester);
@@ -158,11 +160,26 @@ public class CommandIngameTest {
 
     @Test
     void testDealDamageCommand(){
+        //Deal damage comprobation
         EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         Integer initialEndurance = enemyIngame.getCurrentEndurance();
         new DealDamageCommand(1, ranger, enemyIngame).execute();
 
         assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance-1);
+
+        //effects on kill of the enemy on the table
+        EnemyIngame enemyIngame2 = enemyIngameService.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
+        Integer baseGlory = ranger.getGlory();
+        Integer baseGold = ranger.getGold();
+        Integer baseKills = ranger.getKills();
+        Integer gloryAdded = enemyIngame2.getEnemy().getBaseGlory() + enemyIngame2.getEnemy().getExtraGlory();
+        Integer goldAdded = enemyIngame2.getEnemy().getGold();
+        new DealDamageCommand(10, ranger, enemyIngame2).execute();
+
+        assertThat(ranger.getGlory()).isEqualTo(baseGlory+gloryAdded);
+        assertThat(ranger.getGold()).isEqualTo(baseGold+goldAdded);
+        assertThat(ranger.getKills()).isEqualTo(baseKills+1);
+        assertThat(gameTester.getEnemiesFighting()).doesNotContain(enemyIngame2);
     }
 
     @Test
