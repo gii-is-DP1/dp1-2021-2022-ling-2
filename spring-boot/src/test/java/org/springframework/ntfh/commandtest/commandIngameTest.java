@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.ntfh.command.AttackPhaseEndCommand;
+import org.springframework.ntfh.command.ChangeEnemyCommand;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.DiscardCommand;
 import org.springframework.ntfh.command.GiveGuardCommand;
@@ -26,6 +28,10 @@ import org.springframework.ntfh.command.RecoverCardCommand;
 import org.springframework.ntfh.command.RecoverCommand;
 import org.springframework.ntfh.command.RestrainCommand;
 import org.springframework.ntfh.command.StealCoinCommand;
+import org.springframework.ntfh.command.DrawCommand;
+import org.springframework.ntfh.command.ExileCommand;
+import org.springframework.ntfh.command.GiveGloryCommand;
+import org.springframework.ntfh.command.GiveGoldCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
@@ -39,10 +45,10 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardServi
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
-import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
-import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
+import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
@@ -69,12 +75,6 @@ public class commandIngameTest {
 
     @Autowired
     private CharacterService characterService;
-
-    @Autowired
-    private MarketCardService marketCardService;
-
-    @Autowired
-    private MarketCardIngameService marketCardIngameService;
 
     @Autowired
     private TurnService turnService;
@@ -134,14 +134,32 @@ public class commandIngameTest {
         gameService.delete(gameTester);
     }
 
+    @Test
+    void testAttackPhaseEndCommand(){
+        turnService.initializeFromGame(gameTester);
+        Integer gameId = gameTester.getId();
+        Turn initialTurn = gameService.getCurrentTurnByGameId(gameId);
+        TurnStateType initialTurnState = initialTurn.getStateType();
+        new AttackPhaseEndCommand(gameService, ranger).execute();
+
+        assertThat(initialTurn.getStateType()).isNotEqualTo(initialTurnState);
+    }
 
     @Test
-    void testDealDamageCommand() {
-        turnService.initializeFromGame(gameTester);
+    void testChangeEnemyCommand(){
+        enemyIngameService.initializeFromGame(gameTester);
+        List<EnemyIngame> initialEnemiesFighting = gameTester.getEnemiesFighting();
+        EnemyIngame changedEnemy = initialEnemiesFighting.get(0);
+        new ChangeEnemyCommand(ranger, changedEnemy).execute();
+        List<EnemyIngame> currentEnemiesFighting = gameTester.getEnemiesFighting();
+
+        assertThat(currentEnemiesFighting).doesNotContain(changedEnemy);
+    }
+
+    @Test
+    void testDealDamageCommand(){
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         Integer initialEndurance = enemyIngame.getCurrentEndurance();
-
-        assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance);
-
         new DealDamageCommand(1, ranger, enemyIngame).execute();
 
         assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance-1);
@@ -237,6 +255,48 @@ public class commandIngameTest {
         new DiscardCommand(1, ranger).execute();
         new RecoverCommand(ranger).execute();
 
+        assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
+        assertThat(ranger.getDiscardPile().size()).isZero();
+    }
+
+    @Test
+    void testDiscardCommand(){
+        turnService.initializeFromGame(gameTester);
+        Integer initialDiscardedCards = ranger.getDiscardPile().size();
+        new DiscardCommand(1, ranger).execute();
+        Integer discardedCards = ranger.getDiscardPile().size();
+
+        assertThat(initialDiscardedCards).isZero();
+        assertThat(discardedCards).isEqualTo(1);
+    }
+
+    @Test
+    void testDrawCommand(){
+        turnService.initializeFromGame(gameTester);
+        Integer initialHand = ranger.getHand().size();
+        new DrawCommand(1, ranger).execute();
+        Integer currentHand = ranger.getHand().size();
+
+        assertThat(initialHand).isEqualTo(4);
+        assertThat(currentHand).isEqualTo(5);
+    }
+
+
+    @Test
+    void testExileCommand(){
+        turnService.initializeFromGame(gameTester);
+        AbilityCard pocionCurativa = abilityCardService.findById(62);
+        AbilityCardIngame pocionCurativaIngame = abilityCardIngameService.createFromAbilityCard(pocionCurativa, ranger);
+        List<AbilityCardIngame> currentHand = ranger.getHand();
+        currentHand.add(pocionCurativaIngame);
+        ranger.setHand(currentHand);
+
+        assertThat(currentHand.size()).isEqualTo(5);
+        assertThat(ranger.getDiscardPile().size()).isZero();
+
+        new ExileCommand(ranger, AbilityCardTypeEnum.POCION_CURATIVA).execute();
+
+        assertThat(currentHand.size()).isEqualTo(4);
         assertThat(ranger.getDiscardPile().size()).isZero();
     }
 
@@ -262,4 +322,23 @@ public class commandIngameTest {
         assertThat(ranger.getGold()).isEqualTo(9);
     }
     
+    @Test
+    void testGiveGlory(){
+        Integer initialGlory = ranger.getGlory();
+        Integer amount = 1;
+        new GiveGloryCommand(amount, ranger).execute();
+        Integer currentGlory = ranger.getGlory();
+
+        assertThat(currentGlory).isEqualTo(initialGlory+amount);
+    }
+
+    @Test
+    void testGiveGold(){
+        Integer initialGold = ranger.getGold();
+        Integer amount = 1;
+        new GiveGoldCommand(amount, ranger).execute();
+        Integer currentGold = ranger.getGold();
+        
+        assertThat(currentGold).isEqualTo(initialGold+amount);
+    }
 }
