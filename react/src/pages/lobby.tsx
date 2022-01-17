@@ -157,17 +157,18 @@ export default function Lobby() {
   useEffect(() => {
     async function updateUserCharacter() {
       try {
-        const payload = {
-          username: loggedUser.username,
-          character: getCharacterId(),
-        };
-        await axios.put(`/users/character`, payload, {
-          headers: { Authorization: "Bearer " + userToken },
-        });
+        await axios.put(
+          `/users/${loggedUser.username}/character/${getCharacterId()}`,
+          {},
+          {
+            headers: { Authorization: "Bearer " + userToken },
+          }
+        );
       } catch (error: any) {
         toast.error(error?.message);
       }
     }
+    if (character == null) return;
     updateUserCharacter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [character, gender]);
