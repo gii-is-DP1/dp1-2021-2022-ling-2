@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.DiscardCommand;
+import org.springframework.ntfh.command.GiveWoundCommand;
 import org.springframework.ntfh.command.GoldOnKillCommand;
 import org.springframework.ntfh.command.HandToAbilityPileCommand;
 import org.springframework.ntfh.command.HealCommand;
@@ -143,6 +144,15 @@ public class commandIngameTest {
         new DealDamageCommand(1, ranger, enemyIngame).execute();
 
         assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance-1);
+    }
+
+    @Test
+    void testGiveWound() {
+        assertThat(rogue.getWounds()).isZero();
+        
+        new GiveWoundCommand(rogue).execute();
+
+        assertThat(rogue.getWounds()).isEqualTo(1);
     }
 
     @Test
