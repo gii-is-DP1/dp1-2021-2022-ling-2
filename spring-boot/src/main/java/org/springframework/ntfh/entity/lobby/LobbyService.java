@@ -35,14 +35,13 @@ public class LobbyService {
     public Lobby findById(int id) throws DataAccessException {
         Optional<Lobby> lobby = lobbyRepository.findById(id);
         if (!lobby.isPresent())
-            throw new DataAccessException("Lobby with id " + id + " was not found") {
-            };
+            throw new DataAccessException("Lobby with id " + id + " was not found") {};
         return lobby.get();
     }
 
     public Lobby findLobby(Integer lobbyId) {
-        return lobbyRepository.findById(lobbyId).orElseThrow(() -> new DataAccessException("Lobby not found") {
-        });
+        return lobbyRepository.findById(lobbyId)
+                .orElseThrow(() -> new DataAccessException("Lobby not found") {});
     }
 
     @Transactional
@@ -55,8 +54,7 @@ public class LobbyService {
         // make sure to remove all FK refrences to this lobby from the users who were in
         // the lobby
         if (lobby.getGame() != null)
-            throw new DataAccessException("The game has already started") {
-            };
+            throw new DataAccessException("The game has already started") {};
 
         lobby.getUsers().forEach(user -> {
             user.setLobby(null);
@@ -71,7 +69,7 @@ public class LobbyService {
      * @author andrsdt
      * @param lobbyId
      * @param usernameFromRequest username that will be added to the lobby
-     * @param token               JWT token sent by the client
+     * @param token JWT token sent by the client
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
@@ -79,29 +77,26 @@ public class LobbyService {
             throws DataAccessException, MaximumLobbyCapacityException {
         Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
         if (!lobbyOptional.isPresent())
-            throw new DataAccessException("The lobby does not exist") {
-            };
+            throw new DataAccessException("The lobby does not exist") {};
 
         Lobby lobby = lobbyOptional.get();
         if (lobby.getMaxPlayers().equals(lobby.getUsers().size()))
-            throw new MaximumLobbyCapacityException("The lobby is full") {
-            };
+            throw new MaximumLobbyCapacityException("The lobby is full") {};
 
         String usernameFromToken = TokenUtils.usernameFromToken(token);
         if (!usernameFromRequest.equals(usernameFromToken))
-            throw new IllegalArgumentException("The Token username and the request one does not coindice") {
-            };
+            throw new IllegalArgumentException(
+                    "The Token username and the request one does not coindice") {};
 
-        Boolean userInLobby = lobby.getUsers().stream().anyMatch(u -> u.getUsername().equals(usernameFromRequest));
+        Boolean userInLobby = lobby.getUsers().stream()
+                .anyMatch(u -> u.getUsername().equals(usernameFromRequest));
         if (userInLobby)
-            throw new IllegalArgumentException("The user is already in the lobby") {
-            };
+            throw new IllegalArgumentException("The user is already in the lobby") {};
 
         User user = userService.findUser(usernameFromRequest);
         if (user.getLobby() != null)
-            throw new UserAlreadyInLobbyException(
-                    String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
-            };
+            throw new UserAlreadyInLobbyException(String
+                    .format("The user is already in lobby \"%s\"", user.getLobby().getName())) {};
 
         user.setLobby(lobby);
         user.setCharacter(null);
@@ -110,8 +105,8 @@ public class LobbyService {
     }
 
     /**
-     * Removes the given player from the list of players in the lobby. Either
-     * because he/she left or was kicked by the host
+     * Removes the given player from the list of players in the lobby. Either because he/she left or
+     * was kicked by the host
      * 
      * @author andrsdt
      * @param lobbyId
@@ -124,8 +119,7 @@ public class LobbyService {
         User user = userService.findUser(username);
         if (lobby.getHost().getUsername().equals(user.getUsername()))
             // this should be handled by .deleteLobby()
-            throw new DataAccessException("The host cannot leave the lobby") {
-            };
+            throw new DataAccessException("The host cannot leave the lobby") {};
 
         lobby.removeUser(user);
         user.setLobby(null);

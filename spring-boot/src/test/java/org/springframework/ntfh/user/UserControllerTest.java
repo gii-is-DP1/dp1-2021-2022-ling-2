@@ -77,12 +77,8 @@ public class UserControllerTest {
         Pageable page = PageRequest.of(1, 2);
         when(userService.findPage(page)).thenReturn(List.of(user3, user4));
 
-        mockMvc.perform(get("/users")
-                .param("page", "1")
-                .param("size", "2")
-                .header("authorization",
-                        "Bearer " + TokenUtils.ADMIN_TOKEN))
-                .andExpect(status().isOk())
+        mockMvc.perform(get("/users").param("page", "1").param("size", "2").header("authorization",
+                "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].username", is("user3")))
                 .andExpect(jsonPath("$[1].username", is("user4")));
@@ -95,29 +91,26 @@ public class UserControllerTest {
 
         final String USERNAME = "user1";
 
-        mockMvc.perform(get("/users/" + USERNAME))
-                .andExpect(status().isOk())
+        mockMvc.perform(get("/users/" + USERNAME)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.username", is("user1")))
                 .andExpect(jsonPath("$.email", is("user1@mail.com")));
     }
 
     @Test
     void update_by_admin_success() throws Exception {
-        final String PUT_JSON = "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"testing\"}";
-        mockMvc.perform(put("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("authorization",
-                        "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .content(PUT_JSON))
+        final String PUT_JSON =
+                "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"testing\"}";
+        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
+                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     void register_success() throws Exception {
-        final String POST_JSON = "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
-        mockMvc.perform(post("/users/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(POST_JSON))
+        final String POST_JSON =
+                "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
+        mockMvc.perform(
+                post("/users/register").contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -125,48 +118,41 @@ public class UserControllerTest {
     void login_success() throws Exception {
         when(userService.loginUser(any(User.class))).thenReturn(TokenUtils.USER_TOKEN);
         final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
-        mockMvc.perform(post("/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("authorization",
-                        "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .content(POST_JSON))
+        mockMvc.perform(post("/users/login").contentType(MediaType.APPLICATION_JSON)
+                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(POST_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
     }
 
     @Test
     void testSetCharacter_Success() throws Exception {
-        final String PUT_JSON = "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"enabled\":true,\"character\":{\"id\":5,\"baseHealth\":3,\"characterTypeEnum\":\"WARRIOR\",\"characterGenderEnum\":\"MALE\",\"proficiencies\":[{\"id\":2,\"proficiencyTypeEnum\":\"MELEE\",\"secondaryDebuff\":0}]},\"authorities\":[{\"id\":15,\"authority\":\"user\"}]}";
-        mockMvc.perform(put("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("authorization",
-                        "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .content(PUT_JSON))
+        final String PUT_JSON =
+                "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"enabled\":true,\"character\":{\"id\":5,\"baseHealth\":3,\"characterTypeEnum\":\"WARRIOR\",\"characterGenderEnum\":\"MALE\",\"proficiencies\":[{\"id\":2,\"proficiencyTypeEnum\":\"MELEE\",\"secondaryDebuff\":0}]},\"authorities\":[{\"id\":15,\"authority\":\"user\"}]}";
+        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
+                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     void testToggleBanUser_Success() throws Exception {
-        final String PUT_JSON = "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"password\":\"user1\",\"enabled\":false}";
-        mockMvc.perform(put("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("authorization",
-                        "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .content(PUT_JSON))
+        final String PUT_JSON =
+                "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"password\":\"user1\",\"enabled\":false}";
+        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
+                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void testDeleteUser() throws Exception{
+    void testDeleteUser() throws Exception {
         User user5 = new User();
         user5.setUsername("user5");
         user5.setPassword("user5");
         user5.setEmail("user5");
         user5.setEnabled(true);
-        
+
         String DeletedUsername = "user5";
         mockMvc.perform(delete("/users/" + DeletedUsername).header("authorization",
-        "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk());
+                "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk());
     }
 
 }

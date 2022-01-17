@@ -45,7 +45,12 @@ public class GameController {
      * @author andrsdt
      */
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) {
+    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) throws IllegalArgumentException {
+
+        if (lobby.getUsers().size() < 2) {
+            throw new IllegalArgumentException("A game must have at least 2 players");
+        }
+
         Game createdGame = gameService.createFromLobby(lobby);
         return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
     }
