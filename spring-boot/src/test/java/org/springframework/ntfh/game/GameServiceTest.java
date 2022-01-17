@@ -109,8 +109,8 @@ public class GameServiceTest {
         lobbyTester.setLeader(user1);
         lobbyService.save(lobbyTester);
 
-        user1.setCharacter(characterService.findCharacterById(2).get());
-        user2.setCharacter(characterService.findCharacterById(4).get());
+        user1.setCharacter(characterService.findById(2));
+        user2.setCharacter(characterService.findById(4));
 
         gameTester = gameService.createFromLobby(lobbyTester);
         user1.setLobby(lobbyTester);
@@ -165,7 +165,7 @@ public class GameServiceTest {
 
     @Test
     void testPlayCard() {
-        playerTester.setCharacterType(characterService.findCharacterById(5).get());
+        playerTester.setCharacterType(characterService.findById(5));
         AbilityCard pasoAtras = abilityCardService.findById(27);
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(pasoAtras, playerTester);
         String token = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -227,7 +227,7 @@ public class GameServiceTest {
     @Test
     void testBountyBehaviourWithTrampaCard() {
         turnService.initializeFromGame(gameTester);
-        gameTester.getLeader().setCharacterType(characterService.findCharacterById(3).get());
+        gameTester.getLeader().setCharacterType(characterService.findById(3));
         AbilityCard trampa = abilityCardService.findById(60);
         AbilityCardIngame trampaIngame = abilityCardIngameService.createFromAbilityCard(trampa, playerTester);
         String token = TokenUtils.generateJWTToken(playerTester.getUser());
