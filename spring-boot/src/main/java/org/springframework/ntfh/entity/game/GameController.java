@@ -4,7 +4,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,15 +68,18 @@ public class GameController {
      * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
-    @PostMapping
-    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) throws IllegalArgumentException {
+    @PostMapping("/new")
+    public ResponseEntity<Game> createLobby(@RequestBody Game game) throws IllegalArgumentException {
+        Game createdLobby = gameService.createLobby(game);
+        return new ResponseEntity<>(createdLobby, HttpStatus.CREATED);
+    }
 
-        if (lobby.getUsers().size() < 2) {
-            throw new IllegalArgumentException("A game must have at least 2 players");
-        }
-
-        Game createdGame = gameService.createFromLobby(lobby);
-        return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
+    @PostMapping("/{gameId}/start")
+    public ResponseEntity<Game> startGame(@PathVariable("gameId") Integer gameId) {
+        Game game = gameService.findGameById(gameId);
+        // ! TODO implement
+        // gameService.startGame(game);
+        return new ResponseEntity<>(game, HttpStatus.OK);
     }
 
     /**
