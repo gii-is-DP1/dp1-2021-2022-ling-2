@@ -125,30 +125,6 @@ public class GameService {
         gameRepository.delete(game);
     }
 
-    @Transactional
-    public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
-        String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
-        Turn currentTurn = player.getGame().getCurrentTurn();
-        TurnState turnState = turnService.getState(currentTurn);
-        turnState.playCard(abilityCardIngameId, enemyId, token);
-    }
-
-    /**
-     * Executed when a player tries to buy a market card
-     * 
-     * @param marketCardIngameId
-     */
-    @Transactional
-    public void buyMarketCard(Integer marketCardIngameId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
-        String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
-        Turn currentTurn = player.getGame().getCurrentTurn();
-        TurnState turnState = turnService.getState(currentTurn);
-        turnState.buyMarketCard(marketCardIngameId, token);
-    }
 
     @Transactional
     public void setNextTurnState(Turn turn) {
