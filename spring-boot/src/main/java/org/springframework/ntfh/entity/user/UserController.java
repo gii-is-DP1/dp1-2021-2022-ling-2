@@ -8,7 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ntfh.entity.game.history.GameHistory;
-import org.springframework.ntfh.entity.game.history.GameHistoryRepository;
+import org.springframework.ntfh.entity.game.history.GameHistoryService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +33,7 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	private GameHistoryRepository gameHistoryRepository;
+	private GameHistoryService gameHistoryService;
 
 	@GetMapping
 	public ResponseEntity<Iterable<User>> findPage(
@@ -119,7 +119,7 @@ public class UserController {
 	public ResponseEntity<Iterable<GameHistory>> getfindByUser(
 			@PathVariable("userId") String username) {
 		Iterable<GameHistory> gameHistory =
-				this.gameHistoryRepository.findByGamePlayersContaining(username);
+				gameHistoryService.findByGamePlayersContaining(username);
 		return new ResponseEntity<>(gameHistory, HttpStatus.OK);
 	}
 
