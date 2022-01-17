@@ -2,6 +2,7 @@ package org.springframework.ntfh.commandtest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +18,16 @@ import org.springframework.ntfh.command.AttackPhaseEndCommand;
 import org.springframework.ntfh.command.ChangeEnemyCommand;
 import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.DiscardCommand;
+import org.springframework.ntfh.command.GiveGuardCommand;
+import org.springframework.ntfh.command.GiveWoundCommand;
+import org.springframework.ntfh.command.GoldOnKillCommand;
+import org.springframework.ntfh.command.HandToAbilityPileCommand;
+import org.springframework.ntfh.command.HealCommand;
+import org.springframework.ntfh.command.ReceiveDamageCommand;
+import org.springframework.ntfh.command.RecoverCardCommand;
+import org.springframework.ntfh.command.RecoverCommand;
+import org.springframework.ntfh.command.RestrainCommand;
+import org.springframework.ntfh.command.StealCoinCommand;
 import org.springframework.ntfh.command.DrawCommand;
 import org.springframework.ntfh.command.ExileCommand;
 import org.springframework.ntfh.command.GiveGloryCommand;
@@ -34,8 +45,6 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardServi
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
-import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
-import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
@@ -44,6 +53,7 @@ import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
@@ -67,12 +77,6 @@ public class commandIngameTest {
     private CharacterService characterService;
 
     @Autowired
-    private MarketCardService marketCardService;
-
-    @Autowired
-    private MarketCardIngameService marketCardIngameService;
-
-    @Autowired
     private TurnService turnService;
 
     @Autowired
@@ -87,11 +91,15 @@ public class commandIngameTest {
     @Autowired
     private AbilityCardService abilityCardService;
 
-    private Game gameTester;
+    protected Game gameTester;
 
     protected Lobby lobbyTester;
 
-    private Player ranger;
+    protected Player ranger;
+
+    protected Player rogue;
+
+    protected EnemyIngame enemyIngame;
 
     @BeforeEach
     public void init() {
@@ -114,7 +122,11 @@ public class commandIngameTest {
 
         gameTester = gameService.createFromLobby(lobbyTester);
         user1.setLobby(lobbyTester);
+
         ranger = gameTester.getPlayers().get(0);
+        rogue = gameTester.getPlayers().get(1);
+
+        enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
     }
 
     @AfterEach
@@ -162,7 +174,6 @@ public class commandIngameTest {
 
         assertThat(initialDiscardedCards).isZero();
         assertThat(discardedCards).isEqualTo(1);
-
     }
 
     @Test
@@ -214,4 +225,122 @@ public class commandIngameTest {
         
         assertThat(currentGold).isEqualTo(initialGold+amount);
     }
+
+    @Test
+    void testGiveGuard() {
+        assertThat(ranger.getGuard()).isZero();
+        
+        new GiveGuardCommand(1, ranger).execute();
+
+        assertThat(ranger.getGuard()).isEqualTo(1);
+    }
+
+    @Test
+    void testGiveWound() {
+        assertThat(rogue.getWounds()).isZero();
+        
+        new GiveWoundCommand(rogue).execute();
+
+        assertThat(rogue.getWounds()).isEqualTo(1);
+    }
+
+    @Test
+    void testGoldOnKill() {
+        turnService.initializeFromGame(gameTester);
+        enemyIngame.setCurrentEndurance(0);
+        new GoldOnKillCommand(1, enemyIngame, ranger).execute();
+
+        assertThat(ranger.getGold()).isEqualTo(1);
+    }
+
+    @Test
+    void testHandToAbilityPile() {
+        turnService.initializeFromGame(gameTester);
+        AbilityCard companeroLobo = abilityCardService.findById(1);
+        AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngame);
+        ranger.setHand(hand);
+
+        assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
+        assertThat(ranger.getHand().size()).isEqualTo(1);
+        
+        new HandToAbilityPileCommand(ranger, companeroLobo.getAbilityCardTypeEnum()).execute();
+
+        assertThat(ranger.getAbilityPile().size()).isEqualTo(16);
+        assertThat(ranger.getHand().size()).isZero();
+    }
+
+    @Test
+    void testHeal() {
+        rogue.setWounds(1);
+
+        assertThat(rogue.getWounds()).isEqualTo(1);
+
+        new HealCommand(rogue).execute();
+
+        assertThat(rogue.getWounds()).isZero();
+    }
+
+    @Test
+    void testReceiveDamage() {
+        assertThat(rogue.getDiscardPile().size()).isZero();
+
+        new ReceiveDamageCommand(enemyIngame.getCurrentEndurance(), enemyIngame, rogue).execute();
+
+        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+    }
+
+    @Test
+    void testRecoverCardCommand() {
+        turnService.initializeFromGame(gameTester);
+        AbilityCard disparoRapido = abilityCardService.findById(4);
+        AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
+        String token = TokenUtils.generateJWTToken(ranger.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngame);
+        ranger.setHand(hand);
+        gameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(), token);
+
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+
+        new RecoverCardCommand(ranger, AbilityCardTypeEnum.DISPARO_RAPIDO).execute();
+
+        assertThat(ranger.getDiscardPile().size()).isZero();
+    }
+
+    @Test
+    void testRecoverCommand() {
+        turnService.initializeFromGame(gameTester);
+
+        new DiscardCommand(1, ranger).execute();
+        new RecoverCommand(ranger).execute();
+
+        assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
+        assertThat(ranger.getDiscardPile().size()).isZero();
+    }
+
+
+    @Test
+    void testRestrainCommand() {
+        assertThat(enemyIngame.getRestrained()).isFalse();
+
+        new RestrainCommand(enemyIngame).execute();
+
+        assertThat(enemyIngame.getRestrained()).isTrue();
+    }
+
+    @Test
+    void testStealCoinCommand() {
+        ranger.setGold(10);
+
+        assertThat(rogue.getGold()).isZero();
+        assertThat(ranger.getGold()).isEqualTo(10);
+
+        new StealCoinCommand(rogue, ranger).execute();
+
+        assertThat(rogue.getGold()).isEqualTo(1);
+        assertThat(ranger.getGold()).isEqualTo(9);
+    }
+    
 }
