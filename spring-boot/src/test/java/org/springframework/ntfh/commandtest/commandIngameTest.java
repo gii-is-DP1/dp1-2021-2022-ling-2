@@ -166,6 +166,67 @@ public class commandIngameTest {
     }
 
     @Test
+    void testDiscardCommand(){
+        turnService.initializeFromGame(gameTester);
+        Integer initialDiscardedCards = ranger.getDiscardPile().size();
+        new DiscardCommand(1, ranger).execute();
+        Integer discardedCards = ranger.getDiscardPile().size();
+
+        assertThat(initialDiscardedCards).isZero();
+        assertThat(discardedCards).isEqualTo(1);
+    }
+
+    @Test
+    void testDrawCommand(){
+        turnService.initializeFromGame(gameTester);
+        Integer initialHand = ranger.getHand().size();
+        new DrawCommand(1, ranger).execute();
+        Integer currentHand = ranger.getHand().size();
+
+        assertThat(initialHand).isEqualTo(4);
+        assertThat(currentHand).isEqualTo(5);
+    }
+
+
+    @Test
+    void testExileCommand(){
+        turnService.initializeFromGame(gameTester);
+        AbilityCard pocionCurativa = abilityCardService.findById(62);
+        AbilityCardIngame pocionCurativaIngame = abilityCardIngameService.createFromAbilityCard(pocionCurativa, ranger);
+        List<AbilityCardIngame> currentHand = ranger.getHand();
+        currentHand.add(pocionCurativaIngame);
+        ranger.setHand(currentHand);
+
+        assertThat(currentHand.size()).isEqualTo(5);
+        assertThat(ranger.getDiscardPile().size()).isZero();
+
+        new ExileCommand(ranger, AbilityCardTypeEnum.POCION_CURATIVA).execute();
+
+        assertThat(currentHand.size()).isEqualTo(4);
+        assertThat(ranger.getDiscardPile().size()).isZero();
+    }
+
+    @Test
+    void testGiveGlory(){
+        Integer initialGlory = ranger.getGlory();
+        Integer amount = 1;
+        new GiveGloryCommand(amount, ranger).execute();
+        Integer currentGlory = ranger.getGlory();
+
+        assertThat(currentGlory).isEqualTo(initialGlory+amount);
+    }
+
+    @Test
+    void testGiveGold(){
+        Integer initialGold = ranger.getGold();
+        Integer amount = 1;
+        new GiveGoldCommand(amount, ranger).execute();
+        Integer currentGold = ranger.getGold();
+        
+        assertThat(currentGold).isEqualTo(initialGold+amount);
+    }
+
+    @Test
     void testGiveGuard() {
         assertThat(ranger.getGuard()).isZero();
         
@@ -259,46 +320,6 @@ public class commandIngameTest {
         assertThat(ranger.getDiscardPile().size()).isZero();
     }
 
-    @Test
-    void testDiscardCommand(){
-        turnService.initializeFromGame(gameTester);
-        Integer initialDiscardedCards = ranger.getDiscardPile().size();
-        new DiscardCommand(1, ranger).execute();
-        Integer discardedCards = ranger.getDiscardPile().size();
-
-        assertThat(initialDiscardedCards).isZero();
-        assertThat(discardedCards).isEqualTo(1);
-    }
-
-    @Test
-    void testDrawCommand(){
-        turnService.initializeFromGame(gameTester);
-        Integer initialHand = ranger.getHand().size();
-        new DrawCommand(1, ranger).execute();
-        Integer currentHand = ranger.getHand().size();
-
-        assertThat(initialHand).isEqualTo(4);
-        assertThat(currentHand).isEqualTo(5);
-    }
-
-
-    @Test
-    void testExileCommand(){
-        turnService.initializeFromGame(gameTester);
-        AbilityCard pocionCurativa = abilityCardService.findById(62);
-        AbilityCardIngame pocionCurativaIngame = abilityCardIngameService.createFromAbilityCard(pocionCurativa, ranger);
-        List<AbilityCardIngame> currentHand = ranger.getHand();
-        currentHand.add(pocionCurativaIngame);
-        ranger.setHand(currentHand);
-
-        assertThat(currentHand.size()).isEqualTo(5);
-        assertThat(ranger.getDiscardPile().size()).isZero();
-
-        new ExileCommand(ranger, AbilityCardTypeEnum.POCION_CURATIVA).execute();
-
-        assertThat(currentHand.size()).isEqualTo(4);
-        assertThat(ranger.getDiscardPile().size()).isZero();
-    }
 
     @Test
     void testRestrainCommand() {
@@ -322,23 +343,4 @@ public class commandIngameTest {
         assertThat(ranger.getGold()).isEqualTo(9);
     }
     
-    @Test
-    void testGiveGlory(){
-        Integer initialGlory = ranger.getGlory();
-        Integer amount = 1;
-        new GiveGloryCommand(amount, ranger).execute();
-        Integer currentGlory = ranger.getGlory();
-
-        assertThat(currentGlory).isEqualTo(initialGlory+amount);
-    }
-
-    @Test
-    void testGiveGold(){
-        Integer initialGold = ranger.getGold();
-        Integer amount = 1;
-        new GiveGoldCommand(amount, ranger).execute();
-        Integer currentGold = ranger.getGold();
-        
-        assertThat(currentGold).isEqualTo(initialGold+amount);
-    }
 }
