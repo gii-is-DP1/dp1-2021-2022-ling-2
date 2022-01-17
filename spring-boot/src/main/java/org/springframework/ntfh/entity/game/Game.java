@@ -40,17 +40,26 @@ import lombok.Setter;
 @Table(name = "games")
 public class Game extends BaseEntity {
 
+    @NotNull
+    private String name;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date finishTime;
 
-    @NotNull
+    @NotNull(message = "The scenes must be either on or off")
     private Boolean hasScenes;
 
+    @NotNull(message = "The spectators must be either allowed or not allowed")
+    private Boolean spectatorsAllowed;
+
+    @NotNull(message = "The number of max players can not be null")
+    private Integer maxPlayers;
+
     // Set from Lobby by creating Players instances from users
-    @OneToMany
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"game", "lobby"})
     private List<Player> players;
 
@@ -65,6 +74,8 @@ public class Game extends BaseEntity {
     @NotAudited
     @JsonIgnore
     private List<Turn> turns = new ArrayList<>();
+
+    // ! DEFINE GAME STATE ATTRIBUTE
 
     // TODO should these four be NotAudited? If they are audited,
     // can they help with the statistics stuff? (Play X card Y times...)
@@ -117,9 +128,11 @@ public class Game extends BaseEntity {
         return (finishTime == null) ? null : finishTime.getTime() - startTime.getTime();
     }
 
-    /**
-     * @author andrsdt
-     */
+    @Transient
+    public boolean getHasStarted() {
+        return startTime != null;
+    }
+
     @Transient
     public Boolean getHasFinished() {
         return finishTime != null;
