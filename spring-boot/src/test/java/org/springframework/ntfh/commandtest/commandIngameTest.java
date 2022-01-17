@@ -19,6 +19,8 @@ import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.command.DiscardCommand;
 import org.springframework.ntfh.command.DrawCommand;
 import org.springframework.ntfh.command.ExileCommand;
+import org.springframework.ntfh.command.GiveGloryCommand;
+import org.springframework.ntfh.command.GiveGoldCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
@@ -183,7 +185,6 @@ public class commandIngameTest {
         List<AbilityCardIngame> currentHand = ranger.getHand();
         currentHand.add(pocionCurativaIngame);
         ranger.setHand(currentHand);
-        Integer currentAbilityPile = ranger.getAbilityPile().size();
 
         assertThat(currentHand.size()).isEqualTo(5);
         assertThat(ranger.getDiscardPile().size()).isZero();
@@ -194,5 +195,23 @@ public class commandIngameTest {
         assertThat(ranger.getDiscardPile().size()).isZero();
     }
 
-    
+    @Test
+    void testGiveGlory(){
+        Integer initialGlory = ranger.getGlory();
+        Integer amount = 1;
+        new GiveGloryCommand(amount, ranger).execute();
+        Integer currentGlory = ranger.getGlory();
+
+        assertThat(currentGlory).isEqualTo(initialGlory+amount);
+    }
+
+    @Test
+    void testGiveGold(){
+        Integer initialGold = ranger.getGold();
+        Integer amount = 1;
+        new GiveGoldCommand(amount, ranger).execute();
+        Integer currentGold = ranger.getGold();
+        
+        assertThat(currentGold).isEqualTo(initialGold+amount);
+    }
 }
