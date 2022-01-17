@@ -13,7 +13,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,10 +22,10 @@ import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.util.TokenUtils;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc(addFilters = false)
 public class GameControllerTest {
@@ -39,11 +38,10 @@ public class GameControllerTest {
 
     @BeforeEach
     void setup() {
-        Game game1, game2;
-        game1 = new Game();
+        Game game1 = new Game();
         game1.setId(1);
 
-        game2 = new Game();
+        Game game2 = new Game();
         game2.setId(2);
 
         Lobby lobby = new Lobby();
