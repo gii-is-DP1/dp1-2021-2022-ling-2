@@ -30,8 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/users")
 public class UserController {
-	// TODO JWT tokens can be decrypted to know if the user who is trying to perform
-	// an action is accessing his data or not
 	@Autowired
 	private UserService userService;
 

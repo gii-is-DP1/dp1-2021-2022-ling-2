@@ -46,9 +46,8 @@ public class GameHistory extends BaseEntity {
     @OneToOne
     private Player winner;
 
-    // TODO hacer la asociacion tambien desde parte de comments? bidireccional?
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     // orphanRemoval: The "comment" rows will be deleted when the game is deleted
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Comment> comments;
 

@@ -161,10 +161,10 @@ public class GameServiceTest {
     @Test
     public void testDeleteGame() {
         Game tester = gameService.createFromLobby(lobbyTester);
-        final Integer TESTER_ID = tester.getId();
+        Integer gameId = tester.getId();
         gameService.delete(tester);
         assertThrows(DataAccessException.class, () -> {
-            gameService.findGameById(TESTER_ID);
+            gameService.findGameById(gameId);
         });
     }
 

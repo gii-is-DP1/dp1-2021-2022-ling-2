@@ -16,18 +16,9 @@ public class SceneController {
     @Autowired
     private SceneService sceneService;
 
-    @GetMapping()
-    public ResponseEntity<Iterable<Scene>> getAll() {
-        // TODO untested
-        // We don't know if this method will be useful later
-        Iterable<Scene> scenes = sceneService.findAll();
-        return new ResponseEntity<>(scenes, HttpStatus.OK);
-    }
-
     @GetMapping("count")
     public ResponseEntity<Integer> getCount() {
         Integer sceneCount = sceneService.count();
         return new ResponseEntity<>(sceneCount, HttpStatus.OK);
     }
-
 }
