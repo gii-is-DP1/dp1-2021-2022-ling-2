@@ -7,38 +7,48 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.ntfh.configuration.SecurityConfiguration;
+import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.lobby.Lobby;
+import org.springframework.ntfh.entity.lobby.LobbyController;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-// @ExtendWith(SpringExtension.class)
-// @WebMvcTest(value = LobbyController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = LobbyController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = WebSecurityConfigurer.class),
+        excludeAutoConfiguration = SecurityConfiguration.class)
 public class LobbyControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @MockBean
     private LobbyService lobbyService;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @MockBean
+    private CharacterService characterService;
+
+    @MockBean
+    private UserService userService;
 
     @BeforeEach
     void setup() {
@@ -64,31 +74,35 @@ public class LobbyControllerTest {
     }
 
     @Test
-    @WithMockUser("admin")
+    @WithMockUser("tester")
     void testGetAllLobbies() throws Exception {
-        mockMvc.perform(get("/lobbies")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("lobby1")))
+        mockMvc.perform(get("/lobbies")).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[0].name", is("lobby1")))
                 .andExpect(jsonPath("$[1].name", is("lobby2")));
     }
 
     @Test
+    @WithMockUser("tester")
     void testLobbyCount() throws Exception {
-        mockMvc.perform(get("/lobbies/count")).andExpect(status().isOk()).andExpect(jsonPath("$", is(2)));
+        mockMvc.perform(get("/lobbies/count")).andExpect(status().isOk())
+                .andExpect(jsonPath("$", is(2)));
     }
 
     @Test
+    @WithMockUser("tester")
     void testLobbyStatus() throws Exception {
-        mockMvc.perform(get("/lobbies/1")).andExpect(status().isOk()).andExpect(jsonPath("$.name", is("lobby1")));
+        mockMvc.perform(get("/lobbies/1")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("lobby1")));
     }
 
     // TODO wait until the refactor of the method in lobbycontroller is made
     @Disabled
     @Test
     void testJoinLobby() throws Exception {
-        final String POST_JSON = "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
-        mockMvc.perform(post("/lobbies/1/join").contentType(MediaType.APPLICATION_JSON).header("authorization",
-                "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .content(POST_JSON))
+        final String POST_JSON =
+                "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
+        mockMvc.perform(post("/lobbies/1/join").contentType(MediaType.APPLICATION_JSON)
+                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(POST_JSON))
                 .andExpect(status().isOk());
     }
 

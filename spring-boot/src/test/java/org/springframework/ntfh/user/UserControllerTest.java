@@ -10,23 +10,28 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.ntfh.configuration.SecurityConfiguration;
+import org.springframework.ntfh.entity.character.CharacterService;
+import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.user.UserController;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -34,9 +39,11 @@ import org.springframework.test.web.servlet.MockMvc;
  * @see https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
  * @see https://dimitr.im/testing-your-rest-controllers-and-clients-with-spring
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = UserController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = WebSecurityConfigurer.class),
+        excludeAutoConfiguration = SecurityConfiguration.class)
 public class UserControllerTest {
 
     @Autowired
@@ -44,6 +51,12 @@ public class UserControllerTest {
 
     @MockBean
     UserService userService;
+
+    @MockBean
+    CharacterService characterService;
+
+    @MockBean
+    LobbyService lobbyService;
 
     @BeforeEach
     void setup() {
@@ -79,6 +92,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "admin", roles = "admin")
     void findPage_success() throws Exception {
         // Mock the userService.findPage() method
         mockMvc.perform(get("/users").param("page", "1").param("size", "2").header("authorization",
@@ -89,6 +103,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser("user")
     void findByUsername_success() throws Exception {
         // Mock the userService.findByUsername() method
 
@@ -100,15 +115,17 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", password = "admin", roles = "admin")
     void update_by_admin_success() throws Exception {
         final String PUT_JSON =
-                "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"testing\"}";
+                "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"admin\"}";
         mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
                 .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
+    @WithMockUser("user1")
     void register_success() throws Exception {
         final String POST_JSON =
                 "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
@@ -118,6 +135,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser("user1")
     void login_success() throws Exception {
         final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
         mockMvc.perform(post("/users/login").contentType(MediaType.APPLICATION_JSON)
