@@ -1,5 +1,4 @@
 import playerParser from "../../helpers/playerParser";
-import timeParser from "../../helpers/timeParser";
 import { Game } from "../../interfaces/Game";
 
 type Props = {
@@ -39,12 +38,8 @@ export default function GamesHistoryTable(props: Props) {
                   <tr key={game.id}>
                     <td className="text-table-td">{game.id}</td>
                     <td className="text-table-td">{game.duration}</td>
-                    <td className="text-table-td">
-                      {timeParser(game?.startTime)}
-                    </td>
-                    <td className="text-table-td">
-                      {timeParser(game?.finishTime)}
-                    </td>
+                    <td className="text-table-td">{game?.startTime}</td>
+                    <td className="text-table-td">{game?.finishTime}</td>
                     <td className="text-table-td">
                       {game.hasScenes ? "🟢" : "🔴"}
                     </td>
