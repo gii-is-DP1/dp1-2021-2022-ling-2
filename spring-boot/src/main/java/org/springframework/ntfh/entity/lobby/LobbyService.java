@@ -18,11 +18,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class LobbyService {
 
-    @Autowired
     private LobbyRepository lobbyRepository;
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public LobbyService(LobbyRepository lobbyRepository, UserService userService) {
+        this.lobbyRepository = lobbyRepository;
+        this.userService = userService;
+    }
 
     public Integer lobbyCount() {
         return (int) lobbyRepository.count();

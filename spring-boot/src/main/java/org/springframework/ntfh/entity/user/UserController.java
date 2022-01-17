@@ -62,8 +62,9 @@ public class UserController {
 	}
 
 	/**
-	 * Update The profile of a user. Check before if the authorization token is either from the exact user or from any
-	 * admin.
+	 * <<<<<<< HEAD Update The profile of a user. Check before if the authorization token is either from the exact user
+	 * or from any admin. ======= Update The profile of a user. Check before if the authorization token is either from
+	 * the exact user or from any admin. >>>>>>> origin/master
 	 * 
 	 * @param user object with the data to be updated with
 	 * @param token jwt token of the user or the admin.

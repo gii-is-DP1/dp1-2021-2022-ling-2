@@ -10,21 +10,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.List;
-
-import org.junit.jupiter.api.BeforeAll;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.ntfh.entity.character.CharacterService;
+import org.springframework.ntfh.entity.game.history.GameHistoryService;
+import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.user.UserController;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
@@ -32,127 +37,139 @@ import org.springframework.test.web.servlet.MockMvc;
  * @see https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
  * @see https://dimitr.im/testing-your-rest-controllers-and-clients-with-spring
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc()
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = UserController.class)
 public class UserControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+	@Autowired
+	MockMvc mockMvc;
 
-    @MockBean
-    UserService userService;
+	@MockBean
+	UserService userService;
 
-    static User user1, user2, user3, user4;
+	@MockBean
+	GameHistoryService gameHistoryService;
 
-    @BeforeAll
-    static void setup() {
-        user1 = new User();
-        user1.setUsername("user1");
-        user1.setPassword("user1");
-        user1.setEmail("user1@mail.com");
-        user1.setEnabled(true);
+	@MockBean
+	CharacterService characterService;
 
-        user2 = new User();
-        user2.setUsername("user2");
-        user2.setPassword("user2");
-        user2.setEmail("user2@mail.com");
-        user2.setEnabled(true);
+	@MockBean
+	LobbyService lobbyService;
 
-        user3 = new User();
-        user3.setUsername("user3");
-        user3.setPassword("user3");
-        user3.setEmail("user3@mail.com");
-        user3.setEnabled(true);
+	@MockBean
+	DataSource dataSource;
 
-        user4 = new User();
-        user4.setUsername("user4");
-        user4.setPassword("user4");
-        user4.setEmail("user4");
-        user4.setEnabled(true);
-    }
+	@BeforeEach
+	void setup() {
+		User user1 = new User();
+		user1.setUsername("user1");
+		user1.setPassword("user1");
+		user1.setEmail("user1@mail.com");
+		user1.setEnabled(true);
 
-    @Test
-    void findPage_success() throws Exception {
-        // Mock the userService.findPage() method
-        Pageable page = PageRequest.of(1, 2);
-        when(userService.findPage(page)).thenReturn(List.of(user3, user4));
+		User user2 = new User();
+		user2.setUsername("user2");
+		user2.setPassword("user2");
+		user2.setEmail("user2@mail.com");
+		user2.setEnabled(true);
 
-        mockMvc.perform(get("/users").param("page", "1").param("size", "2").header("authorization",
-                "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].username", is("user3")))
-                .andExpect(jsonPath("$[1].username", is("user4")));
-    }
+		User user3 = new User();
+		user3.setUsername("user3");
+		user3.setPassword("user3");
+		user3.setEmail("user3@mail.com");
+		user3.setEnabled(true);
 
-    @Test
-    void findByUsername_success() throws Exception {
-        // Mock the userService.findByUsername() method
-        when(userService.findUser("user1")).thenReturn(user1);
+		User user4 = new User();
+		user4.setUsername("user4");
+		user4.setPassword("user4");
+		user4.setEmail("user4");
+		user4.setEnabled(true);
 
-        final String USERNAME = "user1";
+		Pageable page = PageRequest.of(1, 2);
+		when(userService.findPage(page)).thenReturn(List.of(user3, user4));
+		when(userService.findUser("user1")).thenReturn(user1);
+		when(userService.loginUser(any(User.class))).thenReturn(TokenUtils.USER_TOKEN);
 
-        mockMvc.perform(get("/users/" + USERNAME)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.username", is("user1")))
-                .andExpect(jsonPath("$.email", is("user1@mail.com")));
-    }
+	}
 
-    @Test
-    void update_by_admin_success() throws Exception {
-        final String PUT_JSON =
-                "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"testing\"}";
-        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
-                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
-                .andExpect(status().isOk());
-    }
+	@Test
+	@WithMockUser(username = "admin", password = "admin", roles = "admin")
+	void findPage_success() throws Exception {
+		// Mock the userService.findPage() method
+		mockMvc.perform(get("/users").param("page", "1").param("size", "2").header("authorization",
+				"Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
+				.andExpect(jsonPath("$[0].username", is("user3"))).andExpect(jsonPath("$[1].username", is("user4")));
+	}
 
-    @Test
-    void register_success() throws Exception {
-        final String POST_JSON =
-                "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
-        mockMvc.perform(
-                post("/users/register").contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
-                .andExpect(status().isCreated());
-    }
+	@Test
+	@WithMockUser("user")
+	void findByUsername_success() throws Exception {
+		// Mock the userService.findByUsername() method
 
-    @Test
-    void login_success() throws Exception {
-        when(userService.loginUser(any(User.class))).thenReturn(TokenUtils.USER_TOKEN);
-        final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
-        mockMvc.perform(post("/users/login").contentType(MediaType.APPLICATION_JSON)
-                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(POST_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
-    }
+		final String USERNAME = "user1";
 
-    @Test
-    void testSetCharacter_Success() throws Exception {
-        final String PUT_JSON =
-                "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"enabled\":true,\"character\":{\"id\":5,\"baseHealth\":3,\"characterTypeEnum\":\"WARRIOR\",\"characterGenderEnum\":\"MALE\",\"proficiencies\":[{\"id\":2,\"proficiencyTypeEnum\":\"MELEE\",\"secondaryDebuff\":0}]},\"authorities\":[{\"id\":15,\"authority\":\"user\"}]}";
-        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
-                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
-                .andExpect(status().isOk());
-    }
+		mockMvc.perform(get("/users/" + USERNAME)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.username", is("user1"))).andExpect(jsonPath("$.email", is("user1@mail.com")));
+	}
 
-    @Test
-    void testToggleBanUser_Success() throws Exception {
-        final String PUT_JSON =
-                "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"password\":\"user1\",\"enabled\":false}";
-        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
-                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
-                .andExpect(status().isOk());
-    }
+	@Test
+	@WithMockUser(username = "admin", password = "admin", roles = "admin")
+	void update_by_admin_success() throws Exception {
+		final String PUT_JSON = "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"admin\"}";
+		mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
+				.header("Authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
+				.andExpect(status().isOk());
+	}
 
-    @Test
-    void testDeleteUser() throws Exception {
-        User user5 = new User();
-        user5.setUsername("user5");
-        user5.setPassword("user5");
-        user5.setEmail("user5");
-        user5.setEnabled(true);
+	@Test
+	@WithMockUser("testUser")
+	void register_success() throws Exception {
+		final String POST_JSON =
+				"{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
+				.andExpect(status().isCreated());
+	}
 
-        String DeletedUsername = "user5";
-        mockMvc.perform(delete("/users/" + DeletedUsername).header("authorization",
-                "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk());
-    }
+	@Test
+	void login_success() throws Exception {
+		final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
+		mockMvc.perform(post("/users/login").contentType(MediaType.APPLICATION_JSON)
+				.header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(POST_JSON))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
+	}
+
+	@Test
+	@WithMockUser("user1")
+	void testSetCharacter_Success() throws Exception {
+		final String PUT_JSON =
+				"{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"enabled\":true,\"character\":{\"id\":5,\"baseHealth\":3,\"characterTypeEnum\":\"WARRIOR\",\"characterGenderEnum\":\"MALE\",\"proficiencies\":[{\"id\":2,\"proficiencyTypeEnum\":\"MELEE\",\"secondaryDebuff\":0}]},\"authorities\":[{\"id\":15,\"authority\":\"user\"}]}";
+		mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
+				.header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser("user1")
+	void testToggleBanUser_Success() throws Exception {
+		final String PUT_JSON =
+				"{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"password\":\"user1\",\"enabled\":false}";
+		mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
+				.header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	@WithMockUser(username = "admin", password = "admin", roles = "admin")
+	void testDeleteUser() throws Exception {
+		User user5 = new User();
+		user5.setUsername("user5");
+		user5.setPassword("user5");
+		user5.setEmail("user5");
+		user5.setEnabled(true);
+
+		String DeletedUsername = "user5";
+		mockMvc.perform(delete("/users/" + DeletedUsername).header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN))
+				.andExpect(status().isOk());
+	}
 
 }

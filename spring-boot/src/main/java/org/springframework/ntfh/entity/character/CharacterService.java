@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CharacterService {
 
-    @Autowired
     private CharacterRepository characterRepository;
 
     public Character findById(Integer id) throws DataAccessException {
