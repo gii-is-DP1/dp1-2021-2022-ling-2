@@ -1,7 +1,6 @@
 package org.springframework.ntfh.entity.game;
 
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +43,13 @@ public class GameController {
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
 
+    @GetMapping("/history/count")
+    public ResponseEntity<Integer> getPastGamesCount() {
+        // TODO implement
+        Integer count = gameService.gameCount();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
     @GetMapping("/count")
     public ResponseEntity<Integer> getCount() {
         Integer count = gameService.gameCount();
@@ -64,8 +70,7 @@ public class GameController {
      * @author andrsdt
      */
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby)
-            throws IllegalArgumentException {
+    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) throws IllegalArgumentException {
 
         if (lobby.getUsers().size() < 2) {
             throw new IllegalArgumentException("A game must have at least 2 players");
@@ -84,8 +89,8 @@ public class GameController {
      */
     @PostMapping("/{gameId}/ability-cards/{abilityCardIngameId}")
     public ResponseEntity<Game> playCard(@PathVariable("gameId") Integer gameId,
-            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId,
-            @RequestBody Map<String, Integer> body, @RequestHeader("Authorization") String token) {
+            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body,
+            @RequestHeader("Authorization") String token) {
         Integer enemyId = body.get("enemyId");
         gameService.playCard(abilityCardIngameId, enemyId, token);
         Game game = gameService.findGameById(gameId);
