@@ -1,7 +1,7 @@
 package org.springframework.ntfh.entity.game;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,9 +40,11 @@ import lombok.Setter;
 @Table(name = "games")
 public class Game extends BaseEntity {
 
-    private Timestamp startTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
 
-    private Timestamp finishTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date finishTime;
 
     @NotNull
     private Boolean hasScenes;
@@ -88,8 +92,7 @@ public class Game extends BaseEntity {
     @Transient
     @JsonIgnore
     public List<Player> getAlivePlayersInTurnOrder() {
-        return players.stream().filter(p -> !p.isDead())
-                .sorted((p1, p2) -> p1.getTurnOrder() - p2.getTurnOrder())
+        return players.stream().filter(p -> !p.isDead()).sorted((p1, p2) -> p1.getTurnOrder() - p2.getTurnOrder())
                 .collect(java.util.stream.Collectors.toList());
     }
 
@@ -107,6 +110,8 @@ public class Game extends BaseEntity {
      * @author andrsdt
      * @return Long duration of the time in seconds
      */
+    // TODO send to frontend already parsed
+    // @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     @Transient
     public Long getDuration() {
         return (finishTime == null) ? null : finishTime.getTime() - startTime.getTime();

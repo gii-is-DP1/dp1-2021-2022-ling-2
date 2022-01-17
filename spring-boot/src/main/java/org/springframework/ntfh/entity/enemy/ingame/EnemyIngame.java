@@ -2,7 +2,6 @@ package org.springframework.ntfh.entity.enemy.ingame;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -13,26 +12,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@Audited
 @Table(name = "enemies_ingame")
 public class EnemyIngame extends BaseEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "enemy_id") // TODO needed?
+    @NotAudited
     private Enemy enemy;
 
     @ManyToOne(optional = false)
