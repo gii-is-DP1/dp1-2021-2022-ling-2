@@ -2,22 +2,18 @@ package org.springframework.ntfh.lobby;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.OngoingStubbing;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,57 +23,61 @@ import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+// @ExtendWith(SpringExtension.class)
+// @WebMvcTest(value = LobbyController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class LobbyControllerTest {
-    
-    @Autowired
-    MockMvc mockMvc;
 
     @MockBean
-    LobbyService lobbyService;
+    private LobbyService lobbyService;
 
-    static Lobby lobby1, lobby2, lobby3, lobby4;
+    @Autowired
+    private MockMvc mockMvc;
 
-    static User user1, user2;
+    @BeforeEach
+    void setup() {
 
-    @BeforeAll
-    static void setup() {
-
-        lobby1 = new Lobby();
+        Lobby lobby1 = new Lobby();
         lobby1.setId(1);
         lobby1.setName("lobby1");
 
-        lobby2 = new Lobby();
+        Lobby lobby2 = new Lobby();
         lobby2.setId(2);
         lobby2.setName("lobby2");
 
-        user1 = new User();
+        User user1 = new User();
         user1.setUsername("user1");
 
-        user2 = new User();
+        User user2 = new User();
         user2.setUsername("user2");
+
+        when(lobbyService.findAll()).thenReturn(List.of(lobby1, lobby2));
+        when(lobbyService.lobbyCount()).thenReturn(List.of(lobby1, lobby2).size());
+        when(lobbyService.findLobby(1)).thenReturn(lobby1);
+
     }
 
     @Test
+    @WithMockUser("admin")
     void testGetAllLobbies() throws Exception {
-        when(lobbyService.findAll()).thenReturn(List.of(lobby1, lobby2));
         mockMvc.perform(get("/lobbies")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
-        .andExpect(jsonPath("$[0].name", is("lobby1")))
-        .andExpect(jsonPath("$[1].name", is("lobby2")));
+                .andExpect(jsonPath("$[0].name", is("lobby1")))
+                .andExpect(jsonPath("$[1].name", is("lobby2")));
     }
 
     @Test
     void testLobbyCount() throws Exception {
-        when(lobbyService.lobbyCount()).thenReturn(List.of(lobby1, lobby2).size());
         mockMvc.perform(get("/lobbies/count")).andExpect(status().isOk()).andExpect(jsonPath("$", is(2)));
     }
 
     @Test
     void testLobbyStatus() throws Exception {
-        when(lobbyService.findLobby(1)).thenReturn(lobby1);
         mockMvc.perform(get("/lobbies/1")).andExpect(status().isOk()).andExpect(jsonPath("$.name", is("lobby1")));
     }
 
