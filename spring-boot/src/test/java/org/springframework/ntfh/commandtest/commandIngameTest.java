@@ -62,7 +62,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class commandIngameTest {
+public class CommandIngameTest {
     
     @Autowired
     private GameService gameService;
