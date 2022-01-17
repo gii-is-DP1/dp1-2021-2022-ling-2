@@ -24,8 +24,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This table represents the lobby that is created by the user waiting for
- * people to join to start a game
+ * This table represents the lobby that is created by the user waiting for people to join to start a
+ * game
  * 
  * @author andrsdt
  */
@@ -38,7 +38,7 @@ public class Lobby extends NamedEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "game")
-    @JsonIgnoreProperties(value = { "players", "leader", "currentTurn" })
+    @JsonIgnoreProperties(value = {"players", "leader", "currentTurn"})
     private Game game;
 
     @NotNull(message = "The scenes must be either on or off")

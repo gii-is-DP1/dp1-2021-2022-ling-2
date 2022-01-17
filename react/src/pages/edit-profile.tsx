@@ -23,6 +23,7 @@ export default function EditProfile() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [version, setVersion] = useState(0);
 
   const sendToProfile = () =>
     history.push(ROUTES.PROFILE.replace(":username", params.username));
@@ -32,6 +33,7 @@ export default function EditProfile() {
       const response = await axios.get(`/users/${params.username}`);
       setUsername(response.data.username);
       setEmail(response.data.email);
+      setVersion(response.data.version);
     } catch (error: any) {
       toast.error(error?.message);
       sendToProfile();
@@ -49,7 +51,10 @@ export default function EditProfile() {
       const payload: any = {
         username,
         email,
+        version,
       };
+
+      console.log(payload);
       // Only send the pasword if it has been changed
       if (password !== "") payload.password = password;
 

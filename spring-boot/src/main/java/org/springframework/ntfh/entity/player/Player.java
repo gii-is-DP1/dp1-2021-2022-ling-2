@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
+import javax.validation.constraints.PositiveOrZero;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -35,26 +35,34 @@ import lombok.Setter;
 public class Player extends BaseEntity {
 
     @OneToOne(mappedBy = "player")
-    @JsonIgnoreProperties({ "password", "email", "enabled", "lobby", "game", "player", "character", "authorities" })
+    @JsonIgnoreProperties({"password", "email", "enabled", "lobby", "game", "player", "character",
+            "authorities"})
     private User user;
 
     @NotNull
+    @PositiveOrZero
     private Integer glory;
 
     @NotNull
+    @PositiveOrZero
     private Integer kills;
 
     @NotNull
+    @PositiveOrZero
     private Integer gold;
 
     @NotNull
+    @PositiveOrZero
     private Integer wounds;
 
     @NotNull
+    @PositiveOrZero
     private Integer guard;
 
     @NotNull
-    private Integer turnOrder; // Order in which the player will take their turn. The leader will be 0 (first)
+    @PositiveOrZero
+    private Integer turnOrder; // Order in which the player will take their turn. The leader will be
+                               // 0 (first)
 
     // Should not change when user's character is changed. Once the
     // row is created in the databse, it stays the same
@@ -89,6 +97,6 @@ public class Player extends BaseEntity {
 
     @Transient
     public Boolean isDead() {
-        return wounds>=characterType.getBaseHealth();
+        return wounds >= characterType.getBaseHealth();
     }
 }
