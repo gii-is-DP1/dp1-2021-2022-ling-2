@@ -1,20 +1,23 @@
 package org.springframework.ntfh.commandtest;
 
-
 import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.ntfh.command.DealDamageCommand;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
+import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
@@ -40,9 +43,6 @@ public class commandIngameTest {
     
     @Autowired
     private GameService gameService;
-
-    @Autowired
-    private GameRepository gameRepository;
 
     @Autowired
     private LobbyService lobbyService;
@@ -80,8 +80,6 @@ public class commandIngameTest {
 
     private Player playerTester;
 
-    private Integer INITIAL_GAMES_COUNT = 3;
-
     @BeforeEach
     public void init() {
         User user1 = userService.findUser("user1");
@@ -110,5 +108,17 @@ public class commandIngameTest {
     public void teardown() {
         gameService.delete(gameTester);
     }
+
+
+    @Test
+    void testDealDamageCommand(){
+        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        turnService.initializeFromGame(gameTester);
+        Integer initialEndurance = enemyIngame.getCurrentEndurance();
+        new DealDamageCommand(1, playerTester, enemyIngame).execute();
+
+        assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance-1);
+    }
+
     
 }
