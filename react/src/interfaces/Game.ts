@@ -4,6 +4,7 @@ import { Player } from "./Player";
 import { Turn } from "./Turn";
 
 export interface Game {
+  hasFinished: boolean;
   id: number;
   startTime?: number;
   finishTime?: number;
