@@ -1,13 +1,13 @@
 package org.springframework.ntfh.entity.game;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.lobby.Lobby;
@@ -21,7 +21,6 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -55,8 +54,7 @@ public class GameService {
         Optional<Game> game = gameRepository.findById(id);
         if (!game.isPresent()) {
             log.error("Game with id " + id + " was not found");
-            throw new DataAccessException("Game with id " + id + " was not found") {
-            };
+            throw new DataAccessException("Game with id " + id + " was not found") {};
         }
         return game.get();
     }
@@ -73,7 +71,7 @@ public class GameService {
     @Transactional
     public Game createFromLobby(@Valid Lobby lobby) {
         Game game = new Game();
-        game.setStartTime(System.currentTimeMillis());
+        game.setStartTime(Timestamp.from(Instant.now()));
         game.setHasScenes(lobby.getHasScenes());
 
         // We have to use lobbyFromDB since the one from the request does not
@@ -107,7 +105,8 @@ public class GameService {
         // Once the game is in the database, we update the lobby with a FK to it
         lobby.setGame(game);
         lobbyService.save(lobby);
-        log.info("Game with id " + game.getId() + " was created with players: " + game.getPlayers());
+        log.info(
+                "Game with id " + game.getId() + " was created with players: " + game.getPlayers());
         return savedGame;
     }
 
@@ -159,7 +158,7 @@ public class GameService {
      */
     @Transactional
     public void finishGame(Game game) {
-        game.setFinishTime(System.currentTimeMillis());
+        game.setFinishTime(Timestamp.from(Instant.now()));
         game.getPlayers().forEach(p -> {
             User user = p.getUser();
             user.setLobby(null);

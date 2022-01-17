@@ -22,8 +22,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.ntfh.entity.character.CharacterService;
-import org.springframework.ntfh.entity.game.history.GameHistoryService;
-import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserController;
 import org.springframework.ntfh.entity.user.UserService;
@@ -48,13 +46,7 @@ public class UserControllerTest {
 	UserService userService;
 
 	@MockBean
-	GameHistoryService gameHistoryService;
-
-	@MockBean
 	CharacterService characterService;
-
-	@MockBean
-	LobbyService lobbyService;
 
 	@MockBean
 	DataSource dataSource;

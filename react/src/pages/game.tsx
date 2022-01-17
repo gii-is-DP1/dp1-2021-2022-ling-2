@@ -69,7 +69,7 @@ export default function Game() {
       const response = await axios.get(`/games/${gameId}`);
       const _game: IGame = response.data;
       setGame(_game);
-      if (_game.finishTime) history.push(ROUTES.HOME); // TODO redirect to endgame summary
+      if (_game.hasFinished) history.push(ROUTES.HOME); // TODO redirect to endgame summary
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
@@ -107,7 +107,7 @@ export default function Game() {
         toast.error(error?.message);
       }
     };
-    history.push(ROUTES.GAME_SUMMARY.replace(":gameId", gameId));
+    // history.push(ROUTES.GAME_SUMMARY.replace(":gameId", gameId));
     document.title = "NTFH - Game " + gameId;
     loggedUser.username && fetchUser();
     return function cleanup() {
@@ -123,7 +123,7 @@ export default function Game() {
     if (!game) return;
     const sortedPlayers = playersInRenderOrder(game.players);
     setPlayers(sortedPlayers);
-    setTurn(game.currentTurn);
+    setTurn(game.currentTurn ?? null);
   }, [game]);
 
   useEffect(() => {

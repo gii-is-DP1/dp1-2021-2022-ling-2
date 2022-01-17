@@ -31,7 +31,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
 public class PlayerServiceTest {
 
     @Autowired
@@ -60,7 +60,7 @@ public class PlayerServiceTest {
         tester.setWounds(1);
         tester.setTurnOrder(2);
         tester.setGuard(0);
-        tester.setCharacterType(characterService.findCharacterById(7).get());
+        tester.setCharacterType(characterService.findById(7));
         playerService.savePlayer(tester);
 
         currentPlayer = tester;
@@ -68,10 +68,11 @@ public class PlayerServiceTest {
 
     @AfterEach
     void teardown() {
-        try{
+        try {
             playerService.delete(currentPlayer);
-        } catch (Exception exception){}
-        
+        } catch (Exception exception) {
+        }
+
     }
 
     @Test
@@ -89,20 +90,24 @@ public class PlayerServiceTest {
         assertEquals(5, tester.getKills());
         assertEquals(2, tester.getTurnOrder());
         assertEquals(1, tester.getWounds());
-        assertEquals(characterService.findCharacterById(7).get(), tester.getCharacterType());
+        assertEquals(characterService.findById(7), tester.getCharacterType());
     }
 
 
     @Test
     void testDelete() {
         playerService.delete(currentPlayer);
-        assertThrows(Exception.class, () -> {playerService.findById(currentPlayer.getId());});
+        assertThrows(Exception.class, () -> {
+            playerService.findById(currentPlayer.getId());
+        });
     }
 
     @Test
     void testDeleteById() {
         playerService.deleteById(currentPlayer.getId());
-        assertThrows(Exception.class, () -> {playerService.findById(currentPlayer.getId());});
+        assertThrows(Exception.class, () -> {
+            playerService.findById(currentPlayer.getId());
+        });
     }
 
     @Test
@@ -119,13 +124,13 @@ public class PlayerServiceTest {
         assertEquals(5, tester.getKills());
         assertEquals(2, tester.getTurnOrder());
         assertEquals(1, tester.getWounds());
-        assertEquals(characterService.findCharacterById(7).get(), tester.getCharacterType());
+        assertEquals(characterService.findById(7), tester.getCharacterType());
     }
 
     @Test
     public void testCreateFromUser() {
         User user = userService.findUser("user4");
-        user.setCharacter(characterService.findCharacterById(2).get());
+        user.setCharacter(characterService.findById(2));
         Lobby lobby = lobbyService.findLobby(3);
         Player tester = playerService.createFromUser(user, lobby, 3);
         assertEquals(0, tester.getGold());
