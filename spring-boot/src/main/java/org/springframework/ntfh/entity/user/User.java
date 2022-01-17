@@ -57,12 +57,13 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
 
+	// TODO check if this is making some sense
 	@ManyToOne
 	@JoinColumn(name = "lobby")
-	@JsonIgnoreProperties({ "users", "host", "leader" })
+	@JsonIgnoreProperties({"users", "host", "leader"})
 	private Lobby lobby; // lobby where the user is currently in
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "player")
 	private Player player; // Current player
 
@@ -75,6 +76,7 @@ public class User {
 	// in your current game)
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	@JsonIgnoreProperties({ "user" })
+	@JsonIgnoreProperties({"user"})
 	private Set<Authorities> authorities;
 }
+
