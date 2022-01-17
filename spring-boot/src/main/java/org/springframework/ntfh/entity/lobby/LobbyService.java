@@ -103,7 +103,7 @@ public class LobbyService {
                     String.format("The user is already in lobby \"%s\"", user.getLobby().getName())) {
             };
 
-        user.setLobby(lobby);
+        user.setLobby(lobby); // TODO check if cascades are working OK and we can remove this line
         user.setCharacter(null);
         lobby.addUser(user);
         return lobbyRepository.save(lobby);
