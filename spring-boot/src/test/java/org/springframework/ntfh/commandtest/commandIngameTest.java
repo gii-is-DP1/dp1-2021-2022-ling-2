@@ -7,6 +7,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
@@ -21,9 +24,18 @@ import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.TurnService;
+import org.springframework.ntfh.entity.turn.concretestates.MarketState;
+import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
+@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
 public class commandIngameTest {
     
     @Autowired
