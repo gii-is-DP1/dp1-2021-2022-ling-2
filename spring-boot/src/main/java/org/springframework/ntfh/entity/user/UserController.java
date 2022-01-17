@@ -2,7 +2,6 @@ package org.springframework.ntfh.entity.user;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -37,7 +36,8 @@ public class UserController {
 	private GameHistoryService gameHistoryService;
 
 	@GetMapping
-	public ResponseEntity<Iterable<User>> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+	public ResponseEntity<Iterable<User>> findPage(
+			@PageableDefault(page = 0, size = 10) final Pageable pageable) {
 		List<User> users = this.userService.findPage(pageable);
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
@@ -62,13 +62,12 @@ public class UserController {
 	}
 
 	/**
-	 * Update The profile of a user. Check before if the authorization token is
-	 * either from the exact user or from any admin.
+	 * Update The profile of a user. Check before if the authorization token is either from the
+	 * exact user or from any admin.
 	 * 
-	 * @param user  object with the data to be updated with
+	 * @param user object with the data to be updated with
 	 * @param token jwt token of the user or the admin.
-	 * @return token for user's authentication, in case he/she was the one who
-	 *         updated the profile
+	 * @return token for user's authentication, in case he/she was the one who updated the profile
 	 * @author andrsdt
 	 * 
 	 */
@@ -117,8 +116,10 @@ public class UserController {
 	// TODO make this work
 	// TODO use service instead of repository
 	@GetMapping("{userId}/history")
-	public ResponseEntity<Iterable<GameHistory>> getfindByUser(@PathVariable("userId") String username) {
-		Iterable<GameHistory> gameHistory = gameHistoryService.findByGamePlayersContaining(username);
+	public ResponseEntity<Iterable<GameHistory>> getfindByUser(
+			@PathVariable("userId") String username) {
+		Iterable<GameHistory> gameHistory =
+				gameHistoryService.findByGamePlayersContaining(username);
 		return new ResponseEntity<>(gameHistory, HttpStatus.OK);
 	}
 
