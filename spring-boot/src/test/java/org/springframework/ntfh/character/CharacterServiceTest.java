@@ -1,6 +1,6 @@
 package org.springframework.ntfh.character;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,8 @@ public class CharacterServiceTest {
     @Test
     public void testfindById() {
         Character tester = this.characterService.findCharacterById(2).get();
-        assertEquals(CharacterTypeEnum.RANGER, tester.getCharacterTypeEnum());
-        assertEquals(CharacterGenderEnum.FEMALE, tester.getCharacterGenderEnum());
+        assertThat(tester.getCharacterTypeEnum()).isEqualTo(CharacterTypeEnum.RANGER);
+        assertThat(tester.getCharacterGenderEnum()).isEqualTo(CharacterGenderEnum.FEMALE);
     }
 
 }
