@@ -8,7 +8,6 @@ export const CREATE_LOBBY = "/lobbies/new"; // POST
 export const BROWSE_LOBBIES = "/lobbies"; // GET
 export const LOBBY = "/lobbies/:lobbyId";
 export const GAME = "/games/:gameId";
-export const GAME_SUMMARY = "/games/:gameId/summary";
 export const NOT_FOUND = "/not-found";
 export const ADMIN_PAGE = "/admin";
 export const STATISTICS = "/statistics";
