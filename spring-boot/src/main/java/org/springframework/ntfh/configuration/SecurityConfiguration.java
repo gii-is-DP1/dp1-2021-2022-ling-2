@@ -1,9 +1,7 @@
 package org.springframework.ntfh.configuration;
 
 import java.security.SecureRandom;
-
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Update user's profile
 				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin")
 				// Update user's current character
-				.antMatchers(HttpMethod.PUT, "/users/character").hasAuthority("user")
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/character/{characterId}").hasAuthority("user")
 				// Everyone can see a user's profile
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll()
 				// An admin can delete a user
@@ -65,6 +63,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Allow to request unregistered user credentials
 				.antMatchers(HttpMethod.POST, "/unregistered-users").permitAll()
 				// LOBBY ENDPOINTS
+				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
+				.antMatchers(HttpMethod.POST, "/lobbies").hasAuthority("user") // Allow users to create new lobbies
+				.antMatchers(HttpMethod.GET, "/lobbies/count").permitAll() // Enables to show how many of the elements
+				.antMatchers(HttpMethod.GET, "/lobbies/{lobbyId}").permitAll() // Allow everyone to see a lobby status
 				.antMatchers(HttpMethod.PUT, "/lobbies/{lobbyId}").hasAuthority("user") // Update lobby
 				.antMatchers(HttpMethod.POST, "/lobbies/{lobbyId}/join").hasAuthority("user") // Join a lobby
 				.antMatchers(HttpMethod.DELETE, "/lobbies/{lobbyId}/remove/{username}").hasAuthority("user")
@@ -72,7 +74,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
 				.antMatchers(HttpMethod.POST, "/games").hasAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
-				.antMatchers(HttpMethod.GET, "/games/history").hasAuthority("admin") // Allow admins to see past games
+				// Allow admins to see past games
+				.antMatchers(HttpMethod.GET, "/games/history").hasAnyAuthority("admin", "user")
 				.antMatchers(HttpMethod.GET, "/games/history/count").permitAll() // Allow everyone to see past games
 				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
 				.antMatchers(HttpMethod.PUT, "/games/{gameId}").hasAuthority("user") // Allow users to update a game
