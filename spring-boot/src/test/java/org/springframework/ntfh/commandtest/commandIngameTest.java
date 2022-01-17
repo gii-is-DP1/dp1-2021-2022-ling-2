@@ -153,7 +153,7 @@ public class CommandIngameTest {
         new ChangeEnemyCommand(ranger, changedEnemy).execute();
         List<EnemyIngame> currentEnemiesFighting = gameTester.getEnemiesFighting();
 
-        assertThat(currentEnemiesFighting).doesNotContain(changedEnemy);
+        assertThat(currentEnemiesFighting).isNotEmpty().doesNotContain(changedEnemy);
     }
 
     @Test
