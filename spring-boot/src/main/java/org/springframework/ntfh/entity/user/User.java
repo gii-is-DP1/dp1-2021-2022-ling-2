@@ -20,10 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.ntfh.entity.character.Character;
-import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.game.Game;
 
 import org.hibernate.envers.Audited;
 
@@ -59,21 +58,13 @@ public class User {
 
 	// TODO check if this is making some sense
 	@ManyToOne
-	@JoinColumn(name = "lobby")
-	@JsonIgnoreProperties({"users", "host", "leader"})
-	private Lobby lobby; // lobby where the user is currently in
+	@JoinColumn(name = "game")
+	@JsonIgnoreProperties({"players", "winner", "leader"})
+	private Game game;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "player")
-	private Player player; // Current player
-
-	@ManyToOne
-	@JoinColumn(name = "character")
-	private Character character;
-	// Character that the user has currently selected. Will be set during a lobby,
-	// and will stay the same during the entire game he/she is playing. Useful later
-	// for social interactions (your friends can see the character you are playing
-	// in your current game)
+	private Player player;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnoreProperties({"user"})
