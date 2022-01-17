@@ -31,4 +31,5 @@ public class UnregisteredUserController {
         UnregisteredUser unregisteredUser = unregisteredUserService.create();
         return new ResponseEntity<>(unregisteredUser, HttpStatus.OK);
     }
+    
 }

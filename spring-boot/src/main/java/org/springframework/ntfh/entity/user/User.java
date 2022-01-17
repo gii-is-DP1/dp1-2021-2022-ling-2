@@ -57,7 +57,8 @@ public class User {
 	@Column(columnDefinition = "boolean default true")
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
 
-	@ManyToOne
+	// TODO check if this is making some sense
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH })
 	@JoinColumn(name = "lobby")
 	@JsonIgnoreProperties({ "users", "host", "leader" })
 	private Lobby lobby; // lobby where the user is currently in
