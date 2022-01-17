@@ -7,7 +7,7 @@ import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import { GameHistory } from "../interfaces/GameHistory";
+import { Game } from "../interfaces/Game";
 import { Player } from "../interfaces/Player";
 import { User } from "../interfaces/User";
 
@@ -22,7 +22,7 @@ export default function Profile() {
   const { userToken } = useContext(userContext);
   const loggedUser = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState<User | null>(null);
-  const [userGamesHistory, setUserGamesHistory] = useState<GameHistory[]>([]);
+  const [userGamesHistory, setUserGamesHistory] = useState<Game[]>([]);
   const [matchesWon, setMatchesWon] = useState(1402);
   const [fastestMatch, setFastestMatch] = useState("26m54s");
   const [longestMatch, setLongestMatch] = useState("1h48m");
@@ -32,7 +32,7 @@ export default function Profile() {
       try {
         // TODO remove auth if not needed
         const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get(`gameHistory`, { headers });
+        const response = await axios.get(`games/history`, { headers });
         const gamesPlayedByUser = filterByUsername(response.data);
         setUserGamesHistory(gamesPlayedByUser);
       } catch (error: any) {
@@ -67,10 +67,8 @@ export default function Profile() {
   };
 
   // TODO replace with a backend filter
-  const filterByUsername = (_list: GameHistory[]) =>
-    _list.filter((gameHistory) =>
-      userInPlayerList(gameHistory.game.players, loggedUser.username)
-    );
+  const filterByUsername = (_list: Game[]) =>
+    _list.filter((game) => userInPlayerList(game.players, loggedUser.username));
 
   return (
     <>
