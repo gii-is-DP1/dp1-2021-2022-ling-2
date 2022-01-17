@@ -16,4 +16,8 @@ public class GameHistoryService {
     public Integer count() {
         return (int) gameHistoryRepository.count();
     }
+
+    public Iterable<GameHistory> findByGamePlayersContaining(String username) {
+        return gameHistoryRepository.findByGamePlayersContaining(username);
+    }
 }
