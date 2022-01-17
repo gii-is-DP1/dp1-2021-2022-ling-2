@@ -35,8 +35,8 @@ public class CharacterDeserializer extends JsonDeserializer<Character> {
         JsonNode node = oc.readTree(jp);
         DeserializationConfig config = ctxt.getConfig();
         JavaType type = TypeFactory.defaultInstance().constructType(Character.class);
-        JsonDeserializer<Object> defaultDeserializer = BeanDeserializerFactory.instance.buildBeanDeserializer(ctxt,
-                type, config.introspect(type));
+        JsonDeserializer<Object> defaultDeserializer =
+                BeanDeserializerFactory.instance.buildBeanDeserializer(ctxt, type, config.introspect(type));
 
         try {
             if (defaultDeserializer instanceof ResolvableDeserializer) {
@@ -57,7 +57,7 @@ public class CharacterDeserializer extends JsonDeserializer<Character> {
             // If the id is present, deserialize by it
             if (node.getNodeType() == JsonNodeType.NUMBER) {
                 Integer characterId = node.intValue();
-                return characterService.findCharacterById(characterId).get();
+                return characterService.findById(characterId);
             } else {
                 throw new IllegalArgumentException("Cannot deserialize character");
             }
