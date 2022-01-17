@@ -77,4 +77,7 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	@JsonIgnoreProperties({ "user" })
 	private Set<Authorities> authorities;
+
+	@Version
+	private Integer version;
 }

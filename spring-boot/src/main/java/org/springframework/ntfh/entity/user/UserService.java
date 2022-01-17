@@ -138,6 +138,11 @@ public class UserService {
 		// them in the form, they must stay the same as they were in the database.
 
 		User userInDB = this.findUser(user.getUsername());
+		if (!user.getVersion().equals(userInDB.getVersion())) {
+			throw new DataIntegrityViolationException(
+					"The user is already being modified. Please, refresh and try again");
+		}
+
 		if (user.getEmail() != null) {
 			// If there is a new email, set it on the database
 			userInDB.setEmail(user.getEmail());
