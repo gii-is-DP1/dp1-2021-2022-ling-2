@@ -10,6 +10,7 @@ import java.util.Set;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 // TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
 public class GameServiceTest {
 
     @Autowired
@@ -202,6 +203,8 @@ public class GameServiceTest {
 
     // H7 - E1
     @Test
+    @Disabled
+    // TODO check this in the controller. This is not checked in the service anymore
     public void testCreateFromLobbyNotEnoughPlayers() {
         User user2 = userService.findUser("user2");
         lobbyTester.removeUser(user2);
@@ -249,8 +252,8 @@ public class GameServiceTest {
     // H22 + E1
     @Test
     void testBuyMarketCard_Success() {
-        MarketCardIngame marketCardIngame = marketCardIngameService
-                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame =
+                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(10);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -264,8 +267,8 @@ public class GameServiceTest {
     // H22 - E1
     @Test
     void testBuyMarketCard_Failure() {
-        MarketCardIngame marketCardIngame = marketCardIngameService
-                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame =
+                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(4);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
