@@ -37,22 +37,11 @@ public class GameController {
         return new ResponseEntity<>(games, HttpStatus.OK);
     }
 
-    /**
-     * This endpoint handles the creation of a new game from a lobby
-     * 
-     * @param lobby object with the preferences for the game
-     * @return id of the game so the user can be redirected from the lobby
-     * @author andrsdt
-     */
-    @PostMapping
-    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby) throws IllegalArgumentException {
-
-        if (lobby.getUsers().size() < 2) {
-            throw new IllegalArgumentException("A game must have at least 2 players");
-        }
-
-        Game createdGame = gameService.createFromLobby(lobby);
-        return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
+    @GetMapping("/history")
+    public ResponseEntity<Iterable<Game>> getPastGames() {
+        // TODO implement
+        Iterable<Game> games = gameService.findAll();
+        return new ResponseEntity<>(games, HttpStatus.OK);
     }
 
     @GetMapping("/count")
@@ -68,6 +57,25 @@ public class GameController {
     }
 
     /**
+     * This endpoint handles the creation of a new game from a lobby
+     * 
+     * @param lobby object with the preferences for the game
+     * @return id of the game so the user can be redirected from the lobby
+     * @author andrsdt
+     */
+    @PostMapping
+    public ResponseEntity<Map<String, Integer>> createGame(@RequestBody Lobby lobby)
+            throws IllegalArgumentException {
+
+        if (lobby.getUsers().size() < 2) {
+            throw new IllegalArgumentException("A game must have at least 2 players");
+        }
+
+        Game createdGame = gameService.createFromLobby(lobby);
+        return new ResponseEntity<>(Map.of("gameId", createdGame.getId()), HttpStatus.CREATED);
+    }
+
+    /**
      * This endpoint will receive the petitions of a player to play a card
      * 
      * @author andrsdt
@@ -76,8 +84,8 @@ public class GameController {
      */
     @PostMapping("/{gameId}/ability-cards/{abilityCardIngameId}")
     public ResponseEntity<Game> playCard(@PathVariable("gameId") Integer gameId,
-            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body,
-            @RequestHeader("Authorization") String token) {
+            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId,
+            @RequestBody Map<String, Integer> body, @RequestHeader("Authorization") String token) {
         Integer enemyId = body.get("enemyId");
         gameService.playCard(abilityCardIngameId, enemyId, token);
         Game game = gameService.findGameById(gameId);
