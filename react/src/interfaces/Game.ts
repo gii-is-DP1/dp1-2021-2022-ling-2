@@ -4,18 +4,23 @@ import { Player } from "./Player";
 import { Turn } from "./Turn";
 
 export interface Game {
-  hasFinished: boolean;
   id: number;
+  name: string;
   startTime?: number;
   finishTime?: number;
   hasScenes: boolean;
+  spectatorsAllowed: boolean;
+  maxPlayers: number;
   players: Player[];
   leader: Player;
-  currentTurn?: Turn;
-  duration?: number;
   winner?: Player;
   enemiesInPile: EnemyIngame[];
   enemiesFighting: EnemyIngame[];
   marketCardsInPile: MarketCardIngame[];
   marketCardsForSale: MarketCardIngame[];
+  comments: Comment[];
+  currentTurn?: Turn;
+  duration?: number;
+  hasStarted: boolean;
+  hasFinished: boolean;
 }
