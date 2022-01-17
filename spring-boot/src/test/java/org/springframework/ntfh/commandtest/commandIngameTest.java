@@ -184,6 +184,7 @@ public class CommandIngameTest {
 
     @Test
     void testDiscardCommand(){
+        //Regular work of the command
         turnService.initializeFromGame(gameTester);
         Integer initialDiscardedCards = ranger.getDiscardPile().size();
         new DiscardCommand(1, ranger).execute();
@@ -191,10 +192,20 @@ public class CommandIngameTest {
 
         assertThat(initialDiscardedCards).isZero();
         assertThat(discardedCards).isEqualTo(1);
+
+        //In case of a huge hit we check that if the damage overflows the cards on pile still deals the dmg on the refill, 2 adds wound
+        new DiscardCommand(17, ranger).execute();
+        Integer abilityPileSize = ranger.getAbilityPile().size();
+        Integer discardPileSize = ranger.getDiscardPile().size();
+
+        assertThat(abilityPileSize).isNotZero();
+        assertThat(discardPileSize).isNotZero();
+        assertThat(ranger.getWounds()).isNotZero();
     }
 
     @Test
     void testDrawCommand(){
+        //regular work of the command
         turnService.initializeFromGame(gameTester);
         Integer initialHand = ranger.getHand().size();
         new DrawCommand(1, ranger).execute();
@@ -202,6 +213,14 @@ public class CommandIngameTest {
 
         assertThat(initialHand).isEqualTo(4);
         assertThat(currentHand).isEqualTo(5);
+
+        //drawing more cards than there are currently on the ability pile should add a wound and then draw the rest
+
+        new DiscardCommand(8, ranger).execute();
+        new DrawCommand(8, ranger).execute();
+
+        assertThat(ranger.getDiscardPile().size()).isZero(); //the discard pile has been reabsorbed
+        assertThat(ranger.getWounds()).isNotZero(); // the wound has been added
     }
 
 
