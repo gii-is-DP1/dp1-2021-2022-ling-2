@@ -26,6 +26,7 @@ public class CharacterServiceTest {
     @Test
     public void testfindById() {
         Character tester = this.characterService.findCharacterById(2).get();
+        
         assertThat(tester.getCharacterTypeEnum()).isEqualTo(CharacterTypeEnum.RANGER);
         assertThat(tester.getCharacterGenderEnum()).isEqualTo(CharacterGenderEnum.FEMALE);
     }
