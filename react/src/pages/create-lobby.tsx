@@ -37,12 +37,12 @@ export default function CreateLobby() {
         host: loggedUser.username,
         players: [loggedUser.username],
       };
-      const response = await axios.post("/lobbies", payload, {
+      const response = await axios.post("/games/new", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
-      const lobbyId = response.data.lobbyId;
+      const gameId = response.data.gameId;
       toast.success("Lobby created successfully");
-      history.replace(ROUTES.LOBBY.replace(":lobbyId", lobbyId));
+      history.replace(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error: any) {
       toast.error(error?.message);
     }
