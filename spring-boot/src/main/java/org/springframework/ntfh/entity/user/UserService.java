@@ -1,15 +1,14 @@
 /*
  * Copyright 2002-2013 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package org.springframework.ntfh.entity.user;
 
@@ -61,15 +60,12 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User createUser(User user)
-			throws DataIntegrityViolationException, IllegalArgumentException {
+	public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
 		if (userRepository.existsByEmail(user.getEmail()))
-			throw new IllegalArgumentException(
-					"There is already a user registered with the email provided");
+			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
 		if (userRepository.existsByUsername(user.getUsername()))
-			throw new IllegalArgumentException(
-					"There is already a user registered with the username provided");
+			throw new IllegalArgumentException("There is already a user registered with the username provided");
 
 		// encrypt the password using bcrypt
 		String encodedParamPassword = passwordEncoder.encode(user.getPassword());
@@ -119,19 +115,17 @@ public class UserService {
 	 * @throws DataIntegrityViolationException
 	 */
 	@Transactional
-	public User updateUser(User user, String token) throws DataAccessException,
-			DataIntegrityViolationException, NonMatchingTokenException, IllegalArgumentException {
+	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
+			NonMatchingTokenException, IllegalArgumentException {
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
 		if (!sentBySameUser && !sentByAdmin) {
 			log.warn("User " + user.getUsername() + " unauthorized update by token " + token);
-			throw new NonMatchingTokenException(
-					"A user's profile can only be updated by him/herself or by an admin");
+			throw new NonMatchingTokenException("A user's profile can only be updated by him/herself or by an admin");
 		}
 
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
-		if (userWithSameEmail.isPresent()
-				&& !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
+		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
 			throw new DataIntegrityViolationException("This email is already in use") {};
 		}
 
@@ -161,8 +155,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public String loginUser(User user)
-			throws DataAccessException, IllegalArgumentException, BannedUserException {
+	public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
 		User userInDB = this.findUser(user.getUsername());
 		if (!userInDB.getEnabled()) {
 			throw new BannedUserException("You have been banned") {};
@@ -176,11 +169,11 @@ public class UserService {
 	}
 
 	@Transactional
+	// ! TODO move this to playerService since Character is now a Player attribute
 	public User setCharacter(String username, Character character) throws DataAccessException {
 		User userInDB = this.findUser(username);
-		userInDB.setCharacter(character);
+		// userInDB.setCharacter(character);
 		return userInDB;
-
 	}
 
 	@Transactional
@@ -193,11 +186,9 @@ public class UserService {
 
 	@Transactional
 	public void deleteUser(User user) {
-		if (user.getLobby() != null && user.getLobby().getHasStarted()) {
-			log.error("User " + user.getUsername()
-					+ " was attempted to be deleted while in lobby/game");
-			throw new IllegalStateException(
-					"You cannot delete a user while he/she is playing a game");
+		if (user.getGame() != null && user.getGame().getHasStarted()) {
+			log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
+			throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
 		}
 		this.userRepository.deleteById(user.getUsername());
 		log.info("User " + user.getUsername() + " deleted");

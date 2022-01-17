@@ -53,14 +53,12 @@ public class PlayerService {
     public Player findById(Integer playerId) throws DataAccessException {
         Optional<Player> player = playerRepository.findById(playerId);
         if (!player.isPresent())
-            throw new DataAccessException("Player with id " + playerId + " was not found") {
-            };
+            throw new DataAccessException("Player with id " + playerId + " was not found") {};
         return player.get();
     }
 
     /**
-     * Creates a new player with the given user information and lobby that the
-     * player will be created from.
+     * Creates a new player with the given user information and lobby that the player will be created from.
      * 
      * @param user
      * @param lobby
@@ -76,11 +74,11 @@ public class PlayerService {
         player.setGuard(0);
         player.setTurnOrder(turnOrder);
 
-        if (user.getCharacter() == null) {
-            throw new IllegalArgumentException("User " + user.getUsername() + " has not selected a character");
-        }
+        // ! handle this before starting a game
+        // if (user.getCharacter() == null) {
+        // throw new IllegalArgumentException("User " + user.getUsername() + " has not selected a character");
+        // }
 
-        player.setCharacterType(user.getCharacter());
         player.setUser(user);
         Player playerDB = playerRepository.save(player);
 

@@ -44,8 +44,7 @@ public class LobbyService {
     }
 
     public Lobby findLobby(Integer lobbyId) {
-        return lobbyRepository.findById(lobbyId)
-                .orElseThrow(() -> new DataAccessException("Lobby not found") {});
+        return lobbyRepository.findById(lobbyId).orElseThrow(() -> new DataAccessException("Lobby not found") {});
     }
 
     @Transactional
@@ -61,8 +60,7 @@ public class LobbyService {
             throw new DataAccessException("The game has already started") {};
 
         lobby.getUsers().forEach(user -> {
-            user.setLobby(null);
-            user.setCharacter(null);
+            user.setGame(null);
         });
         this.lobbyRepository.deleteById(lobby.getId());
     }
@@ -89,28 +87,24 @@ public class LobbyService {
 
         String usernameFromToken = TokenUtils.usernameFromToken(token);
         if (!usernameFromRequest.equals(usernameFromToken))
-            throw new IllegalArgumentException(
-                    "The Token username and the request one does not coindice") {};
+            throw new IllegalArgumentException("The Token username and the request one does not coincide") {};
 
-        Boolean userInLobby = lobby.getUsers().stream()
-                .anyMatch(u -> u.getUsername().equals(usernameFromRequest));
+        Boolean userInLobby = lobby.getUsers().stream().anyMatch(u -> u.getUsername().equals(usernameFromRequest));
         if (userInLobby)
             throw new IllegalArgumentException("The user is already in the lobby") {};
 
         User user = userService.findUser(usernameFromRequest);
-        if (user.getLobby() != null)
-            throw new UserAlreadyInLobbyException(String
-                    .format("The user is already in lobby \"%s\"", user.getLobby().getName())) {};
 
-        user.setLobby(lobby);
-        user.setCharacter(null);
+        // ! TODO adapt this to new model
+        // user.setLobby(lobby);
+        // user.setCharacter(null);
         lobby.addUser(user);
         return lobbyRepository.save(lobby);
     }
 
     /**
-     * Removes the given player from the list of players in the lobby. Either because he/she left or
-     * was kicked by the host
+     * Removes the given player from the list of players in the lobby. Either because he/she left or was kicked by the
+     * host
      * 
      * @author andrsdt
      * @param lobbyId
@@ -126,7 +120,7 @@ public class LobbyService {
             throw new DataAccessException("The host cannot leave the lobby") {};
 
         lobby.removeUser(user);
-        user.setLobby(null);
+        user.setGame(null);
 
         this.updateLobby(lobby);
         return true;

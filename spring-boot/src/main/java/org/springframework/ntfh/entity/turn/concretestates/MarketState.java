@@ -72,7 +72,7 @@ public class MarketState implements TurnState {
         MarketCardIngame marketCardIngame = marketCardIngameService.findById(marketCardIngameId);
 
         Set<ProficiencyTypeEnum> marketCardProficiencies = marketCardIngame.getMarketCard().getProficiencies();
-        Set<ProficiencyTypeEnum> playerProficiencies = player.getCharacterType().getProficiencies().stream()
+        Set<ProficiencyTypeEnum> playerProficiencies = player.getCharacter().getProficiencies().stream()
                 .map(Proficiency::getProficiencyTypeEnum).collect(Collectors.toSet());
 
         playerProficiencies.retainAll(marketCardProficiencies); // Intersection of both sets
@@ -88,9 +88,8 @@ public class MarketState implements TurnState {
         }
 
         player.setGold(player.getGold() - price);
-        AbilityCardIngame marketCardAsAbilityCard = abilityCardIngameService.createFromMarketCard(
-                marketCardIngame.getMarketCard(),
-                player);
+        AbilityCardIngame marketCardAsAbilityCard =
+                abilityCardIngameService.createFromMarketCard(marketCardIngame.getMarketCard(), player);
         player.getHand().add(marketCardAsAbilityCard);
 
         // Remove the card from the For Sale pile and it from the database

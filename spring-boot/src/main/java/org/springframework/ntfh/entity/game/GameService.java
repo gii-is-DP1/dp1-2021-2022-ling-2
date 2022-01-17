@@ -105,13 +105,12 @@ public class GameService {
         // Once the game is in the database, we update the lobby with a FK to it
         lobby.setGame(game);
         lobbyService.save(lobby);
-        log.info(
-                "Game with id " + game.getId() + " was created with players: " + game.getPlayers());
+        log.info("Game with id " + game.getId() + " was created with players: " + game.getPlayers());
         return savedGame;
     }
 
     @Transactional
-    public Game save(@Valid Game game) {
+    public Game save(Game game) {
         // Return the game created after saving it
         return gameRepository.save(game);
     }
@@ -161,9 +160,12 @@ public class GameService {
         game.setFinishTime(Timestamp.from(Instant.now()));
         game.getPlayers().forEach(p -> {
             User user = p.getUser();
-            user.setLobby(null);
             user.setPlayer(null);
-            user.setCharacter(null);
         });
+    }
+
+    public Game createLobby(Game game) {
+        // ! set state to lobby
+        return this.save(game);
     }
 }
