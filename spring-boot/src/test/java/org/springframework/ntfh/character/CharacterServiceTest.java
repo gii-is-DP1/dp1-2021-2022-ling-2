@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
 public class CharacterServiceTest {
 
     @Autowired
@@ -25,7 +25,7 @@ public class CharacterServiceTest {
 
     @Test
     public void testfindById() {
-        Character tester = this.characterService.findCharacterById(2).get();
+        Character tester = this.characterService.findById(2);
         assertThat(tester.getCharacterTypeEnum()).isEqualTo(CharacterTypeEnum.RANGER);
         assertThat(tester.getCharacterGenderEnum()).isEqualTo(CharacterGenderEnum.FEMALE);
     }

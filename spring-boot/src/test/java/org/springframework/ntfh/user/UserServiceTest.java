@@ -2,9 +2,8 @@ package org.springframework.ntfh.user;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Set;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
@@ -32,7 +32,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
 
 public class UserServiceTest {
 
@@ -56,11 +56,6 @@ public class UserServiceTest {
         tester.setEmail("antonio@mail.com");
         tester.setAuthorities(userAuthority);
         currentUser = userService.createUser(tester);
-    }
-
-    @AfterEach
-    public void deleteUser() {
-        userService.deleteUser(currentUser);
     }
 
     // H3 + E1
@@ -94,6 +89,14 @@ public class UserServiceTest {
         tester.setPassword(newPassword);
         User updatedTester = userService.updateUser(tester, testerToken);
         assertTrue(passwordEncoder.matches(newPassword, updatedTester.getPassword()));
+    }
+
+    @Test
+    public void testDeleteUser() {
+        User tester = currentUser;
+        String username = tester.getUsername();
+        userService.deleteUser(tester);
+        assertThrows(DataAccessException.class, () -> userService.findUser(username));
     }
 
 }
