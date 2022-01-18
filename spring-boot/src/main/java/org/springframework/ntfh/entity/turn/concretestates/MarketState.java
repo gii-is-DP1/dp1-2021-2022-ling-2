@@ -46,8 +46,7 @@ public class MarketState implements TurnState {
         // and then a new turn will be created
         Player currentPlayer = game.getCurrentTurn().getPlayer();
         game.getEnemiesFighting().forEach(enemy -> {
-            Integer damage = enemy.getCurrentEndurance();
-            new ReceiveDamageCommand(damage, enemy, currentPlayer).execute();
+            new ReceiveDamageCommand(enemy, currentPlayer).execute();
         });
 
         turnService.createNextTurn(game);
