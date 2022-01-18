@@ -4,6 +4,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ntfh.entity.turn.Turn;
+import org.springframework.ntfh.exceptions.NonMatchingTokenException;
+import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -111,7 +113,10 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public Game joinGame(@PathVariable("gameId") Integer gameId, @PathVariable("username") String username,
             @RequestHeader("Authorization") String token) {
-        Game game = gameService.joinGame(gameId, username, token);
+        if (!TokenUtils.usernameCoincidesWithToken(username, token)) {
+            throw new NonMatchingTokenException("The user who is trying to join the game is not the one logged in");
+        }
+        Game game = gameService.joinGame(gameId, username);
         log.info("User " + username + " joined game with id " + gameId);
         return game;
     }
@@ -127,7 +132,7 @@ public class GameController {
 
     @PostMapping("{gameId}/start")
     @ResponseStatus(HttpStatus.OK)
-    public Game startGame(@PathVariable("gameId") Integer gameId) {
+    public Game startGame(@PathVariable("gameId") Integer gameId, @RequestHeader("Authorization") String token) {
         Game game = gameService.findGameById(gameId);
         if (game.getPlayers().size() < 2) {
             throw new IllegalArgumentException("Not enough players to start the game");
@@ -146,6 +151,7 @@ public class GameController {
     public Game playCard(@PathVariable("gameId") Integer gameId,
             @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body,
             @RequestHeader("Authorization") String token) {
+        // TODO refactor: enemyId on URL instead of in body
         Integer enemyId = body.get("enemyId");
         gameService.playCard(abilityCardIngameId, enemyId, token);
         return gameService.findGameById(gameId);
