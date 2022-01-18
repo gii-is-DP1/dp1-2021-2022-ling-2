@@ -491,9 +491,19 @@ public class CommandIngameTest {
 
     @Test
     void testRecoverCommand() {
+
+        //recover one card from the discard pile to the draw pile
+
         turnService.initializeFromGame(gameTester);
 
         new DiscardCommand(1, ranger).execute();
+        new RecoverCommand(ranger).execute();
+
+        assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
+        assertThat(ranger.getDiscardPile().size()).isZero();
+
+        //try to recover one card from an empty discard pile to the draw pile
+
         new RecoverCommand(ranger).execute();
 
         assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
