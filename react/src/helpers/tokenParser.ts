@@ -9,7 +9,8 @@ import { TokenUser } from "../interfaces/TokenUser";
 const tokenParser = (context: { userToken: string }): TokenUser => {
   // TODO rename to parseToken
   const token: string = context.userToken;
-  if (!token) return { username: "", password: "", authorities: [] };
+  if (!token || token === "")
+    return { username: "", password: "", authorities: [] };
   const parsedToken: any = jwtDecode(token);
   const data = parsedToken.data;
   data.authorities = parsedToken.authorities;
