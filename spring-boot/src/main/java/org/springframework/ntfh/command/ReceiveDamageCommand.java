@@ -11,14 +11,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ReceiveDamageCommand implements Command {
 
-    private Integer damage;
-
     private EnemyIngame enemyFrom;
 
     private Player playerTo;
 
     @Override
     public void execute() {
+        Integer damage = enemyFrom.getCurrentEndurance();
         EnemyModifierType enemyModifier = enemyFrom.getEnemy().getEnemyModifierType();
         CharacterTypeEnum characterClass = playerTo.getCharacterTypeEnum();
         if (enemyFrom.getRestrained())
