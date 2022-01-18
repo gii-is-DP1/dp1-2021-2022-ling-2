@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = LobbyController.class)
-public class LobbyControllerTest {
+class LobbyControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
