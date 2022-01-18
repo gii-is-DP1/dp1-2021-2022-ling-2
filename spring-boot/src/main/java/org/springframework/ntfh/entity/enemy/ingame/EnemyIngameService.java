@@ -64,8 +64,6 @@ public class EnemyIngameService {
      * @param game that the horde enemies will be created for
      * @return
      */
-    // TODO should this be transactional? It's called from a transactional method
-    @Transactional
     private void initializeHordeEnemies(Game game) {
         Integer numPlayers = game.getPlayers().size();
         Map<Integer, Integer> numEnemies = Map.of(
@@ -86,8 +84,6 @@ public class EnemyIngameService {
 
     }
 
-    // TODO should this be transactional? It's called from a transactional method
-    @Transactional
     private void initializeWarlord(Game game) {
         List<Enemy> allWarlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
         Collections.shuffle(allWarlords);
