@@ -12,12 +12,12 @@ import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.State;
 import org.springframework.ntfh.util.TokenUtils;
-import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
+@State
 public class OngoingState implements GameState {
 
     @Autowired
@@ -44,12 +44,12 @@ public class OngoingState implements GameState {
     }
 
     @Override
-    public Game joinGame(Integer gameId, String username, String token) {
+    public Game joinGame(Integer gameId, String username) {
         throw new IllegalStateException("You can't join a game that has already started");
     }
 
     @Override
-    public Game removePlayer(Integer gameId, String username, String token) {
+    public Game removePlayer(Integer gameId, String username) {
         throw new IllegalStateException("A player can't be removed after the game has started");
     }
 

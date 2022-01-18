@@ -6,9 +6,9 @@ import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.PlayerService;
-import org.springframework.stereotype.Component;
+import org.springframework.ntfh.util.State;
 
-@Component
+@State
 public class FinishedState implements GameState {
 
     @Autowired
@@ -39,13 +39,13 @@ public class FinishedState implements GameState {
     }
 
     @Override
-    public Game joinGame(Integer gameId, String username, String token) {
+    public Game joinGame(Integer gameId, String username) {
         throw new IllegalStateException("You can't join a finished game");
 
     }
 
     @Override
-    public Game removePlayer(Integer gameId, String username, String token) {
+    public Game removePlayer(Integer gameId, String username) {
         throw new IllegalStateException("You can't leave from a finished game");
 
     }

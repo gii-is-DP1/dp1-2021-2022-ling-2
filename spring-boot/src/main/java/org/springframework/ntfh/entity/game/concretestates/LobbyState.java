@@ -12,12 +12,9 @@ import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
-import org.springframework.ntfh.util.TokenUtils;
-import org.springframework.stereotype.Component;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.ntfh.util.State;
 
-@Slf4j
-@Component
+@State
 public class LobbyState implements GameState {
 
     @Autowired
@@ -50,7 +47,7 @@ public class LobbyState implements GameState {
     }
 
     @Override
-    public Game joinGame(Integer gameId, String username, String token) {
+    public Game joinGame(Integer gameId, String username) {
         // TODO "game" here is redundant, can't we just pass it from the gameService?
         Game game = gameService.findGameById(gameId);
         if (game.getPlayers().stream().anyMatch(p -> p.getUser().getUsername().equals(username))) {
@@ -59,10 +56,6 @@ public class LobbyState implements GameState {
 
         if (game.getMaxPlayers().equals(game.getPlayers().size()))
             throw new MaximumLobbyCapacityException("The lobby is full") {};
-
-        String usernameFromToken = TokenUtils.usernameFromToken(token);
-        if (!username.equals(usernameFromToken))
-            throw new IllegalArgumentException("The Token username and the request one do not coincide") {};
 
         // TODO get this via a converter before the controller
         User user = userService.findUser(username);
@@ -84,7 +77,7 @@ public class LobbyState implements GameState {
     }
 
     @Override
-    public Game removePlayer(Integer gameId, String username, String token) {
+    public Game removePlayer(Integer gameId, String username) {
         Game game = gameService.findGameById(gameId);
         User user = userService.findUser(username);
         Player player = user.getPlayer();

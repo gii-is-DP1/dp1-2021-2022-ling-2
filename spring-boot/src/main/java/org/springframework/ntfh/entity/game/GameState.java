@@ -8,9 +8,9 @@ public interface GameState {
 
     public void deleteGame(Integer gameId);
 
-    public Game joinGame(Integer gameId, String username, String token);
+    public Game joinGame(Integer gameId, String username);
 
-    public Game removePlayer(Integer gameId, String username, String token);
+    public Game removePlayer(Integer gameId, String username);
 
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token);
 

@@ -2,7 +2,6 @@ package org.springframework.ntfh.entity.turn.concretestates;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.command.ReceiveDamageCommand;
 import org.springframework.ntfh.entity.game.Game;
@@ -18,10 +17,10 @@ import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.State;
 import org.springframework.ntfh.util.TokenUtils;
-import org.springframework.stereotype.Component;
 
-@Component
+@State
 public class MarketState implements TurnState {
 
     @Autowired
@@ -46,8 +45,10 @@ public class MarketState implements TurnState {
         // After the market state, the player will receive damage from the horde
         // and then a new turn will be created
         Player currentPlayer = game.getCurrentTurn().getPlayer();
-        game.getEnemiesFighting().forEach(enemy ->
-            new ReceiveDamageCommand(enemy, currentPlayer).execute());
+        game.getEnemiesFighting().forEach(enemy -> {
+            Integer damage = enemy.getCurrentEndurance();
+            new ReceiveDamageCommand(damage, enemy, currentPlayer).execute();
+        });
 
         turnService.createNextTurn(game);
 
