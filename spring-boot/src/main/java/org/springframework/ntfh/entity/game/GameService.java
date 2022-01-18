@@ -42,6 +42,8 @@ public class GameService {
     @Autowired
     private TurnService turnService;
 
+    String gameLogError = "Game with id ";
+
     public Integer gameCount() {
         return (int) gameRepository.count();
     }
@@ -53,8 +55,8 @@ public class GameService {
     public Game findGameById(int id) throws DataAccessException {
         Optional<Game> game = gameRepository.findById(id);
         if (!game.isPresent()) {
-            log.error("Game with id " + id + " was not found");
-            throw new DataAccessException("Game with id " + id + " was not found") {};
+            log.error(gameLogError + id + " was not found");
+            throw new DataAccessException(gameLogError + id + " was not found") {};
         }
         return game.get();
     }
@@ -106,7 +108,7 @@ public class GameService {
         lobby.setGame(game);
         lobbyService.save(lobby);
         log.info(
-                "Game with id " + game.getId() + " was created with players: " + game.getPlayers());
+            gameLogError + game.getId() + " was created with players: " + game.getPlayers());
         return savedGame;
     }
 
