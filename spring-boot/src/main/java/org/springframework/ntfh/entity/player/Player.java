@@ -74,7 +74,9 @@ public class Player extends BaseEntity {
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
     @ManyToOne
-    @JsonIgnore
+    @JsonIgnoreProperties({"startTime", "finishTime", "hasScenes", "spectatorsAllowed", "maxPlayers", "players",
+            "leader", "winner", "turns", "enemiesInPile", "enemiesFighting", "marketCardsInPile", "marketCardsForSale",
+            "comments", "currentTurn"})
     private Game game;
 
     @Transient
