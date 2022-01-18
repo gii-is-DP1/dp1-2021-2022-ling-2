@@ -53,7 +53,7 @@ public class AchievementService {
         }
 
         Optional<Achievement> achievementFromRepo = achievementRepository.findById(achievement.getId());
-        achievement.setType(achievementFromRepo.get().getType());
+        if(achievementFromRepo.isPresent()) achievement.setType(achievementFromRepo.get().getType());
         log.info("Admin with token " + token + " has updated achievement with ID: " + achievement.getId());
         return achievementRepository.save(achievement);
     }
