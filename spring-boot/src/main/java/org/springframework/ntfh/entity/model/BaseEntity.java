@@ -12,10 +12,13 @@
  */
 package org.springframework.ntfh.entity.model;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -30,6 +33,10 @@ public class BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Integer id;
+
+	@Version
+	@Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
+	private Integer version;
 
 	public Integer getId() {
 		return id;
