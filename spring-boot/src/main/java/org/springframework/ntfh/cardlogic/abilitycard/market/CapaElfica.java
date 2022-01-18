@@ -2,6 +2,7 @@ package org.springframework.ntfh.cardlogic.abilitycard.market;
 
 import org.springframework.ntfh.command.RestrainCommand;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.player.Player;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CapaElfica {
-    public void execute(EnemyIngame targetedEnemy) {
+    public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new RestrainCommand(targetedEnemy).execute();
     }
 }

@@ -9,10 +9,7 @@ import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
 import org.springframework.stereotype.Component;
 
 /**
- * Daño: 2
- * Modificador: -
- * Si el heroe tiene PROFICIENCY DEXTERITY, recupera esta carta después de
- * jugarla
+ * Daño: 2 Modificador: - Si el heroe tiene PROFICIENCY DEXTERITY, recupera esta carta después de jugarla
  * 
  * @author Pablosancval
  */
@@ -21,7 +18,7 @@ public class DagaElfica {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy) {
         new DealDamageCommand(2, playerFrom, targetedEnemy).execute();
 
-        Boolean hasDexterity = playerFrom.getCharacterType().getProficiencies().stream()
+        Boolean hasDexterity = playerFrom.getCharacter().getProficiencies().stream()
                 .anyMatch(proficiency -> proficiency.getProficiencyTypeEnum().equals(ProficiencyTypeEnum.DEXTERITY));
 
         if (Boolean.TRUE.equals(hasDexterity))
