@@ -1,6 +1,6 @@
 package org.springframework.ntfh.playablecard.abilitycard;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +18,7 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardTypeEnum;
+import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
@@ -46,11 +47,14 @@ public class AbilityCardIngameServiceTest {
     @Autowired
     private MarketCardService marketCardService;
 
-    private AbilityCardIngame cardTester;
+    protected AbilityCardIngame cardTester;
+
+    protected Player playerTester;
 
     @BeforeEach
     void init() {
-        cardTester = abilityCardIngameService.createFromAbilityCard(abilityCardService.findById(44), gameService.findGameById(1).getLeader());
+        playerTester = gameService.findGameById(1).getLeader();
+        cardTester = abilityCardIngameService.createFromAbilityCard(abilityCardService.findById(44), playerTester);
     }
 
     @AfterEach
@@ -64,12 +68,14 @@ public class AbilityCardIngameServiceTest {
     @Test
     void testFindById() {
         AbilityCardIngame testerCard = abilityCardIngameService.findById(cardTester.getId());
-        assertEquals(AbilityCardTypeEnum.RECONSTITUCION, testerCard.getAbilityCardTypeEnum());
+
+        assertThat(testerCard.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
     }
 
     @Test
     void testDelete() {
         abilityCardIngameService.delete(cardTester);
+
         assertThrows(Exception.class, () -> {abilityCardIngameService.findById(cardTester.getId());});
     }
 
@@ -77,33 +83,40 @@ public class AbilityCardIngameServiceTest {
     void testInitializeFromGame() {
         // Because of populateWithInitialCards() is an auxiliary private method from initializeFromGame(), is tested in the test method of the primary method
         abilityCardIngameService.initializeFromGame(gameService.findGameById(1));
-        assertEquals(4, gameService.findGameById(1).getLeader().getHand().size());
-        assertEquals(11, gameService.findGameById(1).getLeader().getAbilityPile().size());
+        Integer HAND_SIZE = 4;
+        Integer DECK_SIZE = 11;
+
+        assertThat(playerTester.getHand().size()).isEqualTo(HAND_SIZE);
+        assertThat(playerTester.getAbilityPile().size()).isEqualTo(DECK_SIZE);
     }
 
 
     @Test
     void testCreateFromAbilityCard() {
         // TestMethod made in the init()
-        assertEquals(AbilityCardTypeEnum.RECONSTITUCION, cardTester.getAbilityCardTypeEnum());
+        assertThat(cardTester.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
     }
 
     @Test
     void testCreateFromMarketCard() {
-        cardTester = abilityCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameService.findGameById(1).getLeader());
-        assertEquals(MarketCardTypeEnum.POCION_CURATIVA.toString(), cardTester.getAbilityCardTypeEnum().toString());
+        cardTester = abilityCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), playerTester);
+
+        assertThat(cardTester.getAbilityCardTypeEnum()).hasToString(MarketCardTypeEnum.POCION_CURATIVA.toString());
     }
 
     // H20 + E1
     @Test
     void testRefillHandWithCards() {
         turnService.initializeFromGame(gameService.findGameById(1));
-        new HandToAbilityPileCommand(gameService.findGameById(1).getLeader(), gameService.findGameById(1).getLeader().getHand().get(0).getAbilityCardTypeEnum())
-                .execute();
-        assertEquals(3, gameService.findGameById(1).getLeader().getHand().size());
+        new HandToAbilityPileCommand(playerTester, gameService.findGameById(1).getLeader().getHand().get(0).getAbilityCardTypeEnum()).execute();
+        Integer HAND_AFTER_LOSING_ONE_CARD = 3;
+        Integer HAND_AFTER_REFILL = 4;
+        
+        assertThat(gameService.findGameById(1).getLeader().getHand().size()).isEqualTo(HAND_AFTER_LOSING_ONE_CARD);
+        
         abilityCardIngameService.refillHandWithCards(gameService.findGameById(1).getLeader());
-        assertEquals(4, gameService.findGameById(1).getLeader().getHand().size());
+        
+        assertThat(playerTester.getHand().size()).isEqualTo(HAND_AFTER_REFILL);
     }
-
     
 }

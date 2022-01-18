@@ -1,6 +1,6 @@
 package org.springframework.ntfh.playablecard.abilitycard;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -34,39 +34,44 @@ public class AbilityCardServiceTest {
     @Test
     void testCount() {
         Integer testerInt = abilityCardService.count();
-        assertEquals(INITIAL_ABILITYCARD_COUNT, testerInt);
+
+        assertThat(testerInt).isEqualTo(INITIAL_ABILITYCARD_COUNT);
     }
 
     @Test
     void testFindById() {
         AbilityCard tester = abilityCardService.findById(4);
-        assertEquals(AbilityCardTypeEnum.DISPARO_RAPIDO, tester.getAbilityCardTypeEnum());
-        assertEquals(CharacterTypeEnum.RANGER, tester.getCharacterTypeEnum());
+
+        assertThat(tester.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.DISPARO_RAPIDO);
+        assertThat(tester.getCharacterTypeEnum()).isEqualTo(CharacterTypeEnum.RANGER);
     }
 
     @Test
     void testFindAll() {
         Integer testerInt = Lists.newArrayList(abilityCardService.findAll()).size();
-        assertEquals(INITIAL_ABILITYCARD_COUNT, testerInt);
+
+        assertThat(testerInt).isEqualTo(INITIAL_ABILITYCARD_COUNT);
     }
 
     @Test
     void testFindByCharacterTypeEnum() {
         List<AbilityCard> testerList = Lists
                 .newArrayList(abilityCardService.findByCharacterTypeEnum(CharacterTypeEnum.RANGER));
-        assertEquals(true, testerList.contains(abilityCardService.findById(1)));
-        assertEquals(true, testerList.contains(abilityCardService.findById(2)));
-        assertEquals(true, testerList.contains(abilityCardService.findById(4)));
-        assertEquals(true, testerList.contains(abilityCardService.findById(10)));
-        assertEquals(true, testerList.contains(abilityCardService.findById(11)));
-        assertEquals(true, testerList.contains(abilityCardService.findById(13)));
-        assertEquals(true, testerList.contains(abilityCardService.findById(15)));
+
+        assertThat(testerList.contains(abilityCardService.findById(1))).isTrue();
+        assertThat(testerList.contains(abilityCardService.findById(2))).isTrue();
+        assertThat(testerList.contains(abilityCardService.findById(4))).isTrue();
+        assertThat(testerList.contains(abilityCardService.findById(10))).isTrue();
+        assertThat(testerList.contains(abilityCardService.findById(11))).isTrue();
+        assertThat(testerList.contains(abilityCardService.findById(13))).isTrue();
+        assertThat(testerList.contains(abilityCardService.findById(15))).isTrue();
     }
 
     @Test
     void testFindByAbilityCardTypeEnum() {
         AbilityCard tester = abilityCardService.findByAbilityCardTypeEnum(AbilityCardTypeEnum.POCION_CURATIVA);
-        assertEquals(AbilityCardTypeEnum.POCION_CURATIVA, tester.getAbilityCardTypeEnum());
+
+        assertThat(tester.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.POCION_CURATIVA);
     }
 
 }
