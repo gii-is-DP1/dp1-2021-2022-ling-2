@@ -65,11 +65,11 @@ public class UserService {
 	@Transactional
 	public User createUser(User user)
 			throws DataIntegrityViolationException, IllegalArgumentException {
-		if (userRepository.existsByEmail(user.getEmail()))
+		if (Boolean.TRUE.equals(userRepository.existsByEmail(user.getEmail())))
 			throw new IllegalArgumentException(
 					"There is already a user registered with the email provided");
 
-		if (userRepository.existsByUsername(user.getUsername()))
+		if (Boolean.TRUE.equals(userRepository.existsByUsername(user.getUsername())))
 			throw new IllegalArgumentException(
 					"There is already a user registered with the username provided");
 
@@ -125,7 +125,7 @@ public class UserService {
 			DataIntegrityViolationException, NonMatchingTokenException, IllegalArgumentException {
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		if (!sentBySameUser && !sentByAdmin) {
+		if (Boolean.FALSE.equals(sentBySameUser) && Boolean.FALSE.equals(sentByAdmin)) {
 			log.warn(userString + user.getUsername() + " unauthorized update by token " + token);
 			throw new NonMatchingTokenException(
 					"A user's profile can only be updated by him/herself or by an admin");
@@ -162,7 +162,7 @@ public class UserService {
 	public String loginUser(User user)
 			throws DataAccessException, IllegalArgumentException, BannedUserException {
 		User userInDB = this.findUser(user.getUsername());
-		if (!userInDB.getEnabled()) {
+		if (Boolean.FALSE.equals(userInDB.getEnabled())) {
 			throw new BannedUserException("You have been banned") {};
 		}
 
