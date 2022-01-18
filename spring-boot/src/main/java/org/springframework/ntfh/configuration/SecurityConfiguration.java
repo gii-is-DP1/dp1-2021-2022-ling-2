@@ -29,6 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	DataSource dataSource;
 
+	String adminString = "admin";
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and() // enable CORS requests
@@ -42,19 +44,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Allow to login
 				.antMatchers(HttpMethod.POST, "/users/login").permitAll()
 				// Allow admins to list all the users
-				.antMatchers(HttpMethod.GET, "/users").hasAuthority("admin")
+				.antMatchers(HttpMethod.GET, "/users").hasAuthority(adminString)
 				// Allow everyone to get user number
 				.antMatchers(HttpMethod.GET, "/users/count").permitAll()
 				// Update user's profile
-				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin")
+				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", adminString)
 				// Update user's current character
 				.antMatchers(HttpMethod.PUT, "/users/{userId}/character/{characterId}").hasAuthority("user")
 				// Everyone can see a user's profile
 				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll()
 				// An admin can delete a user
-				.antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority("admin")
+				.antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority(adminString)
 				// An admin can ban a user
-				.antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority("admin")
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority(adminString)
 				// Everyone can see a user's match history
 				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll()
 				// Set character
@@ -75,7 +77,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, "/games").hasAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
 				// Allow admins to see past games
-				.antMatchers(HttpMethod.GET, "/games/history").hasAnyAuthority("admin", "user")
+				.antMatchers(HttpMethod.GET, "/games/history").hasAnyAuthority(adminString, "user")
 				.antMatchers(HttpMethod.GET, "/games/history/count").permitAll() // Allow everyone to see past games
 				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
 				.antMatchers(HttpMethod.PUT, "/games/{gameId}").hasAuthority("user") // Allow users to update a game
@@ -88,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Allow users to buy cards in the market
 				// ACHIEVEMENT ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
-				.antMatchers(HttpMethod.PUT, "/achievements").hasAuthority("admin") // Update achievement
+				.antMatchers(HttpMethod.PUT, "/achievements").hasAuthority(adminString) // Update achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
 																							// achievement
 				.antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
@@ -105,7 +107,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/warlords/{gameId}").permitAll() // Allow everyone to list a game's
 																				// warlord
 																				// ADMIN ENDPOINTS
-				.antMatchers("/admin/**").hasAuthority("admin") // access to admin info
+				.antMatchers("/admin/**").hasAuthority(adminString) // access to admin info
 				// OTHER ENDPOINTS
 				.anyRequest().denyAll(); // else, deny
 
