@@ -186,7 +186,7 @@ public class UserService {
 
 	@Transactional
 	public void deleteUser(User user) {
-		if (user.getGame() != null && user.getGame().getHasStarted()) {
+		if (user.getPlayer() != null && user.getPlayer().getGame().getHasStarted()) {
 			log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
 			throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
 		}

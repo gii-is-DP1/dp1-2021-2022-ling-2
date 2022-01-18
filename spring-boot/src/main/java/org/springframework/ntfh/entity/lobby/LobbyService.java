@@ -59,9 +59,9 @@ public class LobbyService {
         if (lobby.getGame() != null)
             throw new DataAccessException("The game has already started") {};
 
-        lobby.getUsers().forEach(user -> {
-            user.setGame(null);
-        });
+        // lobby.getUsers().forEach(user -> {
+        // user.setGame(null);
+        // });
         this.lobbyRepository.deleteById(lobby.getId());
     }
 
@@ -120,7 +120,7 @@ public class LobbyService {
             throw new DataAccessException("The host cannot leave the lobby") {};
 
         lobby.removeUser(user);
-        user.setGame(null);
+        // user.setGame(null);
 
         this.updateLobby(lobby);
         return true;

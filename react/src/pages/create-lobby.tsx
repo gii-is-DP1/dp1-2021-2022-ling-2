@@ -34,14 +34,12 @@ export default function CreateLobby() {
         maxPlayers: maxPlayers,
         hasScenes: scenesChecked,
         spectatorsAllowed: spectatorsChecked,
-        host: loggedUser.username,
-        players: [loggedUser.username],
       };
       const response = await axios.post("/games/new", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
-      const gameId = response.data.gameId;
       toast.success("Lobby created successfully");
+      const gameId = response.data.id;
       history.replace(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error: any) {
       toast.error(error?.message);

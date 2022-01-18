@@ -7,10 +7,13 @@ import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
-import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 import { Game } from "../interfaces/Game";
 import { Player } from "../interfaces/Player";
+import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
+import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
+import { templateGame } from "../templates/game";
+import { templatePlayer } from "../templates/player";
+import { threadId } from "worker_threads";
 /**
  *
  * @author andrsdt
@@ -18,12 +21,12 @@ import { Player } from "../interfaces/Player";
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
-
-  const [game, setGame] = useState<Game | null>(null); // current state of the lobby in the server. Updated perodically
+  const [game, setGame] = useState<Game>(templateGame); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
   const { gameId } = useParams<{ gameId: string }>(); // TODO maybe we should just pass this as a param to the component
   const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
+  const [player, setPlayer] = useState<Player>(templatePlayer);
   const [character, setCharacter] = useState<CharacterTypeEnum | null>(null);
   const [gender, setGender] = useState<CharacterGenderEnum>("MALE");
   const [fullLobby, setFullLobby] = useState<boolean>(false);
@@ -47,25 +50,37 @@ export default function Lobby() {
     // This is a temporal solution to be refactored in the future
   };
 
-  const isHost = () => loggedUser.username === game?.leader?.user.username;
+  const isHost = () => {
+    return loggedUser.username === game.leader?.user?.username;
+  };
 
   async function fetchLobbyStatus() {
     try {
-      const response = await axios.get(`/lobbies/${gameId}`);
-      const newLobby: Game = response.data;
-      if (game && !userInLobby(loggedUser.username, newLobby)) {
+      const response = await axios.get(`/games/${gameId}`);
+      const lobby: Game = response.data;
+      if (game !== templateGame && !userInLobby(loggedUser.username, lobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
         toast("You have been kicked from the lobby");
         history.goBack();
         return;
       }
-      setGame(newLobby);
-      setFullLobby(newLobby.maxPlayers === newLobby.players.length);
-      const takenCharacters: CharacterTypeEnum[] = newLobby.players.map(
+      const state = lobby.hasStarted ? "ONGOING" : "LOBBY";
+      const prevState = game.hasStarted ? "ONGOING" : "LOBBY";
+      if (game !== templateGame && state !== prevState)
+        window.location.reload();
+
+      setGame(lobby);
+      setFullLobby(lobby.maxPlayers === lobby.players.length);
+      const takenCharacters: CharacterTypeEnum[] = lobby.players.map(
         (_player) => _player?.character?.characterTypeEnum
       );
+      setPlayer(
+        lobby.players.find(
+          (_player) => _player.user.username === loggedUser.username
+        ) ?? templatePlayer
+      );
       setCharactersTaken(takenCharacters);
-      return newLobby;
+      return lobby;
     } catch (error: any) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
       toast.error(error?.message);
@@ -74,13 +89,17 @@ export default function Lobby() {
     }
   }
 
-  async function notifyJoinLobby() {
+  async function joinLobby() {
     try {
-      const payload = { username: loggedUser.username };
       const headers = { Authorization: "Bearer " + userToken };
-      await axios.post(`/games/${gameId}/join`, payload, {
-        headers,
-      });
+      const response = await axios.post(
+        `/games/${gameId}/add/${loggedUser.username}`,
+        null,
+        {
+          headers,
+        }
+      );
+      setGame(response.data);
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status === 404) history.push(ROUTES.BROWSE_GAMES);
@@ -101,16 +120,18 @@ export default function Lobby() {
   async function leaveLobby() {
     try {
       const headers = { Authorization: "Bearer " + userToken };
-      await axios.delete(`/lobbies/${gameId}`, { headers });
-      history.replace(ROUTES.BROWSE_GAMES);
-      toast.success("Lobby deleted successfully");
+      await axios.post(`/games/${gameId}/remove/${loggedUser.username}`, null, {
+        headers,
+      });
+      history.push(ROUTES.BROWSE_GAMES);
     } catch (error: any) {
       toast.error(error?.message);
     }
   }
 
-  const userInLobby = (_username: string, _game: Game) =>
-    _game.players.some((p) => p.user.username === _username);
+  const userInLobby = (_username: string, _game: Game) => {
+    return _game.players.some((p) => p.user.username === _username);
+  };
 
   const startGame = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -131,8 +152,7 @@ export default function Lobby() {
       const _lobby = await fetchLobbyStatus();
       // We have to notify the server we have joined the lobby
       // will be only executed if the user is not in the lobby yet
-      if (_lobby && !userInLobby(loggedUser.username, _lobby))
-        notifyJoinLobby();
+      if (_lobby && !userInLobby(loggedUser.username, _lobby)) joinLobby();
     }
     firstFetch();
   }, []); // Only run once
@@ -155,8 +175,8 @@ export default function Lobby() {
     async function updateUserCharacter() {
       try {
         await axios.put(
-          `/users/${loggedUser.username}/character/${getCharacterId()}`,
-          {},
+          `/players/${player?.id}/character/${getCharacterId()}`,
+          null,
           {
             headers: { Authorization: "Bearer " + userToken },
           }
@@ -169,8 +189,6 @@ export default function Lobby() {
     updateUserCharacter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [character, gender]);
-
-  if (!game) return <></>; // Don't render anything if the lobby is not loadedw
 
   return (
     <>
@@ -209,7 +227,7 @@ export default function Lobby() {
                     {game.maxPlayers}
                   </p>
                 </div>
-                <UsersInLobby game={game} />
+                {<UsersInLobby game={game} />}
               </div>
               {/* Left col ( game info, current players)*/}
             </div>

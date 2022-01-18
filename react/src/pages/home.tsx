@@ -37,9 +37,9 @@ export default function Home() {
     } catch (error) {}
   }
 
-  const userInLobby = () => !!user?.game;
+  const userInLobby = () => !!user?.player?.game;
 
-  const userInGame = () => !!user?.game?.hasStarted;
+  const userInGame = () => !!user?.player?.game?.hasStarted;
 
   const handleLogout = () => {
     setUserToken(null);
@@ -122,7 +122,7 @@ export default function Home() {
             <Link
               to={ROUTES.GAME.replace(
                 ":gameId",
-                user?.game?.id?.toString() || ""
+                user?.player?.game?.id?.toString() || ""
               )}
             >
               <button type="submit" className="btn-ntfh">
@@ -134,7 +134,7 @@ export default function Home() {
             <Link
               to={ROUTES.GAME.replace(
                 ":gameId",
-                user?.game?.id?.toString() || ""
+                user?.player?.game?.id?.toString() || ""
               )}
             >
               <button type="submit" className="btn-ntfh">

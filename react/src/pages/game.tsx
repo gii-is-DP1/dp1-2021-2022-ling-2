@@ -39,7 +39,8 @@ export default function Game() {
     useState<AbilityCardIngame | null>(null);
 
   const isSpectator = (_user: User | null) =>
-    !loggedUser.username || (_user && _user?.game?.id !== parseInt(gameId));
+    !loggedUser.username ||
+    (_user && _user?.player?.game?.id !== parseInt(gameId));
 
   const isPlayersTurn = (_turn: Turn | null, username: string) =>
     _turn && _turn.player.user?.username === username;

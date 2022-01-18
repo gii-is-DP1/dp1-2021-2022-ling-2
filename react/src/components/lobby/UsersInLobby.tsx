@@ -19,7 +19,7 @@ export default function UsersInLobby(props: Props) {
   const loggedUser: TokenUser = tokenParser(useContext(UserContext)); // user who is logged in
 
   const playerIsHost = (player: Player | null): boolean =>
-    player != null && player.user.username === game.leader.user.username;
+    player != null && player.user?.username === game.leader.user.username;
 
   const userIsHost = (user: TokenUser | null): boolean =>
     user != null && user.username === game.leader.user.username;
@@ -46,9 +46,13 @@ export default function UsersInLobby(props: Props) {
 
   async function removePlayerFromLobby(player: Player) {
     try {
-      await axios.delete(`/games/${game.id}/remove/${player.id}`, {
-        headers: { Authorization: "Bearer " + userToken },
-      });
+      await axios.post(
+        `/games/${game.id}/remove/${player.user.username}`,
+        null,
+        {
+          headers: { Authorization: "Bearer " + userToken },
+        }
+      );
       toast.success("Player kicked successfully");
     } catch (error: any) {
       toast.error(error?.message);

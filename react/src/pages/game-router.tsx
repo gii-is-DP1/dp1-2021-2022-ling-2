@@ -1,17 +1,19 @@
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
+import axios from "../api/axiosConfig";
+import * as ROUTES from "../constants/routes";
+import { templateGame } from "../templates/game";
 import Game from "./game";
 import GameSummary from "./game-summary";
 import Lobby from "./lobby";
-import * as ROUTES from "../constants/routes";
-import { useEffect, useState } from "react";
-import axios from "../api/axiosConfig";
-import toast from "react-hot-toast";
+import LobbyBrowser from "./lobby-browser";
 
 export default function GameRouter() {
   const history = useHistory();
   const { gameId } = useParams<{ gameId: string }>();
   // TODO route each game page to its own component depending on the state
-  const [game, setGame] = useState(undefined);
+  const [gameState, setGameState] = useState("LOBBY");
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -19,20 +21,19 @@ export default function GameRouter() {
       try {
         const response = await axios.get(`/games/${gameId}`);
         const _game = response.data;
-        setGame(_game);
+        setGameState(_game.hasStarted ? "ONGOING" : "LOBBY");
       } catch (error: any) {
         toast.error(error?.message);
         if (error?.status >= 400) history.push(ROUTES.BROWSE_GAMES);
       }
     };
+    console.log("game-router executed");
     fetchGame();
   }, []);
 
   // ! get state dynamically from game
   // ! State
-  const state: string = "LOBBY";
-
-  switch (state) {
+  switch (gameState) {
     case "LOBBY":
       return <Lobby />;
     case "ONGOING":
@@ -40,6 +41,6 @@ export default function GameRouter() {
     case "FINISHED":
       return <GameSummary />;
     default:
-      return <></>;
+      return <LobbyBrowser />;
   }
 }

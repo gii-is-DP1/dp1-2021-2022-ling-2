@@ -114,7 +114,7 @@ public class GameServiceTest {
         // user2.setCharacter(characterService.findById(4));
 
         gameTester = gameService.createFromLobby(lobbyTester);
-        user1.setGame(gameTester);
+        // user1.setGame(gameTester);
         playerTester = gameTester.getPlayers().get(0);
     }
 

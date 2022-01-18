@@ -58,7 +58,7 @@ public class PlayerServiceTest {
         tester.setGold(4);
         tester.setKills(5);
         tester.setWounds(1);
-        tester.setTurnOrder(2);
+        // tester.setTurnOrder(2);
         tester.setGuard(0);
         // tester.setCharacterType(characterService.findById(7));
         playerService.savePlayer(tester);

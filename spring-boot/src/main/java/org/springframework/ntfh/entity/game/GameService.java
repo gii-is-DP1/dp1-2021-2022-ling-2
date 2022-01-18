@@ -19,6 +19,7 @@ import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
@@ -69,6 +70,78 @@ public class GameService {
     }
 
     @Transactional
+    public Game createGame(Game game) {
+        // ! set state to lobby
+        return this.save(game);
+    }
+
+    @Transactional
+    public void deleteGame(Integer gameId) {
+        // TODO If the petition is sent by a user, only allow to delete it if is in lobby and token coincides
+        // TODO make sure to clear the FKs in Users, cascade delete players and all that
+        // ! delegate to state as the rest of methods
+        Game game = this.findGameById(gameId);
+        game.getPlayers().forEach(p -> p.getUser().setPlayer(null)); // TODO player remains orfan
+        this.delete(game);
+    }
+
+    /**
+     * Adds the given player to the list of players in the lobby.
+     * 
+     * @author andrsdt
+     * @param lobbyId
+     * @param usernameFromRequest username that will be added to the lobby
+     * @param token JWT token sent by the client
+     * @return true if the player was added, false if there was some problem
+     */
+    @Transactional
+    // TODO Delegate to state
+    public Game joinGame(Integer gameId, String username, String token)
+            throws DataAccessException, MaximumLobbyCapacityException {
+        Game game = this.findGameById(gameId);
+
+        if (game.getPlayers().stream().anyMatch(p -> p.getUser().getUsername().equals(username))) {
+            throw new IllegalArgumentException("The player is already in the lobby") {};
+        }
+
+        if (game.getMaxPlayers().equals(game.getPlayers().size()))
+            throw new MaximumLobbyCapacityException("The lobby is full") {};
+
+        String usernameFromToken = TokenUtils.usernameFromToken(token);
+        if (!username.equals(usernameFromToken))
+            throw new IllegalArgumentException("The Token username and the request one do not coincide") {};
+
+        // TODO get this via a converter before the controller
+        User user = userService.findUser(username);
+
+        // ! TODO adapt this to new model
+        // user.setLobby(lobby);
+        // user.setCharacter(null);
+        Player player = playerService.createPlayer(user); // TODO createPlayer(user);
+
+        if (game.getPlayers().isEmpty()) {
+            // The first player to join will be the host/leader
+            game.setLeader(player);
+        }
+
+        game.getPlayers().add(player);
+        player.setGame(game); // TODO redundant? we have mappedBy above
+        player.getUser().setPlayer(player);
+        return game;
+    }
+
+    @Transactional
+    public Game removePlayer(Integer gameId, String username, String token) {
+        // TODO make sure that the one trying to remove the player is either the player himself or the host
+        Game game = this.findGameById(gameId);
+        User user = userService.findUser(username);
+        Player player = user.getPlayer();
+        player.setGame(null);
+        game.getPlayers().remove(player);
+        return this.save(game);
+    }
+
+    @Transactional
     public Game createFromLobby(@Valid Lobby lobby) {
         Game game = new Game();
         game.setStartTime(Timestamp.from(Instant.now()));
@@ -87,7 +160,7 @@ public class GameService {
             Integer turnOrder = isHost ? 0 : i;
             if (!isHost)
                 i++;
-            Player createdPlayer = playerService.createFromUser(user, lobby, turnOrder);
+            Player createdPlayer = playerService.createPlayer(user);
 
             players.add(createdPlayer);
             // TODO temporary solution. Set the lobby host as the leader. In the real game
@@ -164,8 +237,12 @@ public class GameService {
         });
     }
 
-    public Game createLobby(Game game) {
-        // ! set state to lobby
+    @Transactional
+    public Game startGame(Integer gameId) {
+        Game game = this.findGameById(gameId);
+        game.setStartTime(Timestamp.from(Instant.now()));
+        // TODO set state to ONGOING
+        // TODO create the first turn bla bla
         return this.save(game);
     }
 }
