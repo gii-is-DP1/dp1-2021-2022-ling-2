@@ -28,7 +28,7 @@ export default function EnemyCard(params: Params) {
     setSelectedAbilityCard(null);
     try {
       const response = await axios.post(
-        `/games/${gameId}/ability-cards/${selectedAbilityCard.id}`,
+        `/ability-cards/${selectedAbilityCard.id}`,
         { enemyId: enemyIngame.id }, // Payload
         { headers: { Authorization: "Bearer " + userToken } }
       );

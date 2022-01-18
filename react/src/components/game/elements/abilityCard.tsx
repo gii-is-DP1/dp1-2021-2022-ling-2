@@ -32,7 +32,7 @@ export default function AbilityCard(params: Params) {
     if (isSelfPlayable) {
       try {
         const response = await axios.post(
-          `/games/${gameId}/ability-cards/${card.id}`,
+          `/ability-cards/${card.id}`,
           { enemyId: null }, // Payload
           { headers: { Authorization: "Bearer " + userToken } }
         );
