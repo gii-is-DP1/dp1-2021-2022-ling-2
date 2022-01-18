@@ -24,7 +24,7 @@ export default function GameSummary() {
         setGame(_game);
       } catch (error: any) {
         toast.error(error?.message);
-        if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
+        if (error?.status >= 400) history.push(ROUTES.BROWSE_GAMES);
       }
     };
     fetchGame();
@@ -74,7 +74,7 @@ export default function GameSummary() {
                           <td className="text-table-td">{rankingEmojis[i]}</td>
                           <td className="text-table-td">{p.user.username}</td>
                           <td className="text-table-td">
-                            {p.dead ? "💀" : "🖖"}
+                            {p.isDead ? "💀" : "🖖"}
                           </td>
                           <td className="text-table-td">{p.glory}</td>
                           <td className="text-table-td">{p.gold}</td>

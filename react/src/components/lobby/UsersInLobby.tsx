@@ -1,23 +1,28 @@
+import axios from "../../api/axiosConfig";
 import { useContext } from "react";
 import UserContext from "../../context/user";
 import capitalize from "../../helpers/capitalize";
 import tokenParser from "../../helpers/tokenParser";
-import { Lobby } from "../../interfaces/Lobby";
+import { Game } from "../../interfaces/Game";
+import { Player } from "../../interfaces/Player";
 import { TokenUser } from "../../interfaces/TokenUser";
-import { User } from "../../interfaces/User";
+import toast from "react-hot-toast";
 
 type Props = {
-  lobby: Lobby;
-  handleRemoveUserFromLobby: (username: string) => void;
+  game: Game;
 };
 
 export default function UsersInLobby(props: Props) {
-  const { lobby, handleRemoveUserFromLobby } = props; // destructuring props // TODO in other files too
+  const { game } = props; // destructuring props // TODO in other files too
   // user: the one who is logged in
+  const { userToken } = useContext(UserContext);
   const loggedUser: TokenUser = tokenParser(useContext(UserContext)); // user who is logged in
 
-  const isHost = (user: TokenUser | User | null): boolean =>
-    user !== null && user.username === lobby.host.username;
+  const playerIsHost = (player: Player | null): boolean =>
+    player != null && player.user.username === game.leader.user.username;
+
+  const userIsHost = (user: TokenUser | null): boolean =>
+    user != null && user.username === game.leader.user.username;
 
   const characters = [
     "ranger",
@@ -39,29 +44,44 @@ export default function UsersInLobby(props: Props) {
     return id % 2 ? "♂ " : "♀ ";
   };
 
+  async function removePlayerFromLobby(player: Player) {
+    try {
+      await axios.delete(`/games/${game.id}/remove/${player.id}`, {
+        headers: { Authorization: "Bearer " + userToken },
+      });
+      toast.success("Player kicked successfully");
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  }
+
   return (
     <ul className="flex flex-col space-y-2">
-      {lobby.users
+      {game.players
         .sort((a, b) =>
-          a.username < b.username ? 1 : a.username > b.username ? -1 : 0
+          a.user.username < b.user.username
+            ? 1
+            : a.user.username > b.user.username
+            ? -1
+            : 0
         ) // arbitrary but consistent order
-        .map((user: User, idx) => (
+        .map((player: Player, idx) => (
           <li key={idx} className="bg-green-700 rounded-xl p-2 text-white">
-            {!isHost(user) && isHost(loggedUser) && (
+            {!playerIsHost(player) && userIsHost(loggedUser) && (
               // show me the kick button over a player only if i'm the host
               // AND the player to kick is not me
               <button
                 className="mr-2"
-                onClick={(e) => handleRemoveUserFromLobby(user.username)}
+                onClick={(e) => removePlayerFromLobby(player)}
               >
                 ❌
               </button>
             )}
-            {isHost(user) && <span className="m-0 p-1">👑</span>}{" "}
-            {user.username +
+            {playerIsHost(player) && <span className="m-0 p-1">👑</span>}{" "}
+            {player.user.username +
               " — " +
-              getGenderFromId(user?.character?.id) +
-              capitalize(getCharacterFromId(user?.character?.id))}
+              getGenderFromId(player.character?.id) +
+              capitalize(getCharacterFromId(player.character?.id))}
           </li>
         ))}
     </ul>

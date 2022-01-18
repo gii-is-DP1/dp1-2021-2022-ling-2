@@ -37,9 +37,9 @@ export default function Home() {
     } catch (error) {}
   }
 
-  const userInLobby = () => !!user?.lobby;
+  const userInLobby = () => !!user?.game;
 
-  const userInGame = () => !!user?.lobby?.game;
+  const userInGame = () => !!user?.game?.hasStarted;
 
   const handleLogout = () => {
     setUserToken(null);
@@ -105,14 +105,14 @@ export default function Home() {
         <div className="flex flex-col justify-center items-center flex-auto gap-y-2">
           {/* Buttons */}
           {loggedUser && !userInLobby() && (
-            <Link to={ROUTES.CREATE_LOBBY}>
+            <Link to={ROUTES.CREATE_GAME}>
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Create Lobby</p>
               </button>
             </Link>
           )}
           {!userInLobby() && (
-            <Link to={ROUTES.BROWSE_LOBBIES}>
+            <Link to={ROUTES.BROWSE_GAMES}>
               <button type="submit" className="btn-ntfh">
                 <p className="text-gradient-ntfh">Browse Games</p>
               </button>
@@ -120,9 +120,9 @@ export default function Home() {
           )}
           {user && userInLobby() && !userInGame() && (
             <Link
-              to={ROUTES.LOBBY.replace(
-                ":lobbyId",
-                user?.lobby?.id?.toString() || ""
+              to={ROUTES.GAME.replace(
+                ":gameId",
+                user?.game?.id?.toString() || ""
               )}
             >
               <button type="submit" className="btn-ntfh">
@@ -134,7 +134,7 @@ export default function Home() {
             <Link
               to={ROUTES.GAME.replace(
                 ":gameId",
-                user?.lobby?.game?.id?.toString() || ""
+                user?.game?.id?.toString() || ""
               )}
             >
               <button type="submit" className="btn-ntfh">

@@ -10,7 +10,7 @@ export interface Game {
   finishTime?: number;
   hasScenes: boolean;
   spectatorsAllowed: boolean;
-  maxPlayers: number;
+  maxPlayers: 2 | 3 | 4;
   players: Player[];
   leader: Player;
   winner?: Player;

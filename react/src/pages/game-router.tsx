@@ -22,7 +22,7 @@ export default function GameRouter() {
         setGame(_game);
       } catch (error: any) {
         toast.error(error?.message);
-        if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
+        if (error?.status >= 400) history.push(ROUTES.BROWSE_GAMES);
       }
     };
     fetchGame();

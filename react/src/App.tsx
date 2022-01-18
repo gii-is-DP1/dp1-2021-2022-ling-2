@@ -44,14 +44,10 @@ export default function App() {
               path={ROUTES.EDIT_ACHIEVEMENT}
               component={EditAchievement}
             />
-            <Route exact path={ROUTES.CREATE_LOBBY} component={CreateLobby} />
+            <Route exact path={ROUTES.CREATE_GAME} component={CreateLobby} />
             <Route exact path={ROUTES.ACHIEVEMENTS} component={Achievements} />
             <Route exact path={ROUTES.STATISTICS} component={Statistics} />
-            <Route
-              exact
-              path={ROUTES.BROWSE_LOBBIES}
-              component={LobbyBrowser}
-            />
+            <Route exact path={ROUTES.BROWSE_GAMES} component={LobbyBrowser} />
             <Route exact path={ROUTES.GAME} component={GameRouter} />
             <Route exact path={ROUTES.ADMIN_PAGE} component={AdminPage} />
             <Route component={NotFound} />
