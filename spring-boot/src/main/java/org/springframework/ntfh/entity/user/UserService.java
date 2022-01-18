@@ -182,8 +182,8 @@ public class UserService {
 	}
 
 	@Transactional
-	public User toggleBanUser(String username, String token) throws DataAccessException {
-		User userInDB = this.findUser(username);
+	public User toggleBanUser(User userInDB, String token) throws DataAccessException {
+		String username = userInDB.getUsername();
 		userInDB.setEnabled(!userInDB.getEnabled());
 		log.info(userString + username + " ban toggled. Current status: " + userInDB.getEnabled());
 		return userInDB;

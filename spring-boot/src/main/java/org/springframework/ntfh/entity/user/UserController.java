@@ -57,10 +57,10 @@ public class UserController {
 	 * @return User object with only non-sensitive information
 	 * @author andrsdt
 	 */
+	
 	@GetMapping("{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public User getUser(@PathVariable("userId") String username) {
-		User user = this.userService.findUser(username);
+	public User getUser(@PathVariable("userId") User user) {
 		return user;
 	}
 
@@ -110,17 +110,16 @@ public class UserController {
 
 	@PutMapping("{userId}/character/{characterId}")
 	@ResponseStatus(HttpStatus.OK)
-	public void setCharacter(@PathVariable("userId") String userId, @PathVariable("characterId") Integer characterId,
+	public void setCharacter(@PathVariable("userId") User user, @PathVariable("characterId") Character character,
 			@RequestHeader("Authorization") String token) {
 		// TODO use converters for this
-		User user = this.userService.findUser(userId);
-		Character character = this.characterService.findById(characterId);
+		
 		userService.setCharacter(user.getUsername(), character);
 	}
 
 	@PutMapping("{userId}/ban")
 	@ResponseStatus(HttpStatus.OK)
-	public void toggleBanUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
+	public void toggleBanUser(@PathVariable("userId") User username, @RequestHeader("Authorization") String token) {
 		userService.toggleBanUser(username, token);
 	}
 
@@ -128,7 +127,7 @@ public class UserController {
 	// ! TODO no le gusta la lista vacía de momento, requiere que sea implementado
 	
 	@GetMapping("{userId}/history")
-	public ResponseEntity<Iterable<Game>> getfindByUser(@PathVariable("userId") String username) {
+	public ResponseEntity<Iterable<Game>> getfindByUser(@PathVariable("userId") User username) {
 		// Iterable<GameHistory> gameHistory =
 		// gameHistoryService.findByGamePlayersContaining(username);
 		return new ResponseEntity<>(List.of(), HttpStatus.OK);
@@ -139,10 +138,10 @@ public class UserController {
 	 */
 	@DeleteMapping("{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
+	public void deleteUser(@PathVariable("userId") User username, @RequestHeader("Authorization") String token) {
 		// TODO better parse username to user with a converter? saw that in the slides
-		User user = userService.findUser(username);
-		userService.deleteUser(user);
+		// Alex and Pablo think this is done, take it with a grain of salt since we've been doing this for the first time
+		userService.deleteUser(username);
 	}
 
 }
