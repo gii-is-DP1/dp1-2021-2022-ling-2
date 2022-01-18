@@ -525,12 +525,15 @@ public class CommandIngameTest {
         //Check if we restrain an already restrained enemy it will still be restrained
 
         new RestrainCommand(enemyIngame).execute();
-        
+
         assertThat(enemyIngame.getRestrained()).isTrue();
     }
 
     @Test
     void testStealCoinCommand() {
+
+        //the hero/heroes affected have gold to be stolen
+
         ranger.setGold(10);
 
         assertThat(rogue.getGold()).isZero();
@@ -540,6 +543,16 @@ public class CommandIngameTest {
 
         assertThat(rogue.getGold()).isEqualTo(1);
         assertThat(ranger.getGold()).isEqualTo(9);
+
+        //the hero/heroes affected dont have gold to be stolen
+
+        ranger.setGold(0);
+        rogue.setGold(1);
+
+        new StealCoinCommand(rogue, ranger).execute();
+
+        assertThat(rogue.getGold()).isEqualTo(1);
+        assertThat(ranger.getGold()).isZero();
     }
     
 }
