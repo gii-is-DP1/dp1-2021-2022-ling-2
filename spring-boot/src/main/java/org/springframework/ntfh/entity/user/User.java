@@ -57,10 +57,10 @@ public class User {
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
 
 	// TODO check if this is making some sense
-	@ManyToOne
-	@JoinColumn(name = "game")
-	@JsonIgnoreProperties({"players", "winner", "leader"})
-	private Game game;
+	// @ManyToOne
+	// @JoinColumn(name = "game")
+	// @JsonIgnoreProperties({"players", "winner", "leader"})
+	// private Game game;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "player")

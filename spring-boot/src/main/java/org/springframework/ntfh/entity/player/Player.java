@@ -55,14 +55,9 @@ public class Player extends BaseEntity {
     @PositiveOrZero
     private Integer guard;
 
-    @NotNull
-    @PositiveOrZero
-    private Integer turnOrder; // Order in which the player will take their turn. The leader will be
-                               // 0 (first)
-
     // Should not change when user's character is changed. Once the
     // row is created in the databse, it stays the same
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "character_id", referencedColumnName = "id") // TODO redundant referenceColumnName?
     private Character character;
 
@@ -78,21 +73,23 @@ public class Player extends BaseEntity {
     @NotAudited // TODO audit this?
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
-    // Make playerCardsInTurn transient?
+    @ManyToOne
+    @JsonIgnore
+    private Game game;
 
     @Transient
     public CharacterTypeEnum getCharacterTypeEnum() {
-        return character.getCharacterTypeEnum();
+        return (character == null) ? null : character.getCharacterTypeEnum();
     }
 
     @Transient
     public Boolean isDead() {
-        return wounds >= character.getBaseHealth();
+        return (character != null) && wounds >= character.getBaseHealth();
     }
 
     @Transient
-    @JsonIgnore
-    public Game getGame() {
-        return this.user.getGame();
+    public Integer getTurnOrder() {
+        // TODO test if this works
+        return (game == null || game.getPlayers().isEmpty()) ? null : game.getPlayers().indexOf(this);
     }
 }
