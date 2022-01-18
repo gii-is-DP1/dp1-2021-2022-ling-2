@@ -1,9 +1,10 @@
 package org.springframework.ntfh.user;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Set;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,27 +58,22 @@ public class UserServiceTest {
         currentUser = userService.createUser(tester);
     }
 
-    // H3 + E1
-    @Test
-    public void testfindAll() {
-        Integer count = Lists.newArrayList(userService.findAll()).size();
-        assertEquals(INITIAL_COUNT + 1, count);
-    }
-
     @Test
     public void testfindById() {
         User tester = this.userService.findUser("stockie");
-        assertTrue(passwordEncoder.matches("stockie", tester.getPassword()));
-        assertEquals("stockie@mail.com", tester.getEmail());
+
+        assertThat(passwordEncoder.matches("stockie", tester.getPassword())).isTrue();
+        assertThat(tester.getEmail()).isEqualTo("stockie@mail.com");
     }
 
     @Test
     public void testSaveUser() {
         // User created in the BeforeEach
         User tester = currentUser;
-        assertEquals("antonio", tester.getUsername());
-        assertEquals("antonio@mail.com", tester.getEmail());
-        assertTrue(passwordEncoder.matches("antonio", tester.getPassword()));
+
+        assertThat(tester.getUsername()).isEqualTo("antonio");
+        assertThat(tester.getEmail()).isEqualTo("antonio@mail.com");
+        assertThat(passwordEncoder.matches("antonio", tester.getPassword())).isTrue();
     }
 
     @Test
@@ -87,7 +83,8 @@ public class UserServiceTest {
         String newPassword = "newPassword";
         tester.setPassword(newPassword);
         User updatedTester = userService.updateUser(tester, testerToken);
-        assertTrue(passwordEncoder.matches(newPassword, updatedTester.getPassword()));
+
+        assertThat(passwordEncoder.matches(newPassword, updatedTester.getPassword())).isTrue();
     }
 
     @Test
@@ -95,7 +92,16 @@ public class UserServiceTest {
         User tester = currentUser;
         String username = tester.getUsername();
         userService.deleteUser(tester);
+
         assertThrows(DataAccessException.class, () -> userService.findUser(username));
+    }
+
+    // H3 + E1
+    @Test
+    public void testfindAll() {
+        Integer count = Lists.newArrayList(userService.findAll()).size();
+
+        assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
 }
