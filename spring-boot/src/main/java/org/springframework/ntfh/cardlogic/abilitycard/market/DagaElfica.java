@@ -21,7 +21,7 @@ public class DagaElfica {
         Boolean hasDexterity = playerFrom.getCharacter().getProficiencies().stream()
                 .anyMatch(proficiency -> proficiency.getProficiencyTypeEnum().equals(ProficiencyTypeEnum.DEXTERITY));
 
-        if (hasDexterity)
+        if (Boolean.TRUE.equals(hasDexterity))
             new HandToAbilityPileCommand(playerFrom, AbilityCardTypeEnum.DAGA_ELFICA).execute();
     }
 }

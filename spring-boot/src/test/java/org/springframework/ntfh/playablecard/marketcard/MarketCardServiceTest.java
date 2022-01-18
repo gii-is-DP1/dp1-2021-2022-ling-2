@@ -1,6 +1,6 @@
 package org.springframework.ntfh.playablecard.marketcard;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -18,28 +18,35 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class MarketCardServiceTest {
+class MarketCardServiceTest {
 
     @Autowired
     private MarketCardService marketCardService;
 
+    private Integer INITIAL_MARKETCARD_COUNT = 14;
+
+
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = marketCardService.marketCardCount();
-        assertEquals(14, count);
+
+        assertThat(count).isEqualTo(INITIAL_MARKETCARD_COUNT);
     }
 
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(marketCardService.findAll()).size();
-        assertEquals(14, count);
+
+        assertThat(count).isEqualTo(INITIAL_MARKETCARD_COUNT);
     }
 
     @Test
-    public void testfindById() {
+    void testfindById() {
         MarketCard tester = this.marketCardService.findMarketCardById(6).get();
-        assertEquals(MarketCardTypeEnum.PIEDRA_DE_AMOLAR, tester.getMarketCardTypeEnum());
-        assertEquals(4, tester.getPrice());
+        Integer PRICE_OF_PIEDRA_DE_AMOLAR = 4;
+
+        assertThat(tester.getMarketCardTypeEnum()).isEqualTo(MarketCardTypeEnum.PIEDRA_DE_AMOLAR);
+        assertThat(tester.getPrice()).isEqualTo(PRICE_OF_PIEDRA_DE_AMOLAR);
     }
 
 }

@@ -26,167 +26,165 @@ import org.springframework.stereotype.Service;
 @Service
 public class TurnService {
 
-    @Autowired
-    private TurnRepository turnRepository;
+	@Autowired
+	private TurnRepository turnRepository;
 
-    @Autowired
-    private GameService gameService;
+	@Autowired
+	private GameService gameService;
 
-    @Autowired
-    private SceneService sceneService;
+	@Autowired
+	private SceneService sceneService;
 
-    @Autowired
-    private EnemyIngameService enemyIngameService;
+	@Autowired
+	private EnemyIngameService enemyIngameService;
 
-    @Autowired
-    private MarketCardIngameService marketCardIngameService;
+	@Autowired
+	private MarketCardIngameService marketCardIngameService;
 
-    @Autowired
-    private AbilityCardIngameService abilityCardIngameService;
+	@Autowired
+	private AbilityCardIngameService abilityCardIngameService;
 
-    /************ STATES ************/
+	/************ STATES ************/
 
-    @Autowired
-    private MarketState marketState;
+	@Autowired
+	private MarketState marketState;
 
-    @Autowired
-    private PlayerState playerState;
+	@Autowired
+	private PlayerState playerState;
 
-    /*******************************/
+	/*******************************/
 
-    public Integer turnCount() {
-        return (int) turnRepository.count();
-    }
+	Random random = new Random();
 
-    public Iterable<Turn> findAll() {
-        return turnRepository.findAll();
-    }
+	public Integer turnCount() {
+		return (int) turnRepository.count();
+	}
 
-    public Optional<Turn> findturnById(Integer id) {
-        return turnRepository.findById(id);
-    }
+	public Iterable<Turn> findAll() {
+		return turnRepository.findAll();
+	}
 
-    @Transactional
-    public void save(Turn turn) {
-        turnRepository.save(turn);
-    }
+	public Optional<Turn> findturnById(Integer id) {
+		return turnRepository.findById(id);
+	}
 
-    @Transactional
-    public void delete(int turnId) {
-        turnRepository.deleteById(turnId);
-    }
+	@Transactional
+	public void save(Turn turn) {
+		turnRepository.save(turn);
+	}
 
-    /**
-     * Create the initial turn for a game.
-     * 
-     * @author andrsdt
-     * @param game that the turn will be created for
-     */
-    @Transactional
-    public void initializeFromGame(Game game) {
-        Turn turn = new Turn();
-        turn.setPlayer(game.getLeader());
+	@Transactional
+	public void delete(int turnId) {
+		turnRepository.deleteById(turnId);
+	}
 
-        if (game.getHasScenes()) {
-            // Get a random scene and set it as the current scene
-            Scene randomScene = sceneService.findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null); // DB
-                                                                                                                         // indexes
-                                                                                                                         // start
-                                                                                                                         // in
-                                                                                                                         // 1
-            turn.setCurrentScene(randomScene);
-        }
+	/**
+	 * Create the initial turn for a game.
+	 * 
+	 * @author andrsdt
+	 * @param game that the turn will be created for
+	 */
+	@Transactional
+	public void initializeFromGame(Game game) {
+		Turn turn = new Turn();
+		turn.setPlayer(game.getLeader());
 
-        turn.setGame(game);
+		if (Boolean.TRUE.equals(game.getHasScenes())) {
+			// Get a random scene and set it as the current scene
+			Scene randomScene = sceneService.findSceneById(random.nextInt(sceneService.count()) + 1).orElse(null);
+			turn.setCurrentScene(randomScene);
+		}
 
-        // Initial state is the state where the player attacks
-        turn.setStateType(TurnStateType.PLAYER_STATE);
+		turn.setGame(game);
 
-        enemyIngameService.initializeFromGame(game);
-        marketCardIngameService.initializeFromGame(game);
-        abilityCardIngameService.initializeFromGame(game);
-        turnRepository.save(turn);
+		// Initial state is the state where the player attacks
+		turn.setStateType(TurnStateType.PLAYER_STATE);
 
-        // Set a foreign key to the current turn in the game
-        game.getTurns().add(turn);
-    }
+		enemyIngameService.initializeFromGame(game);
+		marketCardIngameService.initializeFromGame(game);
+		abilityCardIngameService.initializeFromGame(game);
+		turnRepository.save(turn);
 
-    public TurnState getState(Turn turn) {
-        TurnStateType stateType = turn.getStateType();
-        if (stateType == TurnStateType.PLAYER_STATE) {
-            return playerState;
-        } else if (stateType == TurnStateType.MARKET_STATE) {
-            return marketState;
-        } else {
-            return null;
-        }
-    }
+		// Set a foreign key to the current turn in the game
+		game.getTurns().add(turn);
+	}
 
-    @Transactional
-    public void setNextState(Turn turn) {
-        TurnState state = getState(turn);
-        state.postState(turn.getGame()); // Execute the post-state method of the current state before changing it
-        TurnStateType nextState = state.getNextState();
-        turn.setStateType(nextState);
-    }
+	public TurnState getState(Turn turn) {
+		TurnStateType stateType = turn.getStateType();
+		if (stateType == TurnStateType.PLAYER_STATE) {
+			return playerState;
+		} else if (stateType == TurnStateType.MARKET_STATE) {
+			return marketState;
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * Given a game, create the next turn
-     * 
-     * @author andrsdt
-     * @param game that the turn will be created for
-     */
-    @Transactional
-    public void createNextTurn(Game game) {
-        Turn currentTurn = game.getCurrentTurn();
-        Turn nextTurn = new Turn();
-        // The next player will be
+	@Transactional
+	public void setNextState(Turn turn) {
+		TurnState state = getState(turn);
+		state.postState(turn.getGame()); // Execute the post-state method of the current state before changing it
+		TurnStateType nextState = state.getNextState();
+		turn.setStateType(nextState);
+	}
 
-        if (game.getHasScenes()) {
-            // Get a random scene and set it as the current scene
-            Scene randomScene = sceneService.findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null);
-            nextTurn.setCurrentScene(randomScene);
-        }
+	/**
+	 * Given a game, create the next turn
+	 * 
+	 * @author andrsdt
+	 * @param game that the turn will be created for
+	 */
+	@Transactional
+	public void createNextTurn(Game game) {
+		Turn currentTurn = game.getCurrentTurn();
+		Turn nextTurn = new Turn();
+		// The next player will be
 
-        game.getEnemiesFighting().forEach(e -> {
-            if (e.getEnemy().getEnemyModifierType() != null
-                    && e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)) {
-                e.setCurrentEndurance(e.getEnemy().getEndurance());
-            }
-            e.getPlayedCardsOnMeInTurn().clear();
-            e.setRestrained(false);
-        });
+		if (Boolean.TRUE.equals(game.getHasScenes())) {
+			// Get a random scene and set it as the current scene
+			Scene randomScene = sceneService.findSceneById(random.nextInt(sceneService.count()) + 1).orElse(null);
+			nextTurn.setCurrentScene(randomScene);
+		}
 
-        // Get the next player. Following the previously set turnOrder, the next player
-        // will be the one after the current player, considering they are alive. In case
-        // there is no next player, the next player will be the first player (circular
-        // list)
-        List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
-        if (alivePlayers.isEmpty()) {
-            // If there are no alive players, the game is over
-            gameService.finishGame(game);
-            return;
-        }
-        Player nextPlayer =
-                alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size() ? alivePlayers.get(0)
-                        : alivePlayers.get(alivePlayers.indexOf(currentTurn.getPlayer()) + 1);
+		game.getEnemiesFighting().forEach(e -> {
+			if (e.getEnemy().getEnemyModifierType() != null
+					&& e.getEnemy().getEnemyModifierType().equals(EnemyModifierType.HEALING_CAPABILITIES)) {
+				e.setCurrentEndurance(e.getEnemy().getEndurance());
+			}
+			e.getPlayedCardsOnMeInTurn().clear();
+			e.setRestrained(false);
+		});
 
-        nextTurn.setPlayer(nextPlayer);
-        nextTurn.setGame(game);
+		// Get the next player. Following the previously set turnOrder, the next player
+		// will be the one after the current player, considering they are alive. In case
+		// there is no next player, the next player will be the first player (circular
+		// list)
+		List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
+		if (alivePlayers.isEmpty()) {
+			// If there are no alive players, the game is over
+			gameService.finishGame(game);
+			return;
+		}
+		Player nextPlayer =
+				alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size() ? alivePlayers.get(0)
+						: alivePlayers.get(alivePlayers.indexOf(currentTurn.getPlayer()) + 1);
 
-        // Initial state is the state where the player attacks
-        nextTurn.setStateType(TurnStateType.PLAYER_STATE);
+		nextTurn.setPlayer(nextPlayer);
+		nextTurn.setGame(game);
 
-        // Add enemies to the table if some died in the previous turn
-        enemyIngameService.refillTableWithEnemies(game);
-        // Add market cards to the table if some were purchased in the previous turn
-        marketCardIngameService.refillMarketWithCards(game);
-        // Refill the current turn player's hand if it has less than 4 cards
-        abilityCardIngameService.refillHandWithCards(nextPlayer);
+		// Initial state is the state where the player attacks
+		nextTurn.setStateType(TurnStateType.PLAYER_STATE);
 
-        turnRepository.save(nextTurn);
+		// Add enemies to the table if some died in the previous turn
+		enemyIngameService.refillTableWithEnemies(game);
+		// Add market cards to the table if some were purchased in the previous turn
+		marketCardIngameService.refillMarketWithCards(game);
+		// Refill the current turn player's hand if it has less than 4 cards
+		abilityCardIngameService.refillHandWithCards(nextPlayer);
 
-        // Set a foreign key to the current turn in the game
-        game.getTurns().add(nextTurn);
-    }
+		turnRepository.save(nextTurn);
+
+		// Set a foreign key to the current turn in the game
+		game.getTurns().add(nextTurn);
+	}
 }

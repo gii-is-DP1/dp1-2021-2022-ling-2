@@ -18,13 +18,13 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
-public class CharacterServiceTest {
+class CharacterServiceTest {
 
     @Autowired
     private CharacterService characterService;
 
     @Test
-    public void testfindById() {
+    void testfindById() {
         Character tester = this.characterService.findById(2);
         assertThat(tester.getCharacterTypeEnum()).isEqualTo(CharacterTypeEnum.RANGER);
         assertThat(tester.getCharacterGenderEnum()).isEqualTo(CharacterGenderEnum.FEMALE);

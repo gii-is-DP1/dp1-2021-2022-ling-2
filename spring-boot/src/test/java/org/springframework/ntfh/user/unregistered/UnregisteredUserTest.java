@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class UnregisteredUserTest {
+class UnregisteredUserTest {
 
     @Autowired
     private UnregisteredUserService unregisteredUserService;

@@ -28,7 +28,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class EnemyIngameServiceTest {
+class EnemyIngameServiceTest {
     
     @Autowired
     private EnemyService enemyService;
@@ -61,12 +61,14 @@ public class EnemyIngameServiceTest {
     @Test
     void testEnemyIngameCount() {
         Integer counter = enemyIngameService.enemyIngameCount();
+
         assertThat(counter).isEqualTo(INITIAL_ENEMIESINGAME_COUNT);
     }
 
     @Test
     void testFindAll() {
         Integer counter = Lists.newArrayList(enemyIngameService.findAll()).size();
+
         assertThat(counter).isEqualTo(INITIAL_ENEMIESINGAME_COUNT);
     }
 
@@ -74,7 +76,9 @@ public class EnemyIngameServiceTest {
     void testFindById() {
         Enemy enemyTester = enemyService.findEnemyById(1).get();
         enemyIngameTester = enemyIngameService.createFromEnemy(enemyTester, gameTester);
-        assertThat(enemyIngameTester.getCurrentEndurance()).isEqualTo(4);
+        Integer ENEMY_ENDURANCE = 4;
+
+        assertThat(enemyIngameTester.getCurrentEndurance()).isEqualTo(ENEMY_ENDURANCE);
         assertThat(enemyIngameTester.isHorde()).isTrue();
         assertThat(enemyIngameTester.getGame()).isEqualTo(gameTester);
         assertThat(enemyIngameTester.getEnemy()).isEqualTo(enemyTester);
@@ -84,6 +88,7 @@ public class EnemyIngameServiceTest {
     void testSaveEnemyIngame() {
         Enemy enemyTester = enemyService.findEnemyById(1).get();
         EnemyIngame testSave = new EnemyIngame();
+
         testSave.setEnemy(enemyTester);
         testSave.setGame(gameTester);
         testSave.setCurrentEndurance(4);
@@ -96,11 +101,16 @@ public class EnemyIngameServiceTest {
 
     @Test
     void testRefillTableWithEnemies() {
+        Integer ENEMIES_AFTER_ONE_GET_KILLED = 2;
+        Integer ENEMIES_REFILLED = 3;
         turnService.initializeFromGame(gameTester);
         new DealDamageCommand(50, gameTester.getPlayers().get(0), gameTester.getEnemiesFighting().get(0)).execute();
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(2);
+
+        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(ENEMIES_AFTER_ONE_GET_KILLED);
+        
         enemyIngameService.refillTableWithEnemies(gameTester);
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(3);
+        
+        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(ENEMIES_REFILLED);
     }
 
     @Test

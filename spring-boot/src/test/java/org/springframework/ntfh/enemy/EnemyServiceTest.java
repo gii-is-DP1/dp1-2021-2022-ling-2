@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class EnemyServiceTest {
+class EnemyServiceTest {
 
     @Autowired
     private EnemyService enemyService;
@@ -37,34 +37,42 @@ public class EnemyServiceTest {
     private final Integer HORDE_COUNT = 27;
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = enemyService.count();
+
         assertThat(count).isEqualTo(ENEMY_COUNT);
     }
 
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(enemyService.findAll()).size();
+
         assertThat(count).isEqualTo(ENEMY_COUNT);
     }
 
     @Test
-    public void testfindById() {
+    void testfindById() {
         Enemy tester = this.enemyService.findEnemyById(17).orElse(null);
+        Integer GLORY_OF_THE_ENEMY = 2;
+        Integer ENDURANCE_OF_THE_ENEMY = 3;
+
         assertThat(tester.getEnemyType()).isEqualTo(EnemyType.REGEN);
         assertThat(tester.getGold()).isZero();
-        assertThat(tester.getBaseGlory()).isEqualTo(2);
+        assertThat(tester.getBaseGlory()).isEqualTo(GLORY_OF_THE_ENEMY);
         assertThat(tester.getExtraGlory()).isZero();
         assertThat(tester.getEnemyModifierType()).isEqualTo(EnemyModifierType.HEALING_CAPABILITIES);
-        assertThat(tester.getEndurance()).isEqualTo(3);
+        assertThat(tester.getEndurance()).isEqualTo(ENDURANCE_OF_THE_ENEMY);
         ;
     }
 
     @Test
     void testEnemyCategoryType() {
         List<Enemy> warlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
+
         assertThat(warlords.size()).isEqualTo(WARLORD_COUNT);
+
         List<Enemy> enemies = enemyService.findByEnemyCategoryType(EnemyCategoryType.HORDE);
+        
         assertThat(enemies.size()).isEqualTo(HORDE_COUNT);
     }
 

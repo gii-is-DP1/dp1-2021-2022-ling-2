@@ -24,6 +24,8 @@ public class UnregisteredUserService {
         this.unregisteredUserRepository = unregisteredUserRepository;
     }
 
+    Random random = new Random();
+
     public Iterable<UnregisteredUser> findAll() {
         return unregisteredUserRepository.findAll();
     }
@@ -45,7 +47,7 @@ public class UnregisteredUserService {
         // generate a random username
         String username;
         do {
-            Integer randomFourDigits = (int) (new Random().nextInt() % 10000);
+            Integer randomFourDigits = (int) (random.nextInt() % 10000);
             username = String.format("user%04d", randomFourDigits);
         } while (this.unregisteredUserRepository.findById(username).isPresent());
 

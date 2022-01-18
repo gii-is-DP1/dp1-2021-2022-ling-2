@@ -1,6 +1,6 @@
 package org.springframework.ntfh.proficiency;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -18,27 +18,32 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class ProficiencyServiceTest {
+class ProficiencyServiceTest {
 
     @Autowired
     private ProficiencyService proficiencyService;
 
+    protected Integer ALL_PROFICIENCIES = 6;
+
     @Test
     void testCountWithInitialData() {
         Integer counter = proficiencyService.count();
-        assertEquals(6, counter);
+
+        assertThat(counter).isEqualTo(ALL_PROFICIENCIES);
     }
 
     @Test
     void testFindAll() {
         Integer counter = Lists.newArrayList(proficiencyService.findAll()).size();
-        assertEquals(6, counter);
+
+        assertThat(counter).isEqualTo(ALL_PROFICIENCIES);
     }
 
     @Test
     void testFindProficiencyById() {
         Proficiency tester = proficiencyService.findProficiencyById(2).get();
-        assertEquals(ProficiencyTypeEnum.MELEE, tester.getProficiencyTypeEnum());
+
+        assertThat(tester.getProficiencyTypeEnum()).isEqualByComparingTo(ProficiencyTypeEnum.MELEE);
     }
     
 }

@@ -20,8 +20,7 @@ public class RobarBolsillos {
 
     public void execute(Player playerFrom) {
         Integer gameId = playerFrom.getGame().getId();
-        gameService.findPlayersByGameId(gameId).forEach(player -> {
-            new StealCoinCommand(playerFrom, player).execute();
-        });
+        gameService.findPlayersByGameId(gameId).forEach(player -> 
+            new StealCoinCommand(playerFrom, player).execute());
     }
 }

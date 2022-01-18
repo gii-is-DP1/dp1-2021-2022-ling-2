@@ -50,7 +50,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
-public class GameServiceTest {
+class GameServiceTest {
 
     @Autowired
     private GameService gameService;
@@ -119,18 +119,18 @@ public class GameServiceTest {
     }
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         gameService.delete(gameTester);
     }
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = gameService.gameCount();
         assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         Game tester = this.gameService.findGameById(1);
         assertThat(tester.getHasScenes()).isTrue();
         assertThat(tester.getLeader().getId()).isEqualTo(1);
@@ -149,13 +149,13 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testSaveGame_success() {
+    void testSaveGame_success() {
         // Test made in the init
         assertThat(gameTester.getId()).isEqualTo(gameService.findGameById(gameTester.getId()).getId());
     }
 
     @Test
-    public void testDeleteGame() {
+    void testDeleteGame() {
         Game tester = gameService.createFromLobby(lobbyTester);
         Integer gameId = tester.getId();
         gameService.delete(tester);
@@ -189,14 +189,14 @@ public class GameServiceTest {
 
     // H1 + E1
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
         assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
     // H7 + E1
     @Test
-    public void testCreateFromLobby() {
+    void testCreateFromLobby() {
         Game tester = gameService.createFromLobby(lobbyTester);
         assertThat(tester.getId()).isEqualTo(gameService.findGameById(tester.getId()).getId());
         gameService.delete(tester);
@@ -206,7 +206,7 @@ public class GameServiceTest {
     @Test
     @Disabled
     // TODO check this in the controller. This is not checked in the service anymore
-    public void testCreateFromLobbyNotEnoughPlayers() {
+    void testCreateFromLobbyNotEnoughPlayers() {
         User user2 = userService.findUser("user2");
         lobbyTester.removeUser(user2);
         assertThrows(IllegalArgumentException.class, () -> gameService.createFromLobby(lobbyTester));
