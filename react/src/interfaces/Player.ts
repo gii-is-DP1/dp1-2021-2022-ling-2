@@ -1,6 +1,7 @@
 import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 import { AbilityCardIngame } from "./AbilityCardIngame";
 import { Character } from "./Character";
+import { Game } from "./Game";
 import { User } from "./User";
 
 export interface Player {
@@ -16,6 +17,7 @@ export interface Player {
   hand: AbilityCardIngame[];
   abilityPile: AbilityCardIngame[];
   discardPile: AbilityCardIngame[];
+  game?: Game;
   characterTypeEnum: CharacterTypeEnum;
   isDead: boolean;
 }
