@@ -1,6 +1,6 @@
 package org.springframework.ntfh.player;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.assertj.core.util.Lists;
@@ -78,25 +78,33 @@ public class PlayerServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = playerService.playerCount();
-        assertEquals(INITIAL_COUNT + 1, count);
+
+        assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
     @Test
     public void testSavePlayer() {
         // Player created in the BeforeEach
         Player tester = currentPlayer;
-        assertEquals(1, tester.getGlory());
-        assertEquals(4, tester.getGold());
-        assertEquals(5, tester.getKills());
-        assertEquals(2, tester.getTurnOrder());
-        assertEquals(1, tester.getWounds());
-        assertEquals(characterService.findById(7), tester.getCharacterType());
+        Integer ORIGINAL_GLORY = 1;
+        Integer ORIGINAL_GOLD = 4;
+        Integer ORIGINAL_KILLS = 5;
+        Integer ORIGINAL_TURN_ORDER = 2;
+        Integer ORIGINAL_WOUNDS = 1;
+
+        assertThat(tester.getGlory()).isEqualTo(ORIGINAL_GLORY);
+        assertThat(tester.getGold()).isEqualTo(ORIGINAL_GOLD);
+        assertThat(tester.getKills()).isEqualTo(ORIGINAL_KILLS);
+        assertThat(tester.getTurnOrder()).isEqualTo(ORIGINAL_TURN_ORDER);
+        assertThat(tester.getWounds()).isEqualTo(ORIGINAL_WOUNDS);
+        assertThat(tester.getCharacterType()).isEqualTo(characterService.findById(7));
     }
 
 
     @Test
     void testDelete() {
         playerService.delete(currentPlayer);
+
         assertThrows(Exception.class, () -> {
             playerService.findById(currentPlayer.getId());
         });
@@ -105,6 +113,7 @@ public class PlayerServiceTest {
     @Test
     void testDeleteById() {
         playerService.deleteById(currentPlayer.getId());
+
         assertThrows(Exception.class, () -> {
             playerService.findById(currentPlayer.getId());
         });
@@ -113,18 +122,25 @@ public class PlayerServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(playerService.findAll()).size();
-        assertEquals(INITIAL_COUNT + 1, count);
+
+        assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
     @Test
     public void testFindByPlayerId() {
         Player tester = this.playerService.findById(currentPlayer.getId());
-        assertEquals(1, tester.getGlory());
-        assertEquals(4, tester.getGold());
-        assertEquals(5, tester.getKills());
-        assertEquals(2, tester.getTurnOrder());
-        assertEquals(1, tester.getWounds());
-        assertEquals(characterService.findById(7), tester.getCharacterType());
+        Integer ORIGINAL_GLORY = 1;
+        Integer ORIGINAL_GOLD = 4;
+        Integer ORIGINAL_KILLS = 5;
+        Integer ORIGINAL_TURN_ORDER = 2;
+        Integer ORIGINAL_WOUNDS = 1;
+
+        assertThat(tester.getGlory()).isEqualTo(ORIGINAL_GLORY);
+        assertThat(tester.getGold()).isEqualTo(ORIGINAL_GOLD);
+        assertThat(tester.getKills()).isEqualTo(ORIGINAL_KILLS);
+        assertThat(tester.getTurnOrder()).isEqualTo(ORIGINAL_TURN_ORDER);
+        assertThat(tester.getWounds()).isEqualTo(ORIGINAL_WOUNDS);
+        assertThat(tester.getCharacterType()).isEqualTo(characterService.findById(7));
     }
 
     @Test
@@ -133,7 +149,8 @@ public class PlayerServiceTest {
         user.setCharacter(characterService.findById(2));
         Lobby lobby = lobbyService.findLobby(3);
         Player tester = playerService.createFromUser(user, lobby, 3);
-        assertEquals(0, tester.getGold());
+
+        assertThat(tester.getGold()).isZero();
     }
 
 }
