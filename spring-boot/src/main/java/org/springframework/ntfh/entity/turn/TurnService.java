@@ -89,7 +89,7 @@ public class TurnService {
         Turn turn = new Turn();
         turn.setPlayer(game.getLeader());
 
-        if (game.getHasScenes()) {
+        if (Boolean.TRUE.equals(game.getHasScenes())) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
                     .findSceneById(random.nextInt(sceneService.count()) + 1).orElse(null); // DB indexes start in
@@ -142,7 +142,7 @@ public class TurnService {
         Turn nextTurn = new Turn();
         // The next player will be
 
-        if (game.getHasScenes()) {
+        if (Boolean.TRUE.equals(game.getHasScenes())) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
                     .findSceneById(random.nextInt(sceneService.count()) + 1).orElse(null);

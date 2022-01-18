@@ -32,7 +32,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
-public class PlayerServiceTest {
+class PlayerServiceTest {
 
     @Autowired
     protected PlayerService playerService;
@@ -76,14 +76,14 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = playerService.playerCount();
 
         assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
     @Test
-    public void testSavePlayer() {
+    void testSavePlayer() {
         // Player created in the BeforeEach
         Player tester = currentPlayer;
         Integer ORIGINAL_GLORY = 1;
@@ -120,14 +120,14 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(playerService.findAll()).size();
 
         assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
     @Test
-    public void testFindByPlayerId() {
+    void testFindByPlayerId() {
         Player tester = this.playerService.findById(currentPlayer.getId());
         Integer ORIGINAL_GLORY = 1;
         Integer ORIGINAL_GOLD = 4;
@@ -144,7 +144,7 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void testCreateFromUser() {
+    void testCreateFromUser() {
         User user = userService.findUser("user4");
         user.setCharacter(characterService.findById(2));
         Lobby lobby = lobbyService.findLobby(3);
