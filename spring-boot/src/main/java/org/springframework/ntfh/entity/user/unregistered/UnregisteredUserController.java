@@ -2,10 +2,10 @@ package org.springframework.ntfh.entity.user.unregistered;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,9 +27,10 @@ public class UnregisteredUserController {
      * Will be called when a user accesses the application without being logged in
      */
     @PostMapping
-    public ResponseEntity<UnregisteredUser> getCredentials() {
+	@ResponseStatus(HttpStatus.OK)
+    public UnregisteredUser getCredentials() {
         UnregisteredUser unregisteredUser = unregisteredUserService.create();
-        return new ResponseEntity<>(unregisteredUser, HttpStatus.OK);
+        return unregisteredUser;
     }
     
 }

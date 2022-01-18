@@ -37,15 +37,17 @@ public class UserController {
 	private CharacterService characterService;
 
 	@GetMapping
-	public ResponseEntity<Iterable<User>> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+	@ResponseStatus(HttpStatus.OK)
+	public Iterable<User> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
 		List<User> users = this.userService.findPage(pageable);
-		return new ResponseEntity<>(users, HttpStatus.OK);
+		return users;
 	}
 
 	@GetMapping("count")
-	public ResponseEntity<Integer> getCount() {
+	@ResponseStatus(HttpStatus.OK)
+	public Integer getCount() {
 		Integer userCount = this.userService.count();
-		return new ResponseEntity<>(userCount, HttpStatus.OK);
+		return userCount;
 	}
 
 	/**
@@ -56,9 +58,10 @@ public class UserController {
 	 * @author andrsdt
 	 */
 	@GetMapping("{userId}")
-	public ResponseEntity<User> getUser(@PathVariable("userId") String username) {
+	@ResponseStatus(HttpStatus.OK)
+	public User getUser(@PathVariable("userId") String username) {
 		User user = this.userService.findUser(username);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		return user;
 	}
 
 	/**
@@ -73,7 +76,8 @@ public class UserController {
 	 * 
 	 */
 	@PutMapping
-	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, String> updateUser(@RequestBody User user,
 			@RequestHeader("Authorization") String token) {
 		User updatedUser = userService.updateUser(user, token);
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
@@ -85,7 +89,7 @@ public class UserController {
 			String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
 			returnBody = Map.of("authorization", tokenWithUpdatedData);
 		}
-		return new ResponseEntity<>(returnBody, HttpStatus.OK);
+		return returnBody;
 	}
 
 	@PostMapping("register")
@@ -94,6 +98,9 @@ public class UserController {
 	public void register(@RequestBody User user) {
 		this.userService.createUser(user);
 	}
+
+
+	// ! TODO este se comporta de manera distinta parece
 
 	@PostMapping("login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
@@ -118,6 +125,8 @@ public class UserController {
 	}
 
 	// TODO implement
+	// ! TODO no le gusta la lista vacía de momento, requiere que sea implementado
+	
 	@GetMapping("{userId}/history")
 	public ResponseEntity<Iterable<Game>> getfindByUser(@PathVariable("userId") String username) {
 		// Iterable<GameHistory> gameHistory =

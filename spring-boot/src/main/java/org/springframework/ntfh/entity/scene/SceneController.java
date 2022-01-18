@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,8 +18,9 @@ public class SceneController {
     private SceneService sceneService;
 
     @GetMapping("count")
-    public ResponseEntity<Integer> getCount() {
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getCount() {
         Integer sceneCount = sceneService.count();
-        return new ResponseEntity<>(sceneCount, HttpStatus.OK);
+        return sceneCount;
     }
 }

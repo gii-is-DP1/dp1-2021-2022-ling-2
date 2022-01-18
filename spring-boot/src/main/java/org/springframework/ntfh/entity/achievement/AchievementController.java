@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,10 +26,14 @@ public class AchievementController {
     private AchievementService achievementService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Achievement>> getAll() {
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Achievement> getAll() {
         Iterable<Achievement> achievements = this.achievementService.findAll();
-        return new ResponseEntity<>(achievements, HttpStatus.OK);
+        return achievements;
     }
+
+
+    // ! TODO a mirar como gestionar el notfound para poder aplicar el nuevo standard, seguramente sea un throw exception
 
     @GetMapping("{achievementId}")
     public ResponseEntity<Achievement> getAchivementById(@PathVariable("achievementId") Integer id) {
@@ -38,7 +43,10 @@ public class AchievementController {
         return new ResponseEntity<>(achievement.get(), HttpStatus.OK);
     }
 
+
+    // ! TODO a mirar como cambiar este putmapping, creemos que le falta devolver algo para la nueva forma de hacer la respuesta
     @PutMapping()
+	@ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<String, String>> updateAchievement(@RequestBody @Valid Achievement achievements,
             @RequestHeader("Authorization") String token) {
         achievementService.updateAchievement(achievements, token);
