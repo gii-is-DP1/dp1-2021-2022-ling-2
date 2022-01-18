@@ -1,5 +1,9 @@
 package org.springframework.ntfh.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.ntfh.entity.enemy.EnemyType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.player.Player;
@@ -24,6 +28,13 @@ public class DealDamageCommand implements Command {
                 .contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
         if (whetstoneCondition || corrosiveArrow) {
             damage++;
+        }
+
+        List<EnemyType> warlords = List.of(EnemyType.GURDRUG, EnemyType.ROGHKILLER, EnemyType.SHRIEKKNIFER);
+        EnemyType targetedEnemyType = targetedEnemy.getEnemy().getEnemyType();
+
+        if(warlords.contains(targetedEnemyType)){
+            new GiveGloryCommand(1, playerFrom).execute();
         }
 
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
