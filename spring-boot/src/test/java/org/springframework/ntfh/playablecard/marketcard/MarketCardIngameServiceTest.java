@@ -112,6 +112,7 @@ public class MarketCardIngameServiceTest {
     @Test
     void testInitializeFromGame() {
         marketCardIngameService.initializeFromGame(gameService.findGameById(1));
+        
         assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
     }
 
