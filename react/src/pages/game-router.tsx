@@ -3,18 +3,17 @@ import toast from "react-hot-toast";
 import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
-import { templateGame } from "../templates/game";
 import { GameStateEnum } from "../types/GameStateEnum";
 import Game from "./game";
 import GameSummary from "./game-summary";
+import Home from "./home";
 import Lobby from "./lobby";
-import LobbyBrowser from "./lobby-browser";
 
 export default function GameRouter() {
   const history = useHistory();
   const { gameId } = useParams<{ gameId: string }>();
   // TODO route each game page to its own component depending on the state
-  const [gameState, setGameState] = useState<GameStateEnum>("LOBBY");
+  const [gameState, setGameState] = useState<GameStateEnum | null>(null);
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -39,6 +38,6 @@ export default function GameRouter() {
     case "FINISHED":
       return <GameSummary />;
     default:
-      return <LobbyBrowser />;
+      return <Home />;
   }
 }

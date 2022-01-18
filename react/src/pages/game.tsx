@@ -49,6 +49,7 @@ export default function Game() {
     const orderedPlayerList: Player[] = _players.sort(
       (p1, p2) => p1.turnOrder - p2.turnOrder
     );
+    if (!playersInRenderOrder) window.location.reload();
     /* In case we are someone playing the game and not a spectator, make sure
      * that the first player of the list (the one who will be rendered on the
      * bottom left part) is us
@@ -121,6 +122,7 @@ export default function Game() {
   useEffect(() => {
     // Re-render players and turn state if needed when the game changes
     if (!game) return;
+    if (game.stateType !== "ONGOING") window.location.reload();
     const sortedPlayers = playersInRenderOrder(game.players);
     setPlayers(sortedPlayers);
     setTurn(game.currentTurn ?? null);

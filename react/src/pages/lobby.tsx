@@ -13,7 +13,6 @@ import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
 import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 import { templateGame } from "../templates/game";
 import { templatePlayer } from "../templates/player";
-import { threadId } from "worker_threads";
 /**
  *
  * @author andrsdt
@@ -64,10 +63,9 @@ export default function Lobby() {
         history.goBack();
         return;
       }
-      const state = lobby.hasStarted ? "ONGOING" : "LOBBY";
-      const prevState = game.hasStarted ? "ONGOING" : "LOBBY";
-      if (game !== templateGame && state !== prevState)
-        window.location.reload();
+
+      // Reload the website to load the next state (if it has changed).
+      if (lobby.stateType !== "LOBBY") window.location.reload();
 
       setGame(lobby);
       setFullLobby(lobby.maxPlayers === lobby.players.length);
