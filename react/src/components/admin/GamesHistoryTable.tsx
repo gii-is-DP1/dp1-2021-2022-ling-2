@@ -1,9 +1,8 @@
 import playerParser from "../../helpers/playerParser";
-import timeParser from "../../helpers/timeParser";
-import { GameHistory } from "../../interfaces/GameHistory";
+import { Game } from "../../interfaces/Game";
 
 type Props = {
-  data: GameHistory[];
+  data: Game[];
 };
 
 export default function GamesHistoryTable(props: Props) {
@@ -35,24 +34,20 @@ export default function GamesHistoryTable(props: Props) {
                 </tr>
               </thead>
               <tbody className="bg-gray-900 divide-y divide-gray-200">
-                {data.map((gameHistory) => (
-                  <tr key={gameHistory.id}>
-                    <td className="text-table-td">{gameHistory.id}</td>
-                    <td className="text-table-td">{gameHistory.duration}</td>
+                {data.map((game) => (
+                  <tr key={game.id}>
+                    <td className="text-table-td">{game.id}</td>
+                    <td className="text-table-td">{game.duration}</td>
+                    <td className="text-table-td">{game?.startTime}</td>
+                    <td className="text-table-td">{game?.finishTime}</td>
                     <td className="text-table-td">
-                      {timeParser(gameHistory.game.startTime)}
+                      {game.hasScenes ? "🟢" : "🔴"}
                     </td>
                     <td className="text-table-td">
-                      {timeParser(gameHistory.finishTime)}
+                      {game?.winner?.user.username}
                     </td>
                     <td className="text-table-td">
-                      {gameHistory.game.hasScenes ? "🟢" : "🔴"}
-                    </td>
-                    <td className="text-table-td">
-                      {gameHistory.winner.user.username}
-                    </td>
-                    <td className="text-table-td">
-                      {playerParser(gameHistory.game.players)}
+                      {playerParser(game.players)}
                     </td>
                   </tr>
                 ))}

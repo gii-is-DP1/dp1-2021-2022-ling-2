@@ -1,20 +1,19 @@
 package org.springframework.ntfh.entity.spectator;
 
 import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.unregistered.UnregisteredUser;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +24,7 @@ import lombok.Setter;
 public class Spectator extends BaseEntity {
     @NotNull
     @Column(columnDefinition = "integer default 0")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date entryTime;
 
     @OneToOne(cascade = CascadeType.ALL) // TODO not oneToOne
