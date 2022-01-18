@@ -1,6 +1,6 @@
 package org.springframework.ntfh.playablecard.marketcard;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardTypeEnum;
@@ -43,11 +44,17 @@ public class MarketCardIngameServiceTest {
     @Autowired
     private TurnService turnService;
 
-    private MarketCardIngame cardTester;
+    protected MarketCardIngame cardTester;
+
+    protected Game gameTester;
+
+    protected Integer FULL_MARKET = 5;
+
 
     @BeforeEach
     void init() {
         cardTester = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameService.findGameById(1));
+        gameTester = gameService.findGameById(1);
     }
 
     @AfterEach
@@ -61,19 +68,22 @@ public class MarketCardIngameServiceTest {
     @Test
     void testFindById() {
         MarketCardIngame testerCard = marketCardIngameService.findById(cardTester.getId());
-        assertEquals(MarketCardTypeEnum.POCION_CURATIVA, testerCard.getMarketCard().getMarketCardTypeEnum());
+
+        assertThat(testerCard.getMarketCard().getMarketCardTypeEnum()).isEqualTo(MarketCardTypeEnum.POCION_CURATIVA);
     }
 
     @Test
     void testSave() {
         cardTester = marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(1).get(), gameService.findGameById(1));
         marketCardIngameService.save(cardTester);
-        assertEquals(MarketCardTypeEnum.DAGA_ELFICA, marketCardIngameService.findById(cardTester.getId()).getMarketCard().getMarketCardTypeEnum());
+
+        assertThat(marketCardIngameService.findById(cardTester.getId()).getMarketCard().getMarketCardTypeEnum()).isEqualTo(MarketCardTypeEnum.DAGA_ELFICA);
     }
 
     @Test
     void testDelete() {
         marketCardIngameService.delete(cardTester);
+
         assertThrows(Exception.class, () -> {marketCardIngameService.findById(cardTester.getId());});
     } 
     
@@ -85,25 +95,30 @@ public class MarketCardIngameServiceTest {
         marketCardIngameService.initializeFromGame(gameService.findGameById(1));
         gameService.setNextTurnState(gameService.getCurrentTurnByGameId(1));
 
-        assertEquals(5, gameService.findGameById(1).getMarketCardsForSale().size());
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+
         List<MarketCardIngame> market = gameService.findGameById(1).getMarketCardsForSale();
         market.get(0).setMarketCard(cardTester.getMarketCard());
         gameService.buyMarketCard(market.get(0).getId(), playerToken);
-        assertEquals(4, gameService.findGameById(1).getMarketCardsForSale().size());
+        Integer FULL_MARKET_LESS_ONE = 4;
+
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET_LESS_ONE);
+
         marketCardIngameService.refillMarketWithCards(gameService.findGameById(1));
-        assertEquals(5, gameService.findGameById(1).getMarketCardsForSale().size());
+
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
     }
 
     @Test
     void testInitializeFromGame() {
         marketCardIngameService.initializeFromGame(gameService.findGameById(1));
-        assertEquals(5, gameService.findGameById(1).getMarketCardsForSale().size());
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
     }
 
     @Test
     void testCreateFromMarketCard() {
         // TestMethod made in the init()
-        assertEquals(MarketCardTypeEnum.POCION_CURATIVA, cardTester.getMarketCard().getMarketCardTypeEnum());
+        assertThat(cardTester.getMarketCard().getMarketCardTypeEnum()).isEqualTo(MarketCardTypeEnum.POCION_CURATIVA);
     }
 
 }
