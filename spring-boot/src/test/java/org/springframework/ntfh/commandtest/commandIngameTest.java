@@ -513,10 +513,19 @@ public class CommandIngameTest {
 
     @Test
     void testRestrainCommand() {
+
+        //check if the enemy is restrained after executing the command
+
         assertThat(enemyIngame.getRestrained()).isFalse();
 
         new RestrainCommand(enemyIngame).execute();
 
+        assertThat(enemyIngame.getRestrained()).isTrue();
+
+        //Check if we restrain an already restrained enemy it will still be restrained
+
+        new RestrainCommand(enemyIngame).execute();
+        
         assertThat(enemyIngame.getRestrained()).isTrue();
     }
 
