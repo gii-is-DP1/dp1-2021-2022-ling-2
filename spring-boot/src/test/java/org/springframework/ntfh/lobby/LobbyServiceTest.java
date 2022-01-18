@@ -32,7 +32,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class LobbyServiceTest {
+class LobbyServiceTest {
 
     @Autowired
     private LobbyService lobbyService;
@@ -48,7 +48,7 @@ public class LobbyServiceTest {
     private Integer INITIAL_LOBBY_COUNT = 3;
 
     @BeforeEach
-    public void init() {
+    void init() {
         User user1 = userService.findUser("user1");
         Set<User> users = Sets.newSet(user1);
 
@@ -64,7 +64,7 @@ public class LobbyServiceTest {
     }
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         try {
             lobbyRepository.delete(lobbyTester);
         } catch (Exception e) {
@@ -73,19 +73,19 @@ public class LobbyServiceTest {
     }
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = lobbyService.lobbyCount();
         assertThat(count).isEqualTo(INITIAL_LOBBY_COUNT+1);
     }
 
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
         assertThat(count).isEqualTo(INITIAL_LOBBY_COUNT+1);
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         Lobby tester = this.lobbyService.findById(1);
         assertThat(tester.getName()).isEqualTo("andres with pablo");
         assertThat(tester.getGame().getId()).isEqualTo(1);
@@ -109,14 +109,14 @@ public class LobbyServiceTest {
     }
 
     @Test
-    public void testDeleteLobby() {
+    void testDeleteLobby() {
         Integer lobbyId = lobbyTester.getId();
         lobbyService.deleteLobby(lobbyTester);
         assertThrows(DataAccessException.class, () -> lobbyService.findById(lobbyId));
     }
 
     @Test
-    public void testRemoveUserFromLobby() {
+    void testRemoveUserFromLobby() {
         Integer lobbyTesterId = lobbyTester.getId();
         User requester = userService.findUser("merlin");
         String requesterString = requester.getUsername();
@@ -138,7 +138,7 @@ public class LobbyServiceTest {
     // partida tiene acceso a la creación, por lo tanto la
     // creación de un lobby es ya de por si este test
     @Test
-    public void testSave() {
+    void testSave() {
         // Test made in the init
         assertThat(lobbyTester.getId()).isEqualTo(lobbyService.findById(lobbyTester.getId()).getId());
         Integer count = Lists.newArrayList(lobbyService.findAll()).size();
@@ -147,7 +147,7 @@ public class LobbyServiceTest {
 
     // H8 + E1
     @Test
-    public void testJoinToLobby_Success() {
+    void testJoinToLobby_Success() {
         Integer lobbyTesterId = lobbyTester.getId();
         User requester = userService.findUser("merlin");
         String requesterString = requester.getUsername();
@@ -158,7 +158,7 @@ public class LobbyServiceTest {
 
     // H8 - E1
     @Test
-    public void testJoinToLobby_Failure() {
+    void testJoinToLobby_Failure() {
         Lobby fullLobby = lobbyService.findLobby(2);
         Integer fullLobbyId = fullLobby.getId();
         User requester = userService.findUser("ezio");
@@ -170,7 +170,7 @@ public class LobbyServiceTest {
 
     // H14 + E1
     @Test
-    public void testGetNumberOfPlayersInLobby() {
+    void testGetNumberOfPlayersInLobby() {
         User user1 = userService.findUser("user1");
         lobbyTester.addUser(user1);
         Integer numUsersInLobby = lobbyTester.getUsers().size();
