@@ -34,12 +34,14 @@ public class AbilityCardServiceTest {
     @Test
     void testCount() {
         Integer testerInt = abilityCardService.count();
+
         assertEquals(INITIAL_ABILITYCARD_COUNT, testerInt);
     }
 
     @Test
     void testFindById() {
         AbilityCard tester = abilityCardService.findById(4);
+
         assertEquals(AbilityCardTypeEnum.DISPARO_RAPIDO, tester.getAbilityCardTypeEnum());
         assertEquals(CharacterTypeEnum.RANGER, tester.getCharacterTypeEnum());
     }
@@ -47,6 +49,7 @@ public class AbilityCardServiceTest {
     @Test
     void testFindAll() {
         Integer testerInt = Lists.newArrayList(abilityCardService.findAll()).size();
+
         assertEquals(INITIAL_ABILITYCARD_COUNT, testerInt);
     }
 
@@ -54,6 +57,7 @@ public class AbilityCardServiceTest {
     void testFindByCharacterTypeEnum() {
         List<AbilityCard> testerList = Lists
                 .newArrayList(abilityCardService.findByCharacterTypeEnum(CharacterTypeEnum.RANGER));
+
         assertEquals(true, testerList.contains(abilityCardService.findById(1)));
         assertEquals(true, testerList.contains(abilityCardService.findById(2)));
         assertEquals(true, testerList.contains(abilityCardService.findById(4)));
@@ -66,6 +70,7 @@ public class AbilityCardServiceTest {
     @Test
     void testFindByAbilityCardTypeEnum() {
         AbilityCard tester = abilityCardService.findByAbilityCardTypeEnum(AbilityCardTypeEnum.POCION_CURATIVA);
+        
         assertEquals(AbilityCardTypeEnum.POCION_CURATIVA, tester.getAbilityCardTypeEnum());
     }
 
