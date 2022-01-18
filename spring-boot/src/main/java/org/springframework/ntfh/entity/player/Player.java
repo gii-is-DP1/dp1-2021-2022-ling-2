@@ -63,19 +63,19 @@ public class Player extends BaseEntity {
     // Should not change when user's character is changed. Once the
     // row is created in the databse, it stays the same
     @ManyToOne(optional = false)
-    @JoinColumn(name = "character_id", referencedColumnName = "id")
+    @JoinColumn(name = "character_id", referencedColumnName = "id") // TODO redundant referenceColumnName?
     private Character character;
 
     @OneToMany
-    @NotAudited
+    @NotAudited // TODO audit this?
     private List<AbilityCardIngame> hand = new ArrayList<>();
 
     @OneToMany
-    @NotAudited
+    @NotAudited // TODO audit this?
     private List<AbilityCardIngame> abilityPile = new ArrayList<>();
 
     @OneToMany
-    @NotAudited
+    @NotAudited // TODO audit this?
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
     // Make playerCardsInTurn transient?
