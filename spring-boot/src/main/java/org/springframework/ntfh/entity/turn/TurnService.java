@@ -54,6 +54,8 @@ public class TurnService {
 
     /*******************************/
 
+    Random random = new Random();
+
     public Integer turnCount() {
         return (int) turnRepository.count();
     }
@@ -65,8 +67,6 @@ public class TurnService {
     public Optional<Turn> findturnById(Integer id) {
         return turnRepository.findById(id);
     }
-
-    Random random = new Random();
 
     @Transactional
     public void save(Turn turn) {
