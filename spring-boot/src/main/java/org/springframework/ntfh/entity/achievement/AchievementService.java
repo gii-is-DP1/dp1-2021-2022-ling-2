@@ -48,7 +48,7 @@ public class AchievementService {
             throw new IllegalArgumentException("There is already an achievement with the same name");
         }
 
-        if (!TokenUtils.tokenHasAnyAuthorities(token, "admin")) {
+        if (Boolean.FALSE.equals(TokenUtils.tokenHasAnyAuthorities(token, "admin"))) {
             throw new NonMatchingTokenException("Only admins can edit achievements");
         }
 

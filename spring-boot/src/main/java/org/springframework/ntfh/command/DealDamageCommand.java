@@ -1,6 +1,5 @@
 package org.springframework.ntfh.command;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.ntfh.entity.enemy.EnemyType;
@@ -38,7 +37,7 @@ public class DealDamageCommand implements Command {
         }
 
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
-        if (targetedEnemy.isDead()) {
+        if (Boolean.TRUE.equals(targetedEnemy.isDead())) {
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
             playerFrom.setKills(playerKillCount + 1);
 

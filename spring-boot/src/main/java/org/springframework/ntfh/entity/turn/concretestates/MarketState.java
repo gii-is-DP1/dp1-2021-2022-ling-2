@@ -46,10 +46,8 @@ public class MarketState implements TurnState {
         // After the market state, the player will receive damage from the horde
         // and then a new turn will be created
         Player currentPlayer = game.getCurrentTurn().getPlayer();
-        game.getEnemiesFighting().forEach(enemy -> {
-            Integer damage = enemy.getCurrentEndurance();
-            new ReceiveDamageCommand(enemy, currentPlayer).execute();
-        });
+        game.getEnemiesFighting().forEach(enemy ->
+            new ReceiveDamageCommand(enemy, currentPlayer).execute());
 
         turnService.createNextTurn(game);
 

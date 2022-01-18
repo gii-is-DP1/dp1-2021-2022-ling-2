@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class SceneServiceTest {
+class SceneServiceTest {
 
     @Autowired
     private SceneService sceneService;
@@ -25,7 +25,7 @@ public class SceneServiceTest {
     protected Integer ALL_SCENES = 12;
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         // TODO: Delete all and create mock initial data. Then test count.
         // By doing this we will make this test independent of the initial data.
         Integer count = sceneService.count();
@@ -34,7 +34,7 @@ public class SceneServiceTest {
     }
 
     @Test
-    public void testfindById() {
+    void testfindById() {
         Scene tester = this.sceneService.findSceneById(8).get();
 
         assertThat(tester.getSceneTypeEnum()).isEqualTo(SceneTypeEnum.PORTAL_DE_ULTHAR);
