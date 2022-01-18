@@ -8,15 +8,18 @@ import java.util.Optional;
 import java.util.Set;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.ntfh.entity.game.concretestates.FinishedState;
+import org.springframework.ntfh.entity.game.concretestates.LobbyState;
+import org.springframework.ntfh.entity.game.concretestates.OngoingState;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
-import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
@@ -43,6 +46,19 @@ public class GameService {
     @Autowired
     private TurnService turnService;
 
+    /************ STATES ************/
+
+    @Autowired
+    private LobbyState lobbyState;
+
+    @Autowired
+    private OngoingState ongoingState;
+
+    @Autowired
+    private FinishedState finishedState;
+
+    /*******************************/
+
     public Integer gameCount() {
         return (int) gameRepository.count();
     }
@@ -65,14 +81,22 @@ public class GameService {
     }
 
     public Turn getCurrentTurnByGameId(Integer gameId) {
+        // TODO move to TurnService?
         List<Turn> turns = gameRepository.getTurnsByGameId(gameId);
         return turns.isEmpty() ? null : turns.get(turns.size() - 1);
     }
 
     @Transactional
     public Game createGame(Game game) {
-        // ! set state to lobby
-        return this.save(game);
+        // Security measure to ensure that only the requested properties are set by the requester
+        Game newGame = new Game();
+        newGame.setName(game.getName());
+        newGame.setHasScenes(game.getHasScenes());
+        newGame.setSpectatorsAllowed(game.getSpectatorsAllowed());
+        newGame.setMaxPlayers(game.getMaxPlayers());
+
+        newGame.setStateType(GameStateType.LOBBY);
+        return this.save(newGame);
     }
 
     @Transactional
@@ -95,53 +119,25 @@ public class GameService {
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    // TODO Delegate to state
     public Game joinGame(Integer gameId, String username, String token)
             throws DataAccessException, MaximumLobbyCapacityException {
         Game game = this.findGameById(gameId);
-
-        if (game.getPlayers().stream().anyMatch(p -> p.getUser().getUsername().equals(username))) {
-            throw new IllegalArgumentException("The player is already in the lobby") {};
-        }
-
-        if (game.getMaxPlayers().equals(game.getPlayers().size()))
-            throw new MaximumLobbyCapacityException("The lobby is full") {};
-
-        String usernameFromToken = TokenUtils.usernameFromToken(token);
-        if (!username.equals(usernameFromToken))
-            throw new IllegalArgumentException("The Token username and the request one do not coincide") {};
-
-        // TODO get this via a converter before the controller
-        User user = userService.findUser(username);
-
-        // ! TODO adapt this to new model
-        // user.setLobby(lobby);
-        // user.setCharacter(null);
-        Player player = playerService.createPlayer(user); // TODO createPlayer(user);
-
-        if (game.getPlayers().isEmpty()) {
-            // The first player to join will be the host/leader
-            game.setLeader(player);
-        }
-
-        game.getPlayers().add(player);
-        player.setGame(game); // TODO redundant? we have mappedBy above
-        player.getUser().setPlayer(player);
-        return game;
+        GameState gameState = this.getState(game);
+        return gameState.joinGame(gameId, username, token);
     }
 
     @Transactional
     public Game removePlayer(Integer gameId, String username, String token) {
         // TODO make sure that the one trying to remove the player is either the player himself or the host
+        // ! delegate to state as the rest of methods
+
         Game game = this.findGameById(gameId);
-        User user = userService.findUser(username);
-        Player player = user.getPlayer();
-        player.setGame(null);
-        game.getPlayers().remove(player);
-        return this.save(game);
+        GameState gameState = this.getState(game);
+        return gameState.removePlayer(gameId, username, token);
     }
 
     @Transactional
+    // TODO remove if unused
     public Game createFromLobby(@Valid Lobby lobby) {
         Game game = new Game();
         game.setStartTime(Timestamp.from(Instant.now()));
@@ -196,11 +192,12 @@ public class GameService {
     @Transactional
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
         // TODO make getting the turn more straightforward, maybe with a custom query
+        // TODO handle token check here instead of in concreteState
         String username = TokenUtils.usernameFromToken(token);
         Player player = userService.findUser(username).getPlayer();
-        Turn currentTurn = player.getGame().getCurrentTurn();
-        TurnState turnState = turnService.getState(currentTurn);
-        turnState.playCard(abilityCardIngameId, enemyId, token);
+        Game game = player.getGame();
+        GameState gameState = this.getState(game);
+        gameState.playCard(abilityCardIngameId, enemyId, token);
     }
 
     /**
@@ -211,11 +208,12 @@ public class GameService {
     @Transactional
     public void buyMarketCard(Integer marketCardIngameId, String token) {
         // TODO make getting the turn more straightforward, maybe with a custom query
+        // TODO handle token check here instead of in concreteState
         String username = TokenUtils.usernameFromToken(token);
         Player player = userService.findUser(username).getPlayer();
-        Turn currentTurn = player.getGame().getCurrentTurn();
-        TurnState turnState = turnService.getState(currentTurn);
-        turnState.buyMarketCard(marketCardIngameId, token);
+        Game game = player.getGame();
+        GameState gameState = this.getState(game);
+        gameState.buyMarketCard(marketCardIngameId, token);
     }
 
     @Transactional
@@ -230,19 +228,39 @@ public class GameService {
      */
     @Transactional
     public void finishGame(Game game) {
-        game.setFinishTime(Timestamp.from(Instant.now()));
-        game.getPlayers().forEach(p -> {
-            User user = p.getUser();
-            user.setPlayer(null);
-        });
+        GameState gameState = this.getState(game);
+        gameState.finishGame(game);
     }
 
     @Transactional
     public Game startGame(Integer gameId) {
+        // ! delegate to state as the rest of methods
         Game game = this.findGameById(gameId);
         game.setStartTime(Timestamp.from(Instant.now()));
-        // TODO set state to ONGOING
-        // TODO create the first turn bla bla
-        return this.save(game);
+        GameState gameState = this.getState(game);
+        return gameState.startGame(gameId);
+    }
+
+    public GameState getState(Game game) {
+        GameStateType stateType = game.getStateType();
+        if (stateType == GameStateType.LOBBY) {
+            return lobbyState;
+        } else if (stateType == GameStateType.ONGOING) {
+            return ongoingState;
+        } else if (stateType == GameStateType.FINISHED) {
+            return finishedState;
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void setNextState(Game game) {
+        GameState state = getState(game);
+        GameStateType nextState = state.getNextState();
+        game.setStateType(nextState);
+
+        GameState newState = getState(game);
+        newState.preState(game); // Execute the preState method right after setting the new state
     }
 }

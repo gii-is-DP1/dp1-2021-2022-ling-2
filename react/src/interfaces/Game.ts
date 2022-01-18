@@ -1,3 +1,4 @@
+import { GameStateEnum } from "../types/GameStateEnum";
 import { EnemyIngame } from "./EnemyIngame";
 import { MarketCardIngame } from "./MarketCardIngame";
 import { Player } from "./Player";
@@ -23,4 +24,5 @@ export interface Game {
   duration?: number;
   hasStarted: boolean;
   hasFinished: boolean;
+  stateType: GameStateEnum;
 }

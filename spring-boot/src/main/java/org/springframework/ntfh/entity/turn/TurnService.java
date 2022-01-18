@@ -89,9 +89,11 @@ public class TurnService {
 
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
-            Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null); // DB indexes start in
-                                                                                                 // 1
+            Scene randomScene = sceneService.findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null); // DB
+                                                                                                                         // indexes
+                                                                                                                         // start
+                                                                                                                         // in
+                                                                                                                         // 1
             turn.setCurrentScene(randomScene);
         }
 
@@ -142,8 +144,7 @@ public class TurnService {
 
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
-            Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null);
+            Scene randomScene = sceneService.findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null);
             nextTurn.setCurrentScene(randomScene);
         }
 
@@ -160,17 +161,15 @@ public class TurnService {
         // will be the one after the current player, considering they are alive. In case
         // there is no next player, the next player will be the first player (circular
         // list)
-        // ! There will probably be a bug if currentTurn.getPlayer() dies since he/she
-        // won't be in the list anymore and indexOf will return -1
         List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
         if (alivePlayers.isEmpty()) {
             // If there are no alive players, the game is over
             gameService.finishGame(game);
             return;
         }
-        Player nextPlayer = alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size()
-                ? alivePlayers.get(0)
-                : alivePlayers.get(alivePlayers.indexOf(currentTurn.getPlayer()) + 1);
+        Player nextPlayer =
+                alivePlayers.indexOf(currentTurn.getPlayer()) + 1 == alivePlayers.size() ? alivePlayers.get(0)
+                        : alivePlayers.get(alivePlayers.indexOf(currentTurn.getPlayer()) + 1);
 
         nextTurn.setPlayer(nextPlayer);
         nextTurn.setGame(game);

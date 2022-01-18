@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -74,8 +76,6 @@ public class Game extends BaseEntity {
     @JsonIgnore
     private List<Turn> turns = new ArrayList<>();
 
-    // ! DEFINE GAME STATE ATTRIBUTE
-
     // TODO should these four be NotAudited? If they are audited,
     // can they help with the statistics stuff? (Play X card Y times...)
     @OneToMany
@@ -93,6 +93,10 @@ public class Game extends BaseEntity {
     // orphanRemoval: The "comment" rows will be deleted when the game is deleted
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private GameStateType stateType;
 
     /**
      * 

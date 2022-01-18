@@ -3,7 +3,6 @@ package org.springframework.ntfh.entity.game;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,35 +33,35 @@ public class GameController {
      * @author pabrobcam
      */
     @GetMapping
-    public ResponseEntity<Iterable<Game>> getAll() {
-        Iterable<Game> games = gameService.findAll();
-        return new ResponseEntity<>(games, HttpStatus.OK);
-    }
-
-    @GetMapping("history")
-    public ResponseEntity<Iterable<Game>> getPastGames() {
-        // TODO implement
-        Iterable<Game> games = gameService.findAll();
-        return new ResponseEntity<>(games, HttpStatus.OK);
-    }
-
-    @GetMapping("history/count")
-    public ResponseEntity<Integer> getPastGamesCount() {
-        // TODO implement
-        Integer count = gameService.gameCount();
-        return new ResponseEntity<>(count, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Game> getAll() {
+        return gameService.findAll();
     }
 
     @GetMapping("count")
-    public ResponseEntity<Integer> getCount() {
-        Integer count = gameService.gameCount();
-        return new ResponseEntity<>(count, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getCount() {
+        return gameService.gameCount();
+    }
+
+    @GetMapping("history")
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Game> getPastGames() {
+        // TODO implement
+        return gameService.findAll();
+    }
+
+    @GetMapping("history/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getPastGamesCount() {
+        // TODO implement
+        return gameService.gameCount();
     }
 
     @GetMapping("{gameId}")
-    public ResponseEntity<Game> getGame(@PathVariable("gameId") Integer gameId) {
-        Game game = gameService.findGameById(gameId);
-        return new ResponseEntity<>(game, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Game getGame(@PathVariable("gameId") Integer gameId) {
+        return gameService.findGameById(gameId);
     }
 
     /**
@@ -73,9 +72,11 @@ public class GameController {
      * @author andrsdt
      */
     @PostMapping("new")
-    public ResponseEntity<Game> createGame(@RequestBody Game game) throws IllegalArgumentException {
-        Game createdLobby = gameService.createGame(game);
-        return new ResponseEntity<>(createdLobby, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Game createGame(@RequestBody Game game) throws IllegalArgumentException {
+        // TODO check here the input validations (e.g. spectatorsAllowed is not null)
+        // if they are not checked in hte entity
+        return gameService.createGame(game);
     }
 
     /**
@@ -89,16 +90,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteGame(@PathVariable("gameId") Integer gameId) {
         gameService.deleteGame(gameId);
-    }
-
-    @PostMapping("{gameId}/start")
-    @ResponseStatus(HttpStatus.OK)
-    public Game startGame(@PathVariable("gameId") Integer gameId) {
-        Game game = gameService.findGameById(gameId);
-        if (game.getPlayers().size() < 2) {
-            throw new IllegalArgumentException("Not enough players to start the game");
-        }
-        return gameService.startGame(gameId);
     }
 
     /**
@@ -134,6 +125,16 @@ public class GameController {
         return game;
     }
 
+    @PostMapping("{gameId}/start")
+    @ResponseStatus(HttpStatus.OK)
+    public Game startGame(@PathVariable("gameId") Integer gameId) {
+        Game game = gameService.findGameById(gameId);
+        if (game.getPlayers().size() < 2) {
+            throw new IllegalArgumentException("Not enough players to start the game");
+        }
+        return gameService.startGame(gameId);
+    }
+
     /**
      * This endpoint will receive the petitions of a player to play a card
      * 
@@ -142,35 +143,34 @@ public class GameController {
      * @return the game with the updated state
      */
     @PostMapping("{gameId}/ability-cards/{abilityCardIngameId}")
-    public ResponseEntity<Game> playCard(@PathVariable("gameId") Integer gameId,
+    public Game playCard(@PathVariable("gameId") Integer gameId,
             @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body,
             @RequestHeader("Authorization") String token) {
         Integer enemyId = body.get("enemyId");
         gameService.playCard(abilityCardIngameId, enemyId, token);
-        Game game = gameService.findGameById(gameId);
-        return new ResponseEntity<>(game, HttpStatus.OK);
+        return gameService.findGameById(gameId);
     }
 
     @PostMapping("{gameId}/market-cards/{marketCardIngameId}")
-    public ResponseEntity<Game> buyMarketCard(@PathVariable("gameId") Integer gameId,
+    @ResponseStatus(HttpStatus.OK)
+    public Game buyMarketCard(@PathVariable("gameId") Integer gameId,
             @PathVariable("marketCardIngameId") Integer marketCardIngameId,
             @RequestHeader("Authorization") String token) {
         gameService.buyMarketCard(marketCardIngameId, token);
-        Game game = gameService.findGameById(gameId);
-        return new ResponseEntity<>(game, HttpStatus.OK);
+        return gameService.findGameById(gameId);
     }
 
     @GetMapping("{gameId}/turn")
-    public ResponseEntity<Turn> getTurn(@PathVariable("gameId") Integer gameId) {
-        Turn turn = gameService.getCurrentTurnByGameId(gameId);
-        return new ResponseEntity<>(turn, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Turn getTurn(@PathVariable("gameId") Integer gameId) {
+        return gameService.getCurrentTurnByGameId(gameId);
     }
 
     @PostMapping("{gameId}/turn/next")
-    public ResponseEntity<Game> nextTurn(@PathVariable("gameId") Integer gameId) {
+    @ResponseStatus(HttpStatus.OK)
+    public Game nextTurn(@PathVariable("gameId") Integer gameId) {
         Turn turn = gameService.getCurrentTurnByGameId(gameId);
         gameService.setNextTurnState(turn);
-        Game game = gameService.findGameById(gameId);
-        return new ResponseEntity<>(game, HttpStatus.OK);
+        return gameService.findGameById(gameId);
     }
 }

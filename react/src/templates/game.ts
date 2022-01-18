@@ -16,4 +16,5 @@ export const templateGame: Game = {
   comments: [],
   hasStarted: false,
   hasFinished: false,
+  stateType: "LOBBY",
 };

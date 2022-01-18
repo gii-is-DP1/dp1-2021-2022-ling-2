@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import * as ROUTES from "../constants/routes";
 import { templateGame } from "../templates/game";
+import { GameStateEnum } from "../types/GameStateEnum";
 import Game from "./game";
 import GameSummary from "./game-summary";
 import Lobby from "./lobby";
@@ -13,7 +14,7 @@ export default function GameRouter() {
   const history = useHistory();
   const { gameId } = useParams<{ gameId: string }>();
   // TODO route each game page to its own component depending on the state
-  const [gameState, setGameState] = useState("LOBBY");
+  const [gameState, setGameState] = useState<GameStateEnum>("LOBBY");
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -21,18 +22,15 @@ export default function GameRouter() {
       try {
         const response = await axios.get(`/games/${gameId}`);
         const _game = response.data;
-        setGameState(_game.hasStarted ? "ONGOING" : "LOBBY");
+        setGameState(_game.stateType);
       } catch (error: any) {
         toast.error(error?.message);
         if (error?.status >= 400) history.push(ROUTES.BROWSE_GAMES);
       }
     };
-    console.log("game-router executed");
     fetchGame();
   }, []);
 
-  // ! get state dynamically from game
-  // ! State
   switch (gameState) {
     case "LOBBY":
       return <Lobby />;
