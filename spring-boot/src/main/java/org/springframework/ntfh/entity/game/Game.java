@@ -59,7 +59,7 @@ public class Game extends BaseEntity {
     private Integer maxPlayers;
 
     // Set from Lobby by creating Players instances from users
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"game", "lobby"})
     private List<Player> players;
 

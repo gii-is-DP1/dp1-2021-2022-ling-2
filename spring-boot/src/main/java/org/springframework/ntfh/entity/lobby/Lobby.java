@@ -24,8 +24,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This table represents the lobby that is created by the user waiting for people to join to start a
- * game
+ * This table represents the lobby that is created by the user waiting for people to join to start a game
  * 
  * @author andrsdt
  */
@@ -56,7 +55,7 @@ public class Lobby extends NamedEntity {
     // from the database. Find the solution for this
     // I want that, whe I delete a lobby, the user rows that were referencing that
     // lobby change their value to NULL in the lobby_id column
-    @OneToMany(mappedBy = "lobby")
+    @OneToMany
     private Set<User> users; // Managed by the server
 
     @ManyToOne()
