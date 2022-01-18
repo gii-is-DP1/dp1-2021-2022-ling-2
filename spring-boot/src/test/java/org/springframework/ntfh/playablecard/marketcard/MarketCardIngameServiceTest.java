@@ -88,7 +88,7 @@ public class MarketCardIngameServiceTest {
         assertEquals(5, gameService.findGameById(1).getMarketCardsForSale().size());
         List<MarketCardIngame> market = gameService.findGameById(1).getMarketCardsForSale();
         market.get(0).setMarketCard(cardTester.getMarketCard());
-        gameService.buyMarketCard(market.get(0).getId(), playerToken);
+        marketCardIngameService.buyMarketCard(market.get(0).getId(), playerToken);
         assertEquals(4, gameService.findGameById(1).getMarketCardsForSale().size());
         marketCardIngameService.refillMarketWithCards(gameService.findGameById(1));
         assertEquals(5, gameService.findGameById(1).getMarketCardsForSale().size());

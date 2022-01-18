@@ -177,7 +177,7 @@ public class GameServiceTest {
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngame);
         playerTester.setHand(hand);
-        gameService.playCard(abilityCardIngame.getId(), null, token);
+        abilityCardIngameService.playCard(abilityCardIngame.getId(), null, token);
         assertEquals(2, playerTester.getHand().size());
     }
 
@@ -245,7 +245,7 @@ public class GameServiceTest {
 
         assertEquals(true, gameTester.getEnemiesFighting().contains(enemyIngame));
 
-        gameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
+        abilityCardIngameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
 
         turnService.createNextTurn(gameTester);
 
@@ -262,7 +262,7 @@ public class GameServiceTest {
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
         turnService.initializeFromGame(gameTester);
         gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
-        gameService.buyMarketCard(marketCardIngameId, playerToken);
+        marketCardIngameService.buyMarketCard(marketCardIngameId, playerToken);
 
         assertEquals(2, playerTester.getGold());
     }
@@ -279,7 +279,7 @@ public class GameServiceTest {
         gameService.setNextTurnState(gameTester.getCurrentTurn());
 
         assertThrows(IllegalArgumentException.class, () -> {
-            gameService.buyMarketCard(marketCardIngameId, playerToken);
+            marketCardIngameService.buyMarketCard(marketCardIngameId, playerToken);
         });
     }
 
