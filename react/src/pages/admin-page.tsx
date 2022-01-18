@@ -12,7 +12,7 @@ import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
-import { GameHistory } from "../interfaces/GameHistory";
+import { Game } from "../interfaces/Game";
 
 type CurrentTableEnum = "ongoing" | "history" | "achievements" | "users";
 
@@ -22,15 +22,17 @@ type CurrentTableEnum = "ongoing" | "history" | "achievements" | "users";
  */
 export default function AdminPage() {
   const history = useHistory();
+  const { userToken } = useContext(userContext);
   const loggedUser = tokenParser(useContext(userContext));
   const [currentTable, setCurrentTable] = useState<CurrentTableEnum>("ongoing");
-  const [gamesHistory, setGamesHistory] = useState<GameHistory[]>([]);
+  const [gamesHistory, setGamesHistory] = useState<Game[]>([]);
 
   useEffect(() => {
     const fetchGameHistory = async () => {
       if (currentTable !== "ongoing") return;
       try {
-        const response = await axios.get("gameHistory");
+        const headers = { Authorization: "Bearer " + userToken };
+        const response = await axios.get("games/history", { headers });
         setGamesHistory(response.data);
       } catch (error: any) {
         toast.error(error?.message);

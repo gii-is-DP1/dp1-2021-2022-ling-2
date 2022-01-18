@@ -1,6 +1,6 @@
 package org.springframework.ntfh.game;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import java.util.Set;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.lobby.Lobby;
 import org.springframework.ntfh.entity.lobby.LobbyService;
@@ -49,14 +49,11 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 // TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
 public class GameServiceTest {
 
     @Autowired
     private GameService gameService;
-
-    @Autowired
-    private GameRepository gameRepository;
 
     @Autowired
     private LobbyService lobbyService;
@@ -112,8 +109,8 @@ public class GameServiceTest {
         lobbyTester.setLeader(user1);
         lobbyService.save(lobbyTester);
 
-        user1.setCharacter(characterService.findCharacterById(2).get());
-        user2.setCharacter(characterService.findCharacterById(4).get());
+        user1.setCharacter(characterService.findById(2));
+        user2.setCharacter(characterService.findById(4));
 
         gameTester = gameService.createFromLobby(lobbyTester);
         user1.setLobby(lobbyTester);
@@ -128,34 +125,32 @@ public class GameServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = gameService.gameCount();
-        assertEquals(INITIAL_GAMES_COUNT + 1, count);
+        assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
     @Test
     public void testFindById() {
         Game tester = this.gameService.findGameById(1);
-        assertEquals(true, tester.getHasScenes());
-        assertEquals(1, tester.getLeader().getId());
+        assertThat(tester.getHasScenes()).isTrue();
+        assertThat(tester.getLeader().getId()).isEqualTo(1);
     }
 
     @Test
     void testFindPlayersByGameId() {
         List<Player> testerList = gameService.findPlayersByGameId(1);
-        assertEquals(2, testerList.size());
+        assertThat(testerList.size()).isEqualTo(2);
     }
 
-    //////////////
     @Test
     void testGetCurrentTurnByGameId() {
         Integer tester = gameService.getCurrentTurnByGameId(gameTester.getId()).getId();
-        assertEquals(1, tester);
+        assertThat(tester).isEqualTo(1);
     }
 
-    ///////////////
     @Test
     public void testSaveGame_success() {
         // Test made in the init
-        assertEquals(gameRepository.findById(gameTester.getId()).get().getId(), gameTester.getId());
+        assertThat(gameTester.getId()).isEqualTo(gameService.findGameById(gameTester.getId()).getId());
     }
 
     @Test
@@ -170,7 +165,7 @@ public class GameServiceTest {
 
     @Test
     void testPlayCard() {
-        playerTester.setCharacterType(characterService.findCharacterById(5).get());
+        playerTester.setCharacterType(characterService.findById(5));
         AbilityCard pasoAtras = abilityCardService.findById(27);
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(pasoAtras, playerTester);
         String token = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -178,16 +173,16 @@ public class GameServiceTest {
         hand.add(abilityCardIngame);
         playerTester.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngame.getId(), null, token);
-        assertEquals(2, playerTester.getHand().size());
+        assertThat(playerTester.getHand().size()).isEqualTo(2);
     }
 
     @Test
     void testNextTurnState() {
         String player_state = gameTester.getCurrentTurn().getStateType().toString();
-        assertEquals("PLAYER_STATE", player_state);
+        assertThat(player_state).isEqualTo("PLAYER_STATE");
         gameService.setNextTurnState(gameTester.getCurrentTurn());
         String market_state = gameTester.getCurrentTurn().getStateType().toString();
-        assertEquals("MARKET_STATE", market_state);
+        assertThat(market_state).isEqualTo("MARKET_STATE");
 
     }
 
@@ -195,19 +190,21 @@ public class GameServiceTest {
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
-        assertEquals(INITIAL_GAMES_COUNT + 1, count);
+        assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
     // H7 + E1
     @Test
     public void testCreateFromLobby() {
         Game tester = gameService.createFromLobby(lobbyTester);
-        assertEquals(gameService.findGameById(tester.getId()).getId(), tester.getId());
+        assertThat(tester.getId()).isEqualTo(gameService.findGameById(tester.getId()).getId());
         gameService.delete(tester);
     }
 
     // H7 - E1
     @Test
+    @Disabled
+    // TODO check this in the controller. This is not checked in the service anymore
     public void testCreateFromLobbyNotEnoughPlayers() {
         User user2 = userService.findUser("user2");
         lobbyTester.removeUser(user2);
@@ -222,15 +219,15 @@ public class GameServiceTest {
         turnService.initializeFromGame(gameTester);
         new DealDamageCommand(2, playerTester, enemyIngame).execute();
 
-        assertEquals(1, playerTester.getGold());
-        assertEquals(1, playerTester.getGlory());
+        assertThat(playerTester.getGold()).isEqualTo(1);
+        assertThat(playerTester.getGlory()).isEqualTo(1);
     }
 
     // H21 + E2
     @Test
     void testBountyBehaviourWithTrampaCard() {
         turnService.initializeFromGame(gameTester);
-        gameTester.getLeader().setCharacterType(characterService.findCharacterById(3).get());
+        gameTester.getLeader().setCharacterType(characterService.findById(3));
         AbilityCard trampa = abilityCardService.findById(60);
         AbilityCardIngame trampaIngame = abilityCardIngameService.createFromAbilityCard(trampa, playerTester);
         String token = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -243,20 +240,20 @@ public class GameServiceTest {
         enemiesFighting.add(enemyIngame);
         gameTester.setEnemiesFighting(enemiesFighting);
 
-        assertEquals(true, gameTester.getEnemiesFighting().contains(enemyIngame));
+        assertThat(gameTester.getEnemiesFighting().contains(enemyIngame)).isTrue();
 
         abilityCardIngameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
 
         turnService.createNextTurn(gameTester);
 
-        assertEquals(false, gameTester.getEnemiesFighting().contains(enemyIngame));
+        assertThat(gameTester.getEnemiesFighting().contains(enemyIngame)).isFalse();
     }
 
     // H22 + E1
     @Test
     void testBuyMarketCard_Success() {
-        MarketCardIngame marketCardIngame = marketCardIngameService
-                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame =
+                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(10);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -264,14 +261,14 @@ public class GameServiceTest {
         gameService.setNextTurnState(gameService.getCurrentTurnByGameId(gameTester.getId()));
         marketCardIngameService.buyMarketCard(marketCardIngameId, playerToken);
 
-        assertEquals(2, playerTester.getGold());
+        assertThat(playerTester.getGold()).isEqualTo(2);
     }
 
     // H22 - E1
     @Test
     void testBuyMarketCard_Failure() {
-        MarketCardIngame marketCardIngame = marketCardIngameService
-                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame =
+                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(4);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -290,7 +287,7 @@ public class GameServiceTest {
         turnService.initializeFromGame(gameTester);
         new DealDamageCommand(2, playerTester, enemyIngame).execute();
 
-        assertEquals(1, playerTester.getKills());
+        assertThat(playerTester.getKills()).isEqualTo(1);
     }
 
 }

@@ -1,9 +1,7 @@
 package org.springframework.ntfh.configuration;
 
 import java.security.SecureRandom;
-
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose
+ * Tools | Templates and open the template in the editor.
  */
 
 /**
@@ -40,22 +37,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
 
 				// USER ENDPOINTS
-				.antMatchers(HttpMethod.POST, "/users/register").permitAll() // Allow to register
-				.antMatchers(HttpMethod.POST, "/users/login").permitAll() // Allow to login
-				.antMatchers(HttpMethod.GET, "/users").hasAuthority("admin") // Allow admins to list all the users
-				.antMatchers(HttpMethod.GET, "/users/count").permitAll() // Allow everyone to get user number
-				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin") // Update user's profile
-				.antMatchers(HttpMethod.PUT, "/users/character").hasAuthority("user") // Update user's current
-																						// character
-				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll() // Everyone can see a user's profile
-				.antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority("admin") // An admin can delete a user
-				.antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority("admin") // An admin can ban a user
-				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll() // Everyone can see a user's match
-																					// history
-				.antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAuthority("user") // Set character
+				// Allow to register
+				.antMatchers(HttpMethod.POST, "/users/register").permitAll()
+				// Allow to login
+				.antMatchers(HttpMethod.POST, "/users/login").permitAll()
+				// Allow admins to list all the users
+				.antMatchers(HttpMethod.GET, "/users").hasAuthority("admin")
+				// Allow everyone to get user number
+				.antMatchers(HttpMethod.GET, "/users/count").permitAll()
+				// Update user's profile
+				.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin")
+				// Update user's current character
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/character/{characterId}").hasAuthority("user")
+				// Everyone can see a user's profile
+				.antMatchers(HttpMethod.GET, "/users/{userId}").permitAll()
+				// An admin can delete a user
+				.antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority("admin")
+				// An admin can ban a user
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority("admin")
+				// Everyone can see a user's match history
+				.antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll()
+				// Set character
+				.antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAuthority("user")
 				// UNREGISTERED USER ENDPOINTS
-				.antMatchers(HttpMethod.POST, "/unregistered-users").permitAll() // Allow to request unregistered user
-																					// credentials
+				// Allow to request unregistered user credentials
+				.antMatchers(HttpMethod.POST, "/unregistered-users").permitAll()
 				// LOBBY ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/lobbies").permitAll() // Allow everyone to list all games
 				.antMatchers(HttpMethod.POST, "/lobbies").hasAuthority("user") // Allow users to create new lobbies
@@ -68,20 +74,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
 				.antMatchers(HttpMethod.POST, "/games").hasAuthority("user") // Allow users to create new games
 				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+				// Allow admins to see past games
+				.antMatchers(HttpMethod.GET, "/games/history").hasAnyAuthority("admin", "user")
+				.antMatchers(HttpMethod.GET, "/games/history/count").permitAll() // Allow everyone to see past games
 				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
+				.antMatchers(HttpMethod.PUT, "/games/{gameId}").hasAuthority("user") // Allow users to update a game
 				.antMatchers(HttpMethod.GET, "/games/{gameId}/turn").permitAll() // Allow everyone to get a game's turn
-				.antMatchers(HttpMethod.POST, "/games/{gameId}/turn/next").hasAnyAuthority("user") // Allow users to go
-																									// to the next turn
-																									// stage
+				// Allow users to go to the next turn stage
+				.antMatchers(HttpMethod.POST, "/games/{gameId}/turn/next").hasAuthority("user")
 				.antMatchers(HttpMethod.POST, "/games/{gameId}/ability-cards/{abilityCardIngameId}")
 				.hasAuthority("user") // Allow users to play cards
-				.antMatchers(HttpMethod.POST, "/games/{gameId}/market-cards/{marketCardIngameId}")
-				.hasAuthority("user") // Allow users to buy cards in the market
-				// GAMEHISTORY ENDPOINTS
-				.antMatchers(HttpMethod.GET, "/gameHistory").permitAll() // Allow admins to list all the old games
-				.antMatchers(HttpMethod.GET, "/gameHistory/count").permitAll() // Allow everyone to see how many games
-																				// have been played in the game browser
-																				// are open lobbies
+				.antMatchers(HttpMethod.POST, "/games/{gameId}/market-cards/{marketCardIngameId}").hasAuthority("user")
+				// Allow users to buy cards in the market
 				// ACHIEVEMENT ENDPOINTS
 				.antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
 				.antMatchers(HttpMethod.PUT, "/achievements").hasAuthority("admin") // Update achievement

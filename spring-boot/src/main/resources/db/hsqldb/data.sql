@@ -260,7 +260,7 @@ INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_or
 UPDATE users SET player = 1 WHERE username='pablo';
 UPDATE users SET player = 2 WHERE username='andres';
 
-INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (1, true, 1637867168863, 1);
+INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (1, true, '2022-01-17 19:11:38.606868', 1);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 1 WHERE id = 1;
 -- Add the players to the game
@@ -285,7 +285,7 @@ UPDATE users SET player = 4 WHERE username='gandalf';
 UPDATE users SET player = 5 WHERE username='legolas';
 UPDATE users SET player = 6 WHERE username='aragorn';
 
-INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (2, true, 1637881111234, 3);
+INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (2, true, '2022-01-17 19:11:38.606868', 3);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 2 WHERE id = 2;
 -- Add the players to the game
@@ -307,14 +307,12 @@ INSERT INTO players(id, glory, gold, kills, wounds, guard, character_id, turn_or
 UPDATE users SET player = 7 WHERE username = 'stockie';
 UPDATE users SET player = 8 WHERE username = 'alejandro';
 
-INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (3, true, 1637881111234, 8);
+INSERT INTO games(id, has_scenes, start_time, leader_id) VALUES (3, true, '2022-01-17 19:11:38.606868', 8);
 -- Once the game is created, the lobby references the game
 UPDATE lobbies SET game = 3 WHERE id = 3;
 -- Add the players to the game
 INSERT INTO games_players(game_id, players_id) VALUES (3, 7);
 INSERT INTO games_players(game_id, players_id) VALUES (3, 8);
-
-INSERT INTO games_history(id, game_id, winner_id, finish_time) VALUES (1, 3, 7, 1637882596427);
 
 -- UnregisteredUser for testing
 INSERT INTO unregistered_users(username, creation_time) VALUES ('user0023', 1637882596427);

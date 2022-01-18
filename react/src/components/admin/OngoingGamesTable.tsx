@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "../../api/axiosConfig";
 import playerParser from "../../helpers/playerParser";
-import timeParser from "../../helpers/timeParser";
 import { Game } from "../../interfaces/Game";
 
 export default function OngoingGamesTable() {
@@ -43,9 +42,7 @@ export default function OngoingGamesTable() {
                 {gameList.map((game) => (
                   <tr key={game.id}>
                     <td className="text-table-td">{game.id}</td>
-                    <td className="text-table-td">
-                      {timeParser(game.startTime)}
-                    </td>
+                    <td className="text-table-td">{game.startTime}</td>
                     <td className="text-table-td">
                       {game.hasScenes ? "🟢" : "🔴"}
                     </td>
