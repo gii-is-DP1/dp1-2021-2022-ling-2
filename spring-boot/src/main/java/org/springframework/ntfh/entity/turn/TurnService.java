@@ -66,6 +66,8 @@ public class TurnService {
         return turnRepository.findById(id);
     }
 
+    Random random = new Random();
+
     @Transactional
     public void save(Turn turn) {
         turnRepository.save(turn);
@@ -90,7 +92,7 @@ public class TurnService {
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null); // DB indexes start in
+                    .findSceneById(random.nextInt(sceneService.count()) + 1).orElse(null); // DB indexes start in
                                                                                                  // 1
             turn.setCurrentScene(randomScene);
         }
@@ -143,7 +145,7 @@ public class TurnService {
         if (game.getHasScenes()) {
             // Get a random scene and set it as the current scene
             Scene randomScene = sceneService
-                    .findSceneById(new Random().nextInt(sceneService.count()) + 1).orElse(null);
+                    .findSceneById(random.nextInt(sceneService.count()) + 1).orElse(null);
             nextTurn.setCurrentScene(randomScene);
         }
 
