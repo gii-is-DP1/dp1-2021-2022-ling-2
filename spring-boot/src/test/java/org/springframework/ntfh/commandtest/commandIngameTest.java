@@ -457,6 +457,9 @@ public class CommandIngameTest {
 
     @Test
     void testRecoverCardCommand() {
+
+        //search for a card that is in the discard pile and recover it
+
         turnService.initializeFromGame(gameTester);
         AbilityCard disparoRapido = abilityCardService.findById(4);
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
@@ -471,6 +474,19 @@ public class CommandIngameTest {
         new RecoverCardCommand(ranger, AbilityCardTypeEnum.DISPARO_RAPIDO).execute();
 
         assertThat(ranger.getDiscardPile().size()).isZero();
+
+        //search for a card that isnt in the discard pile, after not finding the command doesnt make any further actions
+
+        hand.add(abilityCardIngame);
+        ranger.setHand(hand);
+        gameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(), token);
+
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+
+        new RecoverCardCommand(ranger, AbilityCardTypeEnum.COMPANERO_LOBO).execute();
+
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+        
     }
 
     @Test
