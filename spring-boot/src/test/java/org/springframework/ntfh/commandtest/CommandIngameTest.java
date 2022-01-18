@@ -434,14 +434,18 @@ public class CommandIngameTest {
 
         //recieve damage, not enough to wound
         
-        new ReceiveDamageCommand(2, enemyIngame, rogue).execute();
+        new ReceiveDamageCommand(enemyIngame, rogue).execute(); 
 
         assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
         assertThat(rogue.getWounds()).isZero();
 
         //recieve damage beyond their current ability pile, ads wound
+        
+        EnemyIngame enemyIngame2 = enemyIngameService.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester); //hard hitting enemy
 
-        new ReceiveDamageCommand(15, enemyIngame, rogue).execute();
+        new ReceiveDamageCommand(enemyIngame2, rogue).execute();
+        new ReceiveDamageCommand(enemyIngame2, rogue).execute();
+        new ReceiveDamageCommand(enemyIngame2, rogue).execute();
 
         assertThat(rogue.getAbilityPile().size()).isNotZero();
         assertThat(rogue.getDiscardPile().size()).isNotZero();
@@ -449,7 +453,7 @@ public class CommandIngameTest {
 
         //recieve damage and this damage kills
 
-        new ReceiveDamageCommand(13, enemyIngame, rogue).execute();
+        new ReceiveDamageCommand(enemyIngame, rogue).execute();
 
         assertThat(rogue.getWounds()).isEqualTo(2);
         assertThat(rogue.isDead()).isTrue();
