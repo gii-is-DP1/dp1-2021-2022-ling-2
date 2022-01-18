@@ -1,7 +1,6 @@
 package org.springframework.ntfh.commandtest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertArrayEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +202,7 @@ class CommandIngameTest {
 
         new DealDamageCommand(2, ranger, enemyIngame2).execute();
 
-        assertThat(enemyIngame2.getCurrentEndurance()).isEqualTo(0);
+        assertThat(enemyIngame2.getCurrentEndurance()).isZero();
     }
 
     @Test
@@ -298,7 +297,7 @@ class CommandIngameTest {
 
         new GiveGloryCommand(-100, ranger).execute();
 
-        assertThat(ranger.getGlory()).isEqualTo(0);
+        assertThat(ranger.getGlory()).isZero();
     }
 
     @Test
@@ -325,7 +324,7 @@ class CommandIngameTest {
 
         new GiveGoldCommand(-100, ranger).execute();
 
-        assertThat(ranger.getGold()).isEqualTo(0);
+        assertThat(ranger.getGold()).isZero();
     }
 
     @Test
