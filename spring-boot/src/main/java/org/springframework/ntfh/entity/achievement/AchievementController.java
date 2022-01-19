@@ -1,10 +1,9 @@
 package org.springframework.ntfh.entity.achievement;
 
-import java.util.Map;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.ntfh.entity.statistics.StatisticsService;
+import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,18 +21,19 @@ public class AchievementController {
     @Autowired
     private AchievementService achievementService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping
-    public ResponseEntity<Iterable<Achievement>> getAll() {
-        Iterable<Achievement> achievements = this.achievementService.findAll();
-        return new ResponseEntity<>(achievements, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Achievement> getAll() {
+        return this.achievementService.findAll();
     }
 
     @GetMapping("{achievementId}")
-    public ResponseEntity<Achievement> getAchivementById(@PathVariable("achievementId") Integer id) {
-        Optional<Achievement> achievement = this.achievementService.findAchievementById(id);
-        if (!achievement.isPresent())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(achievement.get(), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Achievement getAchivementById(@PathVariable("achievementId") Integer id) {
+        return this.achievementService.findById(id);
     }
 
     @PutMapping

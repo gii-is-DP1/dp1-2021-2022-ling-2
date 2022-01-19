@@ -9,6 +9,7 @@ import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
@@ -33,8 +34,11 @@ public class AchievementService {
         return achievementRepository.findAll();
     }
 
-    public Optional<Achievement> findAchievementById(Integer id) {
-        return achievementRepository.findById(id);
+    public Achievement findById(Integer id) throws DataAccessException {
+        Optional<Achievement> achievement = achievementRepository.findById(id);
+        if (!achievement.isPresent())
+            throw new DataAccessException("Achievement with id " + id + " was not found") {};
+        return achievement.get();
     }
 
     @Transactional
@@ -95,7 +99,7 @@ public class AchievementService {
             return (Boolean) res;
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Ability card type " + className + " is not implemented");
+            throw new IllegalArgumentException("Condition for achievement " + className + " is not implemented");
         }
     }
 }
