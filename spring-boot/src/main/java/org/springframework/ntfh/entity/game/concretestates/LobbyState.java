@@ -47,23 +47,15 @@ public class LobbyState implements GameState {
     }
 
     @Override
-    public Game joinGame(Integer gameId, String username) {
-        // TODO "game" here is redundant, can't we just pass it from the gameService?
-        Game game = gameService.findGameById(gameId);
-        if (game.getPlayers().stream().anyMatch(p -> p.getUser().getUsername().equals(username))) {
+    public Game joinGame(Game game, User user) {
+        if (game.getPlayers().stream().anyMatch(p -> p.getUser().equals(user))) {
             throw new IllegalArgumentException("The player is already in the lobby") {};
         }
 
         if (game.getMaxPlayers().equals(game.getPlayers().size()))
             throw new MaximumLobbyCapacityException("The lobby is full") {};
 
-        // TODO get this via a converter before the controller
-        User user = userService.findUser(username);
-
-        // ! TODO adapt this to new model
-        // user.setLobby(lobby);
-        // user.setCharacter(null);
-        Player player = playerService.createPlayer(user); // TODO createPlayer(user);
+        Player player = playerService.createPlayer(user);
 
         if (game.getPlayers().isEmpty()) {
             // The first player to join will be the host/leader
