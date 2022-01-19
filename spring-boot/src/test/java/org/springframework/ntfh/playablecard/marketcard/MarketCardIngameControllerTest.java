@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = MarketCardIngameController.class)
-public class MarketCardIngameControllerTest {
+class MarketCardIngameControllerTest {
 
     @MockBean
     private MarketCardIngameService marketCardIngameService;
