@@ -33,7 +33,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DataJpaTest(
         includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class MarketCardIngameServiceTest {
+class MarketCardIngameServiceTest {
 
     @Autowired
     private MarketCardService marketCardService;
@@ -135,7 +135,7 @@ public class MarketCardIngameServiceTest {
 
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(cardTester.getMarketCard());
-        gameService.buyMarketCard(market.get(0).getId(), playerToken);
+        marketCardIngameService.buyMarketCard(market.get(0).getId(), playerToken);
         Integer FULL_MARKET_LESS_ONE = 4;
 
         assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET_LESS_ONE);

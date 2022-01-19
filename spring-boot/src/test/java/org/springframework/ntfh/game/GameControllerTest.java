@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = GameController.class)
-public class GameControllerTest {
+class GameControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;

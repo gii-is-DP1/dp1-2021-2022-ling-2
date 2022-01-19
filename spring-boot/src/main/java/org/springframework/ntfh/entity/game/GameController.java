@@ -152,32 +152,6 @@ public class GameController {
         return gameService.startGame(gameId);
     }
 
-    /**
-     * This endpoint will receive the petitions of a player to play a card
-     * 
-     * @author andrsdt
-     * @param entity with the information of the card to play
-     * @return the game with the updated state
-     */
-    @PostMapping("{gameId}/ability-cards/{abilityCardIngameId}")
-    public Game playCard(@PathVariable("gameId") Integer gameId,
-            @PathVariable("abilityCardIngameId") Integer abilityCardIngameId, @RequestBody Map<String, Integer> body,
-            @RequestHeader("Authorization") String token) {
-        // TODO refactor: enemyId on URL instead of in body
-        Integer enemyId = body.get("enemyId");
-        gameService.playCard(abilityCardIngameId, enemyId, token);
-        return gameService.findGameById(gameId);
-    }
-
-    @PostMapping("{gameId}/market-cards/{marketCardIngameId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Game buyMarketCard(@PathVariable("gameId") Integer gameId,
-            @PathVariable("marketCardIngameId") Integer marketCardIngameId,
-            @RequestHeader("Authorization") String token) {
-        gameService.buyMarketCard(marketCardIngameId, token);
-        return gameService.findGameById(gameId);
-    }
-
     @GetMapping("{gameId}/turn")
     @ResponseStatus(HttpStatus.OK)
     public Turn getTurn(@PathVariable("gameId") Integer gameId) {

@@ -59,7 +59,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DataJpaTest(
 		includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class CommandIngameTest {
+class CommandIngameTest {
 
 	@Autowired
 	private GameService gameService;
@@ -200,7 +200,7 @@ public class CommandIngameTest {
 
 		new DealDamageCommand(2, ranger, enemyIngame2).execute();
 
-		assertThat(enemyIngame2.getCurrentEndurance()).isEqualTo(0);
+		assertThat(enemyIngame2.getCurrentEndurance()).isZero();
 	}
 
 	@Test
@@ -298,7 +298,7 @@ public class CommandIngameTest {
 
 		new GiveGloryCommand(-100, ranger).execute();
 
-		assertThat(ranger.getGlory()).isEqualTo(0);
+		assertThat(ranger.getGlory()).isZero();
 	}
 
 	@Test
@@ -325,7 +325,7 @@ public class CommandIngameTest {
 
 		new GiveGoldCommand(-100, ranger).execute();
 
-		assertThat(ranger.getGold()).isEqualTo(0);
+		assertThat(ranger.getGold()).isZero();
 	}
 
 	@Test
@@ -471,7 +471,7 @@ public class CommandIngameTest {
 		List<AbilityCardIngame> hand = new ArrayList<>();
 		hand.add(abilityCardIngame);
 		ranger.setHand(hand);
-		gameService.playCard(abilityCardIngame.getId(),
+		abilityCardIngameService.playCard(abilityCardIngame.getId(),
 				gameTester.getEnemiesFighting().get(0).getId(), token);
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
@@ -487,7 +487,7 @@ public class CommandIngameTest {
 
 		hand.add(abilityCardIngame);
 		ranger.setHand(hand);
-		gameService.playCard(abilityCardIngame.getId(),
+		abilityCardIngameService.playCard(abilityCardIngame.getId(),
 				gameTester.getEnemiesFighting().get(0).getId(), token);
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);

@@ -17,6 +17,11 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardServi
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCard;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.turn.Turn;
+import org.springframework.ntfh.entity.turn.TurnService;
+import org.springframework.ntfh.entity.turn.TurnState;
+import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +32,12 @@ public class AbilityCardIngameService {
 
     @Autowired
     private AbilityCardService abilityCardService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TurnService turnService;
 
     public AbilityCardIngame findById(int id) {
         return abilityCardIngameRepository.findById(id)
@@ -83,7 +94,7 @@ public class AbilityCardIngameService {
      * @param player
      */
     public void refillHandWithCards(Player player) {
-        if (player.isDead())
+        if (Boolean.TRUE.equals(player.isDead()))
             return;
 
         List<AbilityCardIngame> playerAbilityPile = player.getAbilityPile();
@@ -136,4 +147,18 @@ public class AbilityCardIngameService {
 
         return createFromAbilityCard(abilityCard, player);
     }
+
+    @Transactional
+    public Game playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
+        // TODO make getting the turn more straightforward, maybe with a custom query
+        String username = TokenUtils.usernameFromToken(token);
+        Player player = userService.findUser(username).getPlayer();
+        Turn currentTurn = player.getGame().getCurrentTurn();
+        TurnState turnState = turnService.getState(currentTurn);
+        turnState.playCard(abilityCardIngameId, enemyId, token);
+
+        return player.getGame();
+    }
+    
+
 }

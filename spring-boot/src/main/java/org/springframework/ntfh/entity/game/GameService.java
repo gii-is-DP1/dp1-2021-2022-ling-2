@@ -29,9 +29,6 @@ public class GameService {
     private GameRepository gameRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private TurnService turnService;
 
     /************ STATES ************/
@@ -129,7 +126,7 @@ public class GameService {
         Boolean sentByHost = game.getLeader().getUser().getUsername().equals(tokenUsername);
         Boolean sentByPlayerLeaving = username.equals(tokenUsername);
 
-        if (!sentByHost && !sentByPlayerLeaving) {
+        if (Boolean.FALSE.equals(sentByHost) && Boolean.FALSE.equals(sentByPlayerLeaving)) {
             log.error("User " + tokenUsername + " tried to remove player " + username + " from game " + gameId);
             throw new NonMatchingTokenException(
                     "A user can only leave a lobby by himself or by being kicked by the leader") {};
@@ -148,33 +145,6 @@ public class GameService {
     @Transactional
     public void delete(Game game) {
         gameRepository.delete(game);
-    }
-
-    @Transactional
-    public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
-        // TODO handle token check here instead of in concreteState
-        String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
-        Game game = player.getGame();
-        GameState gameState = this.getState(game);
-        gameState.playCard(abilityCardIngameId, enemyId, token);
-    }
-
-    /**
-     * Executed when a player tries to buy a market card
-     * 
-     * @param marketCardIngameId
-     */
-    @Transactional
-    public void buyMarketCard(Integer marketCardIngameId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
-        // TODO handle token check here instead of in concreteState
-        String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
-        Game game = player.getGame();
-        GameState gameState = this.getState(game);
-        gameState.buyMarketCard(marketCardIngameId, token);
     }
 
     @Transactional
