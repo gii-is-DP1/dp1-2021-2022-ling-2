@@ -1,14 +1,18 @@
 package org.springframework.ntfh.entity.achievement;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
-
+import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -17,6 +21,9 @@ public class AchievementService {
 
     @Autowired
     private AchievementRepository achievementRepository;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     public Integer achievementCount() {
         return (int) achievementRepository.count();
@@ -43,8 +50,7 @@ public class AchievementService {
         }
 
         Optional<Achievement> sameNameOptional = achievementRepository.findOptionalByName(achievement.getName());
-        if (sameNameOptional.isPresent() &&
-                !(sameNameOptional.get().getId().equals(achievement.getId()))) {
+        if (sameNameOptional.isPresent() && !(sameNameOptional.get().getId().equals(achievement.getId()))) {
             throw new IllegalArgumentException("There is already an achievement with the same name");
         }
 
@@ -53,8 +59,43 @@ public class AchievementService {
         }
 
         Optional<Achievement> achievementFromRepo = achievementRepository.findById(achievement.getId());
-        if(achievementFromRepo.isPresent()) achievement.setType(achievementFromRepo.get().getType());
+        if (achievementFromRepo.isPresent())
+            achievement.setType(achievementFromRepo.get().getType());
         log.info("Admin with token " + token + " has updated achievement with ID: " + achievement.getId());
         return achievementRepository.save(achievement);
+    }
+
+    // Find all the achievements earned by a user
+    public Iterable<Achievement> findByUser(User user) {
+        List<Achievement> achievements = new ArrayList<>();
+        this.findAll().forEach(achievement -> {
+            if (userHasAchievement(user, achievement))
+                achievements.add(achievement);
+        });
+        return achievements;
+    }
+
+    private Boolean userHasAchievement(User user, Achievement achievement) {
+        String className = CaseUtils.toCamelCase(achievement.getType().toString(), true, new char[] {'_'});
+        String completeClassName =
+                String.format("org.springframework.ntfh.entity.achievement.concreteachievement.%s", className);
+
+        try {
+            // Get the class from its name
+            Class<?> clazz = Class.forName(completeClassName);
+            // Instantiate an object of the class
+            Object achievementChecker = clazz.getDeclaredConstructor().newInstance();
+            // Autowire the new object's dependencies (services used inside)
+            AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
+            factory.autowireBean(achievementChecker);
+            factory.initializeBean(achievementChecker, className);
+            Method method = clazz.getDeclaredMethod("check", User.class, Integer.class);
+            // Execute the method with the parameters
+            Object res = method.invoke(achievementChecker, user, achievement.getCondition());
+            return (Boolean) res;
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Ability card type " + className + " is not implemented");
+        }
     }
 }
