@@ -6,6 +6,7 @@ import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.PlayerService;
+import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.util.State;
 
 @State
@@ -39,7 +40,7 @@ public class FinishedState implements GameState {
     }
 
     @Override
-    public Game joinGame(Integer gameId, String username) {
+    public Game joinGame(Game game, User user) {
         throw new IllegalStateException("You can't join a finished game");
 
     }

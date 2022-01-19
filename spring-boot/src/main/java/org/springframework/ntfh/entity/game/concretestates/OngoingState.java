@@ -30,7 +30,8 @@ public class OngoingState implements GameState {
     public void preState(Game game) {
         // TODO create the first turn bla bla
         turnService.initializeFromGame(game);
-        log.info("Game with id " + game.getId() + " was created with players: " + game.getPlayers());
+        log.info(
+                "Game with id " + game.getId() + " was created with players: " + game.getPlayers());
     }
 
     @Override
@@ -44,7 +45,7 @@ public class OngoingState implements GameState {
     }
 
     @Override
-    public Game joinGame(Integer gameId, String username) {
+    public Game joinGame(Game game, User user) {
         throw new IllegalStateException("You can't join a game that has already started");
     }
 

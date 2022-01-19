@@ -31,7 +31,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 // TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(
+        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 public class TurnServiceTest {
 
@@ -67,8 +68,8 @@ public class TurnServiceTest {
         User user1 = userService.findUser("user1");
         User user2 = userService.findUser("user2");
 
-        gameTester = gameService.joinGame(gameTester.getId(), user1.getUsername()); // first player -> leader
-        gameTester = gameService.joinGame(gameTester.getId(), user2.getUsername());
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
         Player playerTester = gameTester.getPlayers().get(0);
 
@@ -118,7 +119,8 @@ public class TurnServiceTest {
         testerSaver.setCurrentScene(sceneService.findSceneById(1).get());
         turnService.save(testerSaver);
 
-        assertThat(testerSaver.getCurrentScene().getSceneTypeEnum()).isEqualTo(SceneTypeEnum.MERCADO_DE_LOTHARION);
+        assertThat(testerSaver.getCurrentScene().getSceneTypeEnum())
+                .isEqualTo(SceneTypeEnum.MERCADO_DE_LOTHARION);
     }
 
     @Test
@@ -140,7 +142,8 @@ public class TurnServiceTest {
     @Test
     void testGetState() {
         // TODO Needs improvement
-        assertThat(turnService.getState(turnTester).getNextState()).isEqualTo(TurnStateType.MARKET_STATE);
+        assertThat(turnService.getState(turnTester).getNextState())
+                .isEqualTo(TurnStateType.MARKET_STATE);
     }
 
     @Test

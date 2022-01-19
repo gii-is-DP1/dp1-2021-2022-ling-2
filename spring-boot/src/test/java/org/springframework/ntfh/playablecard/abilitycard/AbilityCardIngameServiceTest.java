@@ -31,7 +31,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(
+        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 public class AbilityCardIngameServiceTest {
 
@@ -74,8 +75,8 @@ public class AbilityCardIngameServiceTest {
         User user1 = userService.findUser("user1");
         User user2 = userService.findUser("user2");
 
-        gameTester = gameService.joinGame(gameTester.getId(), user1.getUsername()); // first player -> leader
-        gameTester = gameService.joinGame(gameTester.getId(), user2.getUsername());
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
         playerTester = gameTester.getPlayers().get(0);
 
@@ -86,7 +87,8 @@ public class AbilityCardIngameServiceTest {
         gameService.startGame(gameTester.getId());
         /******************************************************************/
 
-        cardTester = abilityCardIngameService.createFromAbilityCard(abilityCardService.findById(44), playerTester);
+        cardTester = abilityCardIngameService.createFromAbilityCard(abilityCardService.findById(44),
+                playerTester);
     }
 
     @AfterEach
@@ -102,7 +104,8 @@ public class AbilityCardIngameServiceTest {
     void testFindById() {
         AbilityCardIngame testerCard = abilityCardIngameService.findById(cardTester.getId());
 
-        assertThat(testerCard.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
+        assertThat(testerCard.getAbilityCardTypeEnum())
+                .isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
     }
 
     @Test
@@ -116,7 +119,8 @@ public class AbilityCardIngameServiceTest {
 
     @Test
     void testInitializeFromGame() {
-        // Because of populateWithInitialCards() is an auxiliary private method from initializeFromGame(), is tested in
+        // Because of populateWithInitialCards() is an auxiliary private method from
+        // initializeFromGame(), is tested in
         // the test method of the primary method
         Integer HAND_SIZE = 4;
         Integer DECK_SIZE = 11;
@@ -129,22 +133,24 @@ public class AbilityCardIngameServiceTest {
     @Test
     void testCreateFromAbilityCard() {
         // TestMethod made in the init()
-        assertThat(cardTester.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
+        assertThat(cardTester.getAbilityCardTypeEnum())
+                .isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
     }
 
     @Test
     void testCreateFromMarketCard() {
-        cardTester = abilityCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(),
-                playerTester);
+        cardTester = abilityCardIngameService
+                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), playerTester);
 
-        assertThat(cardTester.getAbilityCardTypeEnum()).hasToString(MarketCardTypeEnum.POCION_CURATIVA.toString());
+        assertThat(cardTester.getAbilityCardTypeEnum())
+                .hasToString(MarketCardTypeEnum.POCION_CURATIVA.toString());
     }
 
     // H20 + E1
     @Test
     void testRefillHandWithCards() {
-        new HandToAbilityPileCommand(playerTester, gameTester.getLeader().getHand().get(0).getAbilityCardTypeEnum())
-                .execute();
+        new HandToAbilityPileCommand(playerTester,
+                gameTester.getLeader().getHand().get(0).getAbilityCardTypeEnum()).execute();
         Integer HAND_AFTER_LOSING_ONE_CARD = 3;
         Integer HAND_AFTER_REFILL = 4;
 
