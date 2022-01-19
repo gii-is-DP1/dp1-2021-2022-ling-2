@@ -14,5 +14,5 @@ export const templatePlayer: Player = {
   abilityPile: [],
   discardPile: [],
   characterTypeEnum: undefined,
-  isDead: false,
+  dead: false,
 };
