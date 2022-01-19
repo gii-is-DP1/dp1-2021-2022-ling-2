@@ -28,7 +28,7 @@ public class LobbyState implements GameState {
 
     @Override
     public void preState(Game game) {
-        //
+        // Nothing happens in this state, but is util in the others
     }
 
     @Override
