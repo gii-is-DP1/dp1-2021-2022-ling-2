@@ -19,5 +19,5 @@ export interface Player {
   discardPile: AbilityCardIngame[];
   game?: Game;
   characterTypeEnum: CharacterTypeEnum;
-  isDead: boolean;
+  dead: boolean;
 }

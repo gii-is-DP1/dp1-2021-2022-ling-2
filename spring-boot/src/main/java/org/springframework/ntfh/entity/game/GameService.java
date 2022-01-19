@@ -196,4 +196,8 @@ public class GameService {
     public Iterable<Game> findByStateType(GameStateType stateType) {
         return gameRepository.findByStateType(stateType);
     }
+
+    public Iterable<Game> findFinishedByUser(User user) {
+        return gameRepository.findFinishedByUser(user, GameStateType.FINISHED);
+    }
 }

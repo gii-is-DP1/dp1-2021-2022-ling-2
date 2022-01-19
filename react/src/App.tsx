@@ -5,7 +5,7 @@ import * as ROUTES from "./constants/routes";
 import unregisteredUserContext from "./context/unregisteredUser";
 import userContext from "./context/user";
 import useLocalStorage from "./hooks/useLocalStorage";
-import Achievements from "./pages/achievements";
+import AllAchievements from "./pages/all-achievements";
 import AdminPage from "./pages/admin-page";
 import CreateLobby from "./pages/create-lobby";
 import EditAchievement from "./pages/edit-achievement";
@@ -18,6 +18,7 @@ import NotFound from "./pages/not-found";
 import Profile from "./pages/profile";
 import SignUp from "./pages/signup";
 import Statistics from "./pages/statistics";
+import UserAchievements from "./pages/user-achievements";
 
 export default function App() {
   const [userToken, setUserToken] = useLocalStorage("token", null);
@@ -45,7 +46,16 @@ export default function App() {
               component={EditAchievement}
             />
             <Route exact path={ROUTES.CREATE_GAME} component={CreateLobby} />
-            <Route exact path={ROUTES.ACHIEVEMENTS} component={Achievements} />
+            <Route
+              exact
+              path={ROUTES.ALL_ACHIEVEMENTS}
+              component={AllAchievements}
+            />
+            <Route
+              exact
+              path={ROUTES.USER_ACHIEVEMENTS}
+              component={UserAchievements}
+            />
             <Route exact path={ROUTES.STATISTICS} component={Statistics} />
             <Route exact path={ROUTES.BROWSE_GAMES} component={LobbyBrowser} />
             <Route exact path={ROUTES.GAME} component={GameRouter} />

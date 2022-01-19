@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.user.User;
@@ -25,6 +26,7 @@ public class Spectator extends BaseEntity {
     @NotNull
     @Column(columnDefinition = "integer default 0")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date entryTime;
 
     @OneToOne(cascade = CascadeType.ALL) // TODO not oneToOne
