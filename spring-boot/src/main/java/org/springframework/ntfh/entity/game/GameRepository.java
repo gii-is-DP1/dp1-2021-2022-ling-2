@@ -19,4 +19,8 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
     @Query("SELECT g.players FROM Game g WHERE g.id = ?1")
     List<Player> getPlayersByGameId(int gameId);
 
+    List<Game> findByStateType(GameStateType stateType);
+
+    int countByStateType(GameStateType stateType);
+
 }
