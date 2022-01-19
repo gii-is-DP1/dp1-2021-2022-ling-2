@@ -11,7 +11,7 @@ export default function OngoingGamesTable() {
     const fetchGamesOngoing = async () => {
       try {
         const response = await axios.get(`games/ongoing`);
-        setGameList([...gameList, response.data]);
+        setGameList(response.data);
       } catch (error: any) {
         toast.error(error?.message);
       }

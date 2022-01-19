@@ -149,6 +149,13 @@ public class GameController {
         if (game.getPlayers().size() < 2) {
             throw new IllegalArgumentException("Not enough players to start the game");
         }
+
+        Long distinctCharacterCount = game.getPlayers().stream().filter(p -> p.getCharacter() != null)
+                .map(p -> p.getCharacter().getCharacterTypeEnum()).distinct().count();
+        if (distinctCharacterCount != game.getPlayers().size()) {
+            throw new IllegalArgumentException("Two players can't use the same character");
+        }
+
         return gameService.startGame(gameId);
     }
 
