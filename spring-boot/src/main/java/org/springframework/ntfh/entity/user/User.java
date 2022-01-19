@@ -42,8 +42,8 @@ import lombok.Setter;
 @Entity
 @Audited
 @Table(name = "users")
-public class User {
-    @Id
+public class User extends BaseEntity{
+    @Column(unique = true)
     @NotBlank(message = "Username is required")
     @Length(min = 4, max = 20, message = "Your username must be 4-20 characters long")
     private String username;
