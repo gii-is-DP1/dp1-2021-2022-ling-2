@@ -5,7 +5,6 @@ import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
-import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.util.State;
 
@@ -14,9 +13,6 @@ public class FinishedState implements GameState {
 
     @Autowired
     private GameService gameService;
-
-    @Autowired
-    private PlayerService playerService;
 
     @Override
     public void preState(Game game) {
@@ -32,10 +28,6 @@ public class FinishedState implements GameState {
     @Override
     public void deleteGame(Integer gameId) {
         Game game = gameService.findGameById(gameId);
-        game.getPlayers().forEach(p -> {
-            p.getUser().setPlayer(null);
-            playerService.delete(p);
-        }); // TODO player remains orfan
         gameService.delete(game);
     }
 
@@ -65,7 +57,7 @@ public class FinishedState implements GameState {
     }
 
     @Override
-    public void finishGame(Game game) {
+    public Game finishGame(Game game) {
         throw new IllegalStateException("A finished game can't be finished");
     }
 
