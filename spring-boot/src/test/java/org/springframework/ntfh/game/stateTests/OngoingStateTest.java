@@ -210,7 +210,9 @@ class OngoingStateTest {
     void testStartGame_Failure() {
         assertThat(actualState).isEqualTo(GameStateType.ONGOING);
 
-        assertThrows(IllegalStateException.class, () -> ongoingState.startGame(gameTester.getId()));
+        Integer gameId = gameTester.getId();
+
+        assertThrows(IllegalStateException.class, () -> ongoingState.startGame(gameId));
     }
 
     @Test
