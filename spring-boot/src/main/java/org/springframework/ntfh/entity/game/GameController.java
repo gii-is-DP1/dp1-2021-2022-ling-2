@@ -1,11 +1,12 @@
 package org.springframework.ntfh.entity.game;
 
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ntfh.entity.turn.Turn;
+import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
-import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -112,16 +114,16 @@ public class GameController {
      */
     @PostMapping("{gameId}/add/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public Game joinGame(@PathVariable("gameId") Integer gameId,
-            @PathVariable("username") String username,
-            @RequestHeader("Authorization") String token) {
-        if (!TokenUtils.usernameCoincidesWithToken(username, token)) {
+    public Game joinGame(@PathVariable("gameId") Game game, @PathVariable("username") User user,
+            @RequestHeader("Authorization") User tokenUser) {
+        // ! PABLO AND ALEX take this example as a reference
+        if (!user.equals(tokenUser))
             throw new NonMatchingTokenException(
                     "The user who is trying to join the game is not the one logged in");
-        }
-        Game game = gameService.joinGame(gameId, username);
-        log.info("User " + username + " joined game with id " + gameId);
-        return game;
+        Game updatedgame = gameService.joinGame(game, user);
+        log.info("User " + user.getUsername() + " joined game with id " + game.getId());
+        return updatedgame;
+
     }
 
     @PostMapping("{gameId}/remove/{username}")

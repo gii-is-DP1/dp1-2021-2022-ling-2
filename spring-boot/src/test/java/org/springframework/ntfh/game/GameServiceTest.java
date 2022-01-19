@@ -43,7 +43,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 // TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(
+        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 public class GameServiceTest {
 
@@ -99,8 +100,8 @@ public class GameServiceTest {
         User user1 = userService.findUser("user1");
         User user2 = userService.findUser("user2");
 
-        gameTester = gameService.joinGame(gameTester.getId(), user1.getUsername()); // first player -> leader
-        gameTester = gameService.joinGame(gameTester.getId(), user2.getUsername());
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
         playerTester = gameTester.getPlayers().get(0);
 
@@ -145,7 +146,8 @@ public class GameServiceTest {
     @Test
     public void testSaveGame_success() {
         // Test made in the init
-        assertThat(gameTester.getId()).isEqualTo(gameService.findGameById(gameTester.getId()).getId());
+        assertThat(gameTester.getId())
+                .isEqualTo(gameService.findGameById(gameTester.getId()).getId());
     }
 
     // TODO negative test. delete game which is ONGOING
@@ -160,7 +162,8 @@ public class GameServiceTest {
     @Test
     void testPlayCard() {
         AbilityCard pasoAtras = abilityCardService.findById(27);
-        AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(pasoAtras, playerTester);
+        AbilityCardIngame abilityCardIngame =
+                abilityCardIngameService.createFromAbilityCard(pasoAtras, playerTester);
         String token = TokenUtils.generateJWTToken(playerTester.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngame);
@@ -189,7 +192,8 @@ public class GameServiceTest {
     // H7 + E1
     @Test
     public void testCreateFromLobby() {
-        assertThat(gameTester.getId()).isEqualTo(gameService.findGameById(gameTester.getId()).getId());
+        assertThat(gameTester.getId())
+                .isEqualTo(gameService.findGameById(gameTester.getId()).getId());
     }
 
     // H7 - E1
@@ -199,14 +203,16 @@ public class GameServiceTest {
     public void testCreateFromLobbyNotEnoughPlayers() {
         User user2 = userService.findUser("user2");
         gameService.removePlayer(gameTester.getId(), "user2", TokenUtils.generateJWTToken(user2));
-        assertThrows(IllegalArgumentException.class, () -> gameService.startGame(gameTester.getId()));
+        assertThrows(IllegalArgumentException.class,
+                () -> gameService.startGame(gameTester.getId()));
     }
 
     // H21 + E1
     @Test
     void testRegularBountyCollection() {
         // Slinger de 2 de vida
-        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        EnemyIngame enemyIngame = enemyIngameService
+                .createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         new DealDamageCommand(2, playerTester, enemyIngame).execute();
 
         assertThat(playerTester.getGold()).isEqualTo(1);
@@ -218,13 +224,15 @@ public class GameServiceTest {
     void testBountyBehaviourWithTrampaCard() {
         gameTester.getLeader().setCharacter(characterService.findById(3));
         AbilityCard trampa = abilityCardService.findById(60);
-        AbilityCardIngame trampaIngame = abilityCardIngameService.createFromAbilityCard(trampa, playerTester);
+        AbilityCardIngame trampaIngame =
+                abilityCardIngameService.createFromAbilityCard(trampa, playerTester);
         String token = TokenUtils.generateJWTToken(playerTester.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(trampaIngame);
         playerTester.setHand(hand);
 
-        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        EnemyIngame enemyIngame = enemyIngameService
+                .createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         List<EnemyIngame> enemiesFighting = new ArrayList<>();
         enemiesFighting.add(enemyIngame);
         gameTester.setEnemiesFighting(enemiesFighting);
@@ -241,8 +249,8 @@ public class GameServiceTest {
     // H22 + E1
     @Test
     void testBuyMarketCard_Success() {
-        MarketCardIngame marketCardIngame =
-                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame = marketCardIngameService
+                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(10);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -255,8 +263,8 @@ public class GameServiceTest {
     // H22 - E1
     @Test
     void testBuyMarketCard_Failure() {
-        MarketCardIngame marketCardIngame =
-                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        MarketCardIngame marketCardIngame = marketCardIngameService
+                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
         Integer marketCardIngameId = marketCardIngame.getId();
         playerTester.setGold(4);
         String playerToken = TokenUtils.generateJWTToken(playerTester.getUser());
@@ -270,7 +278,8 @@ public class GameServiceTest {
     // H23 + E1
     @Test
     void testKillCount() {
-        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+        EnemyIngame enemyIngame = enemyIngameService
+                .createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
         new DealDamageCommand(2, playerTester, enemyIngame).execute();
 
         assertThat(playerTester.getKills()).isEqualTo(1);

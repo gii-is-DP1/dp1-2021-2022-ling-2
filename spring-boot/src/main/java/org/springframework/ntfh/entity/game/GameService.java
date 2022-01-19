@@ -13,6 +13,7 @@ import org.springframework.ntfh.entity.game.concretestates.OngoingState;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
+import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
@@ -26,9 +27,6 @@ public class GameService {
 
     @Autowired
     private GameRepository gameRepository;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private TurnService turnService;
@@ -75,7 +73,8 @@ public class GameService {
 
     @Transactional
     public Game createGame(Game game) {
-        // Security measure to ensure that only the requested properties are set by the requester
+        // Security measure to ensure that only the requested properties are set by the
+        // requester
         Game newGame = new Game();
         newGame.setName(game.getName());
         newGame.setHasScenes(game.getHasScenes());
@@ -88,8 +87,8 @@ public class GameService {
 
     @Transactional
     public void deleteGame(Integer gameId) {
-        // TODO If the petition is sent by a user, only allow to delete it if is in lobby and token
-        // coincides
+        // TODO If the petition is sent by a user, only allow to delete it if is in
+        // lobby and token coincides
         // TODO make sure to clear the FKs in Users, cascade delete players and all that
         Game game = this.findGameById(gameId);
         GameState gameState = this.getState(game);
@@ -107,17 +106,16 @@ public class GameService {
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    public Game joinGame(Integer gameId, String username)
+    public Game joinGame(Game game, User user)
             throws DataAccessException, MaximumLobbyCapacityException {
-        Game game = this.findGameById(gameId);
         GameState gameState = this.getState(game);
-        return gameState.joinGame(gameId, username);
+        return gameState.joinGame(game, user);
     }
 
     @Transactional
     public Game removePlayer(Integer gameId, String username, String token) {
-        // TODO make sure that the one trying to remove the player is either the player himself or
-        // the host
+        // TODO make sure that the one trying to remove the player is either the player
+        // himself or the host
         // TODO check token in controller, getting the game via a Converter
         Game game = this.findGameById(gameId);
         String tokenUsername = TokenUtils.usernameFromToken(token);

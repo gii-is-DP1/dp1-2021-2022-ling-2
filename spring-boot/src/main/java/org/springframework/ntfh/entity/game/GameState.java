@@ -1,5 +1,7 @@
 package org.springframework.ntfh.entity.game;
 
+import org.springframework.ntfh.entity.user.User;
+
 public interface GameState {
 
     public void preState(Game game);
@@ -8,7 +10,7 @@ public interface GameState {
 
     public void deleteGame(Integer gameId);
 
-    public Game joinGame(Integer gameId, String username);
+    public Game joinGame(Game game, User user);
 
     public Game removePlayer(Integer gameId, String username);
 

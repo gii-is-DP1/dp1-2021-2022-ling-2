@@ -72,9 +72,8 @@ public class MarketCardIngameServiceTest {
         User user1 = userService.findUser("user1");
         User user2 = userService.findUser("user2");
 
-        gameTester = gameService.joinGame(gameTester.getId(), user1.getUsername()); // first player
-                                                                                    // -> leader
-        gameTester = gameService.joinGame(gameTester.getId(), user2.getUsername());
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
         Player playerTester = gameTester.getPlayers().get(0);
 
