@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.game;
 
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ntfh.entity.turn.Turn;
@@ -149,6 +148,13 @@ public class GameController {
         if (game.getPlayers().size() < 2) {
             throw new IllegalArgumentException("Not enough players to start the game");
         }
+
+        Long distinctCharacterCount = game.getPlayers().stream().filter(p -> p.getCharacter() != null)
+                .map(p -> p.getCharacter().getCharacterTypeEnum()).distinct().count();
+        if (distinctCharacterCount != game.getPlayers().size()) {
+            throw new IllegalArgumentException("Two players can't use the same character");
+        }
+
         return gameService.startGame(gameId);
     }
 

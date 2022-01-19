@@ -1,27 +1,26 @@
 package org.springframework.ntfh.entity.user;
 
 import java.util.Set;
+import java.util.List;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Transient;
-import java.util.ArrayList;
-import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
@@ -61,9 +60,9 @@ public class User extends BaseEntity{
     @Column(columnDefinition = "boolean default true")
     private Boolean enabled; // If a user gets banned, he/she will get disabled
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "player")
-    private Player player;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Player> players = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnoreProperties({"user"})
@@ -76,6 +75,14 @@ public class User extends BaseEntity{
                 Stream.of(commaSeparatedAuthorities.split(",")).map(String::trim).collect(Collectors.toList());
         Stream<String> userAuthorities = this.getAuthorities().stream().map(Authorities::getAuthority);
         return userAuthorities.anyMatch(parameterAuthorities::contains); // At least contains 1 of them
+    }
+
+    @Transient
+    public Player getPlayer() { // Current player the user is handling, or null if not in a game
+        if (getPlayers().isEmpty())
+            return null;
+        Player lastPlayerInList = getPlayers().get(getPlayers().size() - 1);
+        return lastPlayerInList.getGame().getHasFinished() ? null : lastPlayerInList;
     }
 }
 

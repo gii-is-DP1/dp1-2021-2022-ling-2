@@ -77,7 +77,7 @@ public class PlayerService {
         player.setUser(user);
         Player playerDB = this.savePlayer(player);
 
-        user.setPlayer(player);
+        user.getPlayers().add(player);
         userService.save(user);
 
         log.info("Player created by user " + user.getUsername() + " in game with id " + player.getId());

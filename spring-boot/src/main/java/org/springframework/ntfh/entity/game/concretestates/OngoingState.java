@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.Player;
@@ -27,6 +28,9 @@ public class OngoingState implements GameState {
 
     @Autowired
     private TurnService turnService;
+
+    @Autowired
+    private GameService gameService;
 
     @Override
     public void preState(Game game) {
@@ -79,7 +83,10 @@ public class OngoingState implements GameState {
     }
 
     @Override
-    public void finishGame(Game game) {
+    public Game finishGame(Game gameParam) {
+        // ! Workaround. If we don't do this, game does not get updated. Idk why
+        Integer gameId = gameParam.getId();
+        Game game = gameService.findGameById(gameId);
 
         List<Player> players = game.getPlayers();
 
@@ -96,14 +103,9 @@ public class OngoingState implements GameState {
         // Choose as the winner the one with more glory. If there is a tie, the first one is the winner
         Player winner = players.stream().max(maxByGlory().thenComparing(maxByKills())).orElse(null);
         game.setWinner(winner);
-
-        players.forEach(p -> {
-            User user = p.getUser();
-            user.setPlayer(null);
-        });
-
         game.setFinishTime(Timestamp.from(Instant.now()));
-        game.setStateType(GameStateType.FINISHED);
+        gameService.setNextState(game); // set state to FINISHED
+        return gameService.save(game);
     }
 
     private Comparator<Player> maxByGlory() {
