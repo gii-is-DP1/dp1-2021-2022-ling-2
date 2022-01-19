@@ -192,7 +192,7 @@ class FinishedStateTest {
         market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
         Integer marketCardIngameId = market.get(0).getId();
 
-        assertThrows(NullPointerException.class, () -> marketCardIngameService.buyMarketCard(marketCardIngameId, playerToken));
+        assertThrows(IllegalStateException.class, () -> finishedState.buyMarketCard(marketCardIngameId, playerToken));
     }
 
     @Test
