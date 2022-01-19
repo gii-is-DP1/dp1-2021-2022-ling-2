@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
