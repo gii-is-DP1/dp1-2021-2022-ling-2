@@ -75,7 +75,7 @@ class LobbyStateTest {
     protected User user1, user2, user3;
 
     @BeforeEach
-	public void init() {
+	void init() {
 		gameTester = new Game();
 		gameTester.setName("test game");
 		gameTester.setHasScenes(false);
@@ -100,15 +100,13 @@ class LobbyStateTest {
 		ranger.setCharacter(rangerCharacter);
 		rogue.setCharacter(rogueCharacter);
 
-        gameService.getState(gameTester);
-
         lobbyState = (LobbyState) gameService.getState(gameTester);
 
         actualState = gameTester.getStateType();
     }
 
 	@AfterEach
-	public void teardown() {
+	void teardown() {
 		try{
             gameService.delete(gameTester);
         } catch (Exception e) {}
@@ -177,10 +175,11 @@ class LobbyStateTest {
     void testPlayingCards_Failure() {
         assertThat(actualState).isEqualTo(GameStateType.LOBBY);
 
-        gameTester.getLeader().setCharacter(characterService.findById(5));
+        Player warrior = ranger;
+        warrior.setCharacter(characterService.findById(5));
         AbilityCard pasoAtras = abilityCardService.findById(27);
         AbilityCardIngame pasoAtrasIngame = abilityCardIngameService.createFromAbilityCard(pasoAtras, gameTester.getLeader());
-        String token = TokenUtils.generateJWTToken(gameTester.getLeader().getUser());
+        String token = TokenUtils.generateJWTToken(warrior.getUser());
 
         assertThrows(IllegalStateException.class, () -> lobbyState.playCard(pasoAtrasIngame.getId(), null, token));
     }
@@ -191,7 +190,7 @@ class LobbyStateTest {
 
         MarketCard capaElfica = marketCardService.findMarketCardById(11).get();
         MarketCardIngame capaElficaIngame = marketCardIngameService.createFromMarketCard(capaElfica, gameTester);
-        String token = TokenUtils.generateJWTToken(gameTester.getLeader().getUser());
+        String token = TokenUtils.generateJWTToken(ranger.getUser());
 
         assertThrows(IllegalStateException.class, () -> lobbyState.buyMarketCard(capaElficaIngame.getId(), token));
     }
