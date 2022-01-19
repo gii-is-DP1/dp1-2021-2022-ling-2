@@ -65,7 +65,7 @@ public class FinishedState implements GameState {
     }
 
     @Override
-    public void finishGame(Game game) {
+    public Game finishGame(Game game) {
         throw new IllegalStateException("A finished game can't be finished");
     }
 

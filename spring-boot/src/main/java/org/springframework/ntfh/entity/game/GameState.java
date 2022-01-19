@@ -20,5 +20,5 @@ public interface GameState {
 
     public Game startGame(Integer gameId);
 
-    public void finishGame(Game game);
+    public Game finishGame(Game game);
 }

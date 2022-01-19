@@ -97,7 +97,7 @@ public class LobbyState implements GameState {
     }
 
     @Override
-    public void finishGame(Game game) {
+    public Game finishGame(Game game) {
         throw new IllegalStateException("You can't finish a game that has not started");
 
     }

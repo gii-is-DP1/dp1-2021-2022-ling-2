@@ -1,12 +1,14 @@
 package org.springframework.ntfh.configuration;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
+import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.player.Player;
@@ -31,42 +33,72 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private CharacterService characterService;
 
+    private Random random;
+
+    private Integer testUserCount = 1;
+
+    private Integer testLobbyCount = 1;
+
     @Override
     public void run(String... args) throws Exception {
+        random = new Random();
         loadInitialData();
     }
 
     private void loadInitialData() {
-        // Create 30 test users
-        List<User> testUsers = IntStream.range(1, 30).boxed().map(i -> createUser("testUser" + i))
-                .collect(Collectors.toList());
-
-        // Create 4 games and fill them with users
-        createLobbyWithUsersAndStartGame("Test lobby 1", true, false, 2,
-                List.of(testUsers.get(0), testUsers.get(1)));
-        createLobbyWithUsersAndStartGame("Test lobby 2", false, true, 3,
-                List.of(testUsers.get(2), testUsers.get(3), testUsers.get(4)));
-        createLobbyWithUsersAndStartGame("Test lobby 3", false, false, 4,
-                List.of(testUsers.get(5), testUsers.get(6), testUsers.get(7), testUsers.get(8)));
-        createLobbyWithUsersAndStartGame("Test lobby 4", true, true, 4,
-                List.of(testUsers.get(9), testUsers.get(10), testUsers.get(11), testUsers.get(12)));
+        createGamesInLobbyState(2);
+        createGamesInGameState(3);
+        createGamesInFinishedState(4);
     }
 
-    private void createLobbyWithUsersAndStartGame(String name, Boolean hasScenes,
-            Boolean spectatorsAllowed, Integer maxPlayers, List<User> users) {
-        Game lobby = createLobby(name, hasScenes, spectatorsAllowed, maxPlayers);
-        users.forEach(user -> {
-            gameService.joinGame(lobby, user);
-            Player player = user.getPlayer();
-            Character randomCharacter = characterService.findById(player.getId() % 8 + 1);
-            player.setCharacter(randomCharacter);
-            playerService.savePlayer(player);
+    private void createGamesInFinishedState(Integer number) {
+        createGamesInLobbyState(number).forEach(g -> {
+            g = gameService.startGame(g.getId());
+            g = gameService.finishGame(g);
         });
-        gameService.startGame(lobby.getId()); // TODO remove getId() when alex and pablo refactor it
     }
 
-    private Game createLobby(String name, Boolean hasScenes, Boolean spectatorsAllowed,
-            Integer maxPlayers) {
+    private void createGamesInGameState(Integer number) {
+        createGamesInLobbyState(number).forEach(g -> gameService.startGame(g.getId()));
+    }
+
+    private List<Game> createGamesInLobbyState(Integer number) {
+
+        List<Game> games = new ArrayList<>();
+
+        // Create as many lobbies as requested in number parameter
+        for (int i = 0; i < number; i++) {
+            Boolean hasScenes = random.nextBoolean();
+            Boolean spectatorsAllowed = random.nextBoolean();
+            Integer maxPlayers = random.nextInt(2) + 2; // Random between 2 and 4
+            Game lobby = createLobby("Test lobby " + testLobbyCount, hasScenes, spectatorsAllowed, maxPlayers);
+            testLobbyCount++;
+
+            // For every lobby, create users to fill them with players
+            for (int j = 0; j < maxPlayers; j++) {
+                User testUser = createTestUser(testUserCount);
+                gameService.joinGame(lobby, testUser);
+                Player player = testUser.getPlayer();
+
+                List<CharacterTypeEnum> charactersChosen =
+                        lobby.getPlayers().stream().filter(p -> p.getCharacter() != null)
+                                .map(p -> p.getCharacter().getCharacterTypeEnum()).collect(Collectors.toList());
+
+                // Ensure there are no repeated characters
+                Character randomCharacter = null;
+                do {
+                    randomCharacter = characterService.findById(random.nextInt(8) + 1);
+                } while (charactersChosen.contains(randomCharacter.getCharacterTypeEnum()));
+
+                player.setCharacter(randomCharacter);
+                playerService.savePlayer(player);
+            }
+            games.add(lobby);
+        }
+        return games;
+    }
+
+    private Game createLobby(String name, Boolean hasScenes, Boolean spectatorsAllowed, Integer maxPlayers) {
         Game game = new Game();
         game.setName(name);
         game.setHasScenes(hasScenes);
@@ -75,11 +107,13 @@ public class DataLoader implements CommandLineRunner {
         return gameService.createGame(game);
     }
 
-    private User createUser(String name) {
+    private User createTestUser(Integer number) {
         User user = new User();
-        user.setUsername(name);
-        user.setEmail(name + "@mail.com");
-        user.setPassword(name);
+        String username = "TestUser" + number;
+        user.setUsername(username);
+        user.setEmail(username + "@mail.com");
+        user.setPassword(username);
+        testUserCount++;
         return userService.createUser(user);
     }
 }
