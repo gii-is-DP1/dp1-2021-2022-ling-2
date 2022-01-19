@@ -33,9 +33,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private CharacterService characterService;
-
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Iterable<User> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
@@ -65,10 +62,6 @@ public class UserController {
 	}
 
 	/**
-	 * <<<<<<< HEAD Update The profile of a user. Check before if the authorization token is either from the exact user
-	 * or from any admin. ======= Update The profile of a user. Check before if the authorization token is either from
-	 * the exact user or from any admin. >>>>>>> origin/master
-	 * 
 	 * @param user object with the data to be updated with
 	 * @param token jwt token of the user or the admin.
 	 * @return token for user's authentication, in case he/she was the one who updated the profile

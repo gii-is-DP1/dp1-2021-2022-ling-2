@@ -40,7 +40,7 @@ export default function Game() {
 
   const isSpectator = (_user: User | null) =>
     !loggedUser.username ||
-    (_user && _user?.lobby?.game?.id !== parseInt(gameId));
+    (_user && _user?.player?.game?.id !== parseInt(gameId));
 
   const isPlayersTurn = (_turn: Turn | null, username: string) =>
     _turn && _turn.player.user?.username === username;
@@ -49,6 +49,7 @@ export default function Game() {
     const orderedPlayerList: Player[] = _players.sort(
       (p1, p2) => p1.turnOrder - p2.turnOrder
     );
+    if (!playersInRenderOrder) window.location.reload();
     /* In case we are someone playing the game and not a spectator, make sure
      * that the first player of the list (the one who will be rendered on the
      * bottom left part) is us
@@ -72,7 +73,7 @@ export default function Game() {
       if (_game.hasFinished) history.push(ROUTES.HOME); // TODO redirect to endgame summary
     } catch (error: any) {
       toast.error(error?.message);
-      if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
+      if (error?.status >= 400) history.push(ROUTES.BROWSE_GAMES);
     }
   };
 
@@ -121,6 +122,7 @@ export default function Game() {
   useEffect(() => {
     // Re-render players and turn state if needed when the game changes
     if (!game) return;
+    if (game.stateType !== "ONGOING") window.location.reload();
     const sortedPlayers = playersInRenderOrder(game.players);
     setPlayers(sortedPlayers);
     setTurn(game.currentTurn ?? null);
@@ -150,7 +152,7 @@ export default function Game() {
         setTurn(_turn);
 
         // Fetch the game if it's not my turn, or if it's the first time the turn has changed to me
-        if (!isPlayersTurn(_turn, loggedUser.username) || _turn.player.dead) {
+        if (!isPlayersTurn(_turn, loggedUser.username) || _turn.player.isDead) {
           fetchGame();
           setIsNewTurn(true);
         } else {
@@ -208,7 +210,9 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={players[3]?.dead ? { filter: "grayscale(100%)" } : {}}
+                  style={
+                    players[3]?.isDead ? { filter: "grayscale(100%)" } : {}
+                  }
                 >
                   {players[3] && (
                     <PlayerZoneVertical player={players[3]} rotation={90} />
@@ -227,7 +231,9 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={players[2]?.dead ? { filter: "grayscale(100%)" } : {}}
+                  style={
+                    players[2]?.isDead ? { filter: "grayscale(100%)" } : {}
+                  }
                 >
                   {players[2] && (
                     <PlayerZoneVertical
@@ -244,7 +250,9 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={players[0]?.dead ? { filter: "grayscale(100%)" } : {}}
+                  style={
+                    players[0]?.isDead ? { filter: "grayscale(100%)" } : {}
+                  }
                 >
                   {players[0] && <PlayerZoneHorizontal player={players[0]} />}
                   {/* Bottom left (My hand) */}
@@ -256,7 +264,9 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={players[1]?.dead ? { filter: "grayscale(100%)" } : {}}
+                  style={
+                    players[1]?.isDead ? { filter: "grayscale(100%)" } : {}
+                  }
                 >
                   {players[1] && (
                     <PlayerZoneHorizontal player={players[1]} reverse />

@@ -34,7 +34,10 @@ export default function PlayerZoneHorizontal(params: Params) {
           <PlaceholderCard />
         </span>
         <span className={reverse ? "order-3" : ""}>
-          <CharacterCard character={player.characterType} />
+          <div className="fixed transform-gpu -translate-y-8 text-xl font-bold">
+            🩸 ({player.wounds})
+          </div>
+          <CharacterCard character={player.character} />
         </span>
         <span className={reverse ? "order-1" : ""}>
           <CountCard count={player.abilityPile.length} zoomDirection="up" />

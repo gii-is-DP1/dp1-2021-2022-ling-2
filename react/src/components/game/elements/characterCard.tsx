@@ -2,7 +2,7 @@ import { CHARACTER_IMAGE_PATH } from "../../../constants/paths";
 import { Character } from "../../../interfaces/Character";
 
 type Params = {
-  character: Character;
+  character?: Character;
   counterclockwise?: boolean;
 };
 
@@ -25,8 +25,8 @@ export default function CharacterCard(params: Params) {
       }`}
       src={`${CHARACTER_IMAGE_PATH}/${
         character?.characterTypeEnum?.toLowerCase() || ""
-      }_${character.characterGenderEnum.toLowerCase()}.png`}
-      alt={`${character.characterTypeEnum} ${character.characterGenderEnum}`}
+      }_${character?.characterGenderEnum.toLowerCase()}.png`}
+      alt={`${character?.characterTypeEnum} ${character?.characterGenderEnum}`}
     ></img>
   );
 }

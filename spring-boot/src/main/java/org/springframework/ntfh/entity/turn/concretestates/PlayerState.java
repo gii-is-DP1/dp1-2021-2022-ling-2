@@ -1,7 +1,6 @@
 package org.springframework.ntfh.entity.turn.concretestates;
 
 import java.lang.reflect.Method;
-
 import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -17,9 +16,9 @@ import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
-import org.springframework.stereotype.Component;
+import org.springframework.ntfh.util.State;
 
-@Component
+@State
 public class PlayerState implements TurnState {
 
     @Autowired
@@ -65,11 +64,9 @@ public class PlayerState implements TurnState {
         }
         // Convert the enum to the appropiate PascalCase class name (DAGA_ELFICA ->
         // DagaElfica)
-        String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true,
-                new char[] { '_' });
-        String completeClassName = String.format("org.springframework.ntfh.cardlogic.abilitycard.%s.%s",
-                characterTypeName,
-                className);
+        String className = CaseUtils.toCamelCase(abilityCardTypeEnum.toString(), true, new char[] {'_'});
+        String completeClassName =
+                String.format("org.springframework.ntfh.cardlogic.abilitycard.%s.%s", characterTypeName, className);
 
         try {
             // Get the class from its name
@@ -93,8 +90,7 @@ public class PlayerState implements TurnState {
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
             }
         } catch (Exception e) {
-            throw new IllegalArgumentException("Ability card type " + className +
-                    " is not implemented");
+            throw new IllegalArgumentException("Ability card type " + className + " is not implemented");
         }
 
         // Make sure to move the card to the discard pile

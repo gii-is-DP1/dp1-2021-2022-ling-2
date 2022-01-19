@@ -2,23 +2,21 @@ package org.springframework.ntfh.entity.game;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.lobby.Lobby;
-import org.springframework.ntfh.entity.lobby.LobbyService;
+import org.springframework.ntfh.entity.game.concretestates.FinishedState;
+import org.springframework.ntfh.entity.game.concretestates.LobbyState;
+import org.springframework.ntfh.entity.game.concretestates.OngoingState;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
-import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
+import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
@@ -31,18 +29,20 @@ public class GameService {
     private GameRepository gameRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PlayerService playerService;
-
-    @Autowired
-    private LobbyService lobbyService;
-
-    @Autowired
     private TurnService turnService;
 
-    String gameLogError = "Game with id ";
+    /************ STATES ************/
+
+    @Autowired
+    private LobbyState lobbyState;
+
+    @Autowired
+    private OngoingState ongoingState;
+
+    @Autowired
+    private FinishedState finishedState;
+
+    /*******************************/
 
     public Integer gameCount() {
         return (int) gameRepository.count();
@@ -55,8 +55,8 @@ public class GameService {
     public Game findGameById(int id) throws DataAccessException {
         Optional<Game> game = gameRepository.findById(id);
         if (!game.isPresent()) {
-            log.error(gameLogError + id + " was not found");
-            throw new DataAccessException(gameLogError + id + " was not found") {};
+            log.error("Game with id " + id + " was not found");
+            throw new DataAccessException("Game with id " + id + " was not found") {};
         }
         return game.get();
     }
@@ -66,54 +66,76 @@ public class GameService {
     }
 
     public Turn getCurrentTurnByGameId(Integer gameId) {
+        // TODO move to TurnService?
         List<Turn> turns = gameRepository.getTurnsByGameId(gameId);
         return turns.isEmpty() ? null : turns.get(turns.size() - 1);
     }
 
     @Transactional
-    public Game createFromLobby(@Valid Lobby lobby) {
-        Game game = new Game();
-        game.setStartTime(Timestamp.from(Instant.now()));
-        game.setHasScenes(lobby.getHasScenes());
+    public Game createGame(Game game) {
+        // Security measure to ensure that only the requested properties are set by the
+        // requester
+        Game newGame = new Game();
+        newGame.setName(game.getName());
+        newGame.setHasScenes(game.getHasScenes());
+        newGame.setSpectatorsAllowed(game.getSpectatorsAllowed());
+        newGame.setMaxPlayers(game.getMaxPlayers());
 
-        // We have to use lobbyFromDB since the one from the request does not
-        // contain some user attributes and will set them to null later
-        Lobby lobbyFromDB = lobbyService.findById(lobby.getId());
-        Set<User> users = lobbyFromDB.getUsers();
-
-        Integer i = 1;
-        List<Player> players = new ArrayList<>();
-        for (User user : users) {
-            // The turnOrder 0 is reserved for the host
-            Boolean isHost = lobby.getHost().getUsername().equals(user.getUsername());
-            Integer turnOrder = isHost ? 0 : i;
-            if (!isHost)
-                i++;
-            Player createdPlayer = playerService.createFromUser(user, lobby, turnOrder);
-
-            players.add(createdPlayer);
-            // TODO temporary solution. Set the lobby host as the leader. In the real game
-            // it is chosen via a "minigame" with cards
-            if (isHost)
-                game.setLeader(createdPlayer);
-        }
-
-        game.setPlayers(players);
-        Game savedGame = gameRepository.save(game);
-        // Now, we instantiate the entities that will be used in the game
-
-        turnService.initializeFromGame(game);
-
-        // Once the game is in the database, we update the lobby with a FK to it
-        lobby.setGame(game);
-        lobbyService.save(lobby);
-        log.info(
-            gameLogError + game.getId() + " was created with players: " + game.getPlayers());
-        return savedGame;
+        newGame.setStateType(GameStateType.LOBBY);
+        return this.save(newGame);
     }
 
     @Transactional
-    public Game save(@Valid Game game) {
+    public void deleteGame(Integer gameId) {
+        // TODO If the petition is sent by a user, only allow to delete it if is in
+        // lobby and token coincides
+        // TODO make sure to clear the FKs in Users, cascade delete players and all that
+        Game game = this.findGameById(gameId);
+        GameState gameState = this.getState(game);
+        gameState.deleteGame(game.getId());
+
+    }
+
+    /**
+     * Adds the given player to the list of players in the lobby.
+     * 
+     * @author andrsdt
+     * @param lobbyId
+     * @param usernameFromRequest username that will be added to the lobby
+     * @param token JWT token sent by the client
+     * @return true if the player was added, false if there was some problem
+     */
+    @Transactional
+    public Game joinGame(Game game, User user)
+            throws DataAccessException, MaximumLobbyCapacityException {
+        GameState gameState = this.getState(game);
+        return gameState.joinGame(game, user);
+    }
+
+    @Transactional
+    public Game removePlayer(Integer gameId, String username, String token) {
+        // TODO make sure that the one trying to remove the player is either the player
+        // himself or the host
+        // TODO check token in controller, getting the game via a Converter
+        Game game = this.findGameById(gameId);
+        String tokenUsername = TokenUtils.usernameFromToken(token);
+
+        Boolean sentByHost = game.getLeader().getUser().getUsername().equals(tokenUsername);
+        Boolean sentByPlayerLeaving = username.equals(tokenUsername);
+
+        if (!sentByHost && !sentByPlayerLeaving) {
+            log.error("User " + tokenUsername + " tried to remove player " + username
+                    + " from game " + gameId);
+            throw new NonMatchingTokenException(
+                    "A user can only leave a lobby by himself or by being kicked by the leader") {};
+        }
+
+        GameState gameState = this.getState(game);
+        return gameState.removePlayer(gameId, username);
+    }
+
+    @Transactional
+    public Game save(Game game) {
         // Return the game created after saving it
         return gameRepository.save(game);
     }
@@ -121,31 +143,6 @@ public class GameService {
     @Transactional
     public void delete(Game game) {
         gameRepository.delete(game);
-    }
-
-    @Transactional
-    public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
-        String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
-        Turn currentTurn = player.getGame().getCurrentTurn();
-        TurnState turnState = turnService.getState(currentTurn);
-        turnState.playCard(abilityCardIngameId, enemyId, token);
-    }
-
-    /**
-     * Executed when a player tries to buy a market card
-     * 
-     * @param marketCardIngameId
-     */
-    @Transactional
-    public void buyMarketCard(Integer marketCardIngameId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
-        String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
-        Turn currentTurn = player.getGame().getCurrentTurn();
-        TurnState turnState = turnService.getState(currentTurn);
-        turnState.buyMarketCard(marketCardIngameId, token);
     }
 
     @Transactional
@@ -160,12 +157,38 @@ public class GameService {
      */
     @Transactional
     public void finishGame(Game game) {
-        game.setFinishTime(Timestamp.from(Instant.now()));
-        game.getPlayers().forEach(p -> {
-            User user = p.getUser();
-            user.setLobby(null);
-            user.setPlayer(null);
-            user.setCharacter(null);
-        });
+        GameState gameState = this.getState(game);
+        gameState.finishGame(game);
+    }
+
+    @Transactional
+    public Game startGame(Integer gameId) {
+        Game game = this.findGameById(gameId);
+        game.setStartTime(Timestamp.from(Instant.now()));
+        GameState gameState = this.getState(game);
+        return gameState.startGame(gameId);
+    }
+
+    public GameState getState(Game game) {
+        GameStateType stateType = game.getStateType();
+        if (stateType == GameStateType.LOBBY) {
+            return lobbyState;
+        } else if (stateType == GameStateType.ONGOING) {
+            return ongoingState;
+        } else if (stateType == GameStateType.FINISHED) {
+            return finishedState;
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void setNextState(Game game) {
+        GameState state = getState(game);
+        GameStateType nextState = state.getNextState();
+        game.setStateType(nextState);
+
+        GameState newState = getState(game);
+        newState.preState(game); // Execute the preState method right after setting the new state
     }
 }

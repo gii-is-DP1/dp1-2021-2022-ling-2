@@ -1,14 +1,15 @@
-import axios from "../api/axiosConfig";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import HomeButton from "../components/common/home-button";
-import { Game } from "../interfaces/Game";
 import { useHistory, useParams } from "react-router-dom";
+import axios from "../api/axiosConfig";
+import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
+import { Game } from "../interfaces/Game";
+import { templateGame } from "../templates/game";
 
 export default function GameSummary() {
   // TODO don't send the game itself but statistics about the game
-  const [game, setGame] = useState<Game>();
+  const [game, setGame] = useState<Game>(templateGame);
   const { gameId } = useParams<{ gameId: string }>();
   const history = useHistory();
 
@@ -24,7 +25,7 @@ export default function GameSummary() {
         setGame(_game);
       } catch (error: any) {
         toast.error(error?.message);
-        if (error?.status >= 400) history.push(ROUTES.BROWSE_LOBBIES);
+        if (error?.status >= 400) history.push(ROUTES.BROWSE_GAMES);
       }
     };
     fetchGame();
@@ -50,6 +51,9 @@ export default function GameSummary() {
                         Rank
                       </th>
                       <th scope="col" className="text-table-th">
+                        Character
+                      </th>
+                      <th scope="col" className="text-table-th">
                         Player
                       </th>
                       <th scope="col" className="text-table-th">
@@ -72,9 +76,12 @@ export default function GameSummary() {
                       .map((p, i: number) => (
                         <tr key={p.id}>
                           <td className="text-table-td">{rankingEmojis[i]}</td>
-                          <td className="text-table-td">{p.user.username}</td>
                           <td className="text-table-td">
-                            {p.dead ? "💀" : "🖖"}
+                            {p.characterTypeEnum}
+                          </td>
+                          <td className="text-table-td">{p.user?.username}</td>
+                          <td className="text-table-td">
+                            {p.isDead ? "💀" : "🖖"}
                           </td>
                           <td className="text-table-td">{p.glory}</td>
                           <td className="text-table-td">{p.gold}</td>
