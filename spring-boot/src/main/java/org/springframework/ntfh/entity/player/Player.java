@@ -6,11 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -31,7 +29,7 @@ import lombok.Setter;
 @Table(name = "players")
 public class Player extends BaseEntity {
 
-    @OneToOne(mappedBy = "player")
+    @ManyToOne
     @JsonIgnoreProperties({"password", "email", "enabled", "lobby", "game", "player", "character", "authorities"})
     private User user;
 

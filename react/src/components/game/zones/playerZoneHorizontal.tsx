@@ -35,7 +35,10 @@ export default function PlayerZoneHorizontal(params: Params) {
         </span>
         <span className={reverse ? "order-3" : ""}>
           <div className="fixed transform-gpu -translate-y-8 text-xl font-bold">
-            🩸 ({player.wounds})
+            🩸({player.wounds})
+          </div>
+          <div className="fixed transform-gpu -translate-y-16 text-xl font-bold">
+            🛡({player.guard})
           </div>
           <CharacterCard character={player.character} />
         </span>

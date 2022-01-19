@@ -9,10 +9,10 @@ import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 import { Game } from "../interfaces/Game";
 import { Player } from "../interfaces/Player";
-import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
-import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 import { templateGame } from "../templates/game";
 import { templatePlayer } from "../templates/player";
+import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
+import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 /**
  *
  * @author andrsdt
@@ -46,7 +46,6 @@ export default function Lobby() {
     return 1 + 2 * characters.indexOf(character) + genders.indexOf(gender);
     // Input: WARRIOR, FEMALE
     // Output: 3+ 1  = 4 (id Of FEMALE WARRIOR in the DB is 4)
-    // This is a temporal solution to be refactored in the future
   };
 
   const isHost = () => {
@@ -80,7 +79,6 @@ export default function Lobby() {
       setCharactersTaken(takenCharacters);
       return lobby;
     } catch (error: any) {
-      // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
       toast.error(error?.message);
       if (error?.status === 404) history.push(ROUTES.BROWSE_GAMES);
       return;
@@ -172,6 +170,7 @@ export default function Lobby() {
   useEffect(() => {
     async function updateUserCharacter() {
       try {
+        if (player === templatePlayer) return;
         await axios.put(
           `/players/${player?.id}/character/${getCharacterId()}`,
           null,
