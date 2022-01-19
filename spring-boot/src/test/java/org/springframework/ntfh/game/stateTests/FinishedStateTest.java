@@ -190,7 +190,6 @@ class FinishedStateTest {
         MarketCardIngame pocionCurativaIngame = marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
-
         Integer marketCardIngameId = market.get(0).getId();
 
         assertThrows(NullPointerException.class, () -> marketCardIngameService.buyMarketCard(marketCardIngameId, playerToken));
