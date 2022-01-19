@@ -107,8 +107,6 @@ class OngoingStateTest {
 		ranger.setCharacter(rangerCharacter);
 		rogue.setCharacter(rogueCharacter);
 
-        gameService.getState(gameTester);
-
         gameService.startGame(gameTester.getId());
 
         ongoingState = (OngoingState) gameService.getState(gameTester);
