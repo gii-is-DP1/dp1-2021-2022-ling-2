@@ -17,18 +17,27 @@ export default function LobbyBrowser() {
 
   const [gameList, setGameList] = useState<Game[]>([]);
 
-  const fetchLobbies = async () => {
+  const fetchGames = async () => {
+    let gameLs = [];
     try {
-      const response = await axios.get(`games`);
-      setGameList(response.data);
+      const response = await axios.get(`games/lobby`);
+      gameLs = response.data;
+      setGameList(gameLs);
     } catch (error: any) {
       toast.error(error?.message);
-      history.push("/not-found");
+    }
+    try {
+      const response = await axios.get(`games/ongoing`);
+      gameLs = [...gameLs, ...response.data];
+      setGameList(gameLs);
+    } catch (error: any) {
+      toast.error(error?.message);
     }
   };
 
   useEffect(() => {
-    fetchLobbies();
+    fetchGames();
+    fetchGames();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -56,7 +65,7 @@ export default function LobbyBrowser() {
                       <th scope="col" className="text-table-th">
                         <button
                           className="btn-ntfh bg-gray-900 w-full"
-                          onClick={fetchLobbies}
+                          onClick={fetchGames}
                         >
                           <p className={"text-xl text-gradient-ntfh"}>
                             Refresh

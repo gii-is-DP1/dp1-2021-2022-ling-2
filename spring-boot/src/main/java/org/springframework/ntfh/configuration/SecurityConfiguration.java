@@ -67,12 +67,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// PLAYER ENDPOINTS
 				.antMatchers(HttpMethod.PUT, "/players/{playerId}/character/{characterId}").hasAuthority("user")
 				// GAME ENDPOINTS
-				.antMatchers(HttpMethod.GET, "/games").permitAll() // Allow everyone to list all games in the app
-				.antMatchers(HttpMethod.POST, "/games").hasAuthority("user") // Allow users to create new games
-				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+				.antMatchers(HttpMethod.GET, "/games").hasAuthority("admin").antMatchers(HttpMethod.POST, "/games")
+				.hasAuthority("user") // Allow users to create new games
 				// Allow admins to see past games
-				.antMatchers(HttpMethod.GET, "/games/history").hasAnyAuthority(adminString, "user")
-				.antMatchers(HttpMethod.GET, "/games/history/count").permitAll() // Allow everyone to see past games
+				.antMatchers(HttpMethod.GET, "/games/lobby").permitAll() // Allow everyone to see lobbies
+				.antMatchers(HttpMethod.GET, "/games/ongoing") // Allow everyone to see ongoing games
+				.permitAll().antMatchers(HttpMethod.GET, "/games/finished").permitAll()
+				.antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+				.antMatchers(HttpMethod.GET, "/games/finished/count").permitAll() // Allow everyone to see past games
 				.antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
 				.antMatchers(HttpMethod.PUT, "/games/{gameId}").hasAuthority("user") // Allow users to update a game
 				.antMatchers(HttpMethod.GET, "/games/{gameId}/turn").permitAll() // Allow everyone to get a game's turn

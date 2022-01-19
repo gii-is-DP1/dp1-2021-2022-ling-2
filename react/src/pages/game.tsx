@@ -277,7 +277,10 @@ export default function Game() {
             </div>
             {/* Bottom player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
-              <p>{players[0] && players[0].user.username + " (You)"}</p>
+              <p>
+                {players[0] && players[0].user.username}
+                {!isSpectator(user) && " (You)"}
+              </p>
               <p>{players[1] && players[1].user.username}</p>
             </div>
           </div>

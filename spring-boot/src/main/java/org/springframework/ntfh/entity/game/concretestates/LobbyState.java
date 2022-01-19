@@ -63,9 +63,9 @@ public class LobbyState implements GameState {
         }
 
         game.getPlayers().add(player);
-        player.setGame(game); // TODO redundant? we have mappedBy above
+        player.setGame(game);
         player.getUser().setPlayer(player);
-        return game;
+        return gameService.save(game);
     }
 
     @Override

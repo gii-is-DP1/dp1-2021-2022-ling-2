@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -107,7 +108,7 @@ public class Game extends BaseEntity {
     @JsonIgnore
     public List<Player> getAlivePlayersInTurnOrder() {
         return players.stream().filter(p -> !p.isDead()).sorted((p1, p2) -> p1.getTurnOrder() - p2.getTurnOrder())
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @Transient
