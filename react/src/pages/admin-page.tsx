@@ -32,7 +32,7 @@ export default function AdminPage() {
       if (currentTable !== "ongoing") return;
       try {
         const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get("games/history", { headers });
+        const response = await axios.get("games/finished", { headers });
         setGamesHistory(response.data);
       } catch (error: any) {
         toast.error(error?.message);
