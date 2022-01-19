@@ -20,7 +20,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.exceptions.BannedUserException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
@@ -90,11 +89,7 @@ public class UserService {
     }
 
     public User findByUsername(String username) throws DataAccessException {
-        // The username is the id (primary key)
-        Optional<User> user = userRepository.findById(username);
-        if (!user.isPresent())
-            throw new DataAccessException(userString + username + " was not found") {};
-        return user.get();
+        return userRepository.findByUsername(username);
     }
 
     public Integer count() {
@@ -180,7 +175,7 @@ public class UserService {
             log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
             throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
         }
-        this.userRepository.deleteById(user.getUsername());
+        this.userRepository.deleteById(user.getId());
         log.info(userString + user.getUsername() + " deleted");
     }
 

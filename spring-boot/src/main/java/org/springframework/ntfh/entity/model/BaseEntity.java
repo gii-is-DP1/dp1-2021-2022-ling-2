@@ -34,9 +34,10 @@ public class BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Integer id;
 
-	@Version
-	@Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
-	private Integer version;
+	// ! TODO Implement versioning
+	// @Version
+	// @Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
+	// protected Integer version;
 
 	public Integer getId() {
 		return id;
