@@ -5,6 +5,7 @@ import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
 import { Game } from "../interfaces/Game";
+import { Player } from "../interfaces/Player";
 import { templateGame } from "../templates/game";
 
 export default function GameSummary() {
@@ -30,6 +31,12 @@ export default function GameSummary() {
     };
     fetchGame();
   }, []);
+
+  const rankingSort = (p1: Player, p2: Player): number => {
+    // Sorting criteria for deciding the winner: Sort by glory. If equal, sort by kills.
+    const compareGlory = p1.glory - p2.glory;
+    return compareGlory === 0 ? p1.kills - p2.kills : compareGlory;
+  };
 
   return (
     <>
@@ -71,23 +78,19 @@ export default function GameSummary() {
                     </tr>
                   </thead>
                   <tbody className="bg-gray-900 divide-y divide-gray-200">
-                    {game?.players
-                      ?.sort((p1, p2) => p1.glory - p2.glory)
-                      .map((p, i: number) => (
-                        <tr key={p.id}>
-                          <td className="text-table-td">{rankingEmojis[i]}</td>
-                          <td className="text-table-td">
-                            {p.characterTypeEnum}
-                          </td>
-                          <td className="text-table-td">{p.user?.username}</td>
-                          <td className="text-table-td">
-                            {p.isDead ? "💀" : "🖖"}
-                          </td>
-                          <td className="text-table-td">{p.glory}</td>
-                          <td className="text-table-td">{p.gold}</td>
-                          <td className="text-table-td">{p.kills}</td>
-                        </tr>
-                      ))}
+                    {game?.players?.sort(rankingSort).map((p, i: number) => (
+                      <tr key={p.id}>
+                        <td className="text-table-td">{rankingEmojis[i]}</td>
+                        <td className="text-table-td">{p.characterTypeEnum}</td>
+                        <td className="text-table-td">{p.user?.username}</td>
+                        <td className="text-table-td">
+                          {p.isDead ? "💀" : "🖖"}
+                        </td>
+                        <td className="text-table-td">{p.glory}</td>
+                        <td className="text-table-td">{p.gold}</td>
+                        <td className="text-table-td">{p.kills}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
