@@ -83,4 +83,3 @@ public class User {
         return lastPlayerInList.getGame().getHasFinished() ? null : lastPlayerInList;
     }
 }
-
