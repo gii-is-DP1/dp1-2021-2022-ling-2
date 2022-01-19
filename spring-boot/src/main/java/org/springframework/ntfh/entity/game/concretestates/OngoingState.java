@@ -2,6 +2,8 @@ package org.springframework.ntfh.entity.game.concretestates;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameState;
@@ -30,8 +32,7 @@ public class OngoingState implements GameState {
     public void preState(Game game) {
         // TODO create the first turn bla bla
         turnService.initializeFromGame(game);
-        log.info(
-                "Game with id " + game.getId() + " was created with players: " + game.getPlayers());
+        log.info("Game with id " + game.getId() + " was created with players: " + game.getPlayers());
     }
 
     @Override
@@ -79,13 +80,37 @@ public class OngoingState implements GameState {
 
     @Override
     public void finishGame(Game game) {
-        // TODO set winner
-        game.setFinishTime(Timestamp.from(Instant.now()));
-        game.getPlayers().forEach(p -> {
+
+        List<Player> players = game.getPlayers();
+
+        // Give +1 aditional glory to players with 0 wounds
+        players.stream().filter(player -> player.getWounds() == 0)
+                .forEach(player -> player.setGlory(player.getGlory() + 1));
+
+        // Give +1 aditional glory every 3 coins
+        players.stream().forEach(player -> {
+            Integer additionalGlory = player.getGold() / 3;
+            player.setGlory(player.getGlory() + additionalGlory);
+        });
+
+        // Choose as the winner the one with more glory. If there is a tie, the first one is the winner
+        Player winner = players.stream().max(maxByGlory().thenComparing(maxByKills())).orElse(null);
+        game.setWinner(winner);
+
+        players.forEach(p -> {
             User user = p.getUser();
             user.setPlayer(null);
         });
+
+        game.setFinishTime(Timestamp.from(Instant.now()));
         game.setStateType(GameStateType.FINISHED);
     }
 
+    private Comparator<Player> maxByGlory() {
+        return (p1, p2) -> p1.getGlory() - p2.getGlory();
+    }
+
+    private Comparator<Player> maxByKills() {
+        return (p1, p2) -> p1.getKills() - p2.getKills();
+    }
 }
