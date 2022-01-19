@@ -102,4 +102,8 @@ public class AchievementService {
             throw new IllegalArgumentException("Condition for achievement " + className + " is not implemented");
         }
     }
+
+    public void delete(Achievement achievement) {
+        achievementRepository.delete(achievement);
+    }
 }

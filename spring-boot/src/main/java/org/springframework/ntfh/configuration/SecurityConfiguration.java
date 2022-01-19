@@ -94,9 +94,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Allow users to buy cards in the market
                 // ACHIEVEMENT ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
-                .antMatchers(HttpMethod.PUT, "/achievements").hasAuthority(adminString) // Update achievement
+                .antMatchers(HttpMethod.PUT, "/achievements").hasAuthority("admin") // Update achievement
                 .antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
                                                                                           // achievement
+                .antMatchers(HttpMethod.DELETE, "/achievements/{achievementId}").hasAuthority("admin")
                 // SCENE ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/scenes/count").permitAll() // Allow everyone to get the number of scenes
                 // MARKET CARD ENDPOINTS
