@@ -25,16 +25,17 @@ export default function EditAchievement() {
   );
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [condition, setCondition] = useState<number | undefined>(undefined);
 
   const sendToAdminPage = () => history.push(ROUTES.ADMIN_PAGE);
 
   async function fetchAchievement() {
     try {
       const response = await axios.get(`/achievements/${params.achievementId}`);
-      // TODO refactor: can be destructured in one line
       setAchievement(response.data);
       setName(response.data.name);
       setDescription(response.data.description);
+      setCondition(response.data.condition);
     } catch (error: any) {
       toast.error(error?.message);
       sendToAdminPage();
@@ -48,6 +49,7 @@ export default function EditAchievement() {
         id: achievement?.id, // Needed to identify the achievement
         name: name,
         description: description,
+        condition: condition ?? 0,
       };
       await axios.put("/achievements", payload, {
         headers: { Authorization: "Bearer " + userToken },
@@ -77,7 +79,7 @@ export default function EditAchievement() {
             <p className="text-5xl text-gradient-ntfh">Edit achievement</p>
           </button>
         </span>
-        <form className="flex flex-col bg-felt rounded-3xl border-20 border-gray-900 p-8 w-4/5">
+        <form className="flex flex-col bg-felt rounded-3xl border-20 border-gray-900 p-8 w-1/2">
           <div className="flex flex-col mb-4">
             <p className="font-bold text-2xl mb-2">Name</p>
             <input
@@ -92,8 +94,19 @@ export default function EditAchievement() {
             <input
               value={description}
               type="text"
-              className="p-3 rounded-xl border-4 border-black text-black"
+              className="p-3 rounded-xl border-4 border-black text-black break-all"
               onChange={(e) => setDescription(e.target.value)}
+            ></input>
+          </div>
+          <div className="flex flex-col mb-4">
+            <p className="font-bold text-2xl mb-2">Condition {"{X}"}</p>
+            <input
+              value={condition}
+              type="text"
+              className="p-3 rounded-xl border-4 border-black text-black"
+              onChange={(e) =>
+                setCondition(parseInt(e.target.value) || undefined)
+              }
             ></input>
           </div>
           <button type="submit" className="btn-ntfh" onClick={handleSubmit}>

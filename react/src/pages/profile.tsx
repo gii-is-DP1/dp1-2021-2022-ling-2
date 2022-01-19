@@ -62,11 +62,6 @@ export default function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 
-  // TODO replace with a backend filter
-  const userInPlayerList = (_list: Player[], _username: string) => {
-    return _list.some((player) => player.user?.username === profileUsername);
-  };
-
   return (
     <>
       <HomeButton />
@@ -100,7 +95,12 @@ export default function Profile() {
                   <p className="text-2xl text-gradient-ntfh">Edit</p>
                 </button>
               </Link>
-              <Link to={ROUTES.ACHIEVEMENTS}>
+              <Link
+                to={ROUTES.USER_ACHIEVEMENTS.replace(
+                  ":username",
+                  profileUsername
+                )}
+              >
                 <button type="submit" className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">Achievements</p>
                 </button>
