@@ -64,13 +64,13 @@ public class User {
     @JsonIgnoreProperties({"user"})
     private Set<Authorities> authorities;
 
-    @Transient
-    @JsonIgnore
-    public Boolean hasAnyAuthorities(String commaSeparatedAuthorities) {
-        List<String> parameterAuthorities =
-                Stream.of(commaSeparatedAuthorities.split(",")).map(String::trim).collect(Collectors.toList());
-        Stream<String> userAuthorities = this.getAuthorities().stream().map(Authorities::getAuthority);
-        return userAuthorities.anyMatch(parameterAuthorities::contains); // At least contains 1 of them
-    }
+    // @Transient
+    // @JsonIgnore
+    // public Boolean hasAnyAuthorities(String commaSeparatedAuthorities) {
+    // List<String> parameterAuthorities =
+    // Stream.of(commaSeparatedAuthorities.split(",")).map(String::trim).collect(Collectors.toList());
+    // Stream<String> userAuthorities = this.getAuthorities().stream().map(Authorities::getAuthority);
+    // return userAuthorities.anyMatch(parameterAuthorities::contains); // At least contains 1 of them
+    // }
 }
 
