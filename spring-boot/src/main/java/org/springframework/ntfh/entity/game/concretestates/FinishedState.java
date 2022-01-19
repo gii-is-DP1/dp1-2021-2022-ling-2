@@ -42,13 +42,11 @@ public class FinishedState implements GameState {
     @Override
     public Game joinGame(Game game, User user) {
         throw new IllegalStateException("You can't join a finished game");
-
     }
 
     @Override
     public Game removePlayer(Integer gameId, String username) {
         throw new IllegalStateException("You can't leave from a finished game");
-
     }
 
     @Override

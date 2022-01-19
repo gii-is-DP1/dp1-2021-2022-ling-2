@@ -48,6 +48,10 @@ public class GameService {
         return (int) gameRepository.count();
     }
 
+    public Integer countByStateType(GameStateType stateType) {
+        return (int) gameRepository.countByStateType(stateType);
+    }
+
     public Iterable<Game> findAll() {
         return gameRepository.findAll();
     }
@@ -106,8 +110,7 @@ public class GameService {
      * @return true if the player was added, false if there was some problem
      */
     @Transactional
-    public Game joinGame(Game game, User user)
-            throws DataAccessException, MaximumLobbyCapacityException {
+    public Game joinGame(Game game, User user) throws DataAccessException, MaximumLobbyCapacityException {
         GameState gameState = this.getState(game);
         return gameState.joinGame(game, user);
     }
@@ -123,9 +126,8 @@ public class GameService {
         Boolean sentByHost = game.getLeader().getUser().getUsername().equals(tokenUsername);
         Boolean sentByPlayerLeaving = username.equals(tokenUsername);
 
-        if (!sentByHost && !sentByPlayerLeaving) {
-            log.error("User " + tokenUsername + " tried to remove player " + username
-                    + " from game " + gameId);
+        if (Boolean.FALSE.equals(sentByHost) && Boolean.FALSE.equals(sentByPlayerLeaving)) {
+            log.error("User " + tokenUsername + " tried to remove player " + username + " from game " + gameId);
             throw new NonMatchingTokenException(
                     "A user can only leave a lobby by himself or by being kicked by the leader") {};
         }
@@ -190,5 +192,9 @@ public class GameService {
 
         GameState newState = getState(game);
         newState.preState(game); // Execute the preState method right after setting the new state
+    }
+
+    public Iterable<Game> findByStateType(GameStateType stateType) {
+        return gameRepository.findByStateType(stateType);
     }
 }

@@ -21,7 +21,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class AbilityCardServiceTest {
+class AbilityCardServiceTest {
 
     @Autowired
     AbilityCardService abilityCardService;
