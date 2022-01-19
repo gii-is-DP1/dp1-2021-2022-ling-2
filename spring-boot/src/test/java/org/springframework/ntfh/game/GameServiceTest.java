@@ -46,7 +46,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DataJpaTest(
         includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class GameServiceTest {
+class GameServiceTest {
 
     @Autowired
     private GameService gameService;
@@ -85,7 +85,7 @@ public class GameServiceTest {
     private Integer INITIAL_GAMES_COUNT = 0;
 
     @BeforeEach
-    public void init() {
+    void init() {
 
         /**************** Copypasted section ******************************/
         // TODO copypaste from CommandIngameTest, maybe extract to a method?
@@ -114,18 +114,18 @@ public class GameServiceTest {
     }
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         gameService.delete(gameTester);
     }
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = gameService.gameCount();
         assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         Game tester = this.gameService.findGameById(1);
         assertThat(tester.getHasScenes()).isFalse();
         assertThat(tester.getLeader().getId()).isEqualTo(1);
@@ -144,7 +144,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testSaveGame_success() {
+    void testSaveGame_success() {
         // Test made in the init
         assertThat(gameTester.getId())
                 .isEqualTo(gameService.findGameById(gameTester.getId()).getId());
@@ -153,7 +153,7 @@ public class GameServiceTest {
     // TODO negative test. delete game which is ONGOING
     // TODO postiive parametrized test. delete game which is in state LOBBY or FINISHED
     @Test
-    public void testDeleteGame() {
+    void testDeleteGame() {
         gameTester.setStateType(GameStateType.LOBBY);
         gameService.delete(gameTester);
         assertThrows(DataAccessException.class, () -> gameService.findGameById(gameTester.getId()));
@@ -184,14 +184,14 @@ public class GameServiceTest {
 
     // H1 + E1
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
         assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
     // H7 + E1
     @Test
-    public void testCreateFromLobby() {
+    void testCreateFromLobby() {
         assertThat(gameTester.getId())
                 .isEqualTo(gameService.findGameById(gameTester.getId()).getId());
     }
