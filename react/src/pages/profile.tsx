@@ -32,9 +32,10 @@ export default function Profile() {
       try {
         // TODO remove auth if not needed
         const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get(`games/history`, { headers });
-        const gamesPlayedByUser = filterByUsername(response.data);
-        setUserGamesHistory(gamesPlayedByUser);
+        const response = await axios.get(`users/${profileUsername}/history`, {
+          headers,
+        });
+        setUserGamesHistory(response.data);
       } catch (error: any) {
         toast.error(error?.message);
       }
@@ -60,15 +61,6 @@ export default function Profile() {
     fetchUserProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
-
-  // TODO replace with a backend filter
-  const userInPlayerList = (_list: Player[], _username: string) => {
-    return _list.some((player) => player.user?.username === profileUsername);
-  };
-
-  // TODO replace with a backend filter
-  const filterByUsername = (_list: Game[]) =>
-    _list.filter((game) => userInPlayerList(game.players, loggedUser.username));
 
   return (
     <>
@@ -103,14 +95,19 @@ export default function Profile() {
                   <p className="text-2xl text-gradient-ntfh">Edit</p>
                 </button>
               </Link>
-              <Link to={ROUTES.ACHIEVEMENTS}>
+              <Link
+                to={ROUTES.USER_ACHIEVEMENTS.replace(
+                  ":username",
+                  profileUsername
+                )}
+              >
                 <button type="submit" className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">Achievements</p>
                 </button>
               </Link>
             </div>
           </div>
-          <div className="flex flex-col w-3/5">
+          <div className="flex flex-col w-4/5">
             {/* match history table */}
             <GamesHistoryTable data={userGamesHistory} />
           </div>

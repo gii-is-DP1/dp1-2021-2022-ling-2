@@ -49,6 +49,47 @@ public class DataLoader implements CommandLineRunner {
         createGamesInLobbyState(2);
         createGamesInGameState(3);
         createGamesInFinishedState(4);
+
+        createUsersWithTwoGamesPlayed();
+    }
+
+    private void createUsersWithTwoGamesPlayed() {
+        User user1 = createTestUser(testUserCount);
+        testUserCount++;
+
+        User user2 = createTestUser(testUserCount);
+        testUserCount++;
+
+        User user3 = createTestUser(testUserCount);
+        testUserCount++;
+
+        // Create and finish game 1 with User1, User2
+        Game game1 = createLobby("testLobby1", true, true, 2);
+        gameService.joinGame(game1, user1);
+        gameService.joinGame(game1, user2);
+
+        Player player1 = game1.getPlayers().get(0);
+        player1.setCharacter(characterService.findById(1));
+
+        Player player2 = game1.getPlayers().get(1);
+        player2.setCharacter(characterService.findById(3));
+
+        game1 = gameService.startGame(game1.getId());
+        gameService.finishGame(game1);
+
+        // Create and finish game 2 with User1, User3
+        Game game2 = createLobby("testLobby2", true, true, 3);
+        gameService.joinGame(game2, user1);
+        gameService.joinGame(game2, user3);
+
+        Player player3 = game2.getPlayers().get(0);
+        player3.setCharacter(characterService.findById(1));
+
+        Player player4 = game2.getPlayers().get(1);
+        player4.setCharacter(characterService.findById(3));
+
+        game2 = gameService.startGame(game2.getId());
+        gameService.finishGame(game2);
     }
 
     private void createGamesInFinishedState(Integer number) {
