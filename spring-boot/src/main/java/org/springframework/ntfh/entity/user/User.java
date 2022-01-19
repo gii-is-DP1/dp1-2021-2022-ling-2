@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-// import javax.persistence.Version;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,6 +23,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.model.BaseEntity;
 
 import org.hibernate.envers.Audited;
 
@@ -38,16 +38,11 @@ import lombok.Setter;
 @Entity
 @Audited
 @Table(name = "users")
-public class User {
-	@Id
+public class User extends BaseEntity{
+	@Column(unique = true)
 	@NotBlank(message = "Username is required")
 	@Length(min = 4, max = 20, message = "Your username must be 4-20 characters long")
 	private String username;
-
-	// TODO Implement or fix versioning implementation
-	// @Version
-	// @Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
-	// private Integer version;
 
 	@Length(min = 4, message = "Your password must be at least 4 characters long")
 	@JsonProperty(access = Access.WRITE_ONLY)
