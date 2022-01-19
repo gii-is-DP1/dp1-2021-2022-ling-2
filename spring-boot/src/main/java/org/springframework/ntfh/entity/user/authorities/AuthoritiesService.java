@@ -44,6 +44,5 @@ public class AuthoritiesService {
         authority.setAuthority(role);
         authoritiesRepository.save(authority);
         log.info("Authority " + role + " added to user " + username);
-
     }
 }

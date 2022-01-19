@@ -2,7 +2,10 @@ package org.springframework.ntfh.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashSet;
 import java.util.Set;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,11 +49,14 @@ class UserServiceTest {
     @BeforeEach
     void createUser() {
         User tester = new User();
-        Set<Authorities> userAuthority = userService.findByUsername("user1").getAuthorities();
+        Set<Authorities> authSet = new HashSet<>();
+        Authorities auth = new Authorities();
         tester.setUsername("antonio");
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
-        tester.setAuthorities(userAuthority);
+        auth.setUser(tester);
+        auth.setAuthority("user");
+        tester.setAuthorities(authSet);
         currentUser = userService.createUser(tester);
     }
 
