@@ -158,9 +158,9 @@ public class GameService {
      * @author andrsdt
      */
     @Transactional
-    public void finishGame(Game game) {
+    public Game finishGame(Game game) {
         GameState gameState = this.getState(game);
-        gameState.finishGame(game);
+        return gameState.finishGame(game);
     }
 
     @Transactional
