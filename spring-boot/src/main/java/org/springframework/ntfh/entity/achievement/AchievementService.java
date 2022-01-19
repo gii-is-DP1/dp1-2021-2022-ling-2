@@ -48,12 +48,12 @@ public class AchievementService {
             throw new IllegalArgumentException("There is already an achievement with the same name");
         }
 
-        if (!TokenUtils.tokenHasAnyAuthorities(token, "admin")) {
+        if (Boolean.FALSE.equals(TokenUtils.tokenHasAnyAuthorities(token, "admin"))) {
             throw new NonMatchingTokenException("Only admins can edit achievements");
         }
 
         Optional<Achievement> achievementFromRepo = achievementRepository.findById(achievement.getId());
-        achievement.setType(achievementFromRepo.get().getType());
+        if(achievementFromRepo.isPresent()) achievement.setType(achievementFromRepo.get().getType());
         log.info("Admin with token " + token + " has updated achievement with ID: " + achievement.getId());
         return achievementRepository.save(achievement);
     }

@@ -46,10 +46,7 @@ export default function PlayerZoneVertical(params: Params) {
           <PlaceholderCard />
         </span>
         <span className={ccw ? "order-3" : ""}>
-          <CharacterCard
-            character={player.characterType}
-            counterclockwise={ccw}
-          />
+          <CharacterCard character={player.character} counterclockwise={ccw} />
         </span>
         <h1 className={ccw ? "order-1" : ""}>
           <CountCard

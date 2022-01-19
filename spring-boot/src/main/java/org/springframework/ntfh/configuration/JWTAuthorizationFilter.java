@@ -30,7 +30,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
 		try {
-			if (checkJWTToken(request, response)) {
+			if (checkJWTToken(request)) {
 				Claims claims = validateToken(request);
 				if (claims.get("authorities") != null) {
 					setUpSpringAuthentication(claims);
@@ -68,7 +68,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	}
 
-	private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
+	private boolean checkJWTToken(HttpServletRequest request) {
 		String authenticationHeader = request.getHeader(HEADER);
 		if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX))
 			return false;

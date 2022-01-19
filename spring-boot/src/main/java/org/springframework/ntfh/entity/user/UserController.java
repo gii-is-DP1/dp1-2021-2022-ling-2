@@ -101,16 +101,6 @@ public class UserController {
 		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
 
-	@PutMapping("{userId}/character/{characterId}")
-	@ResponseStatus(HttpStatus.OK)
-	public void setCharacter(@PathVariable("userId") String userId, @PathVariable("characterId") Integer characterId,
-			@RequestHeader("Authorization") String token) {
-		// TODO use converters for this
-		User user = this.userService.findUser(userId);
-		Character character = this.characterService.findById(characterId);
-		userService.setCharacter(user.getUsername(), character);
-	}
-
 	@PutMapping("{userId}/ban")
 	@ResponseStatus(HttpStatus.OK)
 	public void toggleBanUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {

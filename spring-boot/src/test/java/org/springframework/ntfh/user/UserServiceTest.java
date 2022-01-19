@@ -1,7 +1,6 @@
 package org.springframework.ntfh.user;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Set;
 import org.assertj.core.util.Lists;
@@ -12,11 +11,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataAccessException;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
+import org.springframework.ntfh.util.State;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,8 +28,8 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
  */
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({BCryptPasswordEncoder.class, PlayerState.class, MarketState.class})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
 
 public class UserServiceTest {
 
@@ -57,27 +55,22 @@ public class UserServiceTest {
         currentUser = userService.createUser(tester);
     }
 
-    // H3 + E1
-    @Test
-    public void testfindAll() {
-        Integer count = Lists.newArrayList(userService.findAll()).size();
-        assertEquals(INITIAL_COUNT + 1, count);
-    }
-
     @Test
     public void testfindById() {
         User tester = this.userService.findUser("stockie");
-        assertTrue(passwordEncoder.matches("stockie", tester.getPassword()));
-        assertEquals("stockie@mail.com", tester.getEmail());
+
+        assertThat(passwordEncoder.matches("stockie", tester.getPassword())).isTrue();
+        assertThat(tester.getEmail()).isEqualTo("stockie@mail.com");
     }
 
     @Test
     public void testSaveUser() {
         // User created in the BeforeEach
         User tester = currentUser;
-        assertEquals("antonio", tester.getUsername());
-        assertEquals("antonio@mail.com", tester.getEmail());
-        assertTrue(passwordEncoder.matches("antonio", tester.getPassword()));
+
+        assertThat(tester.getUsername()).isEqualTo("antonio");
+        assertThat(tester.getEmail()).isEqualTo("antonio@mail.com");
+        assertThat(passwordEncoder.matches("antonio", tester.getPassword())).isTrue();
     }
 
     @Test
@@ -87,7 +80,8 @@ public class UserServiceTest {
         String newPassword = "newPassword";
         tester.setPassword(newPassword);
         User updatedTester = userService.updateUser(tester, testerToken);
-        assertTrue(passwordEncoder.matches(newPassword, updatedTester.getPassword()));
+
+        assertThat(passwordEncoder.matches(newPassword, updatedTester.getPassword())).isTrue();
     }
 
     @Test
@@ -95,7 +89,16 @@ public class UserServiceTest {
         User tester = currentUser;
         String username = tester.getUsername();
         userService.deleteUser(tester);
+
         assertThrows(DataAccessException.class, () -> userService.findUser(username));
+    }
+
+    // H3 + E1
+    @Test
+    public void testfindAll() {
+        Integer count = Lists.newArrayList(userService.findAll()).size();
+
+        assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
 }

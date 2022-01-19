@@ -21,8 +21,6 @@ import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameController;
 import org.springframework.ntfh.entity.game.GameService;
-import org.springframework.ntfh.entity.lobby.Lobby;
-import org.springframework.ntfh.entity.lobby.LobbyService;
 import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.user.UserService;
@@ -51,9 +49,6 @@ public class GameControllerTest {
 	private CharacterService characterService;
 
 	@MockBean
-	private LobbyService lobbyService;
-
-	@MockBean
 	private TurnService turnService;
 
 	@MockBean
@@ -67,10 +62,8 @@ public class GameControllerTest {
 		Game game2 = new Game();
 		game2.setId(2);
 
-		Lobby lobby = new Lobby();
-		// lobby.setId(1);
 		when(gameService.findAll()).thenReturn(List.of(game1, game2));
-		when(gameService.createFromLobby(lobby)).thenReturn(game1);
+		when(gameService.createGame(game1)).thenReturn(game1);
 		when(gameService.gameCount()).thenReturn(List.of(game1, game2).size());
 		when(gameService.findGameById(1)).thenReturn(game1);
 

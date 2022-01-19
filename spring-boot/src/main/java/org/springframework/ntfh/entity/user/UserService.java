@@ -53,6 +53,8 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
+	String userString = "User ";
+
 	/**
 	 * Create a new user
 	 * 
@@ -61,15 +63,12 @@ public class UserService {
 	 * @throws DataAccessException
 	 */
 	@Transactional
-	public User createUser(User user)
-			throws DataIntegrityViolationException, IllegalArgumentException {
-		if (userRepository.existsByEmail(user.getEmail()))
-			throw new IllegalArgumentException(
-					"There is already a user registered with the email provided");
+	public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+		if (Boolean.TRUE.equals(userRepository.existsByEmail(user.getEmail())))
+			throw new IllegalArgumentException("There is already a user registered with the email provided");
 
-		if (userRepository.existsByUsername(user.getUsername()))
-			throw new IllegalArgumentException(
-					"There is already a user registered with the username provided");
+		if (Boolean.TRUE.equals(userRepository.existsByUsername(user.getUsername())))
+			throw new IllegalArgumentException("There is already a user registered with the username provided");
 
 		// encrypt the password using bcrypt
 		String encodedParamPassword = passwordEncoder.encode(user.getPassword());
@@ -78,7 +77,7 @@ public class UserService {
 		user.setEnabled(true);
 		this.save(user);
 		authoritiesService.saveAuthorities(user.getUsername(), "user");
-		log.info("User " + user.getUsername() + " created");
+		log.info(userString + user.getUsername() + " created");
 		return user;
 	}
 
@@ -95,7 +94,7 @@ public class UserService {
 		// The username is the id (primary key)
 		Optional<User> user = userRepository.findById(username);
 		if (!user.isPresent())
-			throw new DataAccessException("User " + username + " was not found") {};
+			throw new DataAccessException(userString + username + " was not found") {};
 		return user.get();
 	}
 
@@ -119,19 +118,17 @@ public class UserService {
 	 * @throws DataIntegrityViolationException
 	 */
 	@Transactional
-	public User updateUser(User user, String token) throws DataAccessException,
-			DataIntegrityViolationException, NonMatchingTokenException, IllegalArgumentException {
+	public User updateUser(User user, String token) throws DataAccessException, DataIntegrityViolationException,
+			NonMatchingTokenException, IllegalArgumentException {
 		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
 		Boolean sentBySameUser = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		if (!sentBySameUser && !sentByAdmin) {
-			log.warn("User " + user.getUsername() + " unauthorized update by token " + token);
-			throw new NonMatchingTokenException(
-					"A user's profile can only be updated by him/herself or by an admin");
+		if (Boolean.FALSE.equals(sentBySameUser) && Boolean.FALSE.equals(sentByAdmin)) {
+			log.warn(userString + user.getUsername() + " unauthorized update by token " + token);
+			throw new NonMatchingTokenException("A user's profile can only be updated by him/herself or by an admin");
 		}
 
 		Optional<User> userWithSameEmail = userRepository.findByEmail(user.getEmail());
-		if (userWithSameEmail.isPresent()
-				&& !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
+		if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getUsername().equals(user.getUsername())) {
 			throw new DataIntegrityViolationException("This email is already in use") {};
 		}
 
@@ -139,10 +136,6 @@ public class UserService {
 		// them in the form, they must stay the same as they were in the database.
 
 		User userInDB = this.findUser(user.getUsername());
-		// if (!user.getVersion().equals(userInDB.getVersion())) {
-		// throw new DataIntegrityViolationException(
-		// "The user is already being modified. Please, refresh and try again");
-		// }
 
 		if (user.getEmail() != null) {
 			// If there is a new email, set it on the database
@@ -156,51 +149,48 @@ public class UserService {
 			log.info("Password updated for user " + user.getUsername());
 		}
 
-		log.info("User " + user.getUsername() + " updated by user with token " + token);
+		log.info(userString + user.getUsername() + " updated by user with token " + token);
 		return userInDB;
 	}
 
 	@Transactional
-	public String loginUser(User user)
-			throws DataAccessException, IllegalArgumentException, BannedUserException {
+	public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
 		User userInDB = this.findUser(user.getUsername());
-		if (!userInDB.getEnabled()) {
+		if (Boolean.FALSE.equals(userInDB.getEnabled())) {
 			throw new BannedUserException("You have been banned") {};
 		}
 
 		if (!passwordEncoder.matches(user.getPassword(), userInDB.getPassword())) {
 			throw new IllegalArgumentException("Incorrect password") {};
 		}
-		log.info("User " + user.getUsername() + " logged in");
+		log.info(userString + user.getUsername() + " logged in");
 		return TokenUtils.generateJWTToken(userInDB);
 	}
 
 	@Transactional
+	// ! TODO move this to playerService since Character is now a Player attribute
 	public User setCharacter(String username, Character character) throws DataAccessException {
 		User userInDB = this.findUser(username);
-		userInDB.setCharacter(character);
+		// userInDB.setCharacter(character);
 		return userInDB;
-
 	}
 
 	@Transactional
 	public User toggleBanUser(String username, String token) throws DataAccessException {
 		User userInDB = this.findUser(username);
 		userInDB.setEnabled(!userInDB.getEnabled());
-		log.info("User " + username + " ban toggled. Current status: " + userInDB.getEnabled());
+		log.info(userString + username + " ban toggled. Current status: " + userInDB.getEnabled());
 		return userInDB;
 	}
 
 	@Transactional
 	public void deleteUser(User user) {
-		if (user.getLobby() != null && user.getLobby().getHasStarted()) {
-			log.error("User " + user.getUsername()
-					+ " was attempted to be deleted while in lobby/game");
-			throw new IllegalStateException(
-					"You cannot delete a user while he/she is playing a game");
+		if (user.getPlayer() != null && user.getPlayer().getGame().getHasStarted()) {
+			log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
+			throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
 		}
 		this.userRepository.deleteById(user.getUsername());
-		log.info("User " + user.getUsername() + " deleted");
+		log.info(userString + user.getUsername() + " deleted");
 	}
 
 }

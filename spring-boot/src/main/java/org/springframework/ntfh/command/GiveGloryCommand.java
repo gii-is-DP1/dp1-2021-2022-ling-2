@@ -13,6 +13,10 @@ public class GiveGloryCommand implements Command {
     @Override
     public void execute() {
         Integer currentGlory = playerFrom.getGlory();
-        playerFrom.setGlory(currentGlory + glory);
+        if(glory>=0 || currentGlory>=Math.abs(glory)){
+            playerFrom.setGlory(currentGlory + glory);
+        } else {
+            playerFrom.setGlory(0);
+        }
     }
 }

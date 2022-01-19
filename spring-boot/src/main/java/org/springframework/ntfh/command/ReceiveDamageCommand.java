@@ -11,17 +11,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ReceiveDamageCommand implements Command {
 
-    private Integer damage;
-
     private EnemyIngame enemyFrom;
 
     private Player playerTo;
 
     @Override
     public void execute() {
+        Integer damage = enemyFrom.getCurrentEndurance();
         EnemyModifierType enemyModifier = enemyFrom.getEnemy().getEnemyModifierType();
         CharacterTypeEnum characterClass = playerTo.getCharacterTypeEnum();
-        if (enemyFrom.getRestrained())
+        if (Boolean.TRUE.equals(enemyFrom.getRestrained()))
             damage = 0;
 
         if (enemyModifier != null && enemyModifier.equals(EnemyModifierType.MAGIC_ATTACKER_1)
@@ -48,8 +47,6 @@ public class ReceiveDamageCommand implements Command {
 
             if (playerTo.getAbilityPile().isEmpty()) {
                 new GiveWoundCommand(playerTo).execute();
-                // break; // TODO remove this break so the player can receive damage on his new
-                // cards
             }
         }
     }

@@ -1,7 +1,6 @@
 package org.springframework.ntfh.enemy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.command.DealDamageCommand;
+import org.springframework.ntfh.entity.character.Character;
+import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
@@ -17,22 +18,24 @@ import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameRepository;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
-import org.springframework.ntfh.entity.turn.TurnService;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.entity.game.GameStateType;
+import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.State;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
 public class EnemyIngameServiceTest {
-    
+
     @Autowired
     private EnemyService enemyService;
-        
+
     @Autowired
     private EnemyIngameRepository enemyIngameRepository;
 
@@ -43,7 +46,10 @@ public class EnemyIngameServiceTest {
     private GameService gameService;
 
     @Autowired
-    private TurnService turnService;
+    private UserService userService;
+
+    @Autowired
+    private CharacterService characterService;
 
     private EnemyIngame enemyIngameTester;
 
@@ -54,19 +60,43 @@ public class EnemyIngameServiceTest {
 
     @BeforeEach
     void init() {
-        gameTester = gameService.findGameById(1);
-        enemyIngameService.initializeFromGame(gameTester);
+        /**************** Copypasted section ******************************/
+        // TODO copypaste from CommandIngameTest, maybe extract to a method?
+        gameTester = new Game();
+        gameTester.setName("test game");
+        gameTester.setHasScenes(false);
+        gameTester.setSpectatorsAllowed(false);
+        gameTester.setMaxPlayers(2);
+        gameTester.setStateType(GameStateType.LOBBY);
+        gameTester = gameService.save(gameTester);
+
+        User user1 = userService.findUser("user1");
+        User user2 = userService.findUser("user2");
+
+        gameTester = gameService.joinGame(gameTester.getId(), user1.getUsername()); // first player -> leader
+        gameTester = gameService.joinGame(gameTester.getId(), user2.getUsername());
+
+        Player playerTester = gameTester.getPlayers().get(0);
+
+        Character warriorCharacter = characterService.findById(5);
+
+        playerTester.setCharacter(warriorCharacter);
+
+        gameService.startGame(gameTester.getId());
+        /******************************************************************/
     }
 
     @Test
     void testEnemyIngameCount() {
         Integer counter = enemyIngameService.enemyIngameCount();
+
         assertThat(counter).isEqualTo(INITIAL_ENEMIESINGAME_COUNT);
     }
 
     @Test
     void testFindAll() {
         Integer counter = Lists.newArrayList(enemyIngameService.findAll()).size();
+
         assertThat(counter).isEqualTo(INITIAL_ENEMIESINGAME_COUNT);
     }
 
@@ -74,16 +104,19 @@ public class EnemyIngameServiceTest {
     void testFindById() {
         Enemy enemyTester = enemyService.findEnemyById(1).get();
         enemyIngameTester = enemyIngameService.createFromEnemy(enemyTester, gameTester);
-        assertThat(enemyIngameTester.getCurrentEndurance()).isEqualTo(4);
+        Integer ENEMY_ENDURANCE = 4;
+
+        assertThat(enemyIngameTester.getCurrentEndurance()).isEqualTo(ENEMY_ENDURANCE);
         assertThat(enemyIngameTester.isHorde()).isTrue();
         assertThat(enemyIngameTester.getGame()).isEqualTo(gameTester);
         assertThat(enemyIngameTester.getEnemy()).isEqualTo(enemyTester);
     }
-   
+
     @Test
     void testSaveEnemyIngame() {
         Enemy enemyTester = enemyService.findEnemyById(1).get();
         EnemyIngame testSave = new EnemyIngame();
+
         testSave.setEnemy(enemyTester);
         testSave.setGame(gameTester);
         testSave.setCurrentEndurance(4);
@@ -96,11 +129,15 @@ public class EnemyIngameServiceTest {
 
     @Test
     void testRefillTableWithEnemies() {
-        turnService.initializeFromGame(gameTester);
+        Integer ENEMIES_AFTER_ONE_GET_KILLED = 2;
+        Integer ENEMIES_REFILLED = 3;
         new DealDamageCommand(50, gameTester.getPlayers().get(0), gameTester.getEnemiesFighting().get(0)).execute();
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(2);
+
+        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(ENEMIES_AFTER_ONE_GET_KILLED);
+
         enemyIngameService.refillTableWithEnemies(gameTester);
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(3);
+
+        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(ENEMIES_REFILLED);
     }
 
     @Test
