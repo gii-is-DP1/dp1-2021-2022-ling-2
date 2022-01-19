@@ -37,7 +37,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
