@@ -14,10 +14,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Transient;
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import java.util.stream.Stream;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.ntfh.entity.user.authorities.Authorities;
@@ -64,13 +68,13 @@ public class User {
     @JsonIgnoreProperties({"user"})
     private Set<Authorities> authorities;
 
-    // @Transient
-    // @JsonIgnore
-    // public Boolean hasAnyAuthorities(String commaSeparatedAuthorities) {
-    // List<String> parameterAuthorities =
-    // Stream.of(commaSeparatedAuthorities.split(",")).map(String::trim).collect(Collectors.toList());
-    // Stream<String> userAuthorities = this.getAuthorities().stream().map(Authorities::getAuthority);
-    // return userAuthorities.anyMatch(parameterAuthorities::contains); // At least contains 1 of them
-    // }
+    @Transient
+    @JsonIgnore
+    public Boolean hasAnyAuthorities(String commaSeparatedAuthorities) {
+        List<String> parameterAuthorities =
+                Stream.of(commaSeparatedAuthorities.split(",")).map(String::trim).collect(Collectors.toList());
+        Stream<String> userAuthorities = this.getAuthorities().stream().map(Authorities::getAuthority);
+        return userAuthorities.anyMatch(parameterAuthorities::contains); // At least contains 1 of them
+    }
 }
 
