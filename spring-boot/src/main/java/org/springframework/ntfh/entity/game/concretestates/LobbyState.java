@@ -39,10 +39,6 @@ public class LobbyState implements GameState {
     @Override
     public void deleteGame(Integer gameId) {
         Game game = gameService.findGameById(gameId);
-        game.getPlayers().forEach(p -> {
-            p.getUser().setPlayer(null);
-            playerService.delete(p);
-        }); // TODO player remains orfan
         gameService.delete(game);
     }
 
@@ -63,8 +59,8 @@ public class LobbyState implements GameState {
         }
 
         game.getPlayers().add(player);
+        user.getPlayers().add(player);
         player.setGame(game);
-        player.getUser().setPlayer(player);
         return gameService.save(game);
     }
 
