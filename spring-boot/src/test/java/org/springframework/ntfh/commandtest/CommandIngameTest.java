@@ -56,7 +56,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(
+		includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 public class CommandIngameTest {
 
@@ -103,8 +104,8 @@ public class CommandIngameTest {
 		User user1 = userService.findUser("user1");
 		User user2 = userService.findUser("user2");
 
-		gameTester = gameService.joinGame(gameTester.getId(), user1.getUsername()); // first player -> leader
-		gameTester = gameService.joinGame(gameTester.getId(), user2.getUsername());
+		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+		gameTester = gameService.joinGame(gameTester, user2);
 
 		ranger = gameTester.getPlayers().get(0);
 		rogue = gameTester.getPlayers().get(1);
@@ -152,8 +153,10 @@ public class CommandIngameTest {
 		new ChangeEnemyCommand(ranger, changedEnemy).execute();
 		List<EnemyIngame> currentEnemiesFighting = gameTester.getEnemiesFighting();
 		Integer currentNumEnemiesonTable = currentEnemiesFighting.size();
-		EnemyType typeEnemyDrawn = currentEnemiesFighting.get(currentNumEnemiesonTable - 1).getEnemy().getEnemyType();
-		List<EnemyType> warlords = List.of(EnemyType.SHRIEKKNIFER, EnemyType.GURDRUG, EnemyType.ROGHKILLER);
+		EnemyType typeEnemyDrawn =
+				currentEnemiesFighting.get(currentNumEnemiesonTable - 1).getEnemy().getEnemyType();
+		List<EnemyType> warlords =
+				List.of(EnemyType.SHRIEKKNIFER, EnemyType.GURDRUG, EnemyType.ROGHKILLER);
 
 		assertThat(currentEnemiesFighting).isNotEmpty().doesNotContain(changedEnemy);
 		assertThat(currentNumEnemiesonTable).isEqualTo(numEnemiesOnTable);
@@ -165,7 +168,8 @@ public class CommandIngameTest {
 
 		// Deal damage to a monster
 
-		EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+		EnemyIngame enemyIngame = enemyIngameService
+				.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
 		Integer initialEndurance = enemyIngame.getCurrentEndurance();
 		new DealDamageCommand(1, ranger, enemyIngame).execute();
 
@@ -173,11 +177,13 @@ public class CommandIngameTest {
 
 		// effects on kill of the enemy on the table
 
-		EnemyIngame enemyIngame2 = enemyIngameService.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
+		EnemyIngame enemyIngame2 = enemyIngameService
+				.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
 		Integer baseGlory = ranger.getGlory();
 		Integer baseGold = ranger.getGold();
 		Integer baseKills = ranger.getKills();
-		Integer gloryAdded = enemyIngame2.getEnemy().getBaseGlory() + enemyIngame2.getEnemy().getExtraGlory();
+		Integer gloryAdded =
+				enemyIngame2.getEnemy().getBaseGlory() + enemyIngame2.getEnemy().getExtraGlory();
 		Integer goldAdded = enemyIngame2.getEnemy().getGold();
 		new DealDamageCommand(10, ranger, enemyIngame2).execute();
 
@@ -186,7 +192,8 @@ public class CommandIngameTest {
 		assertThat(ranger.getKills()).isEqualTo(baseKills + 1);
 		assertThat(gameTester.getEnemiesFighting()).doesNotContain(enemyIngame2);
 
-		// if for any reason we dealt damage to an enemy who is already at 0 his endurance wouldnt change,
+		// if for any reason we dealt damage to an enemy who is already at 0 his endurance wouldnt
+		// change,
 		// although this
 		// case cant really be
 		// accessed by the game since it removes the enemy once it dies
@@ -208,7 +215,8 @@ public class CommandIngameTest {
 		assertThat(initialDiscardedCards).isZero();
 		assertThat(discardedCards).isEqualTo(1);
 
-		// Huge hit that empties the ability pile (should refill the ability pile, still take cards away
+		// Huge hit that empties the ability pile (should refill the ability pile, still take cards
+		// away
 		// from it, and
 		// add a wound to the player)
 
@@ -232,7 +240,8 @@ public class CommandIngameTest {
 		assertThat(initialHand).isEqualTo(4);
 		assertThat(currentHand).isEqualTo(5);
 
-		// drawing more cards than there are currently on the ability pile (should add a wound and then draw
+		// drawing more cards than there are currently on the ability pile (should add a wound and
+		// then draw
 		// the rest)
 
 		new DiscardCommand(8, ranger).execute();
@@ -249,7 +258,8 @@ public class CommandIngameTest {
 		// exile a card
 
 		AbilityCard pocionCurativa = abilityCardService.findById(62);
-		AbilityCardIngame pocionCurativaIngame = abilityCardIngameService.createFromAbilityCard(pocionCurativa, ranger);
+		AbilityCardIngame pocionCurativaIngame =
+				abilityCardIngameService.createFromAbilityCard(pocionCurativa, ranger);
 		List<AbilityCardIngame> currentHand = ranger.getHand();
 		currentHand.add(pocionCurativaIngame);
 		ranger.setHand(currentHand);
@@ -327,7 +337,8 @@ public class CommandIngameTest {
 
 		assertThat(ranger.getGuard()).isEqualTo(guardApplied);
 
-		// add a greater guard on top of guard (should remove the lower of the 2 and keep the highest)
+		// add a greater guard on top of guard (should remove the lower of the 2 and keep the
+		// highest)
 
 		Integer anotherGuard = 2;
 		new GiveGuardCommand(anotherGuard, ranger).execute();
@@ -385,7 +396,8 @@ public class CommandIngameTest {
 		// sends the card from the hand to the ability pile
 
 		AbilityCard companeroLobo = abilityCardService.findById(1);
-		AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
+		AbilityCardIngame abilityCardIngame =
+				abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
 		ranger.getHand().add(abilityCardIngame);
 
 		assertThat(ranger.getAbilityPile().size()).isEqualTo(11);
@@ -428,7 +440,8 @@ public class CommandIngameTest {
 		// recieve damage beyond their current ability pile, ads wound
 
 		// instantiate a hard hitting enemy
-		EnemyIngame enemyIngame2 = enemyIngameService.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
+		EnemyIngame enemyIngame2 = enemyIngameService
+				.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
 
 		new ReceiveDamageCommand(enemyIngame2, rogue).execute();
 		new ReceiveDamageCommand(enemyIngame2, rogue).execute();
@@ -452,12 +465,14 @@ public class CommandIngameTest {
 		// search for a card that is in the discard pile and recover it
 
 		AbilityCard disparoRapido = abilityCardService.findById(4);
-		AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
+		AbilityCardIngame abilityCardIngame =
+				abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
 		String token = TokenUtils.generateJWTToken(ranger.getUser());
 		List<AbilityCardIngame> hand = new ArrayList<>();
 		hand.add(abilityCardIngame);
 		ranger.setHand(hand);
-		gameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(), token);
+		gameService.playCard(abilityCardIngame.getId(),
+				gameTester.getEnemiesFighting().get(0).getId(), token);
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
 
@@ -465,13 +480,15 @@ public class CommandIngameTest {
 
 		assertThat(ranger.getDiscardPile().size()).isZero();
 
-		// search for a card that isnt in the discard pile, after not finding the command doesnt make any
+		// search for a card that isnt in the discard pile, after not finding the command doesnt
+		// make any
 		// further
 		// actions
 
 		hand.add(abilityCardIngame);
 		ranger.setHand(hand);
-		gameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(), token);
+		gameService.playCard(abilityCardIngame.getId(),
+				gameTester.getEnemiesFighting().get(0).getId(), token);
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
 
