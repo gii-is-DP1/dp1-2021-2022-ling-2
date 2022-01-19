@@ -17,7 +17,6 @@ public class FinishedState implements GameState {
     @Override
     public void preState(Game game) {
         // TODO What to do when a game is finished?
-
     }
 
     @Override
