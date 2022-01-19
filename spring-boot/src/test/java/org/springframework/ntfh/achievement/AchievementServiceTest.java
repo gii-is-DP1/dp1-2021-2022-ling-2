@@ -15,25 +15,25 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class AchievementServiceTest {
+class AchievementServiceTest {
 
     @Autowired
     private AchievementService achievementService;
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = achievementService.achievementCount();
         assertEquals(3, count);
     }
 
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(achievementService.findAll()).size();
         assertEquals(3, count);
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         Achievement tester = this.achievementService.findAchievementById(2).get();
         assertEquals("Newcomer", tester.getName());
         assertEquals("Play your first game", tester.getDescription());

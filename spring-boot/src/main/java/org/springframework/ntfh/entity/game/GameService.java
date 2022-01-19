@@ -123,7 +123,7 @@ public class GameService {
         Boolean sentByHost = game.getLeader().getUser().getUsername().equals(tokenUsername);
         Boolean sentByPlayerLeaving = username.equals(tokenUsername);
 
-        if (!sentByHost && !sentByPlayerLeaving) {
+        if (Boolean.FALSE.equals(sentByHost) && Boolean.FALSE.equals(sentByPlayerLeaving)) {
             log.error("User " + tokenUsername + " tried to remove player " + username
                     + " from game " + gameId);
             throw new NonMatchingTokenException(

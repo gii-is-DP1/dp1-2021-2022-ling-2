@@ -37,7 +37,7 @@ public class DealDamageCommand implements Command {
         }
 
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
-        if (targetedEnemy.isDead()) {
+        if (Boolean.TRUE.equals(targetedEnemy.isDead())) {
             targetedEnemy.getGame().getEnemiesFighting().remove(targetedEnemy);
             playerFrom.setKills(playerKillCount + 1);
 

@@ -28,7 +28,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class PlayerServiceTest {
+class PlayerServiceTest {
 
     @Autowired
     protected PlayerService playerService;
@@ -62,20 +62,18 @@ public class PlayerServiceTest {
     void teardown() {
         try {
             playerService.delete(currentPlayer);
-        } catch (Exception exception) {
-        }
-
+        } catch (Exception exception) {}
     }
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = playerService.playerCount();
 
         assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
     @Test
-    public void testSavePlayer() {
+    void testSavePlayer() {
         // Player created in the BeforeEach
         Player tester = currentPlayer;
         Integer ORIGINAL_GLORY = 1;
@@ -110,14 +108,14 @@ public class PlayerServiceTest {
     }
 
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(playerService.findAll()).size();
 
         assertThat(count).isEqualTo(INITIAL_COUNT + 1);
     }
 
     @Test
-    public void testFindByPlayerId() {
+    void testFindByPlayerId() {
         Player tester = this.playerService.findById(currentPlayer.getId());
         Integer ORIGINAL_GLORY = 1;
         Integer ORIGINAL_GOLD = 4;
@@ -133,7 +131,7 @@ public class PlayerServiceTest {
 
     @Test
     @Disabled
-    public void testCreatePlayer() {
+    void testCreatePlayer() {
         User user = userService.findUser("user4");
         Player tester = playerService.createPlayer(user);
         assertThat(tester.getGold()).isZero();

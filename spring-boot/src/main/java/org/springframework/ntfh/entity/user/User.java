@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -56,12 +55,6 @@ public class User extends BaseEntity{
 	@NotNull
 	@Column(columnDefinition = "boolean default true")
 	private Boolean enabled; // If a user gets banned, he/she will get disabled
-
-	// TODO check if this is making some sense
-	// @ManyToOne
-	// @JoinColumn(name = "game")
-	// @JsonIgnoreProperties({"players", "winner", "leader"})
-	// private Game game;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "player")
