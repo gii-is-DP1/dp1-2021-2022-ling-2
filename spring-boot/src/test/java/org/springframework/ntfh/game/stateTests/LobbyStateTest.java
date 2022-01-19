@@ -1,7 +1,6 @@
 package org.springframework.ntfh.game.stateTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +26,6 @@ import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.player.PlayerService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
@@ -39,8 +37,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(
-		includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 class LobbyStateTest {
 
@@ -64,9 +61,6 @@ class LobbyStateTest {
 
     @Autowired
     private MarketCardIngameService marketCardIngameService;
-
-    @Autowired
-    private PlayerService playerService;
 
 	protected Game gameTester;
 
