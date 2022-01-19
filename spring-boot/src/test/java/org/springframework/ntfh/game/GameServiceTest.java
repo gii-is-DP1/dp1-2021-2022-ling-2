@@ -87,8 +87,6 @@ class GameServiceTest {
     @BeforeEach
     void init() {
 
-        /**************** Copypasted section ******************************/
-        // TODO copypaste from CommandIngameTest, maybe extract to a method?
         gameTester = new Game();
         gameTester.setName("test game");
         gameTester.setHasScenes(false);
@@ -100,7 +98,7 @@ class GameServiceTest {
         User user1 = userService.findUser("user1");
         User user2 = userService.findUser("user2");
 
-        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user1);
         gameTester = gameService.joinGame(gameTester, user2);
 
         playerTester = gameTester.getPlayers().get(0);
@@ -110,7 +108,6 @@ class GameServiceTest {
         playerTester.setCharacter(warriorCharacter);
 
         gameService.startGame(gameTester.getId());
-        /******************************************************************/
     }
 
     @AfterEach
