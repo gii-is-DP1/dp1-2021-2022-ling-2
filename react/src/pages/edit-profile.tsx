@@ -124,7 +124,7 @@ export default function EditProfile() {
             <div className="flex flex-col mb-4">
               <p className="font-bold text-2xl mb-2">Password</p>
               <input
-                placeholder="********"
+                placeholder=""
                 type="password"
                 className="p-3 rounded-xl border-4 border-black text-black"
                 onChange={(e) => setPassword(e.target.value)}
@@ -133,7 +133,7 @@ export default function EditProfile() {
             <div className="flex flex-col mb-8">
               <p className="font-bold text-2xl mb-2">Confirm Password</p>
               <input
-                placeholder="********"
+                placeholder=""
                 type="password"
                 className="p-3 rounded-xl border-4 border-black text-black"
                 onChange={(e) => setConfirmPassword(e.target.value)}

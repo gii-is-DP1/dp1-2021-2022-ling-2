@@ -1,6 +1,6 @@
 package org.springframework.ntfh.entity.game;
 
-import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.ntfh.entity.turn.Turn;
