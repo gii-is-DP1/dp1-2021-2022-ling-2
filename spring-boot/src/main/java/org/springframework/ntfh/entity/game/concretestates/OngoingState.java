@@ -79,6 +79,7 @@ public class OngoingState implements GameState {
 
     @Override
     public void finishGame(Game game) {
+        // TODO set winner
         game.setFinishTime(Timestamp.from(Instant.now()));
         game.getPlayers().forEach(p -> {
             User user = p.getUser();
