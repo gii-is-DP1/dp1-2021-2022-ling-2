@@ -145,8 +145,10 @@ class OngoingStateTest {
     void testDeleteGame_Failure() {
         assertThat(actualState).isEqualTo(GameStateType.ONGOING);
         assertThat(gameTester).isNotNull();
+
+        Integer gameId = gameTester.getId();
         
-        assertThrows(IllegalStateException.class, () -> ongoingState.deleteGame(gameTester.getId()));
+        assertThrows(IllegalStateException.class, () -> ongoingState.deleteGame(gameId));
     }
 
     @Test
@@ -162,7 +164,10 @@ class OngoingStateTest {
     void testRemovePlayer_Failure() {
         assertThat(actualState).isEqualTo(GameStateType.ONGOING);
 
-        assertThrows(IllegalStateException.class, () -> ongoingState.removePlayer(gameTester.getId(), user2.getUsername()));
+        Integer gameId = gameTester.getId();
+        String username = user2.getUsername();
+
+        assertThrows(IllegalStateException.class, () -> ongoingState.removePlayer(gameId, username));
     } 
     
     @Test
