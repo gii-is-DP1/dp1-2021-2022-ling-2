@@ -10,4 +10,5 @@ export const GAME = "/games/:gameId";
 export const NOT_FOUND = "/not-found";
 export const ADMIN_PAGE = "/admin";
 export const STATISTICS = "/statistics";
-export const ACHIEVEMENTS = "/achievements";
+export const ALL_ACHIEVEMENTS = "/achievements";
+export const USER_ACHIEVEMENTS = "/profile/:username/achievements";

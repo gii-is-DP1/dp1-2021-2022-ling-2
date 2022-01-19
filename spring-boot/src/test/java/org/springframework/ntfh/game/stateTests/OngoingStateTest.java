@@ -107,8 +107,6 @@ class OngoingStateTest {
 		ranger.setCharacter(rangerCharacter);
 		rogue.setCharacter(rogueCharacter);
 
-        gameService.getState(gameTester);
-
         gameService.startGame(gameTester.getId());
 
         ongoingState = (OngoingState) gameService.getState(gameTester);
@@ -147,8 +145,10 @@ class OngoingStateTest {
     void testDeleteGame_Failure() {
         assertThat(actualState).isEqualTo(GameStateType.ONGOING);
         assertThat(gameTester).isNotNull();
+
+        Integer gameId = gameTester.getId();
         
-        assertThrows(IllegalStateException.class, () -> ongoingState.deleteGame(gameTester.getId()));
+        assertThrows(IllegalStateException.class, () -> ongoingState.deleteGame(gameId));
     }
 
     @Test
@@ -164,7 +164,10 @@ class OngoingStateTest {
     void testRemovePlayer_Failure() {
         assertThat(actualState).isEqualTo(GameStateType.ONGOING);
 
-        assertThrows(IllegalStateException.class, () -> ongoingState.removePlayer(gameTester.getId(), user2.getUsername()));
+        Integer gameId = gameTester.getId();
+        String username = user2.getUsername();
+
+        assertThrows(IllegalStateException.class, () -> ongoingState.removePlayer(gameId, username));
     } 
     
     @Test
@@ -212,7 +215,9 @@ class OngoingStateTest {
     void testStartGame_Failure() {
         assertThat(actualState).isEqualTo(GameStateType.ONGOING);
 
-        assertThrows(IllegalStateException.class, () -> ongoingState.startGame(gameTester.getId()));
+        Integer gameId = gameTester.getId();
+
+        assertThrows(IllegalStateException.class, () -> ongoingState.startGame(gameId));
     }
 
     @Test

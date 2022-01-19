@@ -3,6 +3,9 @@ package org.springframework.ntfh.game.stateTests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +19,7 @@ import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameStateType;
-import org.springframework.ntfh.entity.game.concretestates.LobbyState;
+import org.springframework.ntfh.entity.game.concretestates.FinishedState;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
@@ -26,9 +29,9 @@ import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
-import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.ntfh.util.State;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,7 +42,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-class LobbyStateTest {
+class FinishedStateTest {
 
     @Autowired
     private GameService gameService;
@@ -62,20 +65,23 @@ class LobbyStateTest {
     @Autowired
     private MarketCardIngameService marketCardIngameService;
 
-	protected Game gameTester;
+    @Autowired
+    private TurnService turnService;
+
+    protected Game gameTester;
 
     protected Player ranger;
 
 	protected Player rogue;
 
-    protected LobbyState lobbyState;
+    protected FinishedState finishedState;
 
     protected GameStateType actualState;
 
     protected User user1, user2, user3;
 
     @BeforeEach
-	void init() {
+	public void init() {
 		gameTester = new Game();
 		gameTester.setName("test game");
 		gameTester.setHasScenes(false);
@@ -84,9 +90,9 @@ class LobbyStateTest {
 		gameTester.setStateType(GameStateType.LOBBY);
 		gameTester = gameService.save(gameTester);
 
-        user1 = userService.findByUsername("user1");
-		user2 = userService.findByUsername("user2");
-        user3 = userService.findByUsername("user3"); //User used for joining users test
+        user1 = userService.findUser("user1");
+		user2 = userService.findUser("user2");
+        user3 = userService.findUser("user3"); //User used for joining users test
 
 		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
 		gameTester = gameService.joinGame(gameTester, user2);
@@ -100,119 +106,110 @@ class LobbyStateTest {
 		ranger.setCharacter(rangerCharacter);
 		rogue.setCharacter(rogueCharacter);
 
-        lobbyState = (LobbyState) gameService.getState(gameTester);
+        gameService.startGame(gameTester.getId());
+
+        gameService.finishGame(gameTester);
+
+        finishedState = (FinishedState) gameService.getState(gameTester);
 
         actualState = gameTester.getStateType();
     }
 
 	@AfterEach
-	void teardown() {
+	public void teardown() {
 		try{
             gameService.delete(gameTester);
         } catch (Exception e) {}
 	}
 
     @Test
-    void testGetNextState() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
-        assertThat(lobbyState.getNextState()).isEqualTo(GameStateType.ONGOING);
-    }
+    void testGetNextState_Failure() {
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
+
+        assertThrows(IllegalStateException.class, () -> finishedState.getNextState());
+    } 
 
     @Test
     void testDeleteGame() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
-        assertThat(gameTester).isNotNull();
-        
-        lobbyState.deleteGame(gameTester.getId());
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
+
+        finishedState.deleteGame(gameTester.getId());
         Integer gameId = gameTester.getId();
 
         assertThrows(DataAccessException.class, () -> gameService.findGameById(gameId));
     }
-    
+
     @Test
-    void testJoinGame_Success() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
+    void testJoinGame_Failure() {
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
 
         gameTester.setMaxPlayers(3);
-        lobbyState.joinGame(gameTester, user3);
-
-        assertThat(gameTester.getPlayers().size()).isEqualTo(3);
+        
+        assertThrows(IllegalStateException.class, () -> finishedState.joinGame(gameTester, user3));
     }
 
     @Test
-    void testJoinGame_Failure_Player_Already_Inside() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
+    void testRemovePlayer_Failure() {
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
 
-        gameTester.setMaxPlayers(3);
-        lobbyState.joinGame(gameTester, user3);
+        Integer gameId = gameTester.getId();
+        String username = user2.getUsername();
 
-        assertThat(gameTester.getPlayers().size()).isEqualTo(3);
-
-        assertThrows(IllegalArgumentException.class, () -> lobbyState.joinGame(gameTester, user3));
+        assertThrows(IllegalStateException.class, () -> finishedState.removePlayer(gameId, username));
     }
 
     @Test
-    void testJoinGame_Failure_Full_Lobby() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
-
-        assertThrows(MaximumLobbyCapacityException.class, () -> lobbyState.joinGame(gameTester, user3));
-    }
-
-    @Test
-    void testRemovePlayer() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
-
-        gameTester.setMaxPlayers(3);
-        lobbyState.joinGame(gameTester, user3);
-
-        assertThat(gameTester.getPlayers().size()).isEqualTo(3);
-
-        lobbyState.removePlayer(gameTester.getId(), user3.getUsername());
-
-        assertThat(gameTester.getPlayers().size()).isEqualTo(2);
-    }
-
-    @Test
-    void testPlayingCards_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
+    void testPlayCard() {
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
 
         Player warrior = ranger;
         warrior.setCharacter(characterService.findById(5));
         AbilityCard pasoAtras = abilityCardService.findById(27);
-        AbilityCardIngame pasoAtrasIngame = abilityCardIngameService.createFromAbilityCard(pasoAtras, gameTester.getLeader());
+        AbilityCardIngame pasoAtrasIngame = abilityCardIngameService.createFromAbilityCard(pasoAtras, warrior);
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(pasoAtrasIngame);
+        warrior.setHand(hand);
         String token = TokenUtils.generateJWTToken(warrior.getUser());
         Integer abilityCardIngameId = pasoAtrasIngame.getId();
-
-        assertThrows(IllegalStateException.class, () -> lobbyState.playCard(abilityCardIngameId, null, token));
+        
+        assertThrows(IllegalStateException.class, () -> finishedState.playCard(abilityCardIngameId, null, token));
     }
 
     @Test
-    void testBuyingCards_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
+    void testBuyMarketCard_Failure() {
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
+        
+        ranger.setGold(10);
+        String playerToken = TokenUtils.generateJWTToken(ranger.getUser());
+        turnService.setNextState(gameTester.getCurrentTurn());
+        Integer FULL_MARKET = 5;
 
-        MarketCard capaElfica = marketCardService.findMarketCardById(11).get();
-        MarketCardIngame capaElficaIngame = marketCardIngameService.createFromMarketCard(capaElfica, gameTester);
-        String token = TokenUtils.generateJWTToken(ranger.getUser());
-        Integer marketCardIngameId = capaElficaIngame.getId();
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
 
-        assertThrows(IllegalStateException.class, () -> lobbyState.buyMarketCard(marketCardIngameId, token));
+        MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
+        MarketCardIngame pocionCurativaIngame = marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
+        List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
+        market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
+
+        Integer marketCardIngameId = market.get(0).getId();
+
+        assertThrows(NullPointerException.class, () -> marketCardIngameService.buyMarketCard(marketCardIngameId, playerToken));
     }
 
     @Test
-    void testStartGame() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
+    void testStartGame_Failure() {
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
 
-        lobbyState.startGame(gameTester.getId());
-        GameStateType newActualState = gameTester.getStateType();
+        Integer gameId = gameTester.getId();
 
-        assertThat(newActualState).isEqualTo(GameStateType.ONGOING);
+        assertThrows(IllegalStateException.class, () -> finishedState.startGame(gameId));
     }
 
     @Test
     void testFinishGame_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.LOBBY);
+        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
 
-        assertThrows(IllegalStateException.class, () -> lobbyState.finishGame(gameTester));
+        assertThrows(IllegalStateException.class, () -> finishedState.finishGame(gameTester));
     }
-
+    
 }

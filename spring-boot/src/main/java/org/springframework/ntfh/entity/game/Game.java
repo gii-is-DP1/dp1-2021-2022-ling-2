@@ -1,5 +1,6 @@
 package org.springframework.ntfh.entity.game;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -47,9 +49,11 @@ public class Game extends BaseEntity {
     private String name;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy | HH:mm:ss")
     private Date startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd/MM/yyyy | HH:mm:ss")
     private Date finishTime;
 
     @NotNull(message = "The scenes must be either on or off")
@@ -125,11 +129,10 @@ public class Game extends BaseEntity {
      * @author andrsdt
      * @return Long duration of the time in seconds
      */
-    // TODO send to frontend already parsed
-    // @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     @Transient
-    public Long getDuration() {
-        return (finishTime == null) ? null : finishTime.getTime() - startTime.getTime();
+    @JsonFormat(pattern = "HH:mm:ss")
+    public Timestamp getDuration() {
+        return (finishTime == null) ? null : new Timestamp(finishTime.getTime() - startTime.getTime());
     }
 
     @Transient

@@ -149,6 +149,10 @@ public class GameController {
             throw new IllegalArgumentException("Not enough players to start the game");
         }
 
+        if (game.getPlayers().stream().anyMatch(p -> p.getCharacterTypeEnum() == null)) {
+            throw new IllegalArgumentException("Not all players have selected a character");
+        }
+
         Long distinctCharacterCount = game.getPlayers().stream().filter(p -> p.getCharacter() != null)
                 .map(p -> p.getCharacter().getCharacterTypeEnum()).distinct().count();
         if (distinctCharacterCount != game.getPlayers().size()) {

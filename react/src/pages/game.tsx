@@ -152,7 +152,7 @@ export default function Game() {
         setTurn(_turn);
 
         // Fetch the game if it's not my turn, or if it's the first time the turn has changed to me
-        if (!isPlayersTurn(_turn, loggedUser.username) || _turn.player.isDead) {
+        if (!isPlayersTurn(_turn, loggedUser.username) || _turn.player.dead) {
           fetchGame();
           setIsNewTurn(true);
         } else {
@@ -210,9 +210,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={
-                    players[3]?.isDead ? { filter: "grayscale(100%)" } : {}
-                  }
+                  style={players[3]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[3] && (
                     <PlayerZoneVertical player={players[3]} rotation={90} />
@@ -231,9 +229,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={
-                    players[2]?.isDead ? { filter: "grayscale(100%)" } : {}
-                  }
+                  style={players[2]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[2] && (
                     <PlayerZoneVertical
@@ -250,9 +246,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={
-                    players[0]?.isDead ? { filter: "grayscale(100%)" } : {}
-                  }
+                  style={players[0]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[0] && <PlayerZoneHorizontal player={players[0]} />}
                   {/* Bottom left (My hand) */}
@@ -264,9 +258,7 @@ export default function Game() {
                       ? "bg-yellow-100 bg-opacity-30 rounded-3xl w-full"
                       : ""
                   }`}
-                  style={
-                    players[1]?.isDead ? { filter: "grayscale(100%)" } : {}
-                  }
+                  style={players[1]?.dead ? { filter: "grayscale(100%)" } : {}}
                 >
                   {players[1] && (
                     <PlayerZoneHorizontal player={players[1]} reverse />

@@ -87,8 +87,7 @@ class TurnServiceTest {
     void teardown() {
         try {
             turnService.delete(turnTester.getId());
-        } catch (Exception exception) {
-        }
+        } catch (Exception exception) {}
     }
 
     @Test

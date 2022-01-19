@@ -83,4 +83,3 @@ public class User extends BaseEntity{
         return lastPlayerInList.getGame().getHasFinished() ? null : lastPlayerInList;
     }
 }
-

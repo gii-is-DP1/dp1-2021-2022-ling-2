@@ -48,9 +48,15 @@ INSERT INTO authorities(id,user_id,authority) VALUES(17, 15,'user');
 INSERT INTO users(id,username,password,email) VALUES (16,'user4','$2a$10$.AxtcWQeT3zpXHv4j0892uKnU5kkJTpRhFijkaJujP2bb22KcR/qC', 'user4@mail.com');
 INSERT INTO authorities(id,user_id,authority) VALUES(18, 16,'user');
 
-INSERT INTO achievements(name, description, type) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light', 'CREATE_ACCOUNT');
-INSERT INTO achievements(name, description, type) VALUES ('Newcomer', 'Play your first game', 'PLAY_1_GAME');
-INSERT INTO achievements(name, description, type) VALUES ('Avid player', 'Win 5 games of No Time for Heroes', 'WIN_5_GAMES');
+INSERT INTO achievements(name, description, type, condition) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light', 'CREATE_ACCOUNT', 0);
+
+INSERT INTO achievements(name, description, type, condition) VALUES ('Newcomer', 'Play your first game', 'PLAY_X_GAMES', 1);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Avid player', 'Play {X} games', 'PLAY_X_GAMES', 5);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Regular player', 'Play {X} games', 'PLAY_X_GAMES', 10);
+
+INSERT INTO achievements(name, description, type, condition) VALUES ('First steps', 'Win {X} game', 'WIN_X_GAMES', 1);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Veteran', 'Win {X} games', 'WIN_X_GAMES', 5);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Master', 'Win {X} games', 'WIN_X_GAMES', 10);
 
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (1, 'DEXTERITY', 0);
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (2, 'MELEE', 0);
