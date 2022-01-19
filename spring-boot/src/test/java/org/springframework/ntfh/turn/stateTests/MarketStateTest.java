@@ -1,4 +1,4 @@
-package org.springframework.ntfh.game.stateTests;
+package org.springframework.ntfh.turn.stateTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,15 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameStateType;
-import org.springframework.ntfh.entity.game.concretestates.FinishedState;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
+import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.MarketCard;
@@ -29,7 +28,10 @@ import org.springframework.ntfh.entity.playablecard.marketcard.MarketCardService
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
+import org.springframework.ntfh.entity.turn.TurnStateType;
+import org.springframework.ntfh.entity.turn.concretestates.MarketState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.State;
@@ -42,7 +44,10 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-class FinishedStateTest {
+class MarketStateTest {
+
+    @Autowired
+    private TurnService turnService;
 
     @Autowired
     private GameService gameService;
@@ -65,23 +70,22 @@ class FinishedStateTest {
     @Autowired
     private MarketCardIngameService marketCardIngameService;
 
-    @Autowired
-    private TurnService turnService;
-
-    protected Game gameTester;
+	protected Game gameTester;
 
     protected Player ranger;
 
 	protected Player rogue;
 
-    protected FinishedState finishedState;
-
-    protected GameStateType actualState;
-
     protected User user1, user2, user3;
 
+    protected Turn turnTester;
+
+    protected MarketState marketState;
+
+    protected TurnStateType actualState;
+
     @BeforeEach
-	public void init() {
+	void init() {
 		gameTester = new Game();
 		gameTester.setName("test game");
 		gameTester.setHasScenes(false);
@@ -106,61 +110,42 @@ class FinishedStateTest {
 		ranger.setCharacter(rangerCharacter);
 		rogue.setCharacter(rogueCharacter);
 
-        gameService.startGame(gameTester.getId());
+        turnService.initializeFromGame(gameTester);
 
-        gameService.finishGame(gameTester);
+        turnTester = turnService.findturnById(gameTester.getCurrentTurn().getId()).get();
 
-        finishedState = (FinishedState) gameService.getState(gameTester);
+        turnService.setNextState(turnTester);
 
-        actualState = gameTester.getStateType();
+        marketState = (MarketState) turnService.getState(turnTester);
+
+        actualState = turnTester.getStateType();
     }
 
-	@AfterEach
-	public void teardown() {
-		try{
-            gameService.delete(gameTester);
-        } catch (Exception e) {}
-	}
-
-    @Test
-    void testGetNextState_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
-
-        assertThrows(IllegalStateException.class, () -> finishedState.getNextState());
-    } 
-
-    @Test
-    void testDeleteGame() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
-
-        finishedState.deleteGame(gameTester.getId());
-        Integer gameId = gameTester.getId();
-
-        assertThrows(DataAccessException.class, () -> gameService.findGameById(gameId));
+    @AfterEach
+    void teardown() {
+        try {
+            turnService.delete(turnTester.getId());
+        } catch (Exception exception) {}
     }
 
     @Test
-    void testJoinGame_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
-
-        gameTester.setMaxPlayers(3);
-        
-        assertThrows(IllegalStateException.class, () -> finishedState.joinGame(gameTester, user3));
+    void testGetNextState() {
+        assertThat(actualState).isEqualTo(TurnStateType.MARKET_STATE);
+        assertThat(marketState.getNextState()).isEqualTo(TurnStateType.PLAYER_STATE);
     }
 
     @Test
-    void testRemovePlayer_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
+    void testPostState() {
+        assertThat(actualState).isEqualTo(TurnStateType.MARKET_STATE);
 
-        Integer gameId = gameTester.getId();
-        String username = user2.getUsername();
+        marketState.postState(gameTester);
 
-        assertThrows(IllegalStateException.class, () -> finishedState.removePlayer(gameId, username));
+        assertThat(ranger.getDiscardPile().size()).isNotZero();
     }
 
     @Test
-    void testPlayCard() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
+    void testPlayCard_failure() {
+        assertThat(actualState).isEqualTo(TurnStateType.MARKET_STATE);
 
         Player warrior = ranger;
         warrior.setCharacter(characterService.findById(5));
@@ -170,15 +155,15 @@ class FinishedStateTest {
         hand.add(pasoAtrasIngame);
         warrior.setHand(hand);
         String token = TokenUtils.generateJWTToken(warrior.getUser());
-        Integer abilityCardIngameId = pasoAtrasIngame.getId();
-        
-        assertThrows(IllegalStateException.class, () -> finishedState.playCard(abilityCardIngameId, null, token));
+        Integer abilityCardIngame = pasoAtrasIngame.getId();
+
+        assertThrows(IllegalStateException.class, () -> marketState.playCard(abilityCardIngame, null, token));
     }
 
     @Test
-    void testBuyMarketCard_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
-        
+    void testBuyMarketCard_Success() {
+        assertThat(actualState).isEqualTo(TurnStateType.MARKET_STATE);
+
         ranger.setGold(10);
         String playerToken = TokenUtils.generateJWTToken(ranger.getUser());
         turnService.setNextState(gameTester.getCurrentTurn());
@@ -191,24 +176,53 @@ class FinishedStateTest {
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
         Integer marketCardIngameId = market.get(0).getId();
+        marketState.buyMarketCard(marketCardIngameId, playerToken);
+        Integer FULL_MARKET_LESS_ONE = 4;
+        Integer GOLD_LEFT = 2;
 
-        assertThrows(IllegalStateException.class, () -> finishedState.buyMarketCard(marketCardIngameId, playerToken));
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET_LESS_ONE);
+        assertThat(ranger.getGold()).isEqualTo(GOLD_LEFT);
+        assertThat(ranger.getHand().get(ranger.getHand().size()-1).getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.POCION_CURATIVA);
     }
 
     @Test
-    void testStartGame_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
+    void testBuyMarketCard_Failure_Not_Avaible_Card() {
+        assertThat(actualState).isEqualTo(TurnStateType.MARKET_STATE);
 
-        Integer gameId = gameTester.getId();
+        rogue.setGold(10);
+        String playerToken = TokenUtils.generateJWTToken(rogue.getUser());
+        turnService.setNextState(gameTester.getCurrentTurn());
+        Integer FULL_MARKET = 5;
 
-        assertThrows(IllegalStateException.class, () -> finishedState.startGame(gameId));
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+
+        MarketCard armaduraPlacas = marketCardService.findMarketCardById(12).get();
+        MarketCardIngame armaduraPlacasIngame = marketCardIngameService.createFromMarketCard(armaduraPlacas, gameTester);
+        List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
+        market.get(0).setMarketCard(armaduraPlacasIngame.getMarketCard());
+        Integer marketCardIngameId = market.get(0).getId();
+
+        assertThrows(IllegalArgumentException.class, () -> marketState.buyMarketCard(marketCardIngameId, playerToken));
     }
 
     @Test
-    void testFinishGame_Failure() {
-        assertThat(actualState).isEqualTo(GameStateType.FINISHED);
+    void testBuyMarketCard_Failure_Not_Enough_Gold() {
+        assertThat(actualState).isEqualTo(TurnStateType.MARKET_STATE);
 
-        assertThrows(IllegalStateException.class, () -> finishedState.finishGame(gameTester));
+        rogue.setGold(7);
+        String playerToken = TokenUtils.generateJWTToken(rogue.getUser());
+        turnService.setNextState(gameTester.getCurrentTurn());
+        Integer FULL_MARKET = 5;
+
+        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+
+        MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
+        MarketCardIngame pocionCurativaIngame = marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
+        List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
+        market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
+        Integer marketCardIngameId = market.get(0).getId();
+
+        assertThrows(IllegalArgumentException.class, () -> marketState.buyMarketCard(marketCardIngameId, playerToken));
     }
     
 }
