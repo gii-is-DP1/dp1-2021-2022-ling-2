@@ -89,7 +89,7 @@ public class UserService {
         return page.getContent();
     }
 
-    public User findUser(String username) throws DataAccessException {
+    public User findByUsername(String username) throws DataAccessException {
         // The username is the id (primary key)
         Optional<User> user = userRepository.findById(username);
         if (!user.isPresent())
@@ -134,7 +134,7 @@ public class UserService {
         // Before updating, make sure there are no null values. If the user didn't send
         // them in the form, they must stay the same as they were in the database.
 
-        User userInDB = this.findUser(user.getUsername());
+        User userInDB = this.findByUsername(user.getUsername());
 
         if (user.getEmail() != null) {
             // If there is a new email, set it on the database
@@ -154,7 +154,7 @@ public class UserService {
 
     @Transactional
     public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
-        User userInDB = this.findUser(user.getUsername());
+        User userInDB = this.findByUsername(user.getUsername());
         if (Boolean.FALSE.equals(userInDB.getEnabled())) {
             throw new BannedUserException("You have been banned") {};
         }
@@ -168,7 +168,7 @@ public class UserService {
 
     @Transactional
     public User toggleBanUser(String username, String token) throws DataAccessException {
-        User userInDB = this.findUser(username);
+        User userInDB = this.findByUsername(username);
         userInDB.setEnabled(!userInDB.getEnabled());
         log.info(userString + username + " ban toggled. Current status: " + userInDB.getEnabled());
         return userInDB;

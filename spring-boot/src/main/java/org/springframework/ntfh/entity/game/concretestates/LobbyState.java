@@ -71,7 +71,7 @@ public class LobbyState implements GameState {
     @Override
     public Game removePlayer(Integer gameId, String username) {
         Game game = gameService.findGameById(gameId);
-        User user = userService.findUser(username);
+        User user = userService.findByUsername(username);
         Player player = user.getPlayer();
         player.setGame(null);
         game.getPlayers().remove(player);

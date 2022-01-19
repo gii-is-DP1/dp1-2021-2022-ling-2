@@ -116,7 +116,7 @@ public class UserController {
 	public void deleteUser(@PathVariable("userId") String username,
 			@RequestHeader("Authorization") String token) {
 		// TODO better parse username to user with a converter? saw that in the slides
-		User user = userService.findUser(username);
+		User user = userService.findByUsername(username);
 		userService.deleteUser(user);
 	}
 
