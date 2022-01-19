@@ -63,7 +63,7 @@ export default function Profile() {
 
   // TODO replace with a backend filter
   const userInPlayerList = (_list: Player[], _username: string) => {
-    return _list.some((player) => player.user.username === profileUsername);
+    return _list.some((player) => player.user?.username === profileUsername);
   };
 
   // TODO replace with a backend filter

@@ -1,9 +1,7 @@
 package org.springframework.ntfh.enemy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +13,12 @@ import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
 import org.springframework.ntfh.entity.enemy.EnemyModifierType;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.EnemyType;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.util.State;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
 public class EnemyServiceTest {
 
     @Autowired
@@ -39,32 +36,39 @@ public class EnemyServiceTest {
     @Test
     public void testCountWithInitialData() {
         Integer count = enemyService.count();
+
         assertThat(count).isEqualTo(ENEMY_COUNT);
     }
 
     @Test
     public void testfindAll() {
         Integer count = Lists.newArrayList(enemyService.findAll()).size();
+
         assertThat(count).isEqualTo(ENEMY_COUNT);
     }
 
     @Test
     public void testfindById() {
         Enemy tester = this.enemyService.findEnemyById(17).orElse(null);
+        Integer GLORY_OF_THE_ENEMY = 2;
+        Integer ENDURANCE_OF_THE_ENEMY = 3;
+
         assertThat(tester.getEnemyType()).isEqualTo(EnemyType.REGEN);
         assertThat(tester.getGold()).isZero();
-        assertThat(tester.getBaseGlory()).isEqualTo(2);
+        assertThat(tester.getBaseGlory()).isEqualTo(GLORY_OF_THE_ENEMY);
         assertThat(tester.getExtraGlory()).isZero();
         assertThat(tester.getEnemyModifierType()).isEqualTo(EnemyModifierType.HEALING_CAPABILITIES);
-        assertThat(tester.getEndurance()).isEqualTo(3);
-        ;
+        assertThat(tester.getEndurance()).isEqualTo(ENDURANCE_OF_THE_ENEMY);;
     }
 
     @Test
     void testEnemyCategoryType() {
         List<Enemy> warlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
+
         assertThat(warlords.size()).isEqualTo(WARLORD_COUNT);
+
         List<Enemy> enemies = enemyService.findByEnemyCategoryType(EnemyCategoryType.HORDE);
+
         assertThat(enemies.size()).isEqualTo(HORDE_COUNT);
     }
 

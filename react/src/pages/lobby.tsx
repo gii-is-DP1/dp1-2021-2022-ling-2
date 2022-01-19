@@ -7,10 +7,12 @@ import UsersInLobby from "../components/lobby/UsersInLobby";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
-import { Lobby as ILobby } from "../interfaces/Lobby";
+import { Game } from "../interfaces/Game";
+import { Player } from "../interfaces/Player";
 import { CharacterGenderEnum } from "../types/CharacterGenderEnum";
 import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
-
+import { templateGame } from "../templates/game";
+import { templatePlayer } from "../templates/player";
 /**
  *
  * @author andrsdt
@@ -18,12 +20,12 @@ import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 export default function Lobby() {
   const REFRESH_RATE = 1000; // fetch lobby status every 1000 miliseconds
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
-
-  const [lobby, setLobby] = useState<ILobby | null>(null); // current state of the lobby in the server. Updated perodically
+  const [game, setGame] = useState<Game>(templateGame); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
-  const { lobbyId } = useParams<{ lobbyId: string }>(); // TODO maybe we should just pass this as a param to the component
+  const { gameId } = useParams<{ gameId: string }>(); // TODO maybe we should just pass this as a param to the component
   const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
+  const [player, setPlayer] = useState<Player>(templatePlayer);
   const [character, setCharacter] = useState<CharacterTypeEnum | null>(null);
   const [gender, setGender] = useState<CharacterGenderEnum>("MALE");
   const [fullLobby, setFullLobby] = useState<boolean>(false);
@@ -47,81 +49,95 @@ export default function Lobby() {
     // This is a temporal solution to be refactored in the future
   };
 
-  const isHost = () => loggedUser.username === lobby?.host?.username;
+  const isHost = () => {
+    return loggedUser.username === game.leader?.user?.username;
+  };
 
   async function fetchLobbyStatus() {
     try {
-      const response = await axios.get(`/lobbies/${lobbyId}`);
-      const newLobby: ILobby = response.data;
-      if (lobby && !userInLobby(loggedUser.username, newLobby)) {
+      const response = await axios.get(`/games/${gameId}`);
+      const lobby: Game = response.data;
+      if (game !== templateGame && !userInLobby(loggedUser.username, lobby)) {
         // if I was in the list of the previous lobby and not, I was kicked. Send me to browse lobbies
         toast("You have been kicked from the lobby");
         history.goBack();
         return;
       }
-      if (lobby && lobby.game) {
-        history.push(ROUTES.GAME.replace(":gameId", lobby.game.id.toString()));
-        return;
-      }
-      setLobby(newLobby);
-      setFullLobby(newLobby.maxPlayers === newLobby.users.length);
-      const takenCharacters: CharacterTypeEnum[] = newLobby.users.map(
-        (_user) => _user?.character?.characterTypeEnum
+
+      // Reload the website to load the next state (if it has changed).
+      if (lobby.stateType !== "LOBBY") window.location.reload();
+
+      setGame(lobby);
+      setFullLobby(lobby.maxPlayers === lobby.players.length);
+      const takenCharacters: CharacterTypeEnum[] = lobby.players.map(
+        (_player) => _player?.character?.characterTypeEnum
+      );
+      setPlayer(
+        lobby.players.find(
+          (_player) => _player.user.username === loggedUser.username
+        ) ?? templatePlayer
       );
       setCharactersTaken(takenCharacters);
-      return newLobby;
+      return lobby;
     } catch (error: any) {
       // TODO: Throw NotFoundError on the backend with the message "this lobby does not exist anymore"
       toast.error(error?.message);
-      if (error?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
+      if (error?.status === 404) history.push(ROUTES.BROWSE_GAMES);
       return;
     }
   }
 
-  async function notifyJoinLobby() {
+  async function joinLobby() {
     try {
-      const payload = { username: loggedUser.username };
       const headers = { Authorization: "Bearer " + userToken };
-      await axios.post(`/lobbies/${lobbyId}/join`, payload, {
+      const response = await axios.post(
+        `/games/${gameId}/add/${loggedUser.username}`,
+        null,
+        {
+          headers,
+        }
+      );
+      setGame(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+      if (error?.status === 404) history.push(ROUTES.BROWSE_GAMES);
+    }
+  }
+
+  async function deleteLobby() {
+    try {
+      const headers = { Authorization: "Bearer " + userToken };
+      await axios.delete(`/games/${gameId}`, { headers });
+      history.replace(ROUTES.BROWSE_GAMES);
+      toast.success("Lobby deleted successfully");
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  }
+
+  async function leaveLobby() {
+    try {
+      const headers = { Authorization: "Bearer " + userToken };
+      await axios.post(`/games/${gameId}/remove/${loggedUser.username}`, null, {
         headers,
       });
-    } catch (error: any) {
-      toast.error(error?.message);
-      if (error?.status === 404) history.push(ROUTES.BROWSE_LOBBIES);
-    }
-  }
-
-  async function handleRemoveUserFromLobby(username: string) {
-    try {
-      if (!lobby || !loggedUser.username) return;
-      // axios.delete only has 2 parameters, url and headers)
-      await axios.delete(`/lobbies/${lobby.id}/remove/${username}`, {
-        headers: { Authorization: "Bearer " + userToken },
-      });
-      if (username === lobby.host.username) {
-        toast.success("Lobby deleted successfully");
-        history.goBack();
-      } else if (username === loggedUser.username) {
-        // If I was the one leaving the lobby
-        history.goBack();
-      }
+      history.push(ROUTES.BROWSE_GAMES);
     } catch (error: any) {
       toast.error(error?.message);
     }
   }
 
-  const userInLobby = (_username: string, _lobby: ILobby) =>
-    _lobby.users.some((u) => u.username === _username);
+  const userInLobby = (_username: string, _game: Game) => {
+    return _game.players.some((p) => p.user.username === _username);
+  };
 
-  const createGame = async (e: React.MouseEvent) => {
+  const startGame = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
-      const payload = lobby;
-      const response = await axios.post("/games", payload, {
+      const payload = game;
+      await axios.post(`/games/${gameId}/start`, payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
-      const gameId = response.data.gameId;
-      history.push(ROUTES.GAME.replace(":gameId", gameId));
     } catch (error: any) {
       toast.error(error?.message);
     }
@@ -134,8 +150,7 @@ export default function Lobby() {
       const _lobby = await fetchLobbyStatus();
       // We have to notify the server we have joined the lobby
       // will be only executed if the user is not in the lobby yet
-      if (_lobby && !userInLobby(loggedUser.username, _lobby))
-        notifyJoinLobby();
+      if (_lobby && !userInLobby(loggedUser.username, _lobby)) joinLobby();
     }
     firstFetch();
   }, []); // Only run once
@@ -158,8 +173,8 @@ export default function Lobby() {
     async function updateUserCharacter() {
       try {
         await axios.put(
-          `/users/${loggedUser.username}/character/${getCharacterId()}`,
-          {},
+          `/players/${player?.id}/character/${getCharacterId()}`,
+          null,
           {
             headers: { Authorization: "Bearer " + userToken },
           }
@@ -172,8 +187,6 @@ export default function Lobby() {
     updateUserCharacter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [character, gender]);
-
-  if (!lobby) return <></>; // Don't render anything if the lobby is not loadedw
 
   return (
     <>
@@ -188,17 +201,14 @@ export default function Lobby() {
               <div className="flex flex-col items-start">
                 {/* Game name, delete lobby */}
                 <div className="flex items-baseline space-x-5">
-                  <p className="mb-1">{lobby.name}</p>
+                  <p className="mb-1">{game.name}</p>
+
                   <button
                     className="btn-ntfh mb-3"
-                    onClick={(e) =>
-                      handleRemoveUserFromLobby(loggedUser.username)
-                    }
+                    onClick={isHost() ? deleteLobby : leaveLobby}
                   >
                     <p className="text-gradient-ntfh text-2xl">
-                      {lobby.host.username === loggedUser.username
-                        ? "Delete "
-                        : "Leave "}
+                      {isHost() ? "Delete " : "Leave "}
                       lobby
                     </p>
                   </button>
@@ -211,14 +221,11 @@ export default function Lobby() {
                       : "Waiting for people to join"}
                   </p>
                   <p>
-                    Players in the lobby: {lobby.users.length}/
-                    {lobby.maxPlayers}
+                    Players in the lobby: {game.players.length}/
+                    {game.maxPlayers}
                   </p>
                 </div>
-                <UsersInLobby
-                  lobby={lobby}
-                  handleRemoveUserFromLobby={handleRemoveUserFromLobby}
-                />
+                {<UsersInLobby game={game} />}
               </div>
               {/* Left col ( game info, current players)*/}
             </div>
@@ -344,12 +351,12 @@ export default function Lobby() {
                 </span>
               </form>
 
-              {isHost() && lobby.users.length > 1 && (
+              {isHost() && game.players.length > 1 && (
                 <button
-                  disabled={lobby.users.length < 2}
+                  disabled={game.players.length < 2}
                   className="btn-ntfh ml-2 mt-6"
                   type="submit"
-                  onClick={createGame}
+                  onClick={startGame}
                 >
                   <p className="text-gradient-ntfh">Start Game</p>
                 </button>

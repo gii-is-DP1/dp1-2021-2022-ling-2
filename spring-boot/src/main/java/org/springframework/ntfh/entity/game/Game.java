@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -40,22 +42,30 @@ import lombok.Setter;
 @Table(name = "games")
 public class Game extends BaseEntity {
 
+    @NotNull
+    private String name;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date finishTime;
 
-    @NotNull
+    @NotNull(message = "The scenes must be either on or off")
     private Boolean hasScenes;
 
+    @NotNull(message = "The spectators must be either allowed or not allowed")
+    private Boolean spectatorsAllowed;
+
+    @NotNull(message = "The number of max players can not be null")
+    private Integer maxPlayers;
+
     // Set from Lobby by creating Players instances from users
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", orphanRemoval = true)
     @JsonIgnoreProperties({"game", "lobby"})
-    private List<Player> players;
+    private List<Player> players = new ArrayList<>();
 
     @OneToOne
-    @NotNull
     private Player leader;
 
     @OneToOne
@@ -83,6 +93,10 @@ public class Game extends BaseEntity {
     // orphanRemoval: The "comment" rows will be deleted when the game is deleted
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private GameStateType stateType;
 
     /**
      * 
@@ -117,9 +131,11 @@ public class Game extends BaseEntity {
         return (finishTime == null) ? null : finishTime.getTime() - startTime.getTime();
     }
 
-    /**
-     * @author andrsdt
-     */
+    @Transient
+    public boolean getHasStarted() {
+        return startTime != null;
+    }
+
     @Transient
     public Boolean getHasFinished() {
         return finishTime != null;
