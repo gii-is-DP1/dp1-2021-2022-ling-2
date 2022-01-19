@@ -7,9 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ntfh.entity.achievement.Achievement;
+import org.springframework.ntfh.entity.achievement.AchievementService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
-import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +37,9 @@ public class UserController {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private AchievementService achievementService;
 
     @GetMapping
     public ResponseEntity<Iterable<User>> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
@@ -103,11 +107,16 @@ public class UserController {
         userService.toggleBanUser(username, token);
     }
 
-    // TODO implement
     @GetMapping("{userId}/history")
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Game> getfindByUser(@PathVariable("userId") User user) {
         return gameService.findFinishedByUser(user);
+    }
+
+    @GetMapping("{userId}/achievements")
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Achievement> achievements(@PathVariable("userId") User user) {
+        return achievementService.findByUser(user);
     }
 
     /**
