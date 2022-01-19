@@ -5,7 +5,7 @@ import axios from "../api/axiosConfig";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
 import UserContext from "../context/user";
-import { Lobby } from "../interfaces/Lobby";
+import { Game } from "../interfaces/Game";
 
 /**
  *
@@ -15,12 +15,12 @@ export default function LobbyBrowser() {
   const history = useHistory(); // hook
   const { userToken } = useContext(UserContext);
 
-  const [lobbyList, setLobbyList] = useState<Lobby[]>([]);
+  const [gameList, setGameList] = useState<Game[]>([]);
 
   const fetchLobbies = async () => {
     try {
-      const response = await axios.get(`lobbies`);
-      setLobbyList(response.data);
+      const response = await axios.get(`games`);
+      setGameList(response.data);
     } catch (error: any) {
       toast.error(error?.message);
       history.push("/not-found");
@@ -66,35 +66,35 @@ export default function LobbyBrowser() {
                     </tr>
                   </thead>
                   <tbody className="bg-gray-900 divide-y divide-gray-200">
-                    {lobbyList.map((lobby) => (
-                      <tr key={lobby.id}>
+                    {gameList.map((game) => (
+                      <tr key={game.id}>
                         <td className="text-table-td">
-                          {lobby.users.length}/{lobby.maxPlayers}
+                          {game.players.length}/{game.maxPlayers}
                         </td>
-                        <td className="text-table-td">{lobby.name}</td>
+                        <td className="text-table-td">{game.name}</td>
                         <td className="text-table-td">
-                          {lobby.hasScenes ? "🟢" : "🔴"}
-                        </td>
-                        <td className="text-table-td">
-                          {lobby.spectatorsAllowed ? "🟢" : "🔴"}
+                          {game.hasScenes ? "🟢" : "🔴"}
                         </td>
                         <td className="text-table-td">
-                          {lobby.game ? ( // If the game has started
+                          {game.spectatorsAllowed ? "🟢" : "🔴"}
+                        </td>
+                        <td className="text-table-td">
+                          {game.hasStarted ? (
                             <button
                               className="btn-ntfh w-full bg-gray-800"
-                              disabled={!lobby.spectatorsAllowed}
+                              disabled={!game.spectatorsAllowed}
                               onClick={(e) =>
                                 history.push(
                                   ROUTES.GAME.replace(
                                     ":gameId",
-                                    lobby.game.id.toString()
+                                    game.id.toString()
                                   )
                                 )
                               }
                             >
                               <p
                                 className={`text-xl text-gradient-ntfh ${
-                                  !lobby.spectatorsAllowed && "text-gray-500"
+                                  !game.spectatorsAllowed && "text-gray-500"
                                 }`}
                               >
                                 Spectate
@@ -103,13 +103,13 @@ export default function LobbyBrowser() {
                           ) : (
                             <button
                               className="btn-ntfh w-full bg-gray-800"
-                              disabled={lobby.users.length === lobby.maxPlayers}
+                              disabled={game.players.length === game.maxPlayers}
                               onClick={(e) => {
                                 userToken
                                   ? history.push(
-                                      ROUTES.LOBBY.replace(
-                                        ":lobbyId",
-                                        lobby.id.toString()
+                                      ROUTES.GAME.replace(
+                                        ":gameId",
+                                        game.id.toString()
                                       )
                                     )
                                   : history.push(ROUTES.SIGNUP);
@@ -117,7 +117,7 @@ export default function LobbyBrowser() {
                             >
                               <p
                                 className={`text-xl text-gradient-ntfh ${
-                                  lobby.users.length === lobby.maxPlayers &&
+                                  game.players.length === game.maxPlayers &&
                                   "text-gray-500"
                                 }`}
                               >

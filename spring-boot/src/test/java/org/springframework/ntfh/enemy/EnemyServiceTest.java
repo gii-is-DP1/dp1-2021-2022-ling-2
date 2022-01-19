@@ -1,9 +1,7 @@
 package org.springframework.ntfh.enemy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +13,12 @@ import org.springframework.ntfh.entity.enemy.EnemyCategoryType;
 import org.springframework.ntfh.entity.enemy.EnemyModifierType;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.EnemyType;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.util.State;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
 public class EnemyServiceTest {
 
     @Autowired
@@ -61,8 +58,7 @@ public class EnemyServiceTest {
         assertThat(tester.getBaseGlory()).isEqualTo(GLORY_OF_THE_ENEMY);
         assertThat(tester.getExtraGlory()).isZero();
         assertThat(tester.getEnemyModifierType()).isEqualTo(EnemyModifierType.HEALING_CAPABILITIES);
-        assertThat(tester.getEndurance()).isEqualTo(ENDURANCE_OF_THE_ENEMY);
-        ;
+        assertThat(tester.getEndurance()).isEqualTo(ENDURANCE_OF_THE_ENEMY);;
     }
 
     @Test
@@ -72,7 +68,7 @@ public class EnemyServiceTest {
         assertThat(warlords.size()).isEqualTo(WARLORD_COUNT);
 
         List<Enemy> enemies = enemyService.findByEnemyCategoryType(EnemyCategoryType.HORDE);
-        
+
         assertThat(enemies.size()).isEqualTo(HORDE_COUNT);
     }
 

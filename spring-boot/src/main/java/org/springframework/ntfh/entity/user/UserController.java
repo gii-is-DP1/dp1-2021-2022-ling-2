@@ -33,11 +33,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private CharacterService characterService;
-
 	@GetMapping
-	public ResponseEntity<Iterable<User>> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+	public ResponseEntity<Iterable<User>> findPage(
+			@PageableDefault(page = 0, size = 10) final Pageable pageable) {
 		List<User> users = this.userService.findPage(pageable);
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
@@ -56,16 +54,12 @@ public class UserController {
 	 * @author andrsdt
 	 */
 	@GetMapping("{userId}")
-	public ResponseEntity<User> getUser(@PathVariable("userId") String username) {
-		User user = this.userService.findUser(username);
-		return new ResponseEntity<>(user, HttpStatus.OK);
+	@ResponseStatus(HttpStatus.OK)
+	public User getUser(@PathVariable("userId") User user) {
+		return user;
 	}
 
 	/**
-	 * <<<<<<< HEAD Update The profile of a user. Check before if the authorization token is either from the exact user
-	 * or from any admin. ======= Update The profile of a user. Check before if the authorization token is either from
-	 * the exact user or from any admin. >>>>>>> origin/master
-	 * 
 	 * @param user object with the data to be updated with
 	 * @param token jwt token of the user or the admin.
 	 * @return token for user's authentication, in case he/she was the one who updated the profile
@@ -101,19 +95,10 @@ public class UserController {
 		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
 	}
 
-	@PutMapping("{userId}/character/{characterId}")
-	@ResponseStatus(HttpStatus.OK)
-	public void setCharacter(@PathVariable("userId") String userId, @PathVariable("characterId") Integer characterId,
-			@RequestHeader("Authorization") String token) {
-		// TODO use converters for this
-		User user = this.userService.findUser(userId);
-		Character character = this.characterService.findById(characterId);
-		userService.setCharacter(user.getUsername(), character);
-	}
-
 	@PutMapping("{userId}/ban")
 	@ResponseStatus(HttpStatus.OK)
-	public void toggleBanUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
+	public void toggleBanUser(@PathVariable("userId") String username,
+			@RequestHeader("Authorization") String token) {
 		userService.toggleBanUser(username, token);
 	}
 
@@ -130,7 +115,8 @@ public class UserController {
 	 */
 	@DeleteMapping("{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
+	public void deleteUser(@PathVariable("userId") String username,
+			@RequestHeader("Authorization") String token) {
 		// TODO better parse username to user with a converter? saw that in the slides
 		User user = userService.findUser(username);
 		userService.deleteUser(user);

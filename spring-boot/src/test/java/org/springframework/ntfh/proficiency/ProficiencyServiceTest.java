@@ -1,7 +1,6 @@
 package org.springframework.ntfh.proficiency;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +10,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.proficiency.Proficiency;
 import org.springframework.ntfh.entity.proficiency.ProficiencyService;
 import org.springframework.ntfh.entity.proficiency.ProficiencyTypeEnum;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.util.State;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
 public class ProficiencyServiceTest {
 
     @Autowired
@@ -45,5 +43,5 @@ public class ProficiencyServiceTest {
 
         assertThat(tester.getProficiencyTypeEnum()).isEqualByComparingTo(ProficiencyTypeEnum.MELEE);
     }
-    
+
 }

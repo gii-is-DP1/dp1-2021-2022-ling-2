@@ -23,7 +23,7 @@ export default function MarketCard(params: Params) {
   const buyMarketCard = async () => {
     try {
       const response = await axios.post(
-        `/games/${gameId}/market-cards/${card?.id}`,
+        `/market-cards/buy/${card?.id}`,
         {},
         { headers: { Authorization: "Bearer " + userToken } }
       );

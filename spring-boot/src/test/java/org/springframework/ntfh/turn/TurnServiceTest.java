@@ -2,7 +2,6 @@ package org.springframework.ntfh.turn;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,14 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.ntfh.entity.character.CharacterService;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
+import org.springframework.ntfh.entity.game.GameStateType;
+import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.scene.SceneService;
 import org.springframework.ntfh.entity.scene.SceneTypeEnum;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnStateType;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.entity.user.User;
+import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.entity.character.Character;
+import org.springframework.ntfh.util.State;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
@@ -26,8 +31,9 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 // TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@DataJpaTest(
+        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
 public class TurnServiceTest {
 
     @Autowired
@@ -39,11 +45,41 @@ public class TurnServiceTest {
     @Autowired
     private SceneService sceneService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CharacterService characterService;
+
     protected Turn turnTester;
 
     @BeforeEach
     void setup() {
-        turnService.initializeFromGame(gameService.findGameById(1));
+        /**************** Copypasted section ******************************/
+        // TODO copypaste from CommandIngameTest, maybe extract to a method?
+        Game gameTester = new Game();
+        gameTester.setName("test game");
+        gameTester.setHasScenes(false);
+        gameTester.setSpectatorsAllowed(false);
+        gameTester.setMaxPlayers(2);
+        gameTester.setStateType(GameStateType.LOBBY);
+        gameTester = gameService.save(gameTester);
+
+        User user1 = userService.findUser("user1");
+        User user2 = userService.findUser("user2");
+
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
+
+        Player playerTester = gameTester.getPlayers().get(0);
+
+        Character warriorCharacter = characterService.findById(5);
+
+        playerTester.setCharacter(warriorCharacter);
+
+        gameService.startGame(gameTester.getId());
+        /******************************************************************/
+
         turnTester = turnService.findturnById(1).get();
     }
 
@@ -51,7 +87,8 @@ public class TurnServiceTest {
     void teardown() {
         try {
             turnService.delete(turnTester.getId());
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Test
@@ -82,7 +119,8 @@ public class TurnServiceTest {
         testerSaver.setCurrentScene(sceneService.findSceneById(1).get());
         turnService.save(testerSaver);
 
-        assertThat(testerSaver.getCurrentScene().getSceneTypeEnum()).isEqualTo(SceneTypeEnum.MERCADO_DE_LOTHARION);
+        assertThat(testerSaver.getCurrentScene().getSceneTypeEnum())
+                .isEqualTo(SceneTypeEnum.MERCADO_DE_LOTHARION);
     }
 
     @Test
@@ -104,7 +142,8 @@ public class TurnServiceTest {
     @Test
     void testGetState() {
         // TODO Needs improvement
-        assertThat(turnService.getState(turnTester).getNextState()).isEqualTo(TurnStateType.MARKET_STATE);
+        assertThat(turnService.getState(turnTester).getNextState())
+                .isEqualTo(TurnStateType.MARKET_STATE);
     }
 
     @Test
@@ -118,7 +157,8 @@ public class TurnServiceTest {
     void testCreateNextTurn() {
         turnService.createNextTurn(gameService.findGameById(1));
 
-        assertThat(turnService.findturnById(2).get().getPlayer()).isEqualTo(gameService.findGameById(1).getPlayers().get(1));
+        assertThat(turnService.findturnById(2).get().getPlayer())
+                .isEqualTo(gameService.findGameById(1).getPlayers().get(1));
     }
 
 }

@@ -1,18 +1,23 @@
+import { CharacterTypeEnum } from "../types/CharacterTypeEnum";
 import { AbilityCardIngame } from "./AbilityCardIngame";
 import { Character } from "./Character";
+import { Game } from "./Game";
 import { User } from "./User";
 
 export interface Player {
   id: number;
+  user: User;
   glory: number;
   kills: number;
   gold: number;
-  dead: boolean;
   wounds: number;
+  guard: boolean;
   turnOrder: number;
-  user: User;
-  characterType: Character;
+  character?: Character;
   hand: AbilityCardIngame[];
-  discardPile: AbilityCardIngame[];
   abilityPile: AbilityCardIngame[];
+  discardPile: AbilityCardIngame[];
+  game?: Game;
+  characterTypeEnum: CharacterTypeEnum;
+  isDead: boolean;
 }

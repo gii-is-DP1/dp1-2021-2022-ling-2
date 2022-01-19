@@ -1,16 +1,11 @@
 package org.springframework.ntfh.commandtest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertArrayEquals;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,15 +28,16 @@ import org.springframework.ntfh.command.RecoverCardCommand;
 import org.springframework.ntfh.command.RecoverCommand;
 import org.springframework.ntfh.command.RestrainCommand;
 import org.springframework.ntfh.command.StealCoinCommand;
+import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
+import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyService;
 import org.springframework.ntfh.entity.enemy.EnemyType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
-import org.springframework.ntfh.entity.lobby.Lobby;
-import org.springframework.ntfh.entity.lobby.LobbyService;
+import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
@@ -49,12 +45,10 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
-import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnStateType;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
+import org.springframework.ntfh.util.State;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -62,497 +56,510 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
+@DataJpaTest(
+		includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
 public class CommandIngameTest {
-    
-    @Autowired
-    private GameService gameService;
 
-    @Autowired
-    private LobbyService lobbyService;
+	@Autowired
+	private GameService gameService;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private CharacterService characterService;
+	@Autowired
+	private CharacterService characterService;
 
-    @Autowired
-    private TurnService turnService;
+	@Autowired
+	private AbilityCardIngameService abilityCardIngameService;
 
-    @Autowired
-    private AbilityCardIngameService abilityCardIngameService;
+	@Autowired
+	private EnemyService enemyService;
 
-    @Autowired
-    private EnemyService enemyService;
+	@Autowired
+	private EnemyIngameService enemyIngameService;
 
-    @Autowired
-    private EnemyIngameService enemyIngameService;
+	@Autowired
+	private AbilityCardService abilityCardService;
 
-    @Autowired
-    private AbilityCardService abilityCardService;
+	protected Game gameTester;
 
-    protected Game gameTester;
+	protected Player ranger;
 
-    protected Lobby lobbyTester;
+	protected Player rogue;
 
-    protected Player ranger;
+	protected EnemyIngame enemyIngame;
 
-    protected Player rogue;
+	@BeforeEach
+	public void init() {
+		// TODO copypaste from gameService test except the "ranger, rogue" variables
+		gameTester = new Game();
+		gameTester.setName("test game");
+		gameTester.setHasScenes(false);
+		gameTester.setSpectatorsAllowed(false);
+		gameTester.setMaxPlayers(2);
+		gameTester.setStateType(GameStateType.LOBBY);
+		gameTester = gameService.save(gameTester);
 
-    protected EnemyIngame enemyIngame;
+		User user1 = userService.findUser("user1");
+		User user2 = userService.findUser("user2");
 
-    @BeforeEach
-    public void init() {
-        User user1 = userService.findUser("user1");
-        User user2 = userService.findUser("user2");
-        Set<User> users = Sets.newSet(user1, user2);
+		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+		gameTester = gameService.joinGame(gameTester, user2);
 
-        lobbyTester = new Lobby();
-        lobbyTester.setName("Init lobby");
-        lobbyTester.setHasScenes(true);
-        lobbyTester.setSpectatorsAllowed(false);
-        lobbyTester.setMaxPlayers(4);
-        lobbyTester.setUsers(users);
-        lobbyTester.setHost(user1);
-        lobbyTester.setLeader(user1);
-        lobbyService.save(lobbyTester);
+		ranger = gameTester.getPlayers().get(0);
+		rogue = gameTester.getPlayers().get(1);
 
-        user1.setCharacter(characterService.findById(2));
-        user2.setCharacter(characterService.findById(4));
+		Character rangerCharacter = characterService.findById(2);
+		Character rogueCharacter = characterService.findById(4);
 
-        gameTester = gameService.createFromLobby(lobbyTester);
-        user1.setLobby(lobbyTester);
+		ranger.setCharacter(rangerCharacter);
+		rogue.setCharacter(rogueCharacter);
 
-        ranger = gameTester.getPlayers().get(0);
-        rogue = gameTester.getPlayers().get(1);
+		gameService.startGame(gameTester.getId());
+		Enemy SLINGER = enemyService.findEnemyById(12).get();
+		enemyIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
+	}
 
-        enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
-    }
+	@AfterEach
+	public void teardown() {
+		gameService.delete(gameTester);
+	}
 
-    @AfterEach
-    public void teardown() {
-        gameService.delete(gameTester);
-    }
+	@Test
+	void testAttackPhaseEndCommand() {
 
-    @Test
-    void testAttackPhaseEndCommand(){
+		// The phase of combat changes once used
 
-        //The phase of combat changes once used
+		Integer gameId = gameTester.getId();
+		Turn initialTurn = gameService.getCurrentTurnByGameId(gameId);
+		TurnStateType initialTurnState = initialTurn.getStateType();
+		new AttackPhaseEndCommand(gameService, ranger).execute();
 
-        turnService.initializeFromGame(gameTester);
-        Integer gameId = gameTester.getId();
-        Turn initialTurn = gameService.getCurrentTurnByGameId(gameId);
-        TurnStateType initialTurnState = initialTurn.getStateType();
-        new AttackPhaseEndCommand(gameService, ranger).execute();
+		assertThat(initialTurn.getStateType()).isNotEqualTo(initialTurnState);
+	}
 
-        assertThat(initialTurn.getStateType()).isNotEqualTo(initialTurnState);
-    }
 
-   
-    @Test
-    void testChangeEnemyCommand(){
+	@Test
+	void testChangeEnemyCommand() {
 
-        //Replaces an enemy on the table with the one lowest on the enemy pile
+		// Replaces an enemy on the table with the one lowest on the enemy pile
 
-        enemyIngameService.initializeFromGame(gameTester);
-        List<EnemyIngame> initialEnemiesFighting = gameTester.getEnemiesFighting();
-        EnemyIngame changedEnemy = initialEnemiesFighting.get(0);
-        Integer numEnemiesOnTable = initialEnemiesFighting.size();
+		enemyIngameService.initializeFromGame(gameTester);
+		List<EnemyIngame> initialEnemiesFighting = gameTester.getEnemiesFighting();
+		EnemyIngame changedEnemy = initialEnemiesFighting.get(0);
+		Integer numEnemiesOnTable = initialEnemiesFighting.size();
 
-        new ChangeEnemyCommand(ranger, changedEnemy).execute();
-        List<EnemyIngame> currentEnemiesFighting = gameTester.getEnemiesFighting();
-        Integer currentNumEnemiesonTable = currentEnemiesFighting.size();
-        EnemyType typeEnemyDrawn = currentEnemiesFighting.get(currentNumEnemiesonTable-1).getEnemy().getEnemyType();
-        List<EnemyType> warlords = List.of(EnemyType.SHRIEKKNIFER, EnemyType.GURDRUG, EnemyType.ROGHKILLER);
+		new ChangeEnemyCommand(ranger, changedEnemy).execute();
+		List<EnemyIngame> currentEnemiesFighting = gameTester.getEnemiesFighting();
+		Integer currentNumEnemiesonTable = currentEnemiesFighting.size();
+		EnemyType typeEnemyDrawn =
+				currentEnemiesFighting.get(currentNumEnemiesonTable - 1).getEnemy().getEnemyType();
+		List<EnemyType> warlords =
+				List.of(EnemyType.SHRIEKKNIFER, EnemyType.GURDRUG, EnemyType.ROGHKILLER);
 
-        assertThat(currentEnemiesFighting).isNotEmpty().doesNotContain(changedEnemy);
-        assertThat(currentNumEnemiesonTable).isEqualTo(numEnemiesOnTable);
-        assertThat(warlords).isNotEmpty().doesNotContain(typeEnemyDrawn);
-    }
+		assertThat(currentEnemiesFighting).isNotEmpty().doesNotContain(changedEnemy);
+		assertThat(currentNumEnemiesonTable).isEqualTo(numEnemiesOnTable);
+		assertThat(warlords).isNotEmpty().doesNotContain(typeEnemyDrawn);
+	}
 
-    @Test
-    void testDealDamageCommand(){
+	@Test
+	void testDealDamageCommand() {
 
-        //Deal damage to a monster
+		// Deal damage to a monster
 
-        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
-        Integer initialEndurance = enemyIngame.getCurrentEndurance();
-        new DealDamageCommand(1, ranger, enemyIngame).execute();
+		EnemyIngame enemyIngame = enemyIngameService
+				.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
+		Integer initialEndurance = enemyIngame.getCurrentEndurance();
+		new DealDamageCommand(1, ranger, enemyIngame).execute();
 
-        assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance-1);
+		assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance - 1);
 
-        //effects on kill of the enemy on the table
+		// effects on kill of the enemy on the table
 
-        EnemyIngame enemyIngame2 = enemyIngameService.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
-        Integer baseGlory = ranger.getGlory();
-        Integer baseGold = ranger.getGold();
-        Integer baseKills = ranger.getKills();
-        Integer gloryAdded = enemyIngame2.getEnemy().getBaseGlory() + enemyIngame2.getEnemy().getExtraGlory();
-        Integer goldAdded = enemyIngame2.getEnemy().getGold();
-        new DealDamageCommand(10, ranger, enemyIngame2).execute();
+		EnemyIngame enemyIngame2 = enemyIngameService
+				.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
+		Integer baseGlory = ranger.getGlory();
+		Integer baseGold = ranger.getGold();
+		Integer baseKills = ranger.getKills();
+		Integer gloryAdded =
+				enemyIngame2.getEnemy().getBaseGlory() + enemyIngame2.getEnemy().getExtraGlory();
+		Integer goldAdded = enemyIngame2.getEnemy().getGold();
+		new DealDamageCommand(10, ranger, enemyIngame2).execute();
 
-        assertThat(ranger.getGlory()).isEqualTo(baseGlory+gloryAdded);
-        assertThat(ranger.getGold()).isEqualTo(baseGold+goldAdded);
-        assertThat(ranger.getKills()).isEqualTo(baseKills+1);
-        assertThat(gameTester.getEnemiesFighting()).doesNotContain(enemyIngame2);
+		assertThat(ranger.getGlory()).isEqualTo(baseGlory + gloryAdded);
+		assertThat(ranger.getGold()).isEqualTo(baseGold + goldAdded);
+		assertThat(ranger.getKills()).isEqualTo(baseKills + 1);
+		assertThat(gameTester.getEnemiesFighting()).doesNotContain(enemyIngame2);
 
-        //if for any reason we dealt damage to an enemy who is already at 0 his endurance wouldnt change, although this case cant really be
-        //accessed by the game since it removes the enemy once it dies
+		// if for any reason we dealt damage to an enemy who is already at 0 his endurance wouldnt
+		// change,
+		// although this
+		// case cant really be
+		// accessed by the game since it removes the enemy once it dies
 
-        new DealDamageCommand(2, ranger, enemyIngame2).execute();
+		new DealDamageCommand(2, ranger, enemyIngame2).execute();
 
-        assertThat(enemyIngame2.getCurrentEndurance()).isEqualTo(0);
-    }
+		assertThat(enemyIngame2.getCurrentEndurance()).isEqualTo(0);
+	}
 
-    @Test
-    void testDiscardCommand(){
+	@Test
+	void testDiscardCommand() {
 
-        //Player discards a card
+		// Player discards a card
 
-        turnService.initializeFromGame(gameTester);
-        Integer initialDiscardedCards = ranger.getDiscardPile().size();
-        new DiscardCommand(1, ranger).execute();
-        Integer discardedCards = ranger.getDiscardPile().size();
+		Integer initialDiscardedCards = ranger.getDiscardPile().size();
+		new DiscardCommand(1, ranger).execute();
+		Integer discardedCards = ranger.getDiscardPile().size();
 
-        assertThat(initialDiscardedCards).isZero();
-        assertThat(discardedCards).isEqualTo(1);
+		assertThat(initialDiscardedCards).isZero();
+		assertThat(discardedCards).isEqualTo(1);
 
-        //Huge hit that empties the ability pile (should refill the ability pile, still take cards away from it, and add a wound to the player)
-        
-        new DiscardCommand(17, ranger).execute();
-        Integer abilityPileSize = ranger.getAbilityPile().size();
-        Integer discardPileSize = ranger.getDiscardPile().size();
+		// Huge hit that empties the ability pile (should refill the ability pile, still take cards
+		// away
+		// from it, and
+		// add a wound to the player)
 
-        assertThat(abilityPileSize).isNotZero();
-        assertThat(discardPileSize).isNotZero();
-        assertThat(ranger.getWounds()).isNotZero();
-    }
+		new DiscardCommand(17, ranger).execute();
+		Integer abilityPileSize = ranger.getAbilityPile().size();
+		Integer discardPileSize = ranger.getDiscardPile().size();
 
-    @Test
-    void testDrawCommand(){
+		assertThat(abilityPileSize).isNotZero();
+		assertThat(discardPileSize).isNotZero();
+		assertThat(ranger.getWounds()).isNotZero();
+	}
 
-        //draw a card from the ability pile
-        turnService.initializeFromGame(gameTester);
-        Integer initialHand = ranger.getHand().size();
-        new DrawCommand(1, ranger).execute();
-        Integer currentHand = ranger.getHand().size();
+	@Test
+	void testDrawCommand() {
 
-        assertThat(initialHand).isEqualTo(4);
-        assertThat(currentHand).isEqualTo(5);
+		// draw a card from the ability pile
+		Integer initialHand = ranger.getHand().size();
+		new DrawCommand(1, ranger).execute();
+		Integer currentHand = ranger.getHand().size();
 
-        //drawing more cards than there are currently on the ability pile (should add a wound and then draw the rest)
+		assertThat(initialHand).isEqualTo(4);
+		assertThat(currentHand).isEqualTo(5);
 
-        new DiscardCommand(8, ranger).execute();
-        new DrawCommand(8, ranger).execute();
+		// drawing more cards than there are currently on the ability pile (should add a wound and
+		// then draw
+		// the rest)
 
-        assertThat(ranger.getDiscardPile().size()).isZero();
-        assertThat(ranger.getWounds()).isNotZero();
-    }
+		new DiscardCommand(8, ranger).execute();
+		new DrawCommand(8, ranger).execute();
 
+		assertThat(ranger.getDiscardPile().size()).isZero();
+		assertThat(ranger.getWounds()).isNotZero();
+	}
 
-    @Test
-    void testExileCommand(){
 
-        //exile a card
+	@Test
+	void testExileCommand() {
 
-        turnService.initializeFromGame(gameTester);
-        AbilityCard pocionCurativa = abilityCardService.findById(62);
-        AbilityCardIngame pocionCurativaIngame = abilityCardIngameService.createFromAbilityCard(pocionCurativa, ranger);
-        List<AbilityCardIngame> currentHand = ranger.getHand();
-        currentHand.add(pocionCurativaIngame);
-        ranger.setHand(currentHand);
+		// exile a card
 
-        assertThat(currentHand.size()).isEqualTo(5);
-        assertThat(ranger.getDiscardPile().size()).isZero();
+		AbilityCard pocionCurativa = abilityCardService.findById(62);
+		AbilityCardIngame pocionCurativaIngame =
+				abilityCardIngameService.createFromAbilityCard(pocionCurativa, ranger);
+		List<AbilityCardIngame> currentHand = ranger.getHand();
+		currentHand.add(pocionCurativaIngame);
+		ranger.setHand(currentHand);
 
-        new ExileCommand(ranger, AbilityCardTypeEnum.POCION_CURATIVA).execute();
+		assertThat(currentHand.size()).isEqualTo(5);
+		assertThat(ranger.getDiscardPile().size()).isZero();
 
-        assertThat(currentHand.size()).isEqualTo(4);
-        assertThat(ranger.getDiscardPile().size()).isZero();
-    }
+		new ExileCommand(ranger, AbilityCardTypeEnum.POCION_CURATIVA).execute();
 
-    @Test
-    void testGiveGlory(){
+		assertThat(currentHand.size()).isEqualTo(4);
+		assertThat(ranger.getDiscardPile().size()).isZero();
+	}
 
-        //give glory to a player
+	@Test
+	void testGiveGlory() {
 
-        Integer initialGlory = ranger.getGlory();
-        Integer amount = 5;
-        new GiveGloryCommand(amount, ranger).execute();
-        Integer currentGlory = ranger.getGlory();
+		// give glory to a player
 
-        assertThat(currentGlory).isEqualTo(initialGlory+amount);
+		Integer initialGlory = ranger.getGlory();
+		Integer amount = 5;
+		new GiveGloryCommand(amount, ranger).execute();
+		Integer currentGlory = ranger.getGlory();
 
-        //substract glory
+		assertThat(currentGlory).isEqualTo(initialGlory + amount);
 
-        Integer amountSubstracted = -2;
-        new GiveGloryCommand(amountSubstracted, ranger).execute();
-        Integer gloryAfterSubstract = ranger.getGlory();
-        Integer gloryAfterSubstractGoal = initialGlory+amount+amountSubstracted;
+		// substract glory
 
-        assertThat(gloryAfterSubstract).isEqualTo(gloryAfterSubstractGoal);
+		Integer amountSubstracted = -2;
+		new GiveGloryCommand(amountSubstracted, ranger).execute();
+		Integer gloryAfterSubstract = ranger.getGlory();
+		Integer gloryAfterSubstractGoal = initialGlory + amount + amountSubstracted;
 
-        //substract more than the player has
+		assertThat(gloryAfterSubstract).isEqualTo(gloryAfterSubstractGoal);
 
-        new GiveGloryCommand(-100, ranger).execute();
+		// substract more than the player has
 
-        assertThat(ranger.getGlory()).isEqualTo(0);
-    }
+		new GiveGloryCommand(-100, ranger).execute();
 
-    @Test
-    void testGiveGold(){
-        //give gold to a player
+		assertThat(ranger.getGlory()).isEqualTo(0);
+	}
 
-        Integer initialGold = ranger.getGold();
-        Integer amount = 10;
-        new GiveGoldCommand(amount, ranger).execute();
-        Integer currentGold = ranger.getGold();
-        
-        assertThat(currentGold).isEqualTo(initialGold+amount);
-        
-        //substract gold
+	@Test
+	void testGiveGold() {
+		// give gold to a player
 
-        Integer amountSubstracted = -5;
-        new GiveGoldCommand(amountSubstracted, ranger).execute();
-        Integer goldAfterSubstract = ranger.getGold();
-        Integer goldAfterSubstractGoal = initialGold+amount+amountSubstracted;
+		Integer initialGold = ranger.getGold();
+		Integer amount = 10;
+		new GiveGoldCommand(amount, ranger).execute();
+		Integer currentGold = ranger.getGold();
 
-        assertThat(goldAfterSubstract).isEqualTo(goldAfterSubstractGoal);
+		assertThat(currentGold).isEqualTo(initialGold + amount);
 
-        //substract more than the player has
+		// substract gold
 
-        new GiveGoldCommand(-100, ranger).execute();
+		Integer amountSubstracted = -5;
+		new GiveGoldCommand(amountSubstracted, ranger).execute();
+		Integer goldAfterSubstract = ranger.getGold();
+		Integer goldAfterSubstractGoal = initialGold + amount + amountSubstracted;
 
-        assertThat(ranger.getGold()).isEqualTo(0);
-    }
+		assertThat(goldAfterSubstract).isEqualTo(goldAfterSubstractGoal);
 
-    @Test
-    void testGiveGuard() {
-        //add guard
-        
-        Integer guardApplied = 1;
-        new GiveGuardCommand(guardApplied, ranger).execute();
+		// substract more than the player has
 
-        assertThat(ranger.getGuard()).isEqualTo(guardApplied);
+		new GiveGoldCommand(-100, ranger).execute();
 
-        //add a greater guard on top of guard (should remove the lower of the 2 and keep the highest)
+		assertThat(ranger.getGold()).isEqualTo(0);
+	}
 
-        Integer anotherGuard = 2;
-        new GiveGuardCommand(anotherGuard, ranger).execute();
+	@Test
+	void testGiveGuard() {
+		// add guard
 
-        assertThat(ranger.getGuard()).isEqualTo(anotherGuard);
+		Integer guardApplied = 1;
+		new GiveGuardCommand(guardApplied, ranger).execute();
 
-        //add a lesser guard (will apply negative as well on this case to do them both at once)
+		assertThat(ranger.getGuard()).isEqualTo(guardApplied);
 
-        Integer negativeGuard = -1;
-        new GiveGuardCommand(negativeGuard, ranger);
+		// add a greater guard on top of guard (should remove the lower of the 2 and keep the
+		// highest)
 
-        assertThat(ranger.getGuard()).isEqualTo(anotherGuard);
+		Integer anotherGuard = 2;
+		new GiveGuardCommand(anotherGuard, ranger).execute();
 
-    }
+		assertThat(ranger.getGuard()).isEqualTo(anotherGuard);
 
-    @Test
-    void testGiveWound() {
+		// add a lesser guard (will apply negative as well on this case to do them both at once)
 
-        //wounding a player
-        
-        new GiveWoundCommand(rogue).execute();
+		Integer negativeGuard = -1;
+		new GiveGuardCommand(negativeGuard, ranger);
 
-        assertThat(rogue.getWounds()).isEqualTo(1);
-        assertThat(rogue.isDead()).isFalse();
+		assertThat(ranger.getGuard()).isEqualTo(anotherGuard);
 
-        //killing a player
+	}
 
-        new GiveWoundCommand(rogue).execute();
+	@Test
+	void testGiveWound() {
 
-        assertThat(rogue.getWounds()).isEqualTo(2);
-        assertThat(rogue.isDead()).isTrue();
-    }
+		// wounding a player
 
-    @Test
-    void testGoldOnKill() {
+		new GiveWoundCommand(rogue).execute();
 
-        //gives gold on the kill of an enemy
+		assertThat(rogue.getWounds()).isEqualTo(1);
+		assertThat(rogue.isDead()).isFalse();
 
-        turnService.initializeFromGame(gameTester);
-        enemyIngame.setCurrentEndurance(0);
-        new GoldOnKillCommand(1, enemyIngame, ranger).execute();
+		// killing a player
 
-        assertThat(ranger.getGold()).isEqualTo(1);
+		new GiveWoundCommand(rogue).execute();
 
-        //it will not give the gold if the enemy is still alive
+		assertThat(rogue.getWounds()).isEqualTo(2);
+		assertThat(rogue.isDead()).isTrue();
+	}
 
-        enemyIngame.setCurrentEndurance(1);
-        new GoldOnKillCommand(100, enemyIngame, ranger);
+	@Test
+	void testGoldOnKill() {
 
-        assertThat(ranger.getGold()).isEqualTo(1);
-    }
+		// gives gold on the kill of an enemy
 
-    @Test
-    void testHandToAbilityPile() {
+		enemyIngame.setCurrentEndurance(0);
+		new GoldOnKillCommand(1, enemyIngame, ranger).execute();
 
-        //sends the card from the hand to the ability pile
+		assertThat(ranger.getGold()).isEqualTo(1);
 
-        turnService.initializeFromGame(gameTester);
-        AbilityCard companeroLobo = abilityCardService.findById(1);
-        AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
-        List<AbilityCardIngame> hand = new ArrayList<>();
-        hand.add(abilityCardIngame);
-        ranger.setHand(hand);
+		// it will not give the gold if the enemy is still alive
 
-        assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
-        assertThat(ranger.getHand().size()).isEqualTo(1);
-        
-        new HandToAbilityPileCommand(ranger, companeroLobo.getAbilityCardTypeEnum()).execute();
+		enemyIngame.setCurrentEndurance(1);
+		new GoldOnKillCommand(100, enemyIngame, ranger);
 
-        assertThat(ranger.getAbilityPile().size()).isEqualTo(16);
-        assertThat(ranger.getHand().size()).isZero();
-    }
+		assertThat(ranger.getGold()).isEqualTo(1);
+	}
 
-    @Test
-    void testHeal() {
+	@Test
+	void testHandToAbilityPile() {
 
-        //heal a player
+		// sends the card from the hand to the ability pile
 
-        ranger.setWounds(2);
-        new HealCommand(ranger).execute();
+		AbilityCard companeroLobo = abilityCardService.findById(1);
+		AbilityCardIngame abilityCardIngame =
+				abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
+		ranger.getHand().add(abilityCardIngame);
 
-        assertThat(ranger.getWounds()).isEqualTo(1);
+		assertThat(ranger.getAbilityPile().size()).isEqualTo(11);
+		assertThat(ranger.getHand().size()).isEqualTo(5);
 
-        //heal a player beyond their maximum hp
+		new HandToAbilityPileCommand(ranger, companeroLobo.getAbilityCardTypeEnum()).execute();
 
-        new HealCommand(ranger).execute();
-        new HealCommand(ranger).execute();
+		assertThat(ranger.getAbilityPile().size()).isEqualTo(12);
+		assertThat(ranger.getHand().size()).isEqualTo(4);
+	}
 
-        assertThat(ranger.getWounds()).isZero();
-    }
+	@Test
+	void testHeal() {
 
-    @Test
-    void testReceiveDamage() {
+		// heal a player
 
-        //recieve damage, not enough to wound
-        
-        new ReceiveDamageCommand(2, enemyIngame, rogue).execute();
+		ranger.setWounds(2);
+		new HealCommand(ranger).execute();
 
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
-        assertThat(rogue.getWounds()).isZero();
+		assertThat(ranger.getWounds()).isEqualTo(1);
 
-        //recieve damage beyond their current ability pile, ads wound
+		// heal a player beyond their maximum hp
 
-        new ReceiveDamageCommand(15, enemyIngame, rogue).execute();
+		new HealCommand(ranger).execute();
+		new HealCommand(ranger).execute();
 
-        assertThat(rogue.getAbilityPile().size()).isNotZero();
-        assertThat(rogue.getDiscardPile().size()).isNotZero();
-        assertThat(rogue.getWounds()).isEqualTo(1);
+		assertThat(ranger.getWounds()).isZero();
+	}
 
-        //recieve damage and this damage kills
+	@Test
+	void testReceiveDamage() {
 
-        new ReceiveDamageCommand(13, enemyIngame, rogue).execute();
+		// recieve damage, not enough to wound
 
-        assertThat(rogue.getWounds()).isEqualTo(2);
-        assertThat(rogue.isDead()).isTrue();
-    }
+		new ReceiveDamageCommand(enemyIngame, rogue).execute();
 
-    @Test
-    void testRecoverCardCommand() {
+		assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+		assertThat(rogue.getWounds()).isZero();
 
-        //search for a card that is in the discard pile and recover it
+		// recieve damage beyond their current ability pile, ads wound
 
-        turnService.initializeFromGame(gameTester);
-        AbilityCard disparoRapido = abilityCardService.findById(4);
-        AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
-        String token = TokenUtils.generateJWTToken(ranger.getUser());
-        List<AbilityCardIngame> hand = new ArrayList<>();
-        hand.add(abilityCardIngame);
-        ranger.setHand(hand);
-        gameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(), token);
+		// instantiate a hard hitting enemy
+		EnemyIngame enemyIngame2 = enemyIngameService
+				.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+		new ReceiveDamageCommand(enemyIngame2, rogue).execute();
+		new ReceiveDamageCommand(enemyIngame2, rogue).execute();
+		new ReceiveDamageCommand(enemyIngame2, rogue).execute();
 
-        new RecoverCardCommand(ranger, AbilityCardTypeEnum.DISPARO_RAPIDO).execute();
+		assertThat(rogue.getAbilityPile().size()).isNotZero();
+		assertThat(rogue.getDiscardPile().size()).isNotZero();
+		assertThat(rogue.getWounds()).isEqualTo(1);
 
-        assertThat(ranger.getDiscardPile().size()).isZero();
+		// recieve damage and this damage kills
 
-        //search for a card that isnt in the discard pile, after not finding the command doesnt make any further actions
+		new ReceiveDamageCommand(enemyIngame, rogue).execute();
 
-        hand.add(abilityCardIngame);
-        ranger.setHand(hand);
-        gameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(), token);
+		assertThat(rogue.getWounds()).isEqualTo(2);
+		assertThat(rogue.isDead()).isTrue();
+	}
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+	@Test
+	void testRecoverCardCommand() {
 
-        new RecoverCardCommand(ranger, AbilityCardTypeEnum.COMPANERO_LOBO).execute();
+		// search for a card that is in the discard pile and recover it
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
-        
-    }
+		AbilityCard disparoRapido = abilityCardService.findById(4);
+		AbilityCardIngame abilityCardIngame =
+				abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
+		String token = TokenUtils.generateJWTToken(ranger.getUser());
+		List<AbilityCardIngame> hand = new ArrayList<>();
+		hand.add(abilityCardIngame);
+		ranger.setHand(hand);
+		abilityCardIngameService.playCard(abilityCardIngame.getId(),
+				gameTester.getEnemiesFighting().get(0).getId(), token);
 
-    @Test
-    void testRecoverCommand() {
+		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
 
-        //recover one card from the discard pile to the draw pile
+		new RecoverCardCommand(ranger, AbilityCardTypeEnum.DISPARO_RAPIDO).execute();
 
-        turnService.initializeFromGame(gameTester);
+		assertThat(ranger.getDiscardPile().size()).isZero();
 
-        new DiscardCommand(1, ranger).execute();
-        new RecoverCommand(ranger).execute();
+		// search for a card that isnt in the discard pile, after not finding the command doesnt
+		// make any
+		// further
+		// actions
 
-        assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
-        assertThat(ranger.getDiscardPile().size()).isZero();
+		hand.add(abilityCardIngame);
+		ranger.setHand(hand);
+		abilityCardIngameService.playCard(abilityCardIngame.getId(),
+				gameTester.getEnemiesFighting().get(0).getId(), token);
 
-        //try to recover one card from an empty discard pile to the draw pile
+		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
 
-        new RecoverCommand(ranger).execute();
+		new RecoverCardCommand(ranger, AbilityCardTypeEnum.COMPANERO_LOBO).execute();
 
-        assertThat(ranger.getAbilityPile().size()).isEqualTo(15);
-        assertThat(ranger.getDiscardPile().size()).isZero();
-    }
+		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
 
+	}
 
-    @Test
-    void testRestrainCommand() {
+	@Test
+	void testRecoverCommand() {
 
-        //check if the enemy is restrained after executing the command
+		// recover one card from the discard pile to the draw pile
 
-        assertThat(enemyIngame.getRestrained()).isFalse();
+		new DiscardCommand(1, ranger).execute();
+		new RecoverCommand(ranger).execute();
 
-        new RestrainCommand(enemyIngame).execute();
+		assertThat(ranger.getAbilityPile().size()).isEqualTo(11);
+		assertThat(ranger.getDiscardPile().size()).isZero();
 
-        assertThat(enemyIngame.getRestrained()).isTrue();
+		// try to recover one card from an empty discard pile to the draw pile
 
-        //Check if we restrain an already restrained enemy it will still be restrained
+		new RecoverCommand(ranger).execute();
 
-        new RestrainCommand(enemyIngame).execute();
+		assertThat(ranger.getAbilityPile().size()).isEqualTo(11);
+		assertThat(ranger.getDiscardPile().size()).isZero();
+	}
 
-        assertThat(enemyIngame.getRestrained()).isTrue();
-    }
 
-    @Test
-    void testStealCoinCommand() {
+	@Test
+	void testRestrainCommand() {
 
-        //the hero/heroes affected have gold to be stolen
+		// check if the enemy is restrained after executing the command
 
-        ranger.setGold(10);
+		assertThat(enemyIngame.getRestrained()).isFalse();
 
-        assertThat(rogue.getGold()).isZero();
-        assertThat(ranger.getGold()).isEqualTo(10);
+		new RestrainCommand(enemyIngame).execute();
 
-        new StealCoinCommand(rogue, ranger).execute();
+		assertThat(enemyIngame.getRestrained()).isTrue();
 
-        assertThat(rogue.getGold()).isEqualTo(1);
-        assertThat(ranger.getGold()).isEqualTo(9);
+		// Check if we restrain an already restrained enemy it will still be restrained
 
-        //the hero/heroes affected dont have gold to be stolen
+		new RestrainCommand(enemyIngame).execute();
 
-        ranger.setGold(0);
-        rogue.setGold(1);
+		assertThat(enemyIngame.getRestrained()).isTrue();
+	}
 
-        new StealCoinCommand(rogue, ranger).execute();
+	@Test
+	void testStealCoinCommand() {
 
-        assertThat(rogue.getGold()).isEqualTo(1);
-        assertThat(ranger.getGold()).isZero();
-    }
-    
+		// the hero/heroes affected have gold to be stolen
+
+		ranger.setGold(10);
+
+		assertThat(rogue.getGold()).isZero();
+		assertThat(ranger.getGold()).isEqualTo(10);
+
+		new StealCoinCommand(rogue, ranger).execute();
+
+		assertThat(rogue.getGold()).isEqualTo(1);
+		assertThat(ranger.getGold()).isEqualTo(9);
+
+		// the hero/heroes affected dont have gold to be stolen
+
+		ranger.setGold(0);
+		rogue.setGold(1);
+
+		new StealCoinCommand(rogue, ranger).execute();
+
+		assertThat(rogue.getGold()).isEqualTo(1);
+		assertThat(ranger.getGold()).isZero();
+	}
+
 }
