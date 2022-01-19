@@ -471,7 +471,7 @@ public class CommandIngameTest {
 		List<AbilityCardIngame> hand = new ArrayList<>();
 		hand.add(abilityCardIngame);
 		ranger.setHand(hand);
-		gameService.playCard(abilityCardIngame.getId(),
+		abilityCardIngameService.playCard(abilityCardIngame.getId(),
 				gameTester.getEnemiesFighting().get(0).getId(), token);
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
@@ -487,7 +487,7 @@ public class CommandIngameTest {
 
 		hand.add(abilityCardIngame);
 		ranger.setHand(hand);
-		gameService.playCard(abilityCardIngame.getId(),
+		abilityCardIngameService.playCard(abilityCardIngame.getId(),
 				gameTester.getEnemiesFighting().get(0).getId(), token);
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
