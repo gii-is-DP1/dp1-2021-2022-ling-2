@@ -72,7 +72,8 @@ public class GameControllerTest {
 	@Test
 	@WithMockUser("user")
 	void testGetAllGames() throws Exception {
-		mockMvc.perform(get("/games").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		mockMvc.perform(get("/games").header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2))).andExpect(jsonPath("$[0].id", is(1)))
 				.andExpect(jsonPath("$[1].id", is(2)));
 	}
