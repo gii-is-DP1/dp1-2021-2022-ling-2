@@ -1,9 +1,12 @@
 package org.springframework.ntfh.entity.statistics;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Pair;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameStateType;
@@ -66,18 +69,24 @@ public class StatisticsService {
         return null;
     }
 
-    public List<User> rankingByWonGames() {
+    public List<Pair<String, Integer>> rankingByWonGames() {
         Pageable topFive = PageRequest.of(0, 5);
-        return userRepository.rankingByWonGames(topFive);
+        List<User> query = userRepository.rankingByWonGames(topFive);
+        // We are given the list of sorted users. We want to return a map with the username as key and the number of won
+        // games as value.
+        return query.stream().map(user -> Pair.of(user.getUsername(), user.getPlayers().size()))
+                .collect(Collectors.toList());
     }
 
-    public List<Object> rankingByTotalGlory() {
+    public Map<String, Integer> rankingByTotalGlory() {
         Pageable topFive = PageRequest.of(0, 5);
-        return userRepository.rankingByTotalGlory(topFive);
+        List<Object> res = userRepository.rankingByTotalGlory(topFive);
+        return null;
     }
 
-    public List<Object> rankingByTotalKills() {
+    public Map<String, Integer> rankingByTotalKills() {
         Pageable topFive = PageRequest.of(0, 5);
-        return userRepository.rankingByTotalKills(topFive);
+        List<Object> res = userRepository.rankingByTotalKills(topFive);
+        return null;
     }
 }
