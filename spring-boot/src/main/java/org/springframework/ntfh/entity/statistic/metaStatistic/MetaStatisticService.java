@@ -31,6 +31,7 @@ public class MetaStatisticService {
         this.metaStatisticRepository=metaStatisticRepository;
     }
 
+    //*******For Global Statistics********
     @Transactional
     public Integer getTotalNumberOfGames(){
         return metaStatisticRepository.numberOfGamesTotal();
@@ -51,11 +52,14 @@ public class MetaStatisticService {
         return res;
     }
 
-
     public Integer getTotalPlayedTime(){
         return metaStatisticRepository.globalDurationOfGames();
     }
 
+
+    //******User Statistics********
+
+    //Duration
     public Double getAvgDurationOfGames(User user){
         return metaStatisticRepository.AvgUserDurationOfGames(user);
     }
@@ -68,8 +72,7 @@ public class MetaStatisticService {
         return metaStatisticRepository.MaxDurationOfGames(user);
     }
 
-
-
+    //Number of games and Wins
     public Integer getNumGamesPlayedUser(User user){
         return metaStatisticRepository.findNumberOfGamesByUser(user);
     }
@@ -82,6 +85,7 @@ public class MetaStatisticService {
         return (double) getNumVictoriesByUser(user)/getNumGamesPlayedUser(user);
     }
 
+    //Characters
     public List<Object> getListPlayedCharactersByUser(User user){
         return metaStatisticRepository.listCharactersPlayedByUser(user);
     }
@@ -98,6 +102,8 @@ public class MetaStatisticService {
         return (double) getNumGamesWonWithCharacter(user, character)/getNumGamesPlayedWithCharacter(user, character);
     }
     
+
+    //Deaths
     public Integer getDeathsbyUser(User user){
         return metaStatisticRepository.findNumberOfDeathsbyUser(user);
     }
@@ -115,6 +121,7 @@ public class MetaStatisticService {
         return (double) getDeathsbyUser(user)/numOfGamesByUser;
     }
 
+    //Kills
     public Integer getKillsUser(User user){
         return metaStatisticRepository.findTotalNumberOfkillsByUser(user);
     }
@@ -123,9 +130,6 @@ public class MetaStatisticService {
         return metaStatisticRepository.findMaxNumberOfkillsByUser(user);
     }
 
-    public Integer getMinKillsInOneGame(User user){
-        return metaStatisticRepository.findMinNumberOfkillsByUser(user);
-    }
 
     public Double getAvgKillsUser(User user){
         return metaStatisticRepository.findAVGNumberOfkillsByUser(user);
@@ -140,14 +144,11 @@ public class MetaStatisticService {
         return metaStatisticRepository.findMaxNumberOfkillsByUserWithCharacter(user, character);
     }
 
-    public Integer getMinKillsUserWithCharacterInOneGame(User user, CharacterTypeEnum character){
-        return metaStatisticRepository.findMinNumberOfkillsByUserWithCharacter(user, character);
-    }
-
     public Double getAvgKillsUserWithCharacter(User user, CharacterTypeEnum character){
         return metaStatisticRepository.findAVGNumberOfkillsByUserWithCharacter(user, character);
     }
 
+    //Glory
     public Integer getUserTotalGloryPoints(User user){
         return metaStatisticRepository.findTotalGloryPointsByUser(user);
     }
@@ -155,11 +156,6 @@ public class MetaStatisticService {
     public Integer getMaxUserGloryPointsEarned(User user){
         return metaStatisticRepository.findMaxGloryPointsByUser(user);
     }
-
-    public Integer getMinUserGloryPointsEarned(User user){
-        return metaStatisticRepository.findMinGloryPointsByUser(user);
-    }
-
 
     public Double getAvgGloryPointsEarned(User user){
         return metaStatisticRepository.findAVGGloryPointsByUser(user);
@@ -173,11 +169,13 @@ public class MetaStatisticService {
         return metaStatisticRepository.findMaxGloryPointsByUserWithCharacter(user, character);
     }
 
-    public Integer getMinUserGloryPoitnsCharacter(User user, CharacterTypeEnum character){
-        return metaStatisticRepository.findMinGloryPointsByUserWithCharacter(user, character);
-    }
-
     public Double getAvgUserGloryPointsCharacter(User user, CharacterTypeEnum character){
         return metaStatisticRepository.findAVGGloryPointsByUserWithCharacter(user, character);
+    }
+
+
+    //Other services
+    public MetaStatistic save(MetaStatistic metaStatistic){
+        return metaStatisticRepository.save(metaStatistic);
     }
 }

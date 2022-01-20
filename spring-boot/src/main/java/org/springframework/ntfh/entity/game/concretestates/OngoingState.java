@@ -101,6 +101,13 @@ public class OngoingState implements GameState {
         game.setWinner(winner);
         game.setFinishTime(Timestamp.from(Instant.now()));
         gameService.setNextState(game); // set state to FINISHED
+
+        //**************/
+        // Cosass del Roble (Space+Power Botton)
+        //***************/
+
+
+        
         return gameService.save(game);
     }
 
