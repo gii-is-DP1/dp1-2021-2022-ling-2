@@ -77,6 +77,7 @@ public class RangerCardTest {
 
 	@BeforeEach
 	public void init() {
+
 		gameTester = new Game();
 		gameTester.setName("test game");
 		gameTester.setHasScenes(false);
@@ -155,6 +156,7 @@ public class RangerCardTest {
 	void disparoRapido(){
 
 		//creation of different cards for this test
+
 		AbilityCard disparoRapido = abilityCardService.findById(4);
 		AbilityCard disparoRapido2 = abilityCardService.findById(5);
 		AbilityCard companeroLobo = abilityCardService.findById(1);
@@ -192,6 +194,7 @@ public class RangerCardTest {
 
 	@Test
 	void testEnLaDiana(){
+
 		AbilityCard enLaDiana = abilityCardService.findById(10);
         AbilityCardIngame abilityCardIngameRanger =
                 abilityCardIngameService.createFromAbilityCard(enLaDiana, ranger);
@@ -211,6 +214,7 @@ public class RangerCardTest {
 
 		//initialize the enemies on table to allow for the lluvia de flechas to reach them
 		//we use list instead of listof to avoid it giving an error if an enemy (the slinger) dies and is attempted to be removed
+
 		List<EnemyIngame> listEnemiesFighting = new ArrayList<>();
 		listEnemiesFighting.add(berserkerIngame);
 		listEnemiesFighting.add(slingerIngame);
@@ -235,7 +239,8 @@ public class RangerCardTest {
 	@Test
 	void testRecogerFlechas(){
 
-		//test 
+		//test normal conditions
+
 		AbilityCard disparoRapido = abilityCardService.findById(4);
 		AbilityCard companeroLobo = abilityCardService.findById(1);
         AbilityCardIngame abilityCardIngameRanger2 =
@@ -246,7 +251,6 @@ public class RangerCardTest {
 		List<AbilityCardIngame> discardPile = new ArrayList<>();
 		discardPile.add(abilityCardIngameRanger2);
 		ranger.setDiscardPile(discardPile);
-
 
 		AbilityCard recogerFlechas = abilityCardService.findById(13);
         AbilityCardIngame abilityCardIngameRanger =

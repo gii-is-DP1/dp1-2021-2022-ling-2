@@ -15,7 +15,6 @@ import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyService;
-import org.springframework.ntfh.entity.enemy.EnemyType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
@@ -23,7 +22,6 @@ import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
-import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
@@ -115,6 +113,7 @@ public class WarriorCardTest {
     
 	@Test
 	void testAtaqueBrutal(){
+
 		AbilityCard ataqueBrutal = abilityCardService.findById(16);
         AbilityCardIngame abilityCardIngameWarrior =
         abilityCardIngameService.createFromAbilityCard(ataqueBrutal, warrior);
@@ -126,11 +125,12 @@ public class WarriorCardTest {
 				berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(3);
-		assertThat(warrior.getDiscardPile().size()).isEqualTo(2);
+		assertThat(warrior.getDiscardPile().size()).isEqualTo(2); //the card we just played and the discarded from the effect
 	}
 
 	@Test
 	void testCargaConEscudo(){
+
 		AbilityCard cargaConEscudo = abilityCardService.findById(18);
         AbilityCardIngame abilityCardIngameWarrior =
         abilityCardIngameService.createFromAbilityCard(cargaConEscudo, warrior);
@@ -147,6 +147,7 @@ public class WarriorCardTest {
 
 	@Test
 	void testDobleEspadazo(){
+
 		AbilityCard dobleEspadazo = abilityCardService.findById(19);
         AbilityCardIngame abilityCardIngameWarrior =
         abilityCardIngameService.createFromAbilityCard(dobleEspadazo, warrior);
@@ -158,7 +159,7 @@ public class WarriorCardTest {
 				berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-		assertThat(warrior.getDiscardPile().size()).isEqualTo(2);
+		assertThat(warrior.getDiscardPile().size()).isEqualTo(2); //the card we just played and the discarded from the effect
 	}
 
 	@Test
@@ -216,6 +217,7 @@ public class WarriorCardTest {
 
 	@Test
 	void testPasoAtras(){
+
 		AbilityCard pasoAtras = abilityCardService.findById(27);
         AbilityCardIngame abilityCardIngameWarrior =
         abilityCardIngameService.createFromAbilityCard(pasoAtras, warrior);
@@ -279,7 +281,10 @@ public class WarriorCardTest {
 
 	@Test
 	void vozDeAliento(){
+
 		new DiscardCommand(2, rogue).execute();
+
+		assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
 		
 		AbilityCard vozDeAliento = abilityCardService.findById(30);
         AbilityCardIngame abilityCardIngameWarrior =

@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.command.DiscardCommand;
+import org.springframework.ntfh.command.GiveWoundCommand;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.Enemy;
@@ -84,7 +85,7 @@ public class MarketCardTest {
 
 	@BeforeEach
 	public void init() {
-		// TODO copypaste from gameService test except the "ranger, rogue" variables
+
 		gameTester = new Game();
 		gameTester.setName("test game");
 		gameTester.setHasScenes(false);
@@ -134,6 +135,7 @@ public class MarketCardTest {
     void testAlabardaOrca(){
 
         //card deals full damage
+
         turnService.setNextState(gameTester.getCurrentTurn());
         turnService.setNextState(gameTester.getCurrentTurn()); //turn of rogue
         turnService.setNextState(gameTester.getCurrentTurn());
@@ -208,10 +210,12 @@ public class MarketCardTest {
 
     @Test
     void testArmaduraDePlacas(){
+
         turnService.setNextState(gameTester.getCurrentTurn());
         turnService.setNextState(gameTester.getCurrentTurn()); //turn of rogue
         turnService.setNextState(gameTester.getCurrentTurn());
         turnService.setNextState(gameTester.getCurrentTurn()); //turn of warrior
+
         new DiscardCommand(4, warrior).execute();
 
         assertThat(warrior.getDiscardPile().size()).isEqualTo(4);
@@ -231,6 +235,7 @@ public class MarketCardTest {
 
     @Test
     void testCapaElfica(){
+
         AbilityCard capaElfica = abilityCardService.findById(66);
         AbilityCardIngame abilityCardIngameRanger =
                 abilityCardIngameService.createFromAbilityCard(capaElfica, ranger);
@@ -295,6 +300,7 @@ public class MarketCardTest {
 
     @Test
     void testPiedraDeAmolar(){
+        
         List<EnemyIngame> listEnemiesFighting = List.of(berserkerIngame);
         gameTester.setEnemiesFighting(listEnemiesFighting);
         AbilityCard piedraDeAmolar = abilityCardService.findById(63);
@@ -313,7 +319,9 @@ public class MarketCardTest {
     @Test
     void testPocionCurativa(){
 
-        ranger.setWounds(1);
+        new GiveWoundCommand(ranger);
+
+        assertThat(ranger.getWounds()).isEqualTo(1);
 
         AbilityCard pocionCurativa = abilityCardService.findById(62);
         AbilityCardIngame abilityCardIngameRanger =

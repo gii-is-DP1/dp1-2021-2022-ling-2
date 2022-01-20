@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.ntfh.command.GiveGoldCommand;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.Enemy;
@@ -129,7 +130,6 @@ public class RogueCardTest {
 		assertThat(rogue.getGold()).isZero();
 		assertThat(rogue.getDiscardPile().size()).isEqualTo(2); //discarded card and the card played
 
-
 		//the attack kills
 
 		List<AbilityCardIngame> discardPile = new ArrayList<>();
@@ -146,6 +146,7 @@ public class RogueCardTest {
 
 	@Test
 	void testAtaqueFurtivo(){
+		
 		//the attack doesnt kill and doesnt activate gold on kill
 
 		AbilityCard alCorazon = abilityCardService.findById(48);
@@ -175,6 +176,7 @@ public class RogueCardTest {
 
 	@Test
 	void testBallestaPrecisa(){
+
 		//the attack deals the base amount of damage
 
 		List<EnemyIngame> listEnemiesFighting = List.of(berserkerIngame);
@@ -192,7 +194,6 @@ public class RogueCardTest {
 		assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
 		assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).contains(AbilityCardTypeEnum.BALLESTA_PRECISA);
 		
-		
 		//this type of attack has already been used in this turn so damage is incremented
 
 		hand.add(abilityCardIngameRogue);
@@ -209,7 +210,10 @@ public class RogueCardTest {
 
 		//The rogue has the gold needed to perform the action
 
-		rogue.setGold(2);
+		new GiveGoldCommand(2, rogue).execute();
+
+		assertThat(rogue.getGold()).isEqualTo(2);
+
 		AbilityCard enganar = abilityCardService.findById(56);
 		AbilityCardIngame abilityCardIngameRogue =
 				abilityCardIngameService.createFromAbilityCard(enganar, rogue);
@@ -235,6 +239,7 @@ public class RogueCardTest {
 
 	@Test
 	void testEnLasSombras(){
+
 		AbilityCard enLasSombras = abilityCardService.findById(54);
 		AbilityCardIngame abilityCardIngameRogue =
 				abilityCardIngameService.createFromAbilityCard(enLasSombras, rogue);
@@ -269,7 +274,9 @@ public class RogueCardTest {
 
 		//The ally does have gold to be stolen
 
-		ranger.setGold(1);
+		new GiveGoldCommand(1, ranger).execute();
+
+		assertThat(ranger.getGold()).isEqualTo(1);
 
 		hand.add(abilityCardIngameRogue);
 		rogue.setHand(hand);
@@ -282,6 +289,7 @@ public class RogueCardTest {
 
 	@Test
 	void testSaqueoOro(){
+
 		List<EnemyIngame> enemiesFighting = List.of(berserkerIngame, slingerIngame);
 		gameTester.setEnemiesFighting(enemiesFighting);
 		AbilityCard saqueoOro = abilityCardService.findById(58);
@@ -299,6 +307,7 @@ public class RogueCardTest {
 
 	@Test
 	void testSaqueoOroGloria(){
+
 		List<EnemyIngame> enemiesFighting = List.of(berserkerIngame, slingerIngame);
 		gameTester.setEnemiesFighting(enemiesFighting);
 		AbilityCard saqueoOroGloria = abilityCardService.findById(59);
@@ -319,6 +328,7 @@ public class RogueCardTest {
 	@Disabled
 	// ! TODO Trampa se está comportando como quiere, por algún motivo no está tomando el daño el rogue, no esta entrando en el receive damage
 	void trampa(){
+
 		List<EnemyIngame> enemiesFighting = new ArrayList<>();
 		enemiesFighting.add(berserkerIngame);
 		gameTester.setEnemiesFighting(enemiesFighting);
