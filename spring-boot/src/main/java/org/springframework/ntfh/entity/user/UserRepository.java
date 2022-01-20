@@ -30,15 +30,15 @@ public interface UserRepository extends CrudRepository<User, String> {
     List<User> maxNumberOfGamesWon(Pageable pageable);
 
     // Query to get the users ordered by number of kills
-    @Query("SELECT u, SUM(ps.kills) AS kills from User u inner join u.players ps WHERE ps.user = u GROUP BY u ORDER BY kills DESC")
+    @Query("SELECT u.username, SUM(ps.kills) AS kills from User u inner join u.players ps WHERE ps.user = u GROUP BY u ORDER BY kills DESC")
     List<Object> rankingByTotalKills(Pageable pageable);
 
     // Query to get the users ordered by number of kills
-    @Query("SELECT u, SUM(ps.glory) AS glory from User u inner join u.players ps WHERE ps.user = u GROUP BY u ORDER BY glory DESC")
+    @Query("SELECT u.username, SUM(ps.glory) AS glory from User u inner join u.players ps WHERE ps.user = u GROUP BY u ORDER BY glory DESC")
     List<Object> rankingByTotalGlory(Pageable pageable);
 
     // Query to get the user with most won games
-    @Query("SELECT u from User u inner join u.players ps WHERE ps.game.winner = ps ORDER BY SIZE(ps) DESC")
-    List<User> rankingByWonGames(Pageable topFive);
+    @Query("SELECT u from User u inner join u.players ps WHERE ps.game.winner = ps GROUP BY u ORDER BY SIZE(ps) DESC")
+    List<User> rankingByWonGames(Pageable pageable);
 
 }
