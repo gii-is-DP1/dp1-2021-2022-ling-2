@@ -36,8 +36,7 @@ class AchievementServiceTest {
 
     @Test
     void testFindById() {
-        Achievement tester = this.achievementService.findAchievementById(2).get();
-        
+        Achievement tester = this.achievementService.findById(2);
         assertEquals("Newcomer", tester.getName());
         assertEquals("Play your first game", tester.getDescription());
     }

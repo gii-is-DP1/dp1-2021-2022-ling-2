@@ -179,6 +179,7 @@ public class UserService {
             log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
             throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
         }
+        user.getPlayers().forEach(p -> p.setUser(null)); // Delete references before deleting user
         this.userRepository.deleteById(user.getUsername());
         log.info(userString + user.getUsername() + " deleted");
     }

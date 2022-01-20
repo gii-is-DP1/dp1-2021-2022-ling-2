@@ -6,7 +6,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.ntfh.entity.model.NamedEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,6 @@ public class Achievement extends NamedEntity {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
     private AchievementType type;
 
     private Integer condition; // Win X times, lose X times, etc.

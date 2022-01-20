@@ -39,16 +39,7 @@ export default function AdminPage() {
         toast.error(error?.message);
       }
     };
-    const fetchAllAchievements = async () => {
-      try {
-        const response = await axios.get(`/achievements`);
-        setAchievements(response.data);
-      } catch (error: any) {
-        toast.error(error?.message);
-      }
-    };
     if (currentTable === "ongoing") fetchGameHistory();
-    if (currentTable === "achievements") fetchAllAchievements();
   }, [currentTable]);
 
   useEffect(() => {
@@ -108,9 +99,7 @@ export default function AdminPage() {
               <GamesHistoryTable data={gamesHistory} />
             )}
             {currentTable === "users" && <UsersTable />}
-            {currentTable === "achievements" && (
-              <AchievementsTable achievements={achievements} />
-            )}
+            {currentTable === "achievements" && <AchievementsTable />}
           </div>
         </span>
       </div>

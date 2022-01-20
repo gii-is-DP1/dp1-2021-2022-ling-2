@@ -18,7 +18,6 @@ export default function AbilityCard(params: Params) {
   const { card, selected, setSelected } = params;
   const { userToken } = useContext(UserContext);
   const { setGame } = useContext(GameContext);
-  const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
 
   const abilityCardTypeEnum = card.abilityCard.abilityCardTypeEnum;
   const characterTypeEnum = card.abilityCard.characterTypeEnum;

@@ -12,6 +12,7 @@ import org.springframework.ntfh.entity.achievement.AchievementService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author andrsdt
  */
 @RestController()
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(value = "/users")
 public class UserController {
 
@@ -122,9 +124,7 @@ public class UserController {
      */
     @DeleteMapping("{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
-        // TODO better parse username to user with a converter? saw that in the slides
-        User user = userService.findUser(username);
+    public void deleteUser(@PathVariable("userId") User user, @RequestHeader("Authorization") String token) {
         userService.deleteUser(user);
     }
 
