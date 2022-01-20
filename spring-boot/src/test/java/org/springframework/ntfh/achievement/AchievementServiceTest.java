@@ -23,12 +23,14 @@ class AchievementServiceTest {
     @Test
     void testCountWithInitialData() {
         Integer count = achievementService.achievementCount();
+
         assertEquals(7, count);
     }
 
     @Test
     void testfindAll() {
         Integer count = Lists.newArrayList(achievementService.findAll()).size();
+
         assertEquals(7, count);
     }
 
