@@ -3,10 +3,9 @@ package org.springframework.ntfh.entity.game;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,20 +16,22 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
-import org.springframework.ntfh.entity.comment.Comment;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -94,11 +95,6 @@ public class Game extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
-
-    // TODO remove all about comments (this, entity...)
-    // orphanRemoval: The "comment" rows will be deleted when the game is deleted
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments = new HashSet<>();
 
     @NotNull
     @Enumerated(EnumType.STRING)
