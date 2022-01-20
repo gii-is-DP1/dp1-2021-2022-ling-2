@@ -8,17 +8,15 @@ export default function OngoingGamesTable() {
   const [gameList, setGameList] = useState<Game[]>([]);
 
   useEffect(() => {
-    // get lobby list
-    const fetchGames = async () => {
+    const fetchGamesOngoing = async () => {
       try {
-        const response = await axios.get(`games`);
+        const response = await axios.get(`games/ongoing`);
         setGameList(response.data);
       } catch (error: any) {
         toast.error(error?.message);
       }
     };
-
-    fetchGames();
+    fetchGamesOngoing();
   }, []);
 
   const tableHeaders = ["Id", "Start Time", "Scenes", "Leader", "Players"];

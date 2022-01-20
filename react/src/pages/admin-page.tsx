@@ -12,6 +12,7 @@ import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
+import { Achievement } from "../interfaces/Achievement";
 import { Game } from "../interfaces/Game";
 
 type CurrentTableEnum = "ongoing" | "history" | "achievements" | "users";
@@ -26,19 +27,28 @@ export default function AdminPage() {
   const loggedUser = tokenParser(useContext(userContext));
   const [currentTable, setCurrentTable] = useState<CurrentTableEnum>("ongoing");
   const [gamesHistory, setGamesHistory] = useState<Game[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
     const fetchGameHistory = async () => {
-      if (currentTable !== "ongoing") return;
       try {
         const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get("games/history", { headers });
+        const response = await axios.get("games/finished", { headers });
         setGamesHistory(response.data);
       } catch (error: any) {
         toast.error(error?.message);
       }
     };
-    fetchGameHistory();
+    const fetchAllAchievements = async () => {
+      try {
+        const response = await axios.get(`/achievements`);
+        setAchievements(response.data);
+      } catch (error: any) {
+        toast.error(error?.message);
+      }
+    };
+    if (currentTable === "ongoing") fetchGameHistory();
+    if (currentTable === "achievements") fetchAllAchievements();
   }, [currentTable]);
 
   useEffect(() => {
@@ -98,7 +108,9 @@ export default function AdminPage() {
               <GamesHistoryTable data={gamesHistory} />
             )}
             {currentTable === "users" && <UsersTable />}
-            {currentTable === "achievements" && <AchievementsTable />}
+            {currentTable === "achievements" && (
+              <AchievementsTable achievements={achievements} />
+            )}
           </div>
         </span>
       </div>

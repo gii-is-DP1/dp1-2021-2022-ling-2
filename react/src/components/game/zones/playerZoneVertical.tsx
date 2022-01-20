@@ -46,10 +46,13 @@ export default function PlayerZoneVertical(params: Params) {
           <PlaceholderCard />
         </span>
         <span className={ccw ? "order-3" : ""}>
-          <CharacterCard
-            character={player.characterType}
-            counterclockwise={ccw}
-          />
+          <div className="fixed transform-gpu -translate-y-8 text-xl font-bold">
+            🩸({player.wounds})
+          </div>
+          <div className="fixed transform-gpu -translate-y-16 text-xl font-bold">
+            🛡({player.guard})
+          </div>
+          <CharacterCard character={player.character} counterclockwise={ccw} />
         </span>
         <h1 className={ccw ? "order-1" : ""}>
           <CountCard

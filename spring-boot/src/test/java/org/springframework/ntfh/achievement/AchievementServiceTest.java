@@ -1,7 +1,6 @@
 package org.springframework.ntfh.achievement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,32 +9,31 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.ntfh.entity.achievement.Achievement;
 import org.springframework.ntfh.entity.achievement.AchievementService;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.util.State;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class AchievementServiceTest {
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
+class AchievementServiceTest {
 
     @Autowired
     private AchievementService achievementService;
 
     @Test
-    public void testCountWithInitialData() {
+    void testCountWithInitialData() {
         Integer count = achievementService.achievementCount();
-        assertEquals(3, count);
+        assertEquals(7, count);
     }
 
     @Test
-    public void testfindAll() {
+    void testfindAll() {
         Integer count = Lists.newArrayList(achievementService.findAll()).size();
-        assertEquals(3, count);
+        assertEquals(7, count);
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         Achievement tester = this.achievementService.findAchievementById(2).get();
         assertEquals("Newcomer", tester.getName());
         assertEquals("Play your first game", tester.getDescription());

@@ -33,7 +33,7 @@ public class LluviaDeFlechas {
         Integer minNumWounds = 2;
         List<Player> healthyMembers = new ArrayList<>();
         for(Player player:playersAlive){
-            if(player.getWounds()==minNumWounds){
+            if(player.getWounds().equals(minNumWounds)){
                 healthyMembers.add(player);
             } else if(player.getWounds()<minNumWounds){
                 minNumWounds = player.getWounds();

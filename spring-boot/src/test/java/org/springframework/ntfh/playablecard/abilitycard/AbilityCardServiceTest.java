@@ -1,9 +1,7 @@
 package org.springframework.ntfh.playablecard.abilitycard;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
-
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +12,16 @@ import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCard;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
-import org.springframework.ntfh.entity.turn.concretestates.MarketState;
-import org.springframework.ntfh.entity.turn.concretestates.PlayerState;
+import org.springframework.ntfh.util.State;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
-@Import({ BCryptPasswordEncoder.class, PlayerState.class, MarketState.class })
-public class AbilityCardServiceTest {
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@Import({BCryptPasswordEncoder.class})
+class AbilityCardServiceTest {
 
     @Autowired
     AbilityCardService abilityCardService;
@@ -55,8 +52,8 @@ public class AbilityCardServiceTest {
 
     @Test
     void testFindByCharacterTypeEnum() {
-        List<AbilityCard> testerList = Lists
-                .newArrayList(abilityCardService.findByCharacterTypeEnum(CharacterTypeEnum.RANGER));
+        List<AbilityCard> testerList =
+                Lists.newArrayList(abilityCardService.findByCharacterTypeEnum(CharacterTypeEnum.RANGER));
 
         assertThat(testerList.contains(abilityCardService.findById(1))).isTrue();
         assertThat(testerList.contains(abilityCardService.findById(2))).isTrue();

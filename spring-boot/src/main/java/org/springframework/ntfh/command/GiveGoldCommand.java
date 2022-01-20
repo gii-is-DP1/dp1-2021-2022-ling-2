@@ -8,12 +8,15 @@ import lombok.AllArgsConstructor;
 public class GiveGoldCommand implements Command {
 
     private Integer gold;
-
     private Player playerFrom;
 
     @Override
     public void execute() {
         Integer currentGold = playerFrom.getGold();
-        playerFrom.setGold(currentGold + gold);
+        if(gold>=0 || currentGold>=Math.abs(gold)){
+            playerFrom.setGold(currentGold + gold);
+        } else {
+            playerFrom.setGold(0);
+        }
     }
 }

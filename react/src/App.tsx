@@ -5,21 +5,20 @@ import * as ROUTES from "./constants/routes";
 import unregisteredUserContext from "./context/unregisteredUser";
 import userContext from "./context/user";
 import useLocalStorage from "./hooks/useLocalStorage";
-import Achievements from "./pages/achievements";
+import AllAchievements from "./pages/all-achievements";
 import AdminPage from "./pages/admin-page";
 import CreateLobby from "./pages/create-lobby";
 import EditAchievement from "./pages/edit-achievement";
 import EditProfile from "./pages/edit-profile";
-import Game from "./pages/game";
-import GameSummary from "./pages/game-summary";
+import GameRouter from "./pages/game-router";
 import Home from "./pages/home";
-import Lobby from "./pages/lobby";
 import LobbyBrowser from "./pages/lobby-browser";
 import Login from "./pages/login";
 import NotFound from "./pages/not-found";
 import Profile from "./pages/profile";
 import SignUp from "./pages/signup";
 import Statistics from "./pages/statistics";
+import UserAchievements from "./pages/user-achievements";
 
 export default function App() {
   const [userToken, setUserToken] = useLocalStorage("token", null);
@@ -46,17 +45,20 @@ export default function App() {
               path={ROUTES.EDIT_ACHIEVEMENT}
               component={EditAchievement}
             />
-            <Route exact path={ROUTES.CREATE_LOBBY} component={CreateLobby} />
-            <Route exact path={ROUTES.LOBBY} component={Lobby} />
-            <Route exact path={ROUTES.ACHIEVEMENTS} component={Achievements} />
-            <Route exact path={ROUTES.STATISTICS} component={Statistics} />
+            <Route exact path={ROUTES.CREATE_GAME} component={CreateLobby} />
             <Route
               exact
-              path={ROUTES.BROWSE_LOBBIES}
-              component={LobbyBrowser}
+              path={ROUTES.ALL_ACHIEVEMENTS}
+              component={AllAchievements}
             />
-            <Route exact path={ROUTES.GAME} component={Game} />
-            <Route exact path={ROUTES.GAME_SUMMARY} component={GameSummary} />
+            <Route
+              exact
+              path={ROUTES.USER_ACHIEVEMENTS}
+              component={UserAchievements}
+            />
+            <Route exact path={ROUTES.STATISTICS} component={Statistics} />
+            <Route exact path={ROUTES.BROWSE_GAMES} component={LobbyBrowser} />
+            <Route exact path={ROUTES.GAME} component={GameRouter} />
             <Route exact path={ROUTES.ADMIN_PAGE} component={AdminPage} />
             <Route component={NotFound} />
             {/* All routes have "exact" since that means that the path has to match the exact string. If a route is not correct, the fallback is ROUTES.NOT_FOUND since it's the only one without "exact" */}
