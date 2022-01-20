@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
@@ -59,7 +60,7 @@ public class UserService {
      * @throws DataAccessException
      */
     @Transactional
-    public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+    public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException, OptimisticLockingFailureException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(user.getEmail())))
             throw new IllegalArgumentException("There is already a user registered with the email provided");
 
@@ -139,6 +140,9 @@ public class UserService {
             String encodedParamPassword = passwordEncoder.encode(user.getPassword());
             userInDB.setPassword(encodedParamPassword);
             log.info("Password updated for user " + user.getUsername());
+        }
+        if (!user.getVersion().equals(userInDB.getVersion())) {
+            throw new OptimisticLockingFailureException("Outdated user version") {};
         }
 
         log.info(userString + user.getUsername() + " updated by user with token " + token);
