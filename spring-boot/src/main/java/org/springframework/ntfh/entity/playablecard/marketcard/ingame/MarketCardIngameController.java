@@ -14,11 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/market-cards")
 public class MarketCardIngameController {
 
-
-
     @Autowired
     private MarketCardIngameService marketCardIngameService;
-
 
     @PostMapping("/buy/{marketCardIngameId}")
     public ResponseEntity<Game> buyMarketCard(@PathVariable("marketCardIngameId") Integer marketCardIngameId,
@@ -26,7 +23,4 @@ public class MarketCardIngameController {
         Game game = marketCardIngameService.buyMarketCard(marketCardIngameId, token);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
-
-
-
 }
