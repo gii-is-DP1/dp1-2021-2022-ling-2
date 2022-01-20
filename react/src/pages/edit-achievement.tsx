@@ -25,9 +25,7 @@ export default function EditAchievement() {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [condition, setCondition] = useState<number | undefined>(undefined);
-  const [achievementType, setAchievementType] = useState<string | undefined>(
-    undefined
-  );
+  const [achievementType, setAchievementType] = useState<string>("");
   const [achievementTypeOptions, setAchievementTypeOptions] = useState<
     string[]
   >([]);
@@ -40,6 +38,7 @@ export default function EditAchievement() {
       setName(response.data.name);
       setDescription(response.data.description);
       setCondition(response.data.condition);
+      setAchievementType(response.data.type);
     } catch (error: any) {
       toast.error(error?.message);
       sendToAdminPage();
@@ -130,6 +129,7 @@ export default function EditAchievement() {
             <p className="font-bold text-2xl mb-2 mr-2">Type</p>
             <select
               name="achievement-type"
+              value={achievementType}
               onChange={(e) => setAchievementType(e.target.value)}
             >
               {achievementTypeOptions.map((type) => (

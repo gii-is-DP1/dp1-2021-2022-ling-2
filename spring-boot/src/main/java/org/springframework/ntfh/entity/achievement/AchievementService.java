@@ -63,15 +63,14 @@ public class AchievementService {
             throw new NonMatchingTokenException("Only admins can edit achievements");
         }
 
-        Optional<Achievement> achievementFromRepo = achievementRepository.findById(achievement.getId());
-        if (achievementFromRepo.isPresent())
-            achievement.setType(achievementFromRepo.get().getType());
         log.info("Admin with token " + token + " has updated achievement with ID: " + achievement.getId());
         return achievementRepository.save(achievement);
     }
 
     // Find all the achievements earned by a user
     public Iterable<Achievement> findByUser(User user) {
+        // This has to be done this way instead of using a custom query because having an achievement or not is not
+        // stored in the database, but computed dynamically.
         List<Achievement> achievements = new ArrayList<>();
         this.findAll().forEach(achievement -> {
             if (userHasAchievement(user, achievement))
