@@ -39,7 +39,7 @@ import lombok.Setter;
 @Entity
 @Audited
 @Table(name = "users")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
     @Column(unique = true)
     @NotBlank(message = "Username is required")
     @Length(min = 4, max = 20, message = "Your username must be 4-20 characters long")
@@ -58,7 +58,7 @@ public class User extends BaseEntity{
     @Column(columnDefinition = "boolean default true")
     private Boolean enabled; // If a user gets banned, he/she will get disabled
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Player> players = new ArrayList<>();
 

@@ -69,11 +69,11 @@ class PlayerStateTest {
     @Autowired
     private MarketCardIngameService marketCardIngameService;
 
-	protected Game gameTester;
+    protected Game gameTester;
 
     protected Player ranger;
 
-	protected Player rogue;
+    protected Player rogue;
 
     protected User user1, user2, user3;
 
@@ -84,30 +84,30 @@ class PlayerStateTest {
     protected TurnStateType actualState;
 
     @BeforeEach
-	void init() {
-		gameTester = new Game();
-		gameTester.setName("test game");
-		gameTester.setHasScenes(false);
-		gameTester.setSpectatorsAllowed(false);
-		gameTester.setMaxPlayers(2);
-		gameTester.setStateType(GameStateType.LOBBY);
-		gameTester = gameService.save(gameTester);
+    void init() {
+        gameTester = new Game();
+        gameTester.setName("test game");
+        gameTester.setHasScenes(false);
+        gameTester.setSpectatorsAllowed(false);
+        gameTester.setMaxPlayers(2);
+        gameTester.setStateType(GameStateType.LOBBY);
+        gameTester = gameService.save(gameTester);
 
-        user1 = userService.findUser("user1");
-		user2 = userService.findUser("user2");
-        user3 = userService.findUser("user3"); //User used for joining users test
+        user1 = userService.findByUsername("user1");
+        user2 = userService.findByUsername("user2");
+        user3 = userService.findByUsername("user3"); // User used for joining users test
 
-		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
-		gameTester = gameService.joinGame(gameTester, user2);
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
-		ranger = gameTester.getPlayers().get(0);
-		rogue = gameTester.getPlayers().get(1);
+        ranger = gameTester.getPlayers().get(0);
+        rogue = gameTester.getPlayers().get(1);
 
-		Character rangerCharacter = characterService.findById(2);
-		Character rogueCharacter = characterService.findById(4);
+        Character rangerCharacter = characterService.findById(2);
+        Character rogueCharacter = characterService.findById(4);
 
-		ranger.setCharacter(rangerCharacter);
-		rogue.setCharacter(rogueCharacter);
+        ranger.setCharacter(rangerCharacter);
+        rogue.setCharacter(rogueCharacter);
 
         turnService.initializeFromGame(gameTester);
 
@@ -122,7 +122,8 @@ class PlayerStateTest {
     void teardown() {
         try {
             turnService.delete(turnTester.getId());
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Test
@@ -163,7 +164,7 @@ class PlayerStateTest {
         turnService.setNextState(turnTester);
         turnService.setNextState(turnTester);
         Integer abilityCardIngameId = pasoAtrasIngame.getId();
-        
+
         assertThrows(IllegalArgumentException.class, () -> playerState.playCard(abilityCardIngameId, null, token));
     }
 
@@ -177,14 +178,14 @@ class PlayerStateTest {
         AbilityCardIngame pasoAtrasIngame = abilityCardIngameService.createFromAbilityCard(pasoAtras, warrior);
         String token = TokenUtils.generateJWTToken(warrior.getUser());
         Integer abilityCardIngameId = pasoAtrasIngame.getId();
-        
+
         assertThrows(IllegalArgumentException.class, () -> playerState.playCard(abilityCardIngameId, null, token));
     }
 
     @Test
     void testBuyMarketCard_Failure() {
         assertThat(actualState).isEqualTo(TurnStateType.PLAYER_STATE);
-        
+
         ranger.setGold(10);
         String playerToken = TokenUtils.generateJWTToken(ranger.getUser());
         turnService.setNextState(gameTester.getCurrentTurn());
@@ -193,12 +194,13 @@ class PlayerStateTest {
         assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
 
         MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
-        MarketCardIngame pocionCurativaIngame = marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
+        MarketCardIngame pocionCurativaIngame =
+                marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
         Integer marketCardIngameId = market.get(0).getId();
 
         assertThrows(IllegalStateException.class, () -> playerState.buyMarketCard(marketCardIngameId, playerToken));
     }
-    
+
 }
