@@ -25,6 +25,7 @@ export default function OngoingGamesTable() {
     try {
       const headers = { Authorization: "Bearer " + userToken };
       await axios.delete(`games/${game.id}`, { headers });
+      toast.success("Game deleted successfully");
       fetchGamesOngoing();
     } catch (error: any) {
       toast.error(error?.message);
