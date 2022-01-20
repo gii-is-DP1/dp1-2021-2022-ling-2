@@ -108,17 +108,6 @@ public class UserController {
         userService.toggleBanUser(username, token);
     }
 
-    /**
-     * @author alegestor
-     */
-    @DeleteMapping("{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
-        // TODO better parse username to user with a converter? saw that in the slides
-        User user = userService.findByUsername(username);
-        userService.deleteUser(user);
-    }
-
     @GetMapping("{userId}/history")
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Game> getfindByUser(@PathVariable("userId") User user) {

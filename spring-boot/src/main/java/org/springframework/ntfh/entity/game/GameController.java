@@ -123,7 +123,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public Game joinGame(@PathVariable("gameId") Game game, @PathVariable("username") User user,
             @RequestHeader("Authorization") User tokenUser) {
-        // ! PABLO AND ALEX take this example as a reference
         if (!user.equals(tokenUser))
             throw new NonMatchingTokenException("The user who is trying to join the game is not the one logged in");
         Game updatedgame = gameService.joinGame(game, user);
