@@ -19,7 +19,7 @@ export default function Ranking() {
   useEffect(() => {
     const fetchRankingByWins = async () => {
       try {
-        const response = await axios.get(`/stats/ranking/wins`);
+        const response = await axios.get(`/statistics/ranking/wins`);
         setWinRanking(response.data);
       } catch (error: any) {
         toast.error(error?.message);

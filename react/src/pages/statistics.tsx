@@ -13,7 +13,7 @@ export default function Statistics() {
   useEffect(() => {
     const fetchGameHistoryCount = async () => {
       try {
-        const response = await axios.get(`games/history/count`);
+        const response = await axios.get(`statistics/games/count`);
         setGamesHistoryCount(response.data);
       } catch (error: any) {
         toast.error(error?.message);

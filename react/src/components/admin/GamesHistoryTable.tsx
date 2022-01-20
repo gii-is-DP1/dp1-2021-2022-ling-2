@@ -1,17 +1,20 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useParams } from "react-router";
+import axios from "../../api/axiosConfig";
+import UserContext from "../../context/user";
 import playerParser from "../../helpers/playerParser";
 import { Game } from "../../interfaces/Game";
-import UserContext from "../../context/user";
-import axios from "../../api/axiosConfig";
-import toast from "react-hot-toast";
 
 type Props = {
-  data: Game[];
+  admin?: boolean;
 };
 
 export default function GamesHistoryTable(props: Props) {
-  const { data } = props;
+  const { admin } = props;
   const { userToken } = useContext(UserContext);
+  const [finishedGames, setFinishedGames] = useState<Game[]>([]);
+  const { username } = useParams<{ username: string }>();
 
   const tableHeaders = [
     "Id",
@@ -21,19 +24,42 @@ export default function GamesHistoryTable(props: Props) {
     "Scenes",
     "Winner",
     "Players",
-    "X",
   ];
+
+  if (admin) tableHeaders.push(""); // room for Delete button
 
   const handleDeleteGame = async (game: Game) => {
     try {
       const headers = { Authorization: "Bearer " + userToken };
       await axios.delete(`games/${game.id}`, { headers });
       toast.success("Game deleted successfully");
-      window.location.reload();
+      fetchAllFinishedGames();
     } catch (error: any) {
       toast.error(error?.message);
     }
   };
+
+  const fetchUserFinishedGames = async () => {
+    try {
+      const response = await axios.get(`users/${username}/history`);
+      setFinishedGames(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const fetchAllFinishedGames = async () => {
+    try {
+      const response = await axios.get(`games/finished`);
+      setFinishedGames(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    admin ? fetchAllFinishedGames() : fetchUserFinishedGames();
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -51,7 +77,7 @@ export default function GamesHistoryTable(props: Props) {
                 </tr>
               </thead>
               <tbody className="bg-gray-900 divide-y divide-gray-200">
-                {data.map((game) => (
+                {finishedGames.map((game) => (
                   <tr key={game.id}>
                     <td className="text-table-td">{game.id}</td>
                     <td className="text-table-td">{game.duration}</td>
@@ -66,14 +92,16 @@ export default function GamesHistoryTable(props: Props) {
                     <td className="text-table-td">
                       {playerParser(game.players)}
                     </td>
-                    <td className="space-x-4">
-                      <button
-                        className={"btn btn-red"}
-                        onClick={() => handleDeleteGame(game)}
-                      >
-                        Delete
-                      </button>
-                    </td>
+                    {admin && (
+                      <td className="space-x-4">
+                        <button
+                          className={"btn btn-red"}
+                          onClick={() => handleDeleteGame(game)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

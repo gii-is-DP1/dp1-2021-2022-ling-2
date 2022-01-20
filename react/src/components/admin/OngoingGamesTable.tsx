@@ -32,7 +32,7 @@ export default function OngoingGamesTable() {
     }
   };
 
-  const tableHeaders = ["Id", "Start Time", "Scenes", "Leader", "Players", "X"];
+  const tableHeaders = ["Id", "Start Time", "Scenes", "Leader", "Players", ""];
 
   return (
     <div className="flex flex-col">

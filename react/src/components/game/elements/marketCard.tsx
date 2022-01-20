@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router";
 import axios from "../../../api/axiosConfig";
 import { CARD_BACK } from "../../../constants/images";
 import { BASE_IMAGE_PATH } from "../../../constants/paths";
@@ -16,7 +15,6 @@ type Params = {
 
 export default function MarketCard(params: Params) {
   const { card, count } = params;
-  const { gameId } = useParams<{ gameId: string }>();
   const { userToken } = useContext(UserContext);
   const { setGame } = useContext(GameContext);
 

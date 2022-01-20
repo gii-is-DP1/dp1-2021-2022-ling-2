@@ -62,13 +62,6 @@ public class GameController {
         return gameService.gameCount();
     }
 
-
-    @GetMapping("finished/count")
-    @ResponseStatus(HttpStatus.OK)
-    public Integer getPastGamesCount() {
-        return gameService.countByStateType(GameStateType.FINISHED);
-    }
-
     @GetMapping("{gameId}")
     @ResponseStatus(HttpStatus.OK)
     public Game getGame(@PathVariable("gameId") Integer gameId) {
