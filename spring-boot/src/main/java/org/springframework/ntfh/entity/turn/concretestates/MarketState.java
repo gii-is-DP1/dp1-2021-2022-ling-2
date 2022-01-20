@@ -48,7 +48,6 @@ public class MarketState implements TurnState {
         game.getEnemiesFighting().forEach(enemy -> new ReceiveDamageCommand(enemy, currentPlayer).execute());
 
         turnService.createNextTurn(game);
-
     }
 
     @Override
