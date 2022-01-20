@@ -50,7 +50,6 @@ export default function CenterZone(params: Params) {
       </span>
       <span className="grid grid-cols-6 gap-2 py-1">
         <span className="col-start-3">
-          {/* TODO replace with a flipped warlord card */}
           <img
             draggable={false}
             className="card transform-gpu"
