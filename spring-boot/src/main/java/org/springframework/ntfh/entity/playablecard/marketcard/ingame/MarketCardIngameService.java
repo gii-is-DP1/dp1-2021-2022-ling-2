@@ -118,7 +118,7 @@ public class MarketCardIngameService {
     public Game buyMarketCard(Integer marketCardIngameId, String token) {
         // TODO make getting the turn more straightforward, maybe with a custom query
         String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
+        Player player = userService.findByUsername(username).getPlayer();
         Turn currentTurn = player.getGame().getCurrentTurn();
         TurnState turnState = turnService.getState(currentTurn);
         turnState.buyMarketCard(marketCardIngameId, token);

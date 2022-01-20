@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<User, String> {
+public interface UserRepository extends CrudRepository<User, Integer> {
 
     // TODO is @Query needed?
     @Query("select u from User u")
@@ -19,7 +19,8 @@ public interface UserRepository extends CrudRepository<User, String> {
 
     Boolean existsByEmail(String email);
 
-    // TODO return List<Object> with both user and stats
+    User findByUsername(String username);
+
     // User with more games played (list with 1 element)
     @Query("SELECT u from User u inner join u.players ps ORDER BY SIZE(ps) DESC")
     List<User> maxNumberOfGamesPlayed(Pageable pageable);

@@ -14,10 +14,10 @@ package org.springframework.ntfh.entity.user;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
@@ -27,7 +27,6 @@ import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -61,7 +60,7 @@ public class UserService {
      * @throws DataAccessException
      */
     @Transactional
-    public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException {
+    public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException, OptimisticLockingFailureException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(user.getEmail())))
             throw new IllegalArgumentException("There is already a user registered with the email provided");
 
@@ -88,12 +87,8 @@ public class UserService {
         return page.getContent();
     }
 
-    public User findUser(String username) throws DataAccessException {
-        // The username is the id (primary key)
-        Optional<User> user = userRepository.findById(username);
-        if (!user.isPresent())
-            throw new DataAccessException(userString + username + " was not found") {};
-        return user.get();
+    public User findByUsername(String username) throws DataAccessException {
+        return userRepository.findByUsername(username);
     }
 
     public Integer count() {
@@ -133,7 +128,7 @@ public class UserService {
         // Before updating, make sure there are no null values. If the user didn't send
         // them in the form, they must stay the same as they were in the database.
 
-        User userInDB = this.findUser(user.getUsername());
+        User userInDB = this.findByUsername(user.getUsername());
 
         if (user.getEmail() != null) {
             // If there is a new email, set it on the database
@@ -146,6 +141,9 @@ public class UserService {
             userInDB.setPassword(encodedParamPassword);
             log.info("Password updated for user " + user.getUsername());
         }
+        if (!user.getVersion().equals(userInDB.getVersion())) {
+            throw new OptimisticLockingFailureException("Outdated user version") {};
+        }
 
         log.info(userString + user.getUsername() + " updated by user with token " + token);
         return userInDB;
@@ -153,7 +151,7 @@ public class UserService {
 
     @Transactional
     public String loginUser(User user) throws DataAccessException, IllegalArgumentException, BannedUserException {
-        User userInDB = this.findUser(user.getUsername());
+        User userInDB = this.findByUsername(user.getUsername());
         if (Boolean.FALSE.equals(userInDB.getEnabled())) {
             throw new BannedUserException("You have been banned") {};
         }
@@ -167,7 +165,7 @@ public class UserService {
 
     @Transactional
     public User toggleBanUser(String username, String token) throws DataAccessException {
-        User userInDB = this.findUser(username);
+        User userInDB = this.findByUsername(username);
         userInDB.setEnabled(!userInDB.getEnabled());
         log.info(userString + username + " ban toggled. Current status: " + userInDB.getEnabled());
         return userInDB;
@@ -175,13 +173,8 @@ public class UserService {
 
     @Transactional
     public void deleteUser(User user) {
-        if (user.getPlayer() != null && user.getPlayer().getGame().getHasStarted()) {
-            log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
-            throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
-        }
         user.getPlayers().forEach(p -> p.setUser(null)); // Delete references before deleting user
-        this.userRepository.deleteById(user.getUsername());
+        this.userRepository.deleteById(user.getId());
         log.info(userString + user.getUsername() + " deleted");
     }
-
 }

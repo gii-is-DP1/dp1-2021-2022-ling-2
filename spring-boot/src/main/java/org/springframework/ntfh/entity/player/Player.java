@@ -60,15 +60,15 @@ public class Player extends BaseEntity {
     @JoinColumn(name = "character_id", referencedColumnName = "id") // TODO redundant referenceColumnName?
     private Character character;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL)
     @NotAudited
     private List<AbilityCardIngame> hand = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL)
     @NotAudited
     private List<AbilityCardIngame> abilityPile = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL)
     @NotAudited
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 

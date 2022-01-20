@@ -15,9 +15,8 @@ public class StringToUserConverter implements Converter<String, User> {
 
     @Override
     public User convert(String source) {
-        String username =
-                source.startsWith("Bearer ") ? TokenUtils.usernameFromToken(source) : source;
-        return userService.findUser(username);
+        String username = source.startsWith("Bearer ") ? TokenUtils.usernameFromToken(source) : source;
+        return userService.findByUsername(username);
     }
 
 }

@@ -58,7 +58,7 @@ export default function OngoingGamesTable() {
                       {game.hasScenes ? "🟢" : "🔴"}
                     </td>
                     <td className="text-table-td">
-                      {game.leader.user.username}
+                      {game.leader.user?.username || "deleted"}
                     </td>
                     <td className="text-table-td">
                       {playerParser(game.players)}

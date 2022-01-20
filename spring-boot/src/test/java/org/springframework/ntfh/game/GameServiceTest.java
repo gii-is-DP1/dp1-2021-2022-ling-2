@@ -96,8 +96,8 @@ class GameServiceTest {
         gameTester.setStateType(GameStateType.LOBBY);
         gameTester = gameService.save(gameTester);
 
-        User user1 = userService.findUser("user1");
-        User user2 = userService.findUser("user2");
+        User user1 = userService.findByUsername("user1");
+        User user2 = userService.findByUsername("user2");
 
         gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
         gameTester = gameService.joinGame(gameTester, user2);
@@ -209,7 +209,7 @@ class GameServiceTest {
     @Disabled
     // TODO check this in the controller. This is not checked in the service anymore
     public void testCreateFromLobbyNotEnoughPlayers() {
-        User user2 = userService.findUser("user2");
+        User user2 = userService.findByUsername("user2");
         gameService.removePlayer(gameTester.getId(), "user2", TokenUtils.generateJWTToken(user2));
         Integer gameId = gameTester.getId();
 

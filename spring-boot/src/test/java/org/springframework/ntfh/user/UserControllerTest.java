@@ -89,7 +89,7 @@ class UserControllerTest {
 
         Pageable page = PageRequest.of(1, 2);
         when(userService.findPage(page)).thenReturn(List.of(user3, user4));
-        when(userService.findUser("user1")).thenReturn(user1);
+        when(userService.findByUsername("user1")).thenReturn(user1);
         when(userService.loginUser(any(User.class))).thenReturn(TokenUtils.USER_TOKEN);
 
     }

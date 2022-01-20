@@ -72,8 +72,8 @@ class AbilityCardIngameServiceTest {
         gameTester.setStateType(GameStateType.LOBBY);
         gameTester = gameService.save(gameTester);
 
-        User user1 = userService.findUser("user1");
-        User user2 = userService.findUser("user2");
+        User user1 = userService.findByUsername("user1");
+        User user2 = userService.findByUsername("user2");
 
         gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
         gameTester = gameService.joinGame(gameTester, user2);

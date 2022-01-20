@@ -132,7 +132,7 @@ class PlayerServiceTest {
     @Test
     @Disabled
     void testCreatePlayer() {
-        User user = userService.findUser("user4");
+        User user = userService.findByUsername("user4");
         Player tester = playerService.createPlayer(user);
         assertThat(tester.getGold()).isZero();
     }

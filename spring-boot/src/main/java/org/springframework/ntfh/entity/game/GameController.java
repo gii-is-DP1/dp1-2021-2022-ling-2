@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/games")
+
 public class GameController {
 
     @Autowired
@@ -116,7 +118,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public Game joinGame(@PathVariable("gameId") Game game, @PathVariable("username") User user,
             @RequestHeader("Authorization") User tokenUser) {
-        // ! PABLO AND ALEX take this example as a reference
         if (!user.equals(tokenUser))
             throw new NonMatchingTokenException("The user who is trying to join the game is not the one logged in");
         Game updatedgame = gameService.joinGame(game, user);
