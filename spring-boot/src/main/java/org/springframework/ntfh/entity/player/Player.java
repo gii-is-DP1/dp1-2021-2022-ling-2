@@ -2,6 +2,7 @@ package org.springframework.ntfh.entity.player;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -59,16 +60,16 @@ public class Player extends BaseEntity {
     @JoinColumn(name = "character_id", referencedColumnName = "id") // TODO redundant referenceColumnName?
     private Character character;
 
-    @OneToMany
-    @NotAudited // TODO audit this?
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @NotAudited
     private List<AbilityCardIngame> hand = new ArrayList<>();
 
-    @OneToMany
-    @NotAudited // TODO audit this?
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @NotAudited
     private List<AbilityCardIngame> abilityPile = new ArrayList<>();
 
-    @OneToMany
-    @NotAudited // TODO audit this?
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @NotAudited
     private List<AbilityCardIngame> discardPile = new ArrayList<>();
 
     @ManyToOne

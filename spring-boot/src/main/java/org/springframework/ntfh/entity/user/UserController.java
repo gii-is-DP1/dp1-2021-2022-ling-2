@@ -28,99 +28,116 @@ import org.springframework.web.bind.annotation.RestController;
  * @author andrsdt
  */
 @RestController()
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping(value = "/users")
 public class UserController {
-	@Autowired
-	private UserService userService;
 
-	@GetMapping
-	public ResponseEntity<Iterable<User>> findPage(
-			@PageableDefault(page = 0, size = 10) final Pageable pageable) {
-		List<User> users = this.userService.findPage(pageable);
-		return new ResponseEntity<>(users, HttpStatus.OK);
-	}
+    @Autowired
+    private UserService userService;
 
-	@GetMapping("count")
-	public ResponseEntity<Integer> getCount() {
-		Integer userCount = this.userService.count();
-		return new ResponseEntity<>(userCount, HttpStatus.OK);
-	}
+    @Autowired
+    private GameService gameService;
 
-	/**
-	 * Get information about a user. Should only return non-sensitive information
-	 * 
-	 * @param username that we want to fetch from the database
-	 * @return User object with only non-sensitive information
-	 * @author andrsdt
-	 */
-	@GetMapping("{userId}")
-	@ResponseStatus(HttpStatus.OK)
-	public User getUser(@PathVariable("userId") User user) {
-		return user;
-	}
+    @Autowired
+    private AchievementService achievementService;
 
-	/**
-	 * @param user object with the data to be updated with
-	 * @param token jwt token of the user or the admin.
-	 * @return token for user's authentication, in case he/she was the one who updated the profile
-	 * @author andrsdt
-	 * 
-	 */
-	@PutMapping
-	public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
-			@RequestHeader("Authorization") String token) {
-		User updatedUser = userService.updateUser(user, token);
-		Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
-		Boolean editingOwnProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
-		Map<String, String> returnBody = null;
+    @GetMapping
+    public ResponseEntity<Iterable<User>> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        List<User> users = this.userService.findPage(pageable);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 
-		// Don't return a new token if an admin is editing another user's profile
-		if (updatedUser != null && (!sentByAdmin || editingOwnProfile)) {
-			String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
-			returnBody = Map.of("authorization", tokenWithUpdatedData);
-		}
-		return new ResponseEntity<>(returnBody, HttpStatus.OK);
-	}
+    @GetMapping("count")
+    public ResponseEntity<Integer> getCount() {
+        Integer userCount = this.userService.count();
+        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    }
 
-	@PostMapping("register")
-	@ResponseStatus(HttpStatus.CREATED)
-	// TODO 🔼 do this in the rest of controllers that return no body
-	public void register(@RequestBody User user) {
-		this.userService.createUser(user);
-	}
+    /**
+     * Get information about a user. Should only return non-sensitive information
+     * 
+     * @param username that we want to fetch from the database
+     * @return User object with only non-sensitive information
+     * @author andrsdt
+     */
+    @GetMapping("{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUser(@PathVariable("userId") User user) {
+        return user;
+    }
 
-	@PostMapping("login")
-	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-		String token = userService.loginUser(user);
-		return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
-	}
+    /**
+     * @param user object with the data to be updated with
+     * @param token jwt token of the user or the admin.
+     * @return token for user's authentication, in case he/she was the one who updated the profile
+     * @author andrsdt
+     * 
+     */
+    @PutMapping
+    public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
+            @RequestHeader("Authorization") String token) {
+        User updatedUser = userService.updateUser(user, token);
+        Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
+        Boolean editingOwnProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
+        Map<String, String> returnBody = null;
 
-	@PutMapping("{userId}/ban")
-	@ResponseStatus(HttpStatus.OK)
-	public void toggleBanUser(@PathVariable("userId") String username,
-			@RequestHeader("Authorization") String token) {
-		userService.toggleBanUser(username, token);
-	}
+        // Don't return a new token if an admin is editing another user's profile
+        if (updatedUser != null && (!sentByAdmin || editingOwnProfile)) {
+            String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
+            returnBody = Map.of("authorization", tokenWithUpdatedData);
+        }
+        return new ResponseEntity<>(returnBody, HttpStatus.OK);
+    }
 
-	// TODO implement
-	@GetMapping("{userId}/history")
-	public ResponseEntity<Iterable<Game>> getfindByUser(@PathVariable("userId") String username) {
-		// Iterable<GameHistory> gameHistory =
-		// gameHistoryService.findByGamePlayersContaining(username);
-		return new ResponseEntity<>(List.of(), HttpStatus.OK);
-	}
+    @PostMapping("register")
+    @ResponseStatus(HttpStatus.CREATED)
+    // TODO 🔼 do this in the rest of controllers that return no body
+    public void register(@RequestBody User user) {
+        this.userService.createUser(user);
+    }
 
-	/**
-	 * @author alegestor
-	 */
-	@DeleteMapping("{userId}")
-	@ResponseStatus(HttpStatus.OK)
-	public void deleteUser(@PathVariable("userId") String username,
-			@RequestHeader("Authorization") String token) {
-		// TODO better parse username to user with a converter? saw that in the slides
-		User user = userService.findByUsername(username);
-		userService.deleteUser(user);
-	}
+    @PostMapping("login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
+        String token = userService.loginUser(user);
+        return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
+    }
+
+    @PutMapping("{userId}/ban")
+    @ResponseStatus(HttpStatus.OK)
+    public void toggleBanUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
+        userService.toggleBanUser(username, token);
+    }
+
+    /**
+     * @author alegestor
+     */
+    @DeleteMapping("{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
+        // TODO better parse username to user with a converter? saw that in the slides
+        User user = userService.findByUsername(username);
+        userService.deleteUser(user);
+    }
+
+    @GetMapping("{userId}/history")
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Game> getfindByUser(@PathVariable("userId") User user) {
+        return gameService.findFinishedByUser(user);
+    }
+
+    @GetMapping("{userId}/achievements")
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Achievement> achievements(@PathVariable("userId") User user) {
+        return achievementService.findByUser(user);
+    }
+
+    /**
+     * @author alegestor
+     */
+    @DeleteMapping("{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUser(@PathVariable("userId") User user, @RequestHeader("Authorization") String token) {
+        userService.deleteUser(user);
+    }
 
 }

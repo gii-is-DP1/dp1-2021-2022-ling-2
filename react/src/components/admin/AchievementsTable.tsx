@@ -1,28 +1,67 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useLocation } from "react-router-dom";
+import axios from "../../api/axiosConfig";
 import * as ROUTES from "../../constants/routes";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
 import { Achievement } from "../../interfaces/Achievement";
 
 type Params = {
-  achievements: Achievement[];
+  user?: string;
 };
 
 export default function AchievementsTable(params: Params) {
-  const { achievements } = params;
-  const loggedUser = tokenParser(useContext(userContext));
+  const user = params.user;
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const { userToken } = useContext(userContext);
+  const location = useLocation();
 
-  const isAdmin = () =>
-    loggedUser.username && loggedUser.authorities.includes("admin");
+  const isInAdminConsole = () => location.pathname === "/admin";
+  const prettifyAchievements = (achievementsInput: Achievement[]) =>
+    achievementsInput.forEach(
+      (a) =>
+        (a.description = a.description.replace(
+          "{X}",
+          a.condition?.toString() || " — "
+        ))
+    );
 
-  achievements.forEach(
-    (a) =>
-      (a.description = a.description.replace(
-        "{X}",
-        a.condition?.toString() || " — "
-      ))
-  );
+  const fetchUserAchievements = async () => {
+    try {
+      const response = await axios.get(`/users/${user}/achievements`);
+      prettifyAchievements(response.data);
+      setAchievements(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const fetchAllAchievements = async () => {
+    try {
+      const response = await axios.get(`/achievements`);
+      prettifyAchievements(response.data);
+      setAchievements(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  useEffect(() => {
+    user ? fetchUserAchievements() : fetchAllAchievements();
+  }, []);
+
+  const handleDeleteAchievement = async (achievement: Achievement) => {
+    try {
+      const headers = { Authorization: "Bearer " + userToken };
+      await axios.delete(`achievements/${achievement.id}`, {
+        headers,
+      });
+      user ? fetchUserAchievements() : fetchAllAchievements();
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -37,10 +76,25 @@ export default function AchievementsTable(params: Params) {
                 >
                   Achievements
                 </th>
-                {isAdmin() && (
-                  <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Edit</span>
-                  </th>
+                {isInAdminConsole() && (
+                  <>
+                    <th scope="col" className="relative px-6 py-3">
+                      <span className="sr-only">Edit</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="text-left text-xs font-sm text-gray-200 uppercase tracking-wider"
+                    >
+                      <button className="btn-ntfh">
+                        <Link
+                          to={ROUTES.CREATE_ACHIEVEMENT}
+                          className="flex items-center"
+                        >
+                          <p className="text-gradient-ntfh">New</p>
+                        </Link>
+                      </button>
+                    </th>
+                  </>
                 )}
               </tr>
             </thead>
@@ -59,18 +113,28 @@ export default function AchievementsTable(params: Params) {
                       </div>
                     </div>
                   </td>
-                  {isAdmin() && (
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Link
-                        className="text-indigo-300 hover:text-indigo-500"
-                        to={ROUTES.EDIT_ACHIEVEMENT.replace(
-                          ":achievementId",
-                          achievement.id.toString()
-                        )}
-                      >
-                        Edit
-                      </Link>
-                    </td>
+                  {isInAdminConsole() && (
+                    <>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <Link
+                          className="text-indigo-300 hover:text-indigo-500"
+                          to={ROUTES.EDIT_ACHIEVEMENT.replace(
+                            ":achievementId",
+                            achievement.id.toString()
+                          )}
+                        >
+                          Edit
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          className="text-red-300 hover:text-red-500"
+                          onClick={() => handleDeleteAchievement(achievement)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </>
                   )}
                 </tr>
               ))}

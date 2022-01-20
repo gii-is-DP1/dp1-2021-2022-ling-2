@@ -12,3 +12,5 @@ export const ADMIN_PAGE = "/admin";
 export const STATISTICS = "/statistics";
 export const ALL_ACHIEVEMENTS = "/achievements";
 export const USER_ACHIEVEMENTS = "/profile/:username/achievements";
+export const CREATE_ACHIEVEMENT = "/achievements/new";
+export const RANKING = "/ranking";

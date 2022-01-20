@@ -1,61 +1,40 @@
-import React, { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useHistory, useParams } from "react-router-dom";
-import axios from "../api/axiosConfig";
-import HomeButton from "../components/common/home-button";
-import * as ROUTES from "../constants/routes";
-import userContext from "../context/user";
-import hasAuthority from "../helpers/hasAuthority";
+import { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import tokenParser from "../helpers/tokenParser";
-import { Achievement } from "../interfaces/Achievement";
+import userContext from "../context/user";
+import * as ROUTES from "../constants/routes";
+import axios from "../api/axiosConfig";
+import toast from "react-hot-toast";
+import hasAuthority from "../helpers/hasAuthority";
+import HomeButton from "../components/common/home-button";
 
-/**
- *
- * @author andrsdt
- */
-export default function EditAchievement() {
-  const params: any = useParams();
+export default function CreateAchievement() {
+  // TODO set type
   const history = useHistory();
   const { userToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
-
-  const [achievement, setAchievement] = useState<Achievement | undefined>(
-    undefined
-  );
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [condition, setCondition] = useState<number | undefined>(undefined);
-  const [achievementType, setAchievementType] = useState<string>("");
+  const [achievementType, setAchievementType] = useState<string | undefined>(
+    undefined
+  );
   const [achievementTypeOptions, setAchievementTypeOptions] = useState<
     string[]
   >([]);
-  const sendToAdminPage = () => history.push(ROUTES.ADMIN_PAGE);
 
-  async function fetchAchievement() {
-    try {
-      const response = await axios.get(`/achievements/${params.achievementId}`);
-      setAchievement(response.data);
-      setName(response.data.name);
-      setDescription(response.data.description);
-      setCondition(response.data.condition);
-      setAchievementType(response.data.type);
-    } catch (error: any) {
-      toast.error(error?.message);
-      sendToAdminPage();
-    }
-  }
+  const sendToAdminPage = () => history.push(ROUTES.ADMIN_PAGE);
 
   async function handleSubmit(event: React.MouseEvent) {
     event.preventDefault();
     try {
       const payload = {
-        id: achievement?.id, // Needed to identify the achievement
         name: name,
         description: description,
         condition: condition ?? 0,
         type: achievementType,
       };
-      await axios.put("/achievements", payload, {
+      await axios.post("/achievements/new", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
       toast.success("Achievement edited successfully");
@@ -82,7 +61,6 @@ export default function EditAchievement() {
       toast.error("You must be an admin to access this page");
       history.replace(ROUTES.LOGIN);
     }
-    fetchAchievement();
     fetchAchievementTypeOptions();
   }, []);
 
@@ -92,7 +70,7 @@ export default function EditAchievement() {
       <div className="flex flex-col h-screen bg-wood p-8 items-center">
         <span className="text-center pb-8">
           <button type="submit" className="btn-ntfh">
-            <p className="text-5xl text-gradient-ntfh">Edit achievement</p>
+            <p className="text-5xl text-gradient-ntfh">Create achievement</p>
           </button>
         </span>
         <form className="flex flex-col bg-felt rounded-3xl border-20 border-gray-900 p-8 w-1/2">
@@ -129,7 +107,6 @@ export default function EditAchievement() {
             <p className="font-bold text-2xl mb-2 mr-2">Type</p>
             <select
               name="achievement-type"
-              value={achievementType}
               onChange={(e) => setAchievementType(e.target.value)}
             >
               {achievementTypeOptions.map((type) => (
@@ -140,7 +117,7 @@ export default function EditAchievement() {
             </select>
           </div>
           <button type="submit" className="btn-ntfh" onClick={handleSubmit}>
-            <p className="text-gradient-ntfh text-5xl p-2">Edit</p>
+            <p className="text-gradient-ntfh text-5xl p-2">Create</p>
           </button>
         </form>
       </div>

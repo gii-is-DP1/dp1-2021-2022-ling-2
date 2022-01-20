@@ -1,12 +1,12 @@
 package org.springframework.ntfh.entity.achievement;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,30 +15,46 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/achievements")
 public class AchievementController {
+
     @Autowired
     private AchievementService achievementService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Achievement>> getAll() {
-        Iterable<Achievement> achievements = this.achievementService.findAll();
-        return new ResponseEntity<>(achievements, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Achievement> getAll() {
+        return this.achievementService.findAll();
+    }
+
+    @GetMapping("types")
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<AchievementType> getTypes() {
+        return this.achievementService.findAllTypes();
     }
 
     @GetMapping("{achievementId}")
-    public ResponseEntity<Achievement> getAchivementById(@PathVariable("achievementId") Integer id) {
-        Optional<Achievement> achievement = this.achievementService.findAchievementById(id);
-        if (!achievement.isPresent())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(achievement.get(), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Achievement getAchivementById(@PathVariable("achievementId") Integer id) {
+        return this.achievementService.findById(id);
+    }
+
+    @PostMapping("new")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createAchievement(@RequestBody Achievement achievement) {
+        achievementService.createAchievement(achievement);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void updateAchievement(@RequestBody Achievement achievements, @RequestHeader("Authorization") String token) {
-        achievementService.updateAchievement(achievements, token);
+    public void updateAchievement(@RequestBody Achievement achievement, @RequestHeader("Authorization") String token) {
+        achievementService.updateAchievement(achievement, token);
     }
 
+    @DeleteMapping("{achievementId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAchievement(@PathVariable("achievementId") Achievement achievement) {
+        achievementService.delete(achievement);
+    }
 }

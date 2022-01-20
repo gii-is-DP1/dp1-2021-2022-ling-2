@@ -14,7 +14,6 @@ package org.springframework.ntfh.entity.user;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +26,6 @@ import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -175,8 +173,8 @@ public class UserService {
             log.error("User " + user.getUsername() + " was attempted to be deleted while in lobby/game");
             throw new IllegalStateException("You cannot delete a user while he/she is playing a game");
         }
+        user.getPlayers().forEach(p -> p.setUser(null)); // Delete references before deleting user
         this.userRepository.deleteById(user.getId());
         log.info(userString + user.getUsername() + " deleted");
     }
-
 }
