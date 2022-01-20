@@ -65,8 +65,8 @@ public class DataLoader implements CommandLineRunner {
 
         // Create and finish game 1 with User1, User2
         Game game1 = createLobby("testLobby1", true, true, 2);
-        gameService.joinGame(game1, user1);
-        gameService.joinGame(game1, user2);
+        game1 = gameService.joinGame(game1, user1);
+        game1 = gameService.joinGame(game1, user2);
 
         Player player1 = game1.getPlayers().get(0);
         player1.setCharacter(characterService.findById(1));
@@ -79,8 +79,8 @@ public class DataLoader implements CommandLineRunner {
 
         // Create and finish game 2 with User1, User3
         Game game2 = createLobby("testLobby2", true, true, 3);
-        gameService.joinGame(game2, user1);
-        gameService.joinGame(game2, user3);
+        game2 = gameService.joinGame(game2, user1);
+        game2 = gameService.joinGame(game2, user3);
 
         Player player3 = game2.getPlayers().get(0);
         player3.setCharacter(characterService.findById(1));

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,8 +24,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/games")
+
 public class GameController {
 
     @Autowired
@@ -34,7 +36,6 @@ public class GameController {
      * @return List of all the games ever played
      * @author pabrobcam
      */
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Game> getAll() {
@@ -81,7 +82,6 @@ public class GameController {
      * This endpoint handles the creation of a new game from a lobby
      * 
      * @param lobby object with the preferences for the game
-     * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
     @PostMapping("new")
@@ -93,16 +93,18 @@ public class GameController {
     }
 
     /**
-     * This endpoint handles the creation of a new game from a lobby
+     * This endpoint handles the deletion of a game
      * 
      * @param lobby object with the preferences for the game
-     * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
     @DeleteMapping("{gameId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteGame(@PathVariable("gameId") Integer gameId) {
-        gameService.deleteGame(gameId);
+    public void deleteGame(@PathVariable("gameId") Game game, @RequestHeader("Authorization") User userToken) {
+        if (!userToken.hasAnyAuthorities("admin") && game.getStateType() != GameStateType.LOBBY) {
+            throw new NonMatchingTokenException("Only admins can delete games that are not in lobby");
+        }
+        gameService.delete(game);
     }
 
     /**
@@ -124,7 +126,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public Game joinGame(@PathVariable("gameId") Game game, @PathVariable("username") User user,
             @RequestHeader("Authorization") User tokenUser) {
-        // ! PABLO AND ALEX take this example as a reference
         if (!user.equals(tokenUser))
             throw new NonMatchingTokenException("The user who is trying to join the game is not the one logged in");
         Game updatedgame = gameService.joinGame(game, user);

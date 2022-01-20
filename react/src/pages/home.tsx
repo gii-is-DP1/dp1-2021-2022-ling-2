@@ -25,7 +25,7 @@ export default function Home() {
 
   async function fetchUnregisteredUserData() {
     try {
-      const response = await axios.post("/unregistered-users");
+      const response = await axios.post("/unregistered-users", null, {});
       setUnregisteredUser(response.data);
     } catch (error) {}
   }
@@ -90,7 +90,7 @@ export default function Home() {
               <p className="text-gradient-ntfh">Statistics</p>
             </button>
           </Link>
-          <Link to="" className="btn-ntfh w-min">
+          <Link to={ROUTES.RANKING} className="btn-ntfh w-min">
             <p className="text-gradient-ntfh">Ranking</p>
           </Link>
         </div>

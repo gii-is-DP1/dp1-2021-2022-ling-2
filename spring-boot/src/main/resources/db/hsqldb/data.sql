@@ -1,52 +1,52 @@
-INSERT INTO users(username,password, email) VALUES ('admin','$2a$10$bicbzJTFskk8.sHWJauxCu2RzDIqXk/zCxQDZ5ByLQw0m0lQ6l2Pa', 'admin@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (1,'admin','admin');
-INSERT INTO authorities(id,username,authority) VALUES (2,'admin','user');
+INSERT INTO users(id,username,password,email) VALUES (1,'admin','$2a$10$bicbzJTFskk8.sHWJauxCu2RzDIqXk/zCxQDZ5ByLQw0m0lQ6l2Pa', 'admin@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES (1,1,'admin');
+INSERT INTO authorities(id,user_id,authority) VALUES (2,1,'user');
 
-INSERT INTO users(username,password,email) VALUES ('pablo','$2a$10$k.p0O7lwMeTbmeKbODEqbO8l6VDv38JgLI66UHydll9QhIK4ewlgq', 'pablo@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(4, 'pablo','admin');
-INSERT INTO authorities(id,username,authority) VALUES(5, 'pablo','user');
+INSERT INTO users(id,username,password,email) VALUES (2,'pablo','$2a$10$k.p0O7lwMeTbmeKbODEqbO8l6VDv38JgLI66UHydll9QhIK4ewlgq', 'pablo@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(4, 2,'admin');
+INSERT INTO authorities(id,user_id,authority) VALUES(5, 2,'user');
 
-INSERT INTO users(username,password,email) VALUES ('andres','$2a$10$MnbY762s/bvKrB249IRRferPU3lg70XfzPLxHBwK9Sg8EXA.OSMGO','andres@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES (3,'andres','user');
+INSERT INTO users(id,username,password,email) VALUES (3,'andres','$2a$10$MnbY762s/bvKrB249IRRferPU3lg70XfzPLxHBwK9Sg8EXA.OSMGO','andres@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES (3,3,'user');
 
-INSERT INTO users(username,password,email) VALUES ('stockie','$2a$10$xKDzRwhX90OQZ4EeOUOtMeTc8Sfzj4Dacsbfqh8HSeLzBT5zWgX6W', 'stockie@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(6, 'stockie','user');
+INSERT INTO users(id,username,password,email) VALUES (4,'stockie','$2a$10$xKDzRwhX90OQZ4EeOUOtMeTc8Sfzj4Dacsbfqh8HSeLzBT5zWgX6W', 'stockie@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(6, 4,'user');
 
-INSERT INTO users(username,password,email) VALUES ('alejandro','$2a$10$wto4YGQm44mFCrxN.GoAW.0ll2zZiA.1dy6fMk06AwPy8tqKsw.ra', 'alejandro@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(7, 'alejandro','user');
+INSERT INTO users(id,username,password,email) VALUES (5,'alejandro','$2a$10$wto4YGQm44mFCrxN.GoAW.0ll2zZiA.1dy6fMk06AwPy8tqKsw.ra', 'alejandro@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(7, 5,'user');
 
-INSERT INTO users(username,password,email) VALUES ('merlin','$2a$10$nY6NBJd0GmBPNLvi/JqiguR6.3UDaXINdnIP2Z3PpOAIATvW6ahj.', 'merlin@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(8, 'merlin','user');
+INSERT INTO users(id,username,password,email) VALUES (6,'merlin','$2a$10$nY6NBJd0GmBPNLvi/JqiguR6.3UDaXINdnIP2Z3PpOAIATvW6ahj.', 'merlin@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(8,6,'user');
 
-INSERT INTO users(username,password,email) VALUES ('legolas','$2a$10$M5ZhWHiGOKrB5gpLAnPo3OTEj9SFOmxmBDyj.FuwtCH9ZdQlNNtWG', 'legolas@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(9, 'legolas','user');
+INSERT INTO users(id,username,password,email) VALUES (7,'legolas','$2a$10$M5ZhWHiGOKrB5gpLAnPo3OTEj9SFOmxmBDyj.FuwtCH9ZdQlNNtWG', 'legolas@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(9,7,'user');
 
-INSERT INTO users(username,password,email) VALUES ('gandalf','$2a$10$mtBX7rLI1QALxQcnsUc1/OapMiBnjMmDTsRwxiXqJXpQmXZuOYR5q', 'gandalf@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(10, 'gandalf','user');
+INSERT INTO users(id,username,password,email) VALUES (8,'gandalf','$2a$10$mtBX7rLI1QALxQcnsUc1/OapMiBnjMmDTsRwxiXqJXpQmXZuOYR5q', 'gandalf@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(10,8,'user');
 
-INSERT INTO users(username,password,email) VALUES ('frodo','$2a$10$PalqK8iUM3awRALpPgs1j.AnUo2uKdriZcOAXQopLRIUQVsySrDVa', 'frodo@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(11, 'frodo','user');
+INSERT INTO users(id,username,password,email) VALUES (9,'frodo','$2a$10$PalqK8iUM3awRALpPgs1j.AnUo2uKdriZcOAXQopLRIUQVsySrDVa', 'frodo@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(11, 9,'user');
 
-INSERT INTO users(username,password,email) VALUES ('dalinar','$2a$10$UkzgrcjhQFvIzpSAiev6YuGzKzKFLCk9YOD8GD/vGerFzMjRyl7De', 'dalinar@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(12, 'dalinar','user');
+INSERT INTO users(id,username,password,email) VALUES (10,'dalinar','$2a$10$UkzgrcjhQFvIzpSAiev6YuGzKzKFLCk9YOD8GD/vGerFzMjRyl7De', 'dalinar@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(12,10,'user');
 
-INSERT INTO users(username,password,email) VALUES ('aragorn','$2a$10$yDGVc5VBqkHDkEIu7xHYquXsiMNAa4iY3ioE1s5HPT2x5P2N1ftvS', 'aragorn@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(13, 'aragorn','user');
+INSERT INTO users(id,username,password,email) VALUES (11,'aragorn','$2a$10$yDGVc5VBqkHDkEIu7xHYquXsiMNAa4iY3ioE1s5HPT2x5P2N1ftvS', 'aragorn@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(13, 11,'user');
 
-INSERT INTO users(username,password,email) VALUES ('ezio','$2a$10$wlrC8OwlLYJYg3wM.5gxmuiPhvHaK/sh2sDbHnMYehSzvnRUzauXm', 'ezio@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(14, 'ezio','user');
+INSERT INTO users(id,username,password,email) VALUES (12,'ezio','$2a$10$wlrC8OwlLYJYg3wM.5gxmuiPhvHaK/sh2sDbHnMYehSzvnRUzauXm', 'ezio@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(14, 12,'user');
 
-INSERT INTO users(username,password,email) VALUES ('user1','$2a$10$/oWmIwbGzUR5guYoznFzDefC.MMYFTwZ3bmLIiWd4akO8cac/eTX2', 'user1@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(15, 'user1','user');
+INSERT INTO users(id,username,password,email) VALUES (13,'user1','$2a$10$/oWmIwbGzUR5guYoznFzDefC.MMYFTwZ3bmLIiWd4akO8cac/eTX2', 'user1@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(15, 13,'user');
 
-INSERT INTO users(username,password,email) VALUES ('user2','$2a$10$pLlYabqhasLIEdk16qUXqeNNNnK3tszIc2ud1QQ6IshsN.WoOOQHu', 'user2@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(16, 'user2','user');
+INSERT INTO users(id,username,password,email) VALUES (14,'user2','$2a$10$pLlYabqhasLIEdk16qUXqeNNNnK3tszIc2ud1QQ6IshsN.WoOOQHu', 'user2@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(16, 14,'user');
 
-INSERT INTO users(username,password,email) VALUES ('user3','$2a$10$/Equ7DkGQXhbXtz5bO6uruA/VStGtLxhGE8aLd3Xi28mOkVqaj70y', 'user3@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(17, 'user3','user');
+INSERT INTO users(id,username,password,email) VALUES (15,'user3','$2a$10$/Equ7DkGQXhbXtz5bO6uruA/VStGtLxhGE8aLd3Xi28mOkVqaj70y', 'user3@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(17, 15,'user');
 
-INSERT INTO users(username,password,email) VALUES ('user4','$2a$10$.AxtcWQeT3zpXHv4j0892uKnU5kkJTpRhFijkaJujP2bb22KcR/qC', 'user4@mail.com');
-INSERT INTO authorities(id,username,authority) VALUES(18, 'user4','user');
+INSERT INTO users(id,username,password,email) VALUES (16,'user4','$2a$10$.AxtcWQeT3zpXHv4j0892uKnU5kkJTpRhFijkaJujP2bb22KcR/qC', 'user4@mail.com');
+INSERT INTO authorities(id,user_id,authority) VALUES(18, 16,'user');
 
 INSERT INTO achievements(name, description, type, condition) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light', 'CREATE_ACCOUNT', 0);
 

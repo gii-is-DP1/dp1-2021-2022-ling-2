@@ -62,7 +62,7 @@ public class OngoingState implements GameState {
     @Override
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
         String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
+        Player player = userService.findByUsername(username).getPlayer();
         Turn currentTurn = player.getGame().getCurrentTurn();
         TurnState turnState = turnService.getState(currentTurn);
         turnState.playCard(abilityCardIngameId, enemyId, token);
@@ -71,7 +71,7 @@ public class OngoingState implements GameState {
     @Override
     public void buyMarketCard(Integer marketCardIngameId, String token) {
         String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
+        Player player = userService.findByUsername(username).getPlayer();
         Turn currentTurn = player.getGame().getCurrentTurn();
         TurnState turnState = turnService.getState(currentTurn);
         turnState.buyMarketCard(marketCardIngameId, token);
@@ -83,11 +83,7 @@ public class OngoingState implements GameState {
     }
 
     @Override
-    public Game finishGame(Game gameParam) {
-        // ! Workaround. If we don't do this, game does not get updated. Idk why
-        Integer gameId = gameParam.getId();
-        Game game = gameService.findGameById(gameId);
-
+    public Game finishGame(Game game) {
         List<Player> players = game.getPlayers();
 
         // Give +1 aditional glory to players with 0 wounds
@@ -100,19 +96,19 @@ public class OngoingState implements GameState {
             player.setGlory(player.getGlory() + additionalGlory);
         });
 
-        // Choose as the winner the one with more glory. If there is a tie, the first one is the winner
-        Player winner = players.stream().max(maxByGlory().thenComparing(maxByKills())).orElse(null);
+        // Choose as the winner the one with more glory. If there is a tie, the leader is the winner
+        Player winner = players.stream().max(compareByGlory().thenComparing(compareByKills())).orElse(game.getLeader());
         game.setWinner(winner);
         game.setFinishTime(Timestamp.from(Instant.now()));
         gameService.setNextState(game); // set state to FINISHED
         return gameService.save(game);
     }
 
-    private Comparator<Player> maxByGlory() {
-        return (p1, p2) -> p1.getGlory() - p2.getGlory();
+    private Comparator<Player> compareByGlory() {
+        return (p1, p2) -> p1.getGlory().compareTo(p2.getGlory());
     }
 
-    private Comparator<Player> maxByKills() {
-        return (p1, p2) -> p1.getKills() - p2.getKills();
+    private Comparator<Player> compareByKills() {
+        return (p1, p2) -> p1.getKills().compareTo(p2.getKills());
     }
 }

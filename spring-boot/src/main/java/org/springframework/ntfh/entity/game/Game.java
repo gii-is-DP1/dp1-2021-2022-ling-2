@@ -70,31 +70,32 @@ public class Game extends BaseEntity {
     @JsonIgnoreProperties({"game", "lobby"})
     private List<Player> players = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Player leader;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Player winner;
 
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     @NotAudited
     @JsonIgnore
     private List<Turn> turns = new ArrayList<>();
 
     // TODO should these four be NotAudited? If they are audited,
     // can they help with the statistics stuff? (Play X card Y times...)
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<EnemyIngame> enemiesInPile = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<EnemyIngame> enemiesFighting = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MarketCardIngame> marketCardsInPile = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
 
+    // TODO remove all about comments (this, entity...)
     // orphanRemoval: The "comment" rows will be deleted when the game is deleted
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();

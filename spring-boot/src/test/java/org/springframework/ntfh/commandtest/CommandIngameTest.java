@@ -101,8 +101,8 @@ class CommandIngameTest {
 		gameTester.setStateType(GameStateType.LOBBY);
 		gameTester = gameService.save(gameTester);
 
-		User user1 = userService.findUser("user1");
-		User user2 = userService.findUser("user2");
+		User user1 = userService.findByUsername("user1");
+		User user2 = userService.findByUsername("user2");
 
 		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
 		gameTester = gameService.joinGame(gameTester, user2);
@@ -351,7 +351,6 @@ class CommandIngameTest {
 		new GiveGuardCommand(negativeGuard, ranger);
 
 		assertThat(ranger.getGuard()).isEqualTo(anotherGuard);
-
 	}
 
 	@Test
@@ -495,7 +494,6 @@ class CommandIngameTest {
 		new RecoverCardCommand(ranger, AbilityCardTypeEnum.COMPANERO_LOBO).execute();
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
-
 	}
 
 	@Test

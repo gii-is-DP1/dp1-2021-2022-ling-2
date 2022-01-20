@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.command.ReceiveDamageCommand;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
@@ -30,6 +31,9 @@ public class MarketState implements TurnState {
     TurnService turnService;
 
     @Autowired
+    GameService gameService;
+
+    @Autowired
     MarketCardIngameService marketCardIngameService;
 
     @Autowired
@@ -46,9 +50,8 @@ public class MarketState implements TurnState {
         // and then a new turn will be created
         Player currentPlayer = game.getCurrentTurn().getPlayer();
         game.getEnemiesFighting().forEach(enemy -> new ReceiveDamageCommand(enemy, currentPlayer).execute());
-
+        game = gameService.save(game);
         turnService.createNextTurn(game);
-
     }
 
     @Override
@@ -62,7 +65,7 @@ public class MarketState implements TurnState {
         // TODO throw exception if not player's turn?
 
         String username = TokenUtils.usernameFromToken(token);
-        User user = userService.findUser(username);
+        User user = userService.findByUsername(username);
         Player player = user.getPlayer();
 
         MarketCardIngame marketCardIngame = marketCardIngameService.findById(marketCardIngameId);

@@ -1,6 +1,5 @@
 package org.springframework.ntfh.entity.user.authorities;
 
-import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -39,16 +38,11 @@ public class AuthoritiesService {
     @Transactional
     public void saveAuthorities(String username, String role) throws DataAccessException {
         Authorities authority = new Authorities();
-        Optional<User> user = userRepository.findById(username);
+        User user = userRepository.findByUsername(username);
 
-        if (user.isPresent()) {
-            authority.setUser(user.get());
-            authority.setAuthority(role);
-            authoritiesRepository.save(authority);
-            log.info("Authority " + role + " added to user " + username);
-        } else {
-            throw new DataAccessException("User '" + user.getClass().getName() + "' not found!") {
-            };
-        }
+        authority.setUser(user);
+        authority.setAuthority(role);
+        authoritiesRepository.save(authority);
+        log.info("Authority " + role + " added to user " + username);
     }
 }

@@ -43,7 +43,11 @@ public class LobbyState implements GameState {
     }
 
     @Override
-    public Game joinGame(Game game, User user) {
+    public Game joinGame(Game gameParam, User user) {
+        // ! Workaround. If we don't do this, game does not get updated. Idk why
+        Integer gameId = gameParam.getId();
+        Game game = gameService.findGameById(gameId);
+
         if (game.getPlayers().stream().anyMatch(p -> p.getUser().equals(user))) {
             throw new IllegalArgumentException("The player is already in the lobby") {};
         }
@@ -67,7 +71,7 @@ public class LobbyState implements GameState {
     @Override
     public Game removePlayer(Integer gameId, String username) {
         Game game = gameService.findGameById(gameId);
-        User user = userService.findUser(username);
+        User user = userService.findByUsername(username);
         Player player = user.getPlayer();
         player.setGame(null);
         game.getPlayers().remove(player);
