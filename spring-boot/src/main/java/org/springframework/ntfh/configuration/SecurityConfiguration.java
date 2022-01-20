@@ -133,7 +133,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10, new SecureRandom("NTFHseed".getBytes()));
+        return new BCryptPasswordEncoder(10, new SecureRandom("NoTiMeFoRhErOeS$sEeD".getBytes()));
     }
-
 }
