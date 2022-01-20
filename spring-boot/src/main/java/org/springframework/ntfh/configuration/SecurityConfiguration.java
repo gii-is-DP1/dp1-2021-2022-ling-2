@@ -89,6 +89,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/games/{gameId}").hasAnyAuthority("admin", "user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/start").hasAuthority("user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/turn/next").hasAuthority("user")
+                .antMatchers(HttpMethod.GET, "/games/ongoing/count").hasAuthority("user")
+                .antMatchers(HttpMethod.GET, "/games/finished/count").hasAuthority("user")
                 // ACHIEVEMENT ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
                 .antMatchers(HttpMethod.GET, "/achievements/types").hasAuthority("admin")

@@ -32,7 +32,8 @@ export default function UsersTable() {
 
   const fetchTotalPages = async () => {
     try {
-      const response = await axios.get("users/count");
+      const headers = { Authorization: "Bearer " + userToken };
+      const response = await axios.get("users/count", { headers });
       setUserCount(response.data);
     } catch (error: any) {
       toast.error(error?.message);
