@@ -1,5 +1,9 @@
+import { useContext } from "react";
 import playerParser from "../../helpers/playerParser";
 import { Game } from "../../interfaces/Game";
+import UserContext from "../../context/user";
+import axios from "../../api/axiosConfig";
+import toast from "react-hot-toast";
 
 type Props = {
   data: Game[];
@@ -7,6 +11,7 @@ type Props = {
 
 export default function GamesHistoryTable(props: Props) {
   const { data } = props;
+  const { userToken } = useContext(UserContext);
 
   const tableHeaders = [
     "Id",
@@ -16,7 +21,18 @@ export default function GamesHistoryTable(props: Props) {
     "Scenes",
     "Winner",
     "Players",
+    "X",
   ];
+
+  const handleDeleteGame = async (game: Game) => {
+    try {
+      const headers = { Authorization: "Bearer " + userToken };
+      await axios.delete(`games/${game.id}`, { headers });
+      window.location.reload();
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -48,6 +64,14 @@ export default function GamesHistoryTable(props: Props) {
                     </td>
                     <td className="text-table-td">
                       {playerParser(game.players)}
+                    </td>
+                    <td className="space-x-4">
+                      <button
+                        className={"btn btn-red"}
+                        onClick={() => handleDeleteGame(game)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
