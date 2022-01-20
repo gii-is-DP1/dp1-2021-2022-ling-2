@@ -89,14 +89,6 @@ public class GameService {
         return this.save(newGame);
     }
 
-    @Transactional
-    public void deleteGame(Game game) {
-        // TODO If the petition is sent by a user, only allow to delete it if is in
-        // lobby and token coincides
-        // TODO make sure to clear the FKs in Users, cascade delete players and all that
-        // ! UNUSED !
-    }
-
     /**
      * Adds the given player to the list of players in the lobby.
      * 

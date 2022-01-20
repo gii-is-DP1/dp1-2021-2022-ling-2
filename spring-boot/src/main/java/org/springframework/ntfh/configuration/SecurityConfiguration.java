@@ -78,6 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/games/lobby").permitAll() // Allow everyone to see lobbies
                 .antMatchers(HttpMethod.GET, "/games/ongoing").permitAll() // Allow everyone to see ongoing games
                 .antMatchers(HttpMethod.GET, "/games/finished").permitAll()// Allow everyone to see finished games
+                .antMatchers(HttpMethod.GET, "/games/ongoing/count").permitAll() // Allow everyone to see past games
                 .antMatchers(HttpMethod.GET, "/games/finished/count").permitAll() // Allow everyone to see past games
                 .antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
                 .antMatchers(HttpMethod.PUT, "/games/{gameId}").hasAuthority("user") // Allow users to update a game

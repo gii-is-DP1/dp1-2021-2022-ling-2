@@ -18,7 +18,6 @@ export default function OngoingGamesTable() {
       const response = await axios.get("games/ongoing", {
         params: { page: page },
       });
-      // TODO implement pageable
       setGameList(response.data);
     } catch (error: any) {
       toast.error(error?.message);
@@ -106,7 +105,7 @@ export default function OngoingGamesTable() {
                     <td className="text-table-td">
                       {playerParser(game.players)}
                     </td>
-                    <td className="space-x-4 flex flex-row justify-end items-center pt-2">
+                    <td className="p-1 space-x-4 flex flex-row justify-end items-center pt-2">
                       <button
                         className={"btn btn-red"}
                         onClick={() => handleDeleteGame(game)}

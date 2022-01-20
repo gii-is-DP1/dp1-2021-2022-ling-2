@@ -49,20 +49,27 @@ public class GameController {
     }
 
     @GetMapping("ongoing")
+    @ResponseStatus(HttpStatus.OK)
     public Iterable<Game> getOngoingPageable(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
         return gameService.findByStateTypePageable(GameStateType.ONGOING, pageable);
     }
 
+    @GetMapping("finished")
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Game> getFinishedPageable(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        return gameService.findByStateTypePageable(GameStateType.FINISHED, pageable);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("ongoing/count")
     public Integer getOngoingCount() {
         return gameService.countByStateType(GameStateType.ONGOING);
     }
 
-
-    @GetMapping("finished")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Game> getPastGames() {
-        return gameService.findByStateType(GameStateType.FINISHED);
+    @GetMapping("finished/count")
+    public Integer getFinishedCount() {
+        return gameService.countByStateType(GameStateType.FINISHED);
     }
 
     @GetMapping("count")
