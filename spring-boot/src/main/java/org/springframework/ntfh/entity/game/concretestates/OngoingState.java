@@ -83,11 +83,7 @@ public class OngoingState implements GameState {
     }
 
     @Override
-    public Game finishGame(Game gameParam) {
-        // ! Workaround. If we don't do this, game does not get updated. Idk why
-        Integer gameId = gameParam.getId();
-        Game game = gameService.findGameById(gameId);
-
+    public Game finishGame(Game game) {
         List<Player> players = game.getPlayers();
 
         // Give +1 aditional glory to players with 0 wounds
