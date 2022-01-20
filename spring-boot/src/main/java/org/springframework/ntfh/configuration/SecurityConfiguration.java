@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /*
  * To change this license header, choose License Headers in Project Properties. To change this template file, choose
@@ -33,7 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and() // enable CORS requests
+        http.cors() // enable CORS requests
+                .and() // enable CSRF
                 .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests() // antMatchers:
                 .antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
@@ -111,14 +113,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                                                                // ADMIN ENDPOINTS
                 .antMatchers("/admin/**").hasAuthority(adminString) // access to admin info
                 // OTHER ENDPOINTS
-                .anyRequest().denyAll(); // else, deny
-
+                .anyRequest().denyAll() // else, deny
+                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         // Configuración para que funcione la consola de administración
         // de la BD H2 (deshabilitar las cabeceras de protección contra
         // ataques de tipo csrf y habilitar los framesets si su contenido
         // se sirve desde esta misma página.
-
-        http.csrf().disable(); // TODO csrf token in JSON for better security
 
         http.headers().frameOptions().sameOrigin();
     }
@@ -133,7 +133,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10, new SecureRandom("NTFHseed".getBytes()));
+        return new BCryptPasswordEncoder(10, new SecureRandom("NoTiMeFoRhErOeS$sEeD".getBytes()));
     }
-
 }
