@@ -27,8 +27,6 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
-import org.springframework.ntfh.entity.turn.TurnService;
-import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
@@ -48,8 +46,6 @@ public class RangerCardTest {
     @Autowired
 	private GameService gameService;
 
-	@Autowired
-	private TurnService turnService;
 
 	@Autowired
 	private UserService userService;
