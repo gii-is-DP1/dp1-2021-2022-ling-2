@@ -11,29 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.ntfh.command.AttackPhaseEndCommand;
-import org.springframework.ntfh.command.ChangeEnemyCommand;
-import org.springframework.ntfh.command.DealDamageCommand;
-import org.springframework.ntfh.command.DiscardCommand;
-import org.springframework.ntfh.command.DrawCommand;
-import org.springframework.ntfh.command.ExileCommand;
-import org.springframework.ntfh.command.GiveGloryCommand;
-import org.springframework.ntfh.command.GiveGoldCommand;
-import org.springframework.ntfh.command.GiveGuardCommand;
-import org.springframework.ntfh.command.GiveWoundCommand;
-import org.springframework.ntfh.command.GoldOnKillCommand;
-import org.springframework.ntfh.command.HandToAbilityPileCommand;
-import org.springframework.ntfh.command.HealCommand;
-import org.springframework.ntfh.command.ReceiveDamageCommand;
-import org.springframework.ntfh.command.RecoverCardCommand;
-import org.springframework.ntfh.command.RecoverCommand;
-import org.springframework.ntfh.command.RestrainCommand;
-import org.springframework.ntfh.command.StealCoinCommand;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.enemy.Enemy;
 import org.springframework.ntfh.entity.enemy.EnemyService;
-import org.springframework.ntfh.entity.enemy.EnemyType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
@@ -45,8 +26,6 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeE
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.turn.Turn;
-import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.util.State;
@@ -95,7 +74,7 @@ public class RogueCardTest {
 
 	@BeforeEach
 	public void init() {
-		// TODO copypaste from gameService test except the "ranger, rogue" variables
+
 		gameTester = new Game();
 		gameTester.setName("test game");
 		gameTester.setHasScenes(false);
