@@ -118,12 +118,14 @@ class GameServiceTest {
     @Test
     void testCountWithInitialData() {
         Integer count = gameService.gameCount();
+
         assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
     @Test
     void testFindById() {
         Game tester = this.gameService.findGameById(1);
+
         assertThat(tester.getHasScenes()).isFalse();
         assertThat(tester.getLeader().getId()).isEqualTo(1);
     }
@@ -131,12 +133,14 @@ class GameServiceTest {
     @Test
     void testFindPlayersByGameId() {
         List<Player> testerList = gameService.findPlayersByGameId(1);
+
         assertThat(testerList.size()).isEqualTo(2);
     }
 
     @Test
     void testGetCurrentTurnByGameId() {
         Integer tester = gameService.getCurrentTurnByGameId(gameTester.getId()).getId();
+
         assertThat(tester).isEqualTo(1);
     }
 
@@ -153,7 +157,9 @@ class GameServiceTest {
     void testDeleteGame() {
         gameTester.setStateType(GameStateType.LOBBY);
         gameService.delete(gameTester);
-        assertThrows(DataAccessException.class, () -> gameService.findGameById(gameTester.getId()));
+        Integer gameId = gameTester.getId();
+
+        assertThrows(DataAccessException.class, () -> gameService.findGameById(gameId));
     }
 
     @Test
@@ -166,15 +172,20 @@ class GameServiceTest {
         hand.add(abilityCardIngame);
         playerTester.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngame.getId(), null, token);
+
         assertThat(playerTester.getHand().size()).isEqualTo(2);
     }
 
     @Test
     void testNextTurnState() {
         String player_state = gameTester.getCurrentTurn().getStateType().toString();
+
         assertThat(player_state).isEqualTo("PLAYER_STATE");
+
         gameService.setNextTurnState(gameTester.getCurrentTurn());
+
         String market_state = gameTester.getCurrentTurn().getStateType().toString();
+
         assertThat(market_state).isEqualTo("MARKET_STATE");
 
     }
@@ -183,6 +194,7 @@ class GameServiceTest {
     @Test
     void testfindAll() {
         Integer count = Lists.newArrayList(gameService.findAll()).size();
+
         assertThat(count).isEqualTo(INITIAL_GAMES_COUNT + 1);
     }
 
@@ -200,8 +212,10 @@ class GameServiceTest {
     public void testCreateFromLobbyNotEnoughPlayers() {
         User user2 = userService.findUser("user2");
         gameService.removePlayer(gameTester.getId(), "user2", TokenUtils.generateJWTToken(user2));
+        Integer gameId = gameTester.getId();
+
         assertThrows(IllegalArgumentException.class,
-                () -> gameService.startGame(gameTester.getId()));
+                () -> gameService.startGame(gameId));
     }
 
     // H21 + E1

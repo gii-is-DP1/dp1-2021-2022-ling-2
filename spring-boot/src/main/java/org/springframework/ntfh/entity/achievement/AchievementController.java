@@ -1,10 +1,6 @@
 package org.springframework.ntfh.entity.achievement;
 
-import java.util.Map;
 import java.util.Optional;
-
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,15 +39,10 @@ public class AchievementController {
         return new ResponseEntity<>(achievement.get(), HttpStatus.OK);
     }
 
-
-    // ! TODO a mirar como cambiar este putmapping, creemos que le falta devolver algo para la nueva forma de hacer la respuesta
-    @PutMapping()
-	@ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map<String, String>> updateAchievement(@RequestBody @Valid Achievement achievements,
-            @RequestHeader("Authorization") String token) {
+    @PutMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void updateAchievement(@RequestBody Achievement achievements, @RequestHeader("Authorization") String token) {
         achievementService.updateAchievement(achievements, token);
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

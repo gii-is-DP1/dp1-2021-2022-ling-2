@@ -82,6 +82,9 @@ export default function Home() {
       <div className="flex-none w-1/4 flex flex-col justify-between">
         {/* Left column (statistics, ranking, share)*/}
         <div className="flex flex-col">
+          <Link to={ROUTES.ALL_ACHIEVEMENTS} className="btn-ntfh w-min mb-2">
+            <p className="text-gradient-ntfh">Achievements</p>
+          </Link>
           <Link to={ROUTES.STATISTICS}>
             <button type="submit" className="btn-ntfh mb-2">
               <p className="text-gradient-ntfh">Statistics</p>

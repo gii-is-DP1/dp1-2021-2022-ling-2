@@ -1,31 +1,28 @@
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-import axios from "../../api/axiosConfig";
 import * as ROUTES from "../../constants/routes";
 import userContext from "../../context/user";
 import tokenParser from "../../helpers/tokenParser";
 import { Achievement } from "../../interfaces/Achievement";
 
-export default function AchievementsTable() {
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
+type Params = {
+  achievements: Achievement[];
+};
+
+export default function AchievementsTable(params: Params) {
+  const { achievements } = params;
   const loggedUser = tokenParser(useContext(userContext));
-
-  useEffect(() => {
-    const fetchAchievements = async () => {
-      try {
-        const response = await axios.get(`achievements`);
-        setAchievements(response.data);
-      } catch (error: any) {
-        toast.error(error?.message);
-      }
-    };
-
-    fetchAchievements();
-  }, []);
 
   const isAdmin = () =>
     loggedUser.username && loggedUser.authorities.includes("admin");
+
+  achievements.forEach(
+    (a) =>
+      (a.description = a.description.replace(
+        "{X}",
+        a.condition?.toString() || " — "
+      ))
+  );
 
   return (
     <div className="flex flex-col">

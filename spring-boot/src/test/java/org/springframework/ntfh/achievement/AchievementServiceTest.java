@@ -23,18 +23,21 @@ class AchievementServiceTest {
     @Test
     void testCountWithInitialData() {
         Integer count = achievementService.achievementCount();
-        assertEquals(3, count);
+
+        assertEquals(7, count);
     }
 
     @Test
     void testfindAll() {
         Integer count = Lists.newArrayList(achievementService.findAll()).size();
-        assertEquals(3, count);
+
+        assertEquals(7, count);
     }
 
     @Test
     void testFindById() {
         Achievement tester = this.achievementService.findAchievementById(2).get();
+        
         assertEquals("Newcomer", tester.getName());
         assertEquals("Play your first game", tester.getDescription());
     }

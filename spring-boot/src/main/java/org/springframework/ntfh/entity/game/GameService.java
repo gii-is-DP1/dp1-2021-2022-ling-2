@@ -14,7 +14,6 @@ import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.user.User;
-import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.ntfh.exceptions.MaximumLobbyCapacityException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
@@ -196,5 +195,9 @@ public class GameService {
 
     public Iterable<Game> findByStateType(GameStateType stateType) {
         return gameRepository.findByStateType(stateType);
+    }
+
+    public Iterable<Game> findFinishedByUser(User user) {
+        return gameRepository.findFinishedByUser(user, GameStateType.FINISHED);
     }
 }

@@ -64,7 +64,7 @@ export default function GameSummary() {
                         Player
                       </th>
                       <th scope="col" className="text-table-th">
-                        Status
+                        Alive
                       </th>
                       <th scope="col" className="text-table-th">
                         Glory
@@ -84,7 +84,7 @@ export default function GameSummary() {
                         <td className="text-table-td">{p.characterTypeEnum}</td>
                         <td className="text-table-td">{p.user?.username}</td>
                         <td className="text-table-td">
-                          {p.isDead ? "💀" : "🖖"}
+                          {p.dead ? "😀" : "🖖"}
                         </td>
                         <td className="text-table-td">{p.glory}</td>
                         <td className="text-table-td">{p.gold}</td>
