@@ -2,16 +2,15 @@ package org.springframework.ntfh.entity.user;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ntfh.entity.achievement.Achievement;
-import org.springframework.ntfh.entity.achievement.AchievementService;
 import org.springframework.ntfh.entity.game.Game;
-import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.util.TokenUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController()
 @RequestMapping(value = "/users")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 	@Autowired
 	private UserService userService;

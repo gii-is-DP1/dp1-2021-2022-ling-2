@@ -47,6 +47,10 @@ public class BaseEntity {
 		this.id = id;
 	}
 
+	public Integer getVersion() {
+		return version;
+	}
+
 	// TODO delete if not used
 	@JsonIgnore
 	public boolean isNew() {

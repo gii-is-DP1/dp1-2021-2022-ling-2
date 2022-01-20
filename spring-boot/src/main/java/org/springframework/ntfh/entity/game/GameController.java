@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/games")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class GameController {
 
     @Autowired

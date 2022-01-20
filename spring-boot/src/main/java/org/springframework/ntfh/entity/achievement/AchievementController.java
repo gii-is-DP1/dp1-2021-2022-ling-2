@@ -1,9 +1,11 @@
 package org.springframework.ntfh.entity.achievement;
 
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/achievements")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AchievementController {
     @Autowired
     private AchievementService achievementService;
