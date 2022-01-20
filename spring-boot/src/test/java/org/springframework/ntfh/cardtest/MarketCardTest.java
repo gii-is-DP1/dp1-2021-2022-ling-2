@@ -300,7 +300,7 @@ public class MarketCardTest {
 
     @Test
     void testPiedraDeAmolar(){
-        
+
         List<EnemyIngame> listEnemiesFighting = List.of(berserkerIngame);
         gameTester.setEnemiesFighting(listEnemiesFighting);
         AbilityCard piedraDeAmolar = abilityCardService.findById(63);
@@ -319,7 +319,7 @@ public class MarketCardTest {
     @Test
     void testPocionCurativa(){
 
-        new GiveWoundCommand(ranger);
+        new GiveWoundCommand(ranger).execute();
 
         assertThat(ranger.getWounds()).isEqualTo(1);
 
@@ -334,6 +334,7 @@ public class MarketCardTest {
                 null, tokenRanger);
         
         assertThat(ranger.getWounds()).isZero();
+        assertThat(ranger.getDiscardPile().size()).isZero();
     }
 
     @Test

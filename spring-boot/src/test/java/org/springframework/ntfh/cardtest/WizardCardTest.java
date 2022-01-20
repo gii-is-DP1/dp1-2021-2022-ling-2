@@ -242,8 +242,8 @@ public class WizardCardTest {
 		new GiveWoundCommand(wizard).execute();
 		new DiscardCommand(2, wizard).execute();
 
-		assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
-		assertThat(wizard.getDiscardPile().size()).isEqualTo(3);
+		assertThat(rogue.getDiscardPile().size()).isEqualTo(3);
+		assertThat(wizard.getDiscardPile().size()).isEqualTo(2);
 		assertThat(wizard.getWounds()).isEqualTo(1);
 
 		AbilityCard orbeCurativo = abilityCardService.findById(40);
