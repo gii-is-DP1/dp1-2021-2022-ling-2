@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "../../../api/axiosConfig";
+import { WARLORD_CARD_BACK } from "../../../constants/images";
+import { BASE_IMAGE_PATH } from "../../../constants/paths";
 import gameContext from "../../../context/game";
 import { AbilityCardIngame } from "../../../interfaces/AbilityCardIngame";
 import CountCard from "../elements/countCard";
@@ -49,7 +51,12 @@ export default function CenterZone(params: Params) {
       <span className="grid grid-cols-6 gap-2 py-1">
         <span className="col-start-3">
           {/* TODO replace with a flipped warlord card */}
-          <PlaceholderCard />
+          <img
+            draggable={false}
+            className="card transform-gpu"
+            src= {WARLORD_CARD_BACK}
+            alt="WARLORD_CARD_BACK"
+          ></img>
         </span>
         {game?.hasScenes && (
           <>
