@@ -19,7 +19,6 @@ export interface Game {
   enemiesFighting: EnemyIngame[];
   marketCardsInPile: MarketCardIngame[];
   marketCardsForSale: MarketCardIngame[];
-  comments: Comment[];
   currentTurn?: Turn;
   duration?: number;
   hasStarted: boolean;
