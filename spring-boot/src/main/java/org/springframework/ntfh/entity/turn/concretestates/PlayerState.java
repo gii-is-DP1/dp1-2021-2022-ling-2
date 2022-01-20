@@ -14,6 +14,7 @@ import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCa
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.turn.Turn;
+import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.ntfh.util.State;
@@ -29,6 +30,9 @@ public class PlayerState implements TurnState {
 
     @Autowired
     private EnemyIngameService enemyIngameService;
+
+    @Autowired
+    private TurnService turnService;
 
     @Override
     public TurnStateType getNextState() {
@@ -99,6 +103,13 @@ public class PlayerState implements TurnState {
             player.getHand().remove(abilityCardIngame);
             player.getDiscardPile().add(abilityCardIngame);
         }
+
+        // End turn if plying this card has killed you
+        if (player.isDead()) {
+            turnService.setNextState(currentTurn);
+            turnService.setNextState(currentTurn);
+        }
+
     }
 
     @Override
