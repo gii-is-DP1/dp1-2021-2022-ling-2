@@ -74,7 +74,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // GAME ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/games").hasAuthority("admin") // Allow admins to see all games
                 .antMatchers(HttpMethod.POST, "/games").hasAuthority("user") // Allow users to create new games
-                // Allow admins to see past games
                 .antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
                 .antMatchers(HttpMethod.GET, "/games/lobby").permitAll() // Allow everyone to see lobbies
                 .antMatchers(HttpMethod.GET, "/games/ongoing").permitAll() // Allow everyone to see ongoing games
@@ -87,7 +86,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/games/new").hasAuthority("user") // Allow users to create games
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/add/{username}").hasAuthority("user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/remove/{username}").hasAuthority("user")
-                .antMatchers(HttpMethod.DELETE, "/games/{gameId}").hasAuthority("user")
+                .antMatchers(HttpMethod.DELETE, "/games/{gameId}").hasAnyAuthority("admin", "user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/start").hasAuthority("user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/turn/next").hasAuthority("user")
                 // ACHIEVEMENT ENDPOINTS
