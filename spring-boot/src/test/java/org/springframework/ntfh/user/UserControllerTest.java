@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -116,9 +118,8 @@ class UserControllerTest {
     @WithMockUser(username = "admin", password = "admin", roles = "admin")
     void update_by_admin_success() throws Exception {
         final String PUT_JSON = "{\"username\":\"admin\",\"email\":\"newMailAdmin@mail.com\",\"password\":\"admin\"}";
-        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(put("/users").with(csrf()).header("Authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON).content(PUT_JSON)).andExpect(status().isOk());
     }
 
     @Test
@@ -126,16 +127,16 @@ class UserControllerTest {
     void register_success() throws Exception {
         final String POST_JSON =
                 "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
-        mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
-                .andExpect(status().isCreated());
+        mockMvc.perform(post("/users/register").with(csrf()).header("Authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON).content(POST_JSON)).andExpect(status().isCreated());
     }
 
     @Test
     void login_success() throws Exception {
         final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
-        mockMvc.perform(post("/users/login").contentType(MediaType.APPLICATION_JSON)
-                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(POST_JSON))
-                .andExpect(status().isOk()).andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
+        mockMvc.perform(post("/users/login").with(csrf()).header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON).content(POST_JSON)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
     }
 
     @Test
@@ -143,9 +144,8 @@ class UserControllerTest {
     void testSetCharacter_Success() throws Exception {
         final String PUT_JSON =
                 "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"enabled\":true,\"character\":{\"id\":5,\"baseHealth\":3,\"characterTypeEnum\":\"WARRIOR\",\"characterGenderEnum\":\"MALE\",\"proficiencies\":[{\"id\":2,\"proficiencyTypeEnum\":\"MELEE\",\"secondaryDebuff\":0}]},\"authorities\":[{\"id\":15,\"authority\":\"user\"}]}";
-        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
-                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(put("/users").with(csrf()).header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON).content(PUT_JSON)).andExpect(status().isOk());
     }
 
     @Test
@@ -153,9 +153,8 @@ class UserControllerTest {
     void testToggleBanUser_Success() throws Exception {
         final String PUT_JSON =
                 "{\"username\":\"user1\",\"email\":\"user1@mail.com\",\"password\":\"user1\",\"enabled\":false}";
-        mockMvc.perform(put("/users").contentType(MediaType.APPLICATION_JSON)
-                .header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN).content(PUT_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(put("/users").with(csrf()).header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON).content(PUT_JSON)).andExpect(status().isOk());
     }
 
     @Test
@@ -168,8 +167,8 @@ class UserControllerTest {
         user5.setEnabled(true);
 
         String DeletedUsername = "user5";
-        mockMvc.perform(delete("/users/" + DeletedUsername).header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/users/" + DeletedUsername).with(csrf()).header("authorization",
+                "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk());
     }
 
 }
