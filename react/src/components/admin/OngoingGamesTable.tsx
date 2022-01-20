@@ -36,11 +36,12 @@ export default function OngoingGamesTable() {
 
   const handleDeleteGame = async (game: Game) => {
     try {
+      gameList.splice(gameList.indexOf(game), 1);
       const headers = { Authorization: "Bearer " + userToken };
       await axios.delete(`games/${game.id}`, { headers });
       fetchGamesOngoing();
       setOngoingGameCount(ongoingGameCount - 1);
-      toast.success("Game deleted successfully");
+      toast.success(`Game ${game.id} deleted successfully`);
     } catch (error: any) {
       toast.error(error?.message);
     }

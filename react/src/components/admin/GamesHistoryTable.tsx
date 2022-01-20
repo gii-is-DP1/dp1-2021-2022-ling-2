@@ -67,9 +67,10 @@ export default function GamesHistoryTable(props: Props) {
 
   const handleDeleteGame = async (game: Game) => {
     try {
+      finishedGames.splice(finishedGames.indexOf(game), 1);
       const headers = { Authorization: "Bearer " + userToken };
       await axios.delete(`games/${game.id}`, { headers });
-      toast.success("Game deleted successfully");
+      toast.success(`Game ${game.id} deleted successfully`);
       fetchAllFinishedGames();
       setfinishedGameCount(finishedGameCount - 1);
     } catch (error: any) {
