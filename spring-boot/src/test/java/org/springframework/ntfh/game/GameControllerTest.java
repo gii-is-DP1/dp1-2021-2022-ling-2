@@ -60,7 +60,7 @@ class GameControllerTest {
         game1.setId(1);
 
         Game game2 = new Game();
-        game1.setId(2);
+        game2.setId(2);
 
         when(gameService.findAll()).thenReturn(List.of(game1, game2));
         when(gameService.createGame(game1)).thenReturn(game1);
