@@ -5,15 +5,16 @@ axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.headers.common["Content-Type"] = "application/json";
 axios.defaults.headers.common["Accept"] = "application/json";
 // axios.defaults.headers.common["Access-Control-Allow-Credentials"] = "true";
+axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN";
 axios.defaults.withCredentials = true;
-
 const instance = axios.create();
 
-instance.interceptors.request.use((config) => {
-  config.xsrfHeaderName = "X-CSRF-TOKEN";
-  return config;
-});
+// instance.interceptors.request.use((config) => {
+//   config && config.headers && config.headers.common["X-XSRF-TOKEN"];
+//   return config;
+// });
 
+// ! It works if we pass the token as "X-XSRF-TOKEN" as a header (tested with Postman)
 instance.interceptors.response.use(
   (response) => {
     return response;
