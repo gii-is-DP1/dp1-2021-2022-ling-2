@@ -100,19 +100,19 @@ public class OngoingState implements GameState {
             player.setGlory(player.getGlory() + additionalGlory);
         });
 
-        // Choose as the winner the one with more glory. If there is a tie, the first one is the winner
-        Player winner = players.stream().max(maxByGlory().thenComparing(maxByKills())).orElse(null);
+        // Choose as the winner the one with more glory. If there is a tie, the leader is the winner
+        Player winner = players.stream().max(compareByGlory().thenComparing(compareByKills())).orElse(game.getLeader());
         game.setWinner(winner);
         game.setFinishTime(Timestamp.from(Instant.now()));
         gameService.setNextState(game); // set state to FINISHED
         return gameService.save(game);
     }
 
-    private Comparator<Player> maxByGlory() {
-        return (p1, p2) -> p1.getGlory() - p2.getGlory();
+    private Comparator<Player> compareByGlory() {
+        return (p1, p2) -> p1.getGlory().compareTo(p2.getGlory());
     }
 
-    private Comparator<Player> maxByKills() {
-        return (p1, p2) -> p1.getKills() - p2.getKills();
+    private Comparator<Player> compareByKills() {
+        return (p1, p2) -> p1.getKills().compareTo(p2.getKills());
     }
 }
