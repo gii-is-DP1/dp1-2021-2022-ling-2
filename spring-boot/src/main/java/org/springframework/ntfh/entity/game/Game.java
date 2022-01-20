@@ -27,7 +27,6 @@ import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
 import org.springframework.ntfh.entity.comment.Comment;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
-import org.springframework.ntfh.entity.game.statistics.GameStatistics;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
 import org.springframework.ntfh.entity.player.Player;
@@ -84,16 +83,16 @@ public class Game extends BaseEntity {
 
     // TODO should these four be NotAudited? If they are audited,
     // can they help with the statistics stuff? (Play X card Y times...)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<EnemyIngame> enemiesInPile = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<EnemyIngame> enemiesFighting = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MarketCardIngame> marketCardsInPile = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
 
     // TODO remove all about comments (this, entity...)
