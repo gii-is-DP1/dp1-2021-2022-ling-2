@@ -32,12 +32,14 @@ class UnregisteredUserTest {
     @Test
     void testFindAll() {
         Integer count = Lists.newArrayList(unregisteredUserService.findAll()).size();
+
         assertEquals(INITIAL_COUNT, count);
     }
 
     @Test
     void testFindById() {
         UnregisteredUser tester = this.unregisteredUserService.findUnregisteredUserById("user0023").get();
+
         assertEquals(1637882596427L, tester.getCreationTime());
     }
 
@@ -46,6 +48,7 @@ class UnregisteredUserTest {
         Integer preCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
         unregisteredUserService.create();
         Integer posCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
+
         assertEquals(preCreationCount + 1, posCreationCount);
     }
 
@@ -55,6 +58,7 @@ class UnregisteredUserTest {
         Integer preDeletionCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
         unregisteredUserService.delete(toBeDeleted);
         Integer posCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
+        
         assertEquals(preDeletionCount - 1, posCreationCount);
     }
 

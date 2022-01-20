@@ -351,7 +351,6 @@ class CommandIngameTest {
 		new GiveGuardCommand(negativeGuard, ranger);
 
 		assertThat(ranger.getGuard()).isEqualTo(anotherGuard);
-
 	}
 
 	@Test
@@ -495,7 +494,6 @@ class CommandIngameTest {
 		new RecoverCardCommand(ranger, AbilityCardTypeEnum.COMPANERO_LOBO).execute();
 
 		assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
-
 	}
 
 	@Test
