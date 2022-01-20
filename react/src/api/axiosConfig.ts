@@ -9,12 +9,12 @@ axios.defaults.xsrfHeaderName = "X-XSRF-TOKEN";
 axios.defaults.withCredentials = true;
 const instance = axios.create();
 
+// ! It works if we pass the token as "X-XSRF-TOKEN" as a header (tested with Postman)
 // instance.interceptors.request.use((config) => {
 //   config && config.headers && config.headers.common["X-XSRF-TOKEN"];
 //   return config;
 // });
 
-// ! It works if we pass the token as "X-XSRF-TOKEN" as a header (tested with Postman)
 instance.interceptors.response.use(
   (response) => {
     return response;
