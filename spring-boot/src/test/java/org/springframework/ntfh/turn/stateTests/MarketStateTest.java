@@ -92,9 +92,9 @@ class MarketStateTest {
         gameTester.setStateType(GameStateType.LOBBY);
         gameTester = gameService.save(gameTester);
 
-        user1 = userService.findUser("user1");
-        user2 = userService.findUser("user2");
-        user3 = userService.findUser("user3"); // User used for joining users test
+        user1 = userService.findByUsername("user1");
+        user2 = userService.findByUsername("user2");
+        user3 = userService.findByUsername("user3"); // User used for joining users test
 
         gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
         gameTester = gameService.joinGame(gameTester, user2);

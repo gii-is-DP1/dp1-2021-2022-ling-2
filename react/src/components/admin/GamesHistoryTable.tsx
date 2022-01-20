@@ -61,7 +61,7 @@ export default function GamesHistoryTable(props: Props) {
                       {game.hasScenes ? "🟢" : "🔴"}
                     </td>
                     <td className="text-table-td">
-                      {game?.winner?.user?.username}
+                      {game?.winner?.user?.username || "deleted"}
                     </td>
                     <td className="text-table-td">
                       {playerParser(game.players)}

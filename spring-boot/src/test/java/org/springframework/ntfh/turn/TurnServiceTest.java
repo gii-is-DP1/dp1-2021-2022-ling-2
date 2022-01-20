@@ -31,8 +31,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 // TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@DataJpaTest(
-        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 class TurnServiceTest {
 
@@ -65,8 +64,8 @@ class TurnServiceTest {
         gameTester.setStateType(GameStateType.LOBBY);
         gameTester = gameService.save(gameTester);
 
-        User user1 = userService.findUser("user1");
-        User user2 = userService.findUser("user2");
+        User user1 = userService.findByUsername("user1");
+        User user2 = userService.findByUsername("user2");
 
         gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
         gameTester = gameService.joinGame(gameTester, user2);
@@ -87,7 +86,8 @@ class TurnServiceTest {
     void teardown() {
         try {
             turnService.delete(turnTester.getId());
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Test
@@ -118,8 +118,7 @@ class TurnServiceTest {
         testerSaver.setCurrentScene(sceneService.findSceneById(1).get());
         turnService.save(testerSaver);
 
-        assertThat(testerSaver.getCurrentScene().getSceneTypeEnum())
-                .isEqualTo(SceneTypeEnum.MERCADO_DE_LOTHARION);
+        assertThat(testerSaver.getCurrentScene().getSceneTypeEnum()).isEqualTo(SceneTypeEnum.MERCADO_DE_LOTHARION);
     }
 
     @Test
@@ -141,8 +140,7 @@ class TurnServiceTest {
     @Test
     void testGetState() {
         // TODO Needs improvement
-        assertThat(turnService.getState(turnTester).getNextState())
-                .isEqualTo(TurnStateType.MARKET_STATE);
+        assertThat(turnService.getState(turnTester).getNextState()).isEqualTo(TurnStateType.MARKET_STATE);
     }
 
     @Test

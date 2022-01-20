@@ -62,7 +62,7 @@ public class OngoingState implements GameState {
     @Override
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
         String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
+        Player player = userService.findByUsername(username).getPlayer();
         Turn currentTurn = player.getGame().getCurrentTurn();
         TurnState turnState = turnService.getState(currentTurn);
         turnState.playCard(abilityCardIngameId, enemyId, token);
@@ -71,7 +71,7 @@ public class OngoingState implements GameState {
     @Override
     public void buyMarketCard(Integer marketCardIngameId, String token) {
         String username = TokenUtils.usernameFromToken(token);
-        Player player = userService.findUser(username).getPlayer();
+        Player player = userService.findByUsername(username).getPlayer();
         Turn currentTurn = player.getGame().getCurrentTurn();
         TurnState turnState = turnService.getState(currentTurn);
         turnState.buyMarketCard(marketCardIngameId, token);

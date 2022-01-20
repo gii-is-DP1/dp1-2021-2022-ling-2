@@ -2,7 +2,10 @@ package org.springframework.ntfh.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashSet;
 import java.util.Set;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,17 +49,20 @@ class UserServiceTest {
     @BeforeEach
     void createUser() {
         User tester = new User();
-        Set<Authorities> userAuthority = userService.findUser("user1").getAuthorities();
+        Set<Authorities> authSet = new HashSet<>();
+        Authorities auth = new Authorities();
         tester.setUsername("antonio");
         tester.setPassword("antonio");
         tester.setEmail("antonio@mail.com");
-        tester.setAuthorities(userAuthority);
+        auth.setUser(tester);
+        auth.setAuthority("user");
+        tester.setAuthorities(authSet);
         currentUser = userService.createUser(tester);
     }
 
     @Test
     void testfindById() {
-        User tester = this.userService.findUser("stockie");
+        User tester = this.userService.findByUsername("stockie");
 
         assertThat(passwordEncoder.matches("stockie", tester.getPassword())).isTrue();
         assertThat(tester.getEmail()).isEqualTo("stockie@mail.com");
@@ -89,7 +95,7 @@ class UserServiceTest {
         String username = tester.getUsername();
         userService.deleteUser(tester);
 
-        assertThrows(DataAccessException.class, () -> userService.findUser(username));
+        assertThrows(DataAccessException.class, () -> userService.findByUsername(username));
     }
 
     // H3 + E1

@@ -91,6 +91,7 @@ public class UserController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.CREATED)
+    // TODO 🔼 do this in the rest of controllers that return no body
     public void register(@RequestBody User user) {
         this.userService.createUser(user);
     }
