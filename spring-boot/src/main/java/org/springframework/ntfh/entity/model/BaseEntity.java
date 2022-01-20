@@ -35,9 +35,9 @@ public class BaseEntity {
 	protected Integer id;
 
 	// ! TODO Implement versioning
-	// @Version
-	// @Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
-	// protected Integer version;
+	@Version
+	@Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
+	protected Integer version;
 
 	public Integer getId() {
 		return id;
