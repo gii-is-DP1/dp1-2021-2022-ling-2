@@ -2,6 +2,7 @@ package org.springframework.ntfh.entity.achievement;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -105,5 +106,13 @@ public class AchievementService {
 
     public void delete(Achievement achievement) {
         achievementRepository.delete(achievement);
+    }
+
+    public List<AchievementType> findAllTypes() {
+        return Arrays.asList(AchievementType.values());
+    }
+
+    public void createAchievement(Achievement achievement) {
+        achievementRepository.save(achievement);
     }
 }

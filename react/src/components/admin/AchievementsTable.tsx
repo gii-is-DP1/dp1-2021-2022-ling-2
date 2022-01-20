@@ -87,8 +87,7 @@ export default function AchievementsTable(params: Params) {
                     >
                       <button className="btn-ntfh">
                         <Link
-                          // to={ROUTES.CREATE_ACHIEVEMENT}
-                          to={"A"}
+                          to={ROUTES.CREATE_ACHIEVEMENT}
                           className="flex items-center"
                         >
                           <p className="text-gradient-ntfh">New</p>

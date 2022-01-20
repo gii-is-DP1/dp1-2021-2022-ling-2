@@ -28,5 +28,4 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 
     @Query("SELECT COUNT(distinct g) from Game g inner join g.players ps where ps.user = ?1 and g.stateType = ?2")
     Integer countFinishedByUser(User user, GameStateType stateType);
-
 }
