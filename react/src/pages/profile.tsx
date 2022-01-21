@@ -63,7 +63,17 @@ export default function Profile() {
         history.push("/not-found");
       }
     };
+
+    const fetchUserStatistics = async () => {
+      try {
+        const response = await axios.get(`statistics/users/${profileUsername}`);
+        const userStats = response.data as UserStatsPOJO;
+      } catch (error: any) {
+        toast.error(error?.message);
+      }
+    };
     fetchUserProfile();
+    fetchUserStatistics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty array means "run only first time the component renders"
 

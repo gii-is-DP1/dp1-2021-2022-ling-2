@@ -57,12 +57,4 @@ public class StatisticsController {
     public Integer gamesPlayedByUser(@PathVariable("userId") User user) {
         return statisticsService.countFinishedByUser(user);
     }
-
-
-    @GetMapping("games/{gameId}/statistics")
-    @ResponseStatus(HttpStatus.OK)
-    public GameStatsPOJO getGameStatistics(@PathVariable("gameId") Game game) {
-        return statisticsService.getGameStatistics(game);
-    }
-
 }

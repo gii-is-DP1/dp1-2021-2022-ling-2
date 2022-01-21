@@ -90,9 +90,4 @@ public class StatisticsService {
         Page<Object> res = userRepository.rankingByTotalKills(topFive);
         return null;
     }
-
-    public GameStatsPOJO getGameStatistics(Game game) {
-
-        return null;
-    }
 }

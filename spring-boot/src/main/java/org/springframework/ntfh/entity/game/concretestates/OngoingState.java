@@ -3,10 +3,7 @@ package org.springframework.ntfh.entity.game.concretestates;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
@@ -109,27 +106,27 @@ public class OngoingState implements GameState {
         game.setFinishTime(Timestamp.from(Instant.now()));
         gameService.setNextState(game); // set state to FINISHED
 
-        //**************/
+        // **************/
         // Cosass del Roble (Space+Power Botton)
-        //***************/
+        // ***************/
 
-        for(int i=0; i<players.size();i++){
-            MetaStatistic ms=new MetaStatistic();
+        for (int i = 0; i < players.size(); i++) {
+            MetaStatistic ms = new MetaStatistic();
             Player p = players.get(i);
             ms.setUser(p.getUser());
             ms.setDied(p.isDead());
             ms.setGloryEarned(p.getGlory());
             ms.setKillCount(p.getKills());
             ms.setCharacter(p.getCharacterTypeEnum());
-            if(p.equals(winner)){
+            if (p.equals(winner)) {
                 ms.setVictory(true);
-            }else{
+            } else {
                 ms.setVictory(false);
             }
 
-            Integer duration=(int) (game.getFinishTime().getTime()-game.getStartTime().getTime());
+            Integer duration = (int) (game.getFinishTime().getTime() - game.getStartTime().getTime());
             ms.setDuration(duration);
-            
+
             metaStatisticService.save(ms);
         }
 
