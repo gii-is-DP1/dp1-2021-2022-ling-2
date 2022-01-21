@@ -397,6 +397,25 @@ class CommandIngameTest {
 
         assertThat(ranger.getAbilityPile().size()).isEqualTo(12);
         assertThat(ranger.getHand().size()).isEqualTo(4);
+
+        // check it doesnt return all cards of the same enum type
+
+        AbilityCard dagaElfica1 = abilityCardService.findById(61);
+        AbilityCardIngame dagaElfica1Ingame = abilityCardIngameService.createFromAbilityCard(dagaElfica1, rogue);
+        rogue.getHand().add(dagaElfica1Ingame);
+        AbilityCard dagaElfica2 = abilityCardService.findById(61);
+        AbilityCardIngame dagaElfica2Ingame = abilityCardIngameService.createFromAbilityCard(dagaElfica2, rogue);
+        rogue.getHand().add(dagaElfica2Ingame);
+
+        assertThat(rogue.getAbilityPile().size()).isEqualTo(11);
+        assertThat(rogue.getHand().size()).isEqualTo(6);
+
+        new HandToAbilityPileCommand(rogue, dagaElfica1.getAbilityCardTypeEnum()).execute();
+
+        assertThat(rogue.getAbilityPile().size()).isEqualTo(12);
+        assertThat(rogue.getHand().size()).isEqualTo(5);
+
+
     }
 
     @Test
