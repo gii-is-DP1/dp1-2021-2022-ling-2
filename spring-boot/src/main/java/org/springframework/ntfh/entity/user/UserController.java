@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author andrsdt
  */
-@RestController()
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@RestController
 @RequestMapping(value = "/users")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     @Autowired
@@ -91,7 +91,6 @@ public class UserController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.CREATED)
-    // TODO 🔼 do this in the rest of controllers that return no body
     public void register(@RequestBody User user) {
         this.userService.createUser(user);
     }
@@ -116,8 +115,15 @@ public class UserController {
 
     @GetMapping("{userId}/achievements")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Achievement> achievements(@PathVariable("userId") User user) {
-        return achievementService.findByUser(user);
+    public Iterable<Achievement> getAchievements(@PathVariable("userId") User user,
+            @PageableDefault(page = 0, size = 5) final Pageable pageable) {
+        return achievementService.findByUser(user, pageable);
+    }
+
+    @GetMapping("{userId}/achievements/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getUserAchievementCount(@PathVariable("userId") User user) {
+        return achievementService.countByUser(user);
     }
 
     /**

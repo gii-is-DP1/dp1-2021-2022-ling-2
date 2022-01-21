@@ -60,7 +60,8 @@ public class UserService {
      * @throws DataAccessException
      */
     @Transactional
-    public User createUser(User user) throws DataIntegrityViolationException, IllegalArgumentException, OptimisticLockingFailureException {
+    public User createUser(User user)
+            throws DataIntegrityViolationException, IllegalArgumentException, OptimisticLockingFailureException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(user.getEmail())))
             throw new IllegalArgumentException("There is already a user registered with the email provided");
 

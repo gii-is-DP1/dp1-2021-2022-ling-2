@@ -8,5 +8,5 @@ package org.springframework.ntfh.entity.achievement;
  * @author andrsdt
  */
 public enum AchievementType {
-    CREATE_ACCOUNT, PLAY_X_GAMES, WIN_X_GAMES
+    CREATE_ACCOUNT, PLAY_X_GAMES, WIN_X_GAMES, KILL_X_ENEMIES, EARN_X_GLORY, PLAY_X_DISTINCT_CHARACTERS
 }

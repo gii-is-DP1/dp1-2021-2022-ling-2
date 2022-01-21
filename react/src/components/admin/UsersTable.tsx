@@ -13,14 +13,16 @@ export default function UsersTable() {
   const loggedUser = tokenParser(useContext(UserContext));
   const [userList, setUserList] = useState<User[]>([]);
   const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const [userCount, setUserCount] = useState(0);
+  const usersPerPage = 10;
+  const totalPages = Math.floor(userCount / usersPerPage);
 
   const fetchUsers = async () => {
     try {
       const headers = { Authorization: "Bearer " + userToken };
       const response = await axios.get("users", {
         headers,
-        params: { page: page },
+        params: { page: page, size: usersPerPage },
       });
       setUserList(response.data);
     } catch (error: any) {
@@ -30,10 +32,9 @@ export default function UsersTable() {
 
   const fetchTotalPages = async () => {
     try {
-      const response = await axios.get("users/count");
-      const usersPerPage = 10;
-      const userCount = response.data;
-      setTotalPages(Math.floor(userCount / usersPerPage));
+      const headers = { Authorization: "Bearer " + userToken };
+      const response = await axios.get("users/count", { headers });
+      setUserCount(response.data);
     } catch (error: any) {
       toast.error(error?.message);
     }
@@ -57,6 +58,7 @@ export default function UsersTable() {
         headers: { Authorization: "Bearer " + userToken },
       });
       fetchUsers();
+      setUserCount(userCount - 1);
       toast.success(_user.username + " has been deleted");
     } catch (error: any) {
       toast.error(error?.message);

@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router";
 import axios from "../../../api/axiosConfig";
 import { BASE_IMAGE_PATH } from "../../../constants/paths";
 import GameContext from "../../../context/game";

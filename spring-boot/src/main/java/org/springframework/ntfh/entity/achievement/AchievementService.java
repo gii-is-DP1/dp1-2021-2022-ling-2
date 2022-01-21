@@ -1,16 +1,17 @@
 package org.springframework.ntfh.entity.achievement;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
 import org.springframework.ntfh.util.TokenUtils;
@@ -27,12 +28,16 @@ public class AchievementService {
     @Autowired
     private ApplicationContext applicationContext;
 
-    public Integer achievementCount() {
+    public Integer count() {
         return (int) achievementRepository.count();
     }
 
-    public Iterable<Achievement> findAll() {
+    public List<Achievement> findAll() {
         return achievementRepository.findAll();
+    }
+
+    public Iterable<Achievement> findPageable(Pageable pageable) {
+        return achievementRepository.findPage(pageable);
     }
 
     public Achievement findById(Integer id) throws DataAccessException {
@@ -68,15 +73,16 @@ public class AchievementService {
     }
 
     // Find all the achievements earned by a user
-    public Iterable<Achievement> findByUser(User user) {
+    public List<Achievement> findByUser(User user, Pageable pageable) {
         // This has to be done this way instead of using a custom query because having an achievement or not is not
         // stored in the database, but computed dynamically.
-        List<Achievement> achievements = new ArrayList<>();
-        this.findAll().forEach(achievement -> {
-            if (userHasAchievement(user, achievement))
-                achievements.add(achievement);
-        });
-        return achievements;
+        return findAll().stream().skip(pageable.getOffset()).filter(a -> userHasAchievement(user, a))
+                .limit(pageable.getPageSize()).collect(Collectors.toList());
+    }
+
+    // Count the number of achievements earned by a user
+    public Integer countByUser(User user) {
+        return (int) findAll().stream().filter(a -> userHasAchievement(user, a)).count();
     }
 
     private Boolean userHasAchievement(User user, Achievement achievement) {

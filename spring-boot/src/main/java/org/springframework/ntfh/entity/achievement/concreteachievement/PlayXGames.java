@@ -4,10 +4,10 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PlayXGames {
+public class PlayXGames implements Achievement {
 
-    public Boolean check(User userFrom, Integer numberOfGames) {
-        Integer playedGames = userFrom.getPlayers().size();
-        return playedGames >= numberOfGames;
+    public Boolean check(User user, Integer numRequested) {
+        Integer playedGames = user.getPlayers().size();
+        return playedGames >= numRequested;
     }
 }

@@ -30,7 +30,6 @@ public class CharacterDeserializer extends JsonDeserializer<Character> {
     @Override
     public Character deserialize(final JsonParser jp, final DeserializationContext ctxt)
             throws IOException, DataAccessException {
-        // TODO handle in the controller?
         ObjectCodec oc = jp.getCodec();
         JsonNode node = oc.readTree(jp);
         DeserializationConfig config = ctxt.getConfig();

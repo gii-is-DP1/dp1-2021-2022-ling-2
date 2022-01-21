@@ -39,8 +39,7 @@ public class EnemyIngameService {
     public EnemyIngame findById(Integer id) throws DataAccessException {
         Optional<EnemyIngame> enemyIngame = enemyIngameRepository.findById(id);
         if (!enemyIngame.isPresent())
-            throw new DataAccessException("EnemyIngame with id " + id + " was not found") {
-            };
+            throw new DataAccessException("EnemyIngame with id " + id + " was not found") {};
         return enemyIngame.get();
     }
 
@@ -57,8 +56,8 @@ public class EnemyIngameService {
     }
 
     /**
-     * Given a game, create the initial horde enemies. These will be random and the
-     * number of enemies will depend on the number of players
+     * Given a game, create the initial horde enemies. These will be random and the number of enemies will depend on the
+     * number of players
      * 
      * @author andrsdt
      * @param game that the horde enemies will be created for
@@ -66,8 +65,7 @@ public class EnemyIngameService {
      */
     private void initializeHordeEnemies(Game game) {
         Integer numPlayers = game.getPlayers().size();
-        Map<Integer, Integer> numEnemies = Map.of(
-                2, 19, // 19 horde enemies for 2 players
+        Map<Integer, Integer> numEnemies = Map.of(2, 19, // 19 horde enemies for 2 players
                 3, 23, // 23 horde enemies for 3 players
                 4, 27);// 27 horde enemies for 4 players
 
@@ -75,8 +73,7 @@ public class EnemyIngameService {
 
         Collections.shuffle(allHordeEnemies);
 
-        List<EnemyIngame> hordeEnemiesIngame = allHordeEnemies.stream()
-                .limit(numEnemies.get(numPlayers))
+        List<EnemyIngame> hordeEnemiesIngame = allHordeEnemies.stream().limit(numEnemies.get(numPlayers))
                 .map(hordeEnemy -> createFromEnemy(hordeEnemy, game)) // And create the DB row of each one
                 .collect(Collectors.toList());
 
@@ -93,12 +90,10 @@ public class EnemyIngameService {
     }
 
     /**
-     * Keep taking enemies from the pile and adding them to the fighting area while
-     * there are less than 3
+     * Keep taking enemies from the pile and adding them to the fighting area while there are less than 3
      * 
      * @author @andrsdt
      */
-    // TODO should this be transactional? It's called from a transactional method
     @Transactional
     public void refillTableWithEnemies(Game game) {
         List<EnemyIngame> enemiesInPile = game.getEnemiesInPile();
@@ -121,7 +116,6 @@ public class EnemyIngameService {
         }
     }
 
-    // TODO should this be transactional? It's called from a transactional method
     @Transactional
     public EnemyIngame createFromEnemy(Enemy enemy, Game game) {
         EnemyIngame enemyIngame = new EnemyIngame();

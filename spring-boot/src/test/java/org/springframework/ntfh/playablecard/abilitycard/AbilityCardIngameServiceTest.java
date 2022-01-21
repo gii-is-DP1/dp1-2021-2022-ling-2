@@ -31,8 +31,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(
-        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 class AbilityCardIngameServiceTest {
 
@@ -62,8 +61,6 @@ class AbilityCardIngameServiceTest {
 
     @BeforeEach
     void init() {
-        /**************** Copypasted section ******************************/
-        // TODO copypaste from CommandIngameTest, maybe extract to a method?
         gameTester = new Game();
         gameTester.setName("test game");
         gameTester.setHasScenes(false);
@@ -85,10 +82,8 @@ class AbilityCardIngameServiceTest {
         playerTester.setCharacter(warriorCharacter);
 
         gameService.startGame(gameTester.getId());
-        /******************************************************************/
 
-        cardTester = abilityCardIngameService.createFromAbilityCard(abilityCardService.findById(44),
-                playerTester);
+        cardTester = abilityCardIngameService.createFromAbilityCard(abilityCardService.findById(44), playerTester);
     }
 
     @AfterEach
@@ -104,8 +99,7 @@ class AbilityCardIngameServiceTest {
     void testFindById() {
         AbilityCardIngame testerCard = abilityCardIngameService.findById(cardTester.getId());
 
-        assertThat(testerCard.getAbilityCardTypeEnum())
-                .isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
+        assertThat(testerCard.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
     }
 
     @Test
@@ -133,24 +127,22 @@ class AbilityCardIngameServiceTest {
     @Test
     void testCreateFromAbilityCard() {
         // TestMethod made in the init()
-        assertThat(cardTester.getAbilityCardTypeEnum())
-                .isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
+        assertThat(cardTester.getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.RECONSTITUCION);
     }
 
     @Test
     void testCreateFromMarketCard() {
-        cardTester = abilityCardIngameService
-                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), playerTester);
+        cardTester = abilityCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(),
+                playerTester);
 
-        assertThat(cardTester.getAbilityCardTypeEnum())
-                .hasToString(MarketCardTypeEnum.POCION_CURATIVA.toString());
+        assertThat(cardTester.getAbilityCardTypeEnum()).hasToString(MarketCardTypeEnum.POCION_CURATIVA.toString());
     }
 
     // H20 + E1
     @Test
     void testRefillHandWithCards() {
-        new HandToAbilityPileCommand(playerTester,
-                gameTester.getLeader().getHand().get(0).getAbilityCardTypeEnum()).execute();
+        new HandToAbilityPileCommand(playerTester, gameTester.getLeader().getHand().get(0).getAbilityCardTypeEnum())
+                .execute();
         Integer HAND_AFTER_LOSING_ONE_CARD = 3;
         Integer HAND_AFTER_REFILL = 4;
 

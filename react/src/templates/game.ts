@@ -13,7 +13,6 @@ export const templateGame: Game = {
   enemiesFighting: [],
   marketCardsInPile: [],
   marketCardsForSale: [],
-  comments: [],
   hasStarted: false,
   hasFinished: false,
   stateType: "LOBBY",

@@ -24,8 +24,6 @@ class UnregisteredUserTest {
     @Autowired
     private UnregisteredUserService unregisteredUserService;
 
-    // TODO test this dynamically. There should be no initial unregisteredUser rows
-    // in the DB
     // Number of unregisteredUsers in the DB
     private final Integer INITIAL_COUNT = 1;
 
@@ -58,7 +56,7 @@ class UnregisteredUserTest {
         Integer preDeletionCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
         unregisteredUserService.delete(toBeDeleted);
         Integer posCreationCount = Lists.newArrayList(unregisteredUserService.findAll()).size();
-        
+
         assertEquals(preDeletionCount - 1, posCreationCount);
     }
 

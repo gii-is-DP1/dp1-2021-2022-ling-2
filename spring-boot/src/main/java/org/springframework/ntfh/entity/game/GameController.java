@@ -2,6 +2,8 @@ package org.springframework.ntfh.entity.game;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.user.User;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,27 +50,33 @@ public class GameController {
     }
 
     @GetMapping("ongoing")
-    public Iterable<Game> getOngoing() {
-        return gameService.findByStateType(GameStateType.ONGOING);
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Game> getOngoingPageable(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        return gameService.findByStateTypePageable(GameStateType.ONGOING, pageable);
     }
 
     @GetMapping("finished")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Game> getPastGames() {
-        return gameService.findByStateType(GameStateType.FINISHED);
+    public Iterable<Game> getFinishedPageable(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        return gameService.findByStateTypePageable(GameStateType.FINISHED, pageable);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("ongoing/count")
+    public Integer getOngoingCount() {
+        return gameService.countByStateType(GameStateType.ONGOING);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("finished/count")
+    public Integer getFinishedCount() {
+        return gameService.countByStateType(GameStateType.FINISHED);
     }
 
     @GetMapping("count")
     @ResponseStatus(HttpStatus.OK)
     public Integer getCount() {
         return gameService.gameCount();
-    }
-
-
-    @GetMapping("finished/count")
-    @ResponseStatus(HttpStatus.OK)
-    public Integer getPastGamesCount() {
-        return gameService.countByStateType(GameStateType.FINISHED);
     }
 
     @GetMapping("{gameId}")

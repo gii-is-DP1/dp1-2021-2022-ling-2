@@ -18,7 +18,6 @@ public class DealDamageCommand implements Command {
 
     @Override
     public void execute() {
-        // TODO move this to somewhere else, not scalable
         Integer currentEndurance = targetedEnemy.getCurrentEndurance();
         Integer playerKillCount = playerFrom.getKills();
         Boolean whetstoneCondition =

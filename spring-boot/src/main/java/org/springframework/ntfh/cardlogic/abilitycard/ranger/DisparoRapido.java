@@ -23,7 +23,7 @@ public class DisparoRapido {
         Integer posicion = playerFrom.getHand().size()-1;
         AbilityCardIngame cartaRobada = playerFrom.getHand().get(posicion);
         if(cartaRobada.getAbilityCardTypeEnum().equals(AbilityCardTypeEnum.DISPARO_RAPIDO)){
-            execute(playerFrom, targetedEnemy);
+            
         } else {
             new HandToAbilityPileCommand(playerFrom, cartaRobada.getAbilityCardTypeEnum()).execute();
         }

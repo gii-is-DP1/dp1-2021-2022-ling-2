@@ -48,15 +48,25 @@ INSERT INTO authorities(id,user_id,authority) VALUES(17, 15,'user');
 INSERT INTO users(id,username,password,email) VALUES (16,'user4','$2a$10$.AxtcWQeT3zpXHv4j0892uKnU5kkJTpRhFijkaJujP2bb22KcR/qC', 'user4@mail.com');
 INSERT INTO authorities(id,user_id,authority) VALUES(18, 16,'user');
 
-INSERT INTO achievements(name, description, type, condition) VALUES ('A new hand touches the beacon', 'Listen. Hear me and obey. A foul darkness has seeped into my temple. A darkness that you will destroy. Return my beacon to Mount Kilkreath. And I will make you the instrument of my cleansing light', 'CREATE_ACCOUNT', 0);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Welcome to the adventure', 'Create an account', 'CREATE_ACCOUNT', 0);
 
 INSERT INTO achievements(name, description, type, condition) VALUES ('Newcomer', 'Play your first game', 'PLAY_X_GAMES', 1);
 INSERT INTO achievements(name, description, type, condition) VALUES ('Avid player', 'Play {X} games', 'PLAY_X_GAMES', 5);
 INSERT INTO achievements(name, description, type, condition) VALUES ('Regular player', 'Play {X} games', 'PLAY_X_GAMES', 10);
 
-INSERT INTO achievements(name, description, type, condition) VALUES ('First steps', 'Win {X} game', 'WIN_X_GAMES', 1);
+INSERT INTO achievements(name, description, type, condition) VALUES ('First steps', 'Win your first game', 'WIN_X_GAMES', 1);
 INSERT INTO achievements(name, description, type, condition) VALUES ('Veteran', 'Win {X} games', 'WIN_X_GAMES', 5);
 INSERT INTO achievements(name, description, type, condition) VALUES ('Master', 'Win {X} games', 'WIN_X_GAMES', 10);
+
+INSERT INTO achievements(name, description, type, condition) VALUES ('First blood', 'Kill your first enemy', 'KILL_X_ENEMIES', 1);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Bloodthirsty', 'Kill {X} enemies', 'KILL_X_ENEMIES', 100);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Assassin', 'Kill {X} enemies', 'KILL_X_ENEMIES', 1000);
+
+INSERT INTO achievements(name, description, type, condition) VALUES ('Peasant', 'Earn {X} points of glory', 'EARN_X_GLORY', 10);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Normie', 'Earn {X} points of glory', 'EARN_X_GLORY', 100);
+INSERT INTO achievements(name, description, type, condition) VALUES ('Glorious', 'Earn {X} points of glory', 'EARN_X_GLORY', 1000);
+
+INSERT INTO achievements(name, description, type, condition) VALUES ('Multipurpose', 'Play with every character at least once', 'PLAY_X_DISTINCT_CHARACTERS', 4);
 
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (1, 'DEXTERITY', 0);
 INSERT INTO proficiencies(id, proficiency_type_enum, secondary_debuff) VALUES (2, 'MELEE', 0);
