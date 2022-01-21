@@ -95,9 +95,7 @@ export default function AdminPage() {
           </div>
           <div className="flex flex-col w-full items-center justify-start pl-12 pt-12">
             {currentTable === "ongoing" && <OngoingGamesTable />}
-            {currentTable === "history" && (
-              <GamesHistoryTable data={gamesHistory} />
-            )}
+            {currentTable === "history" && <GamesHistoryTable admin />}
             {currentTable === "users" && <UsersTable />}
             {currentTable === "achievements" && <AchievementsTable />}
           </div>

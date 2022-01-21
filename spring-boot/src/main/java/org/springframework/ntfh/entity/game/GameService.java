@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.ntfh.entity.game.concretestates.FinishedState;
 import org.springframework.ntfh.entity.game.concretestates.LobbyState;
 import org.springframework.ntfh.entity.game.concretestates.OngoingState;
@@ -86,14 +87,6 @@ public class GameService {
 
         newGame.setStateType(GameStateType.LOBBY);
         return this.save(newGame);
-    }
-
-    @Transactional
-    public void deleteGame(Game game) {
-        // TODO If the petition is sent by a user, only allow to delete it if is in
-        // lobby and token coincides
-        // TODO make sure to clear the FKs in Users, cascade delete players and all that
-        // ! UNUSED !
     }
 
     /**
@@ -191,7 +184,11 @@ public class GameService {
     }
 
     public Iterable<Game> findByStateType(GameStateType stateType) {
-        return gameRepository.findByStateType(stateType);
+        return gameRepository.findByStateType(stateType, Pageable.unpaged());
+    }
+
+    public Iterable<Game> findByStateTypePageable(GameStateType stateType, Pageable pageable) {
+        return gameRepository.findByStateType(stateType, pageable);
     }
 
     public Iterable<Game> findFinishedByUser(User user) {

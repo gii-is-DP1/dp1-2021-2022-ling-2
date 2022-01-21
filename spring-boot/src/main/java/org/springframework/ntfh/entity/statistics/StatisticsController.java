@@ -5,7 +5,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
+import org.springframework.ntfh.entity.game.GameService;
+import org.springframework.ntfh.entity.game.GameStateType;
+import org.springframework.ntfh.entity.user.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,11 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
  * @author andrsdt
  */
 @RestController
-@RequestMapping("/stats")
+@RequestMapping("/statistics")
 public class StatisticsController {
 
     @Autowired
     StatisticsService statisticsService;
+
+    @Autowired
+    GameService gameService;
+
+    @GetMapping("games/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getPastGamesCount() {
+        return gameService.countByStateType(GameStateType.FINISHED);
+    }
 
     @GetMapping("ranking/wins")
     @ResponseStatus(HttpStatus.OK)
@@ -38,10 +51,10 @@ public class StatisticsController {
         return null;
     }
 
-    @GetMapping("ranking/kills")
+    @GetMapping("{userId}/games/count")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Integer> getRankingBykills() {
-        // return statisticsService.getRankingByKills();
-        return null;
+    public Integer gamesPlayedByUser(@PathVariable("userId") User user) {
+        return statisticsService.countFinishedByUser(user);
     }
+
 }

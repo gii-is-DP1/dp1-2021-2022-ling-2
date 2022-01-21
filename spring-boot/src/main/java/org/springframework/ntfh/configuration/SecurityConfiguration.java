@@ -78,6 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/games/lobby").permitAll() // Allow everyone to see lobbies
                 .antMatchers(HttpMethod.GET, "/games/ongoing").permitAll() // Allow everyone to see ongoing games
                 .antMatchers(HttpMethod.GET, "/games/finished").permitAll()// Allow everyone to see finished games
+                .antMatchers(HttpMethod.GET, "/games/ongoing/count").permitAll() // Allow everyone to see past games
                 .antMatchers(HttpMethod.GET, "/games/finished/count").permitAll() // Allow everyone to see past games
                 .antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
                 .antMatchers(HttpMethod.PUT, "/games/{gameId}").hasAuthority("user") // Allow users to update a game
@@ -89,6 +90,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/games/{gameId}").hasAnyAuthority("admin", "user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/start").hasAuthority("user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/turn/next").hasAuthority("user")
+                .antMatchers(HttpMethod.GET, "/games/ongoing/count").hasAuthority("user")
+                .antMatchers(HttpMethod.GET, "/games/finished/count").hasAuthority("user")
                 // ACHIEVEMENT ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
                 .antMatchers(HttpMethod.GET, "/achievements/types").hasAuthority("admin")
@@ -107,9 +110,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/admin/**").hasAuthority(adminString) // access to admin info
                 // RANKING ENDPOINTS
-                .antMatchers(HttpMethod.GET, "/stats/ranking/wins").permitAll()
-                .antMatchers(HttpMethod.GET, "/stats/ranking/glory").permitAll()
-                .antMatchers(HttpMethod.GET, "/stats/ranking/kills").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/games/count").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/glory").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/kills").permitAll()
                 // OTHER ENDPOINTS
                 .anyRequest().denyAll() // else, deny
                 .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

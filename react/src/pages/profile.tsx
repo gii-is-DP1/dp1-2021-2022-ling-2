@@ -83,11 +83,6 @@ export default function Profile() {
             <span>Fastest match: {fastestMatch}</span>
             <span>Longest match: {longestMatch}</span>
             <div className="flex flex-wrap space-x-3">
-              <Link to={ROUTES.STATISTICS + `/${profileUsername}`}>
-                <button type="submit" className="btn-ntfh">
-                  <p className="text-2xl text-gradient-ntfh">Stats</p>
-                </button>
-              </Link>
               <Link
                 to={ROUTES.EDIT_PROFILE.replace(":username", profileUsername)}
               >
@@ -107,9 +102,9 @@ export default function Profile() {
               </Link>
             </div>
           </div>
-          <div className="flex flex-col w-4/5">
+          <div className="flex flex-col w-2/3">
             {/* match history table */}
-            <GamesHistoryTable data={userGamesHistory} />
+            <GamesHistoryTable />
           </div>
         </span>
       </div>

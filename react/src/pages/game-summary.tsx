@@ -64,7 +64,7 @@ export default function GameSummary() {
                         Player
                       </th>
                       <th scope="col" className="text-table-th">
-                        Alive?
+                        Alive
                       </th>
                       <th scope="col" className="text-table-th">
                         Glory
