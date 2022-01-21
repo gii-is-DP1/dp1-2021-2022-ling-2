@@ -3,12 +3,12 @@ package org.springframework.ntfh.entity.statistic;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Pair;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.game.GameRepository;
 import org.springframework.ntfh.entity.game.GameStateType;
@@ -17,10 +17,10 @@ import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StatisticService {
+public class StatisticsService {
 
     @Autowired
-    private StatisticRepository statisticsRepository;
+    private StatisticsRepository statisticsRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -29,35 +29,55 @@ public class StatisticService {
     private GameRepository gameRepository;
 
     // *******For Global Statistics********
+
     public Integer countFinishedGames() {
         return gameRepository.countByStateType(GameStateType.FINISHED);
     }
 
-    public List<User> getListUsersByNumberOfGames(Pageable pageable) {
+    public Integer countUsers() {
+        return (int) userRepository.count();
+    }
+
+    public Double getAvgGamesPlayedPerUser() {
+        Long numberOfUsers = userRepository.count();
+        return countFinishedGames() / numberOfUsers.doubleValue();
+    }
+
+    public Integer getTotalGameHours() {
+        return statisticsRepository.globalDurationOfGames() / 1000 / 3600;
+    }
+
+    public List<User> getUsersOrderedByNumberOfGames(Pageable pageable) {
         return statisticsRepository.listUserByNumberOfGames(pageable);
     }
 
-    public Double getAvgGamesPlayed() {
-        Iterator<User> it = userRepository.findAll().iterator();
-        Integer userCounter = 0;
-        while (it.hasNext()) {
-            userCounter++;
-            it.next();
-        }
-        Double res = (double) (countFinishedGames() / userCounter);
-        return res;
+    public List<Pair<String, Long>> getRankingByWins() {
+        Pageable topFive = PageRequest.of(0, 5);
+        return statisticsRepository.rankingByWins(topFive).stream()
+                .map(list -> Pair.of((String) list.get(0), (long) list.get(1)))
+                .collect(java.util.stream.Collectors.toList());
     }
 
-    public Integer getTotalPlayedTime() {
-        return statisticsRepository.globalDurationOfGames();
+
+    public List<Pair<String, Long>> getRankingByGlory() {
+        Pageable topFive = PageRequest.of(0, 5);
+        return statisticsRepository.rankingByGlory(topFive).stream()
+                .map(list -> Pair.of((String) list.get(0), (long) list.get(1)))
+                .collect(java.util.stream.Collectors.toList());
     }
 
+    public List<Pair<String, Long>> getRankingByKills() {
+        Pageable topFive = PageRequest.of(0, 5);
+        return statisticsRepository.rankingByKills(topFive).stream()
+                .map(list -> Pair.of((String) list.get(0), (long) list.get(1)))
+                .collect(java.util.stream.Collectors.toList());
+    }
 
     // ******User Statistics********
 
     // Number of games played by the user
     public int countFinishedByUser(User user) {
-        return gameRepository.countFinishedByUser(user, GameStateType.FINISHED);
+        return statisticsRepository.countByUser(user);
     }
 
     public Timestamp getAvgDurationOfGames(User user) {

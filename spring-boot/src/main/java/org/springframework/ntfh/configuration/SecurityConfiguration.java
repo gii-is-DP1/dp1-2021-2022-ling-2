@@ -109,12 +109,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/admin/**").hasAuthority("admin") // access to admin info
                 // RANKING ENDPOINTS
+                .antMatchers(HttpMethod.GET, "/statistics/games/count").permitAll()
                 .antMatchers(HttpMethod.GET, "/statistics/users/{userId}/games/count").permitAll()
                 .antMatchers(HttpMethod.GET, "/statistics/users/{userId}").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/games/count").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/ranking/glory").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/ranking/kills").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/global").permitAll()
                 // OTHER ENDPOINTS
                 .anyRequest().denyAll() // else, deny
                 .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

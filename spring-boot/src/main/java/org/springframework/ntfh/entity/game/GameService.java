@@ -77,10 +77,6 @@ public class GameService {
         return gameRepository.findByStateType(stateType, pageable).getContent();
     }
 
-    public Integer countFinishedByUser(User user) {
-        return gameRepository.countFinishedByUser(user, GameStateType.FINISHED);
-    }
-
     public Iterable<Game> findFinishedByUser(User user, Pageable pageable) {
         return gameRepository.findFinishedByUser(user, GameStateType.FINISHED, pageable).getContent();
     }

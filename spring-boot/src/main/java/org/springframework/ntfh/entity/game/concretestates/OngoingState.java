@@ -11,7 +11,7 @@ import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.Player;
 import org.springframework.ntfh.entity.statistic.Statistics;
-import org.springframework.ntfh.entity.statistic.StatisticService;
+import org.springframework.ntfh.entity.statistic.StatisticsService;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
@@ -35,7 +35,7 @@ public class OngoingState implements GameState {
     private GameService gameService;
 
     @Autowired
-    private StatisticService statisticsService;
+    private StatisticsService statisticsService;
 
     @Override
     public void preState(Game game) {
