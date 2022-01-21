@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.Transient;
-import org.springframework.ntfh.entity.comment.Comment;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.playablecard.marketcard.ingame.MarketCardIngame;
@@ -94,11 +93,6 @@ public class Game extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
-
-    // TODO remove all about comments (this, entity...)
-    // orphanRemoval: The "comment" rows will be deleted when the game is deleted
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments = new HashSet<>();
 
     @NotNull
     @Enumerated(EnumType.STRING)

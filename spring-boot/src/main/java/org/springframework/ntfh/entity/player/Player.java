@@ -75,7 +75,7 @@ public class Player extends BaseEntity {
     @ManyToOne
     @JsonIgnoreProperties({"startTime", "finishTime", "hasScenes", "spectatorsAllowed", "maxPlayers", "players",
             "leader", "winner", "turns", "enemiesInPile", "enemiesFighting", "marketCardsInPile", "marketCardsForSale",
-            "comments", "currentTurn"})
+            "currentTurn"})
     private Game game;
 
     @Transient

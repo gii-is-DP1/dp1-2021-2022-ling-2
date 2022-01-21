@@ -12,7 +12,6 @@ import org.springframework.ntfh.entity.achievement.AchievementService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.util.TokenUtils;
-import org.springframework.ntfh.entity.character.Character;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,7 +91,6 @@ public class UserController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.CREATED)
-    // TODO 🔼 do this in the rest of controllers that return no body
     public void register(@RequestBody User user) {
         this.userService.createUser(user);
     }
