@@ -10,8 +10,6 @@ import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.statistic.Statistics;
-import org.springframework.ntfh.entity.statistic.StatisticsService;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
