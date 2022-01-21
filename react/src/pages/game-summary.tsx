@@ -9,7 +9,6 @@ import { Player } from "../interfaces/Player";
 import { templateGame } from "../templates/game";
 
 export default function GameSummary() {
-  // TODO don't send the game itself but statistics about the game
   const [game, setGame] = useState<Game>(templateGame);
   const { gameId } = useParams<{ gameId: string }>();
   const history = useHistory();
@@ -18,8 +17,6 @@ export default function GameSummary() {
 
   useEffect(() => {
     const fetchGame = async () => {
-      // TODO extract this common function to another file and replace it everywhere
-
       try {
         const response = await axios.get(`/games/${gameId}`);
         const _game = response.data;
@@ -33,9 +30,12 @@ export default function GameSummary() {
   }, []);
 
   const rankingSort = (p1: Player, p2: Player): number => {
-    // Sorting criteria for deciding the winner: Sort by glory. If equal, sort by kills.
-    const compareGlory = p2.glory - p1.glory;
-    return compareGlory === 0 ? p2.kills - p1.kills : compareGlory;
+    // Sorting criteria for deciding the winner: Sort by glory. If equal, sort by kills. if equal, the alive one wins.
+    let compareDead, compareKills, compareGlory;
+    compareGlory = p2.glory - p1.glory;
+    compareKills = !compareGlory && p2.glory - p1.glory;
+    compareDead = !compareKills && p1.dead ? 1 : -1;
+    return compareGlory || compareDead || compareKills || 0;
   };
 
   return (
@@ -70,10 +70,10 @@ export default function GameSummary() {
                         Glory
                       </th>
                       <th scope="col" className="text-table-th">
-                        Gold
+                        Kills
                       </th>
                       <th scope="col" className="text-table-th">
-                        Kills
+                        Gold
                       </th>
                     </tr>
                   </thead>
@@ -87,8 +87,8 @@ export default function GameSummary() {
                           {p.dead ? "☠️" : "😀"}
                         </td>
                         <td className="text-table-td">{p.glory}</td>
-                        <td className="text-table-td">{p.gold}</td>
                         <td className="text-table-td">{p.kills}</td>
+                        <td className="text-table-td">{p.gold}</td>
                       </tr>
                     ))}
                   </tbody>

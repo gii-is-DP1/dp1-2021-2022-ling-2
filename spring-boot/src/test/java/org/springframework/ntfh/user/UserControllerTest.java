@@ -4,14 +4,13 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.ntfh.entity.achievement.AchievementService;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.GameService;
+import org.springframework.ntfh.entity.statistic.StatisticsService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserController;
 import org.springframework.ntfh.entity.user.UserService;
@@ -57,6 +57,9 @@ class UserControllerTest {
 
     @MockBean
     AchievementService achievementService;
+
+    @MockBean
+    StatisticsService statisticsService;
 
     @MockBean
     DataSource dataSource;
@@ -97,7 +100,6 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = "admin", password = "admin", roles = "admin")
     void findPage_success() throws Exception {
-        // Mock the userService.findPage() method
         mockMvc.perform(get("/users").param("page", "1").param("size", "2").header("authorization",
                 "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].username", is("user3"))).andExpect(jsonPath("$[1].username", is("user4")));
@@ -106,8 +108,6 @@ class UserControllerTest {
     @Test
     @WithMockUser("user")
     void findByUsername_success() throws Exception {
-        // Mock the userService.findByUsername() method
-
         final String USERNAME = "user1";
 
         mockMvc.perform(get("/users/" + USERNAME)).andExpect(status().isOk())
@@ -127,16 +127,15 @@ class UserControllerTest {
     void register_success() throws Exception {
         final String POST_JSON =
                 "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
-        mockMvc.perform(post("/users/register").with(csrf()).header("Authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON).content(POST_JSON)).andExpect(status().isCreated());
+        mockMvc.perform(post("/users/register").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
+                .andExpect(status().isCreated());
     }
 
     @Test
     void login_success() throws Exception {
         final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
-        mockMvc.perform(post("/users/login").with(csrf()).header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON).content(POST_JSON)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
+        mockMvc.perform(post("/users/login").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
     }
 
     @Test

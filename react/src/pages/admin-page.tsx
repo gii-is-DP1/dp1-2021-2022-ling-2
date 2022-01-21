@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import axios from "../api/axiosConfig";
 import AchievementsTable from "../components/admin/AchievementsTable";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import OngoingGamesTable from "../components/admin/OngoingGamesTable";
@@ -12,8 +11,6 @@ import * as ROUTES from "../constants/routes";
 import userContext from "../context/user";
 import hasAuthority from "../helpers/hasAuthority";
 import tokenParser from "../helpers/tokenParser";
-import { Achievement } from "../interfaces/Achievement";
-import { Game } from "../interfaces/Game";
 
 type CurrentTableEnum = "ongoing" | "history" | "achievements" | "users";
 
@@ -23,24 +20,8 @@ type CurrentTableEnum = "ongoing" | "history" | "achievements" | "users";
  */
 export default function AdminPage() {
   const history = useHistory();
-  const { userToken } = useContext(userContext);
   const loggedUser = tokenParser(useContext(userContext));
   const [currentTable, setCurrentTable] = useState<CurrentTableEnum>("ongoing");
-  const [gamesHistory, setGamesHistory] = useState<Game[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
-
-  useEffect(() => {
-    const fetchGameHistory = async () => {
-      try {
-        const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get("games/finished", { headers });
-        setGamesHistory(response.data);
-      } catch (error: any) {
-        toast.error(error?.message);
-      }
-    };
-    if (currentTable === "ongoing") fetchGameHistory();
-  }, [currentTable]);
 
   useEffect(() => {
     document.title = "NTFH - Admin panel";
@@ -66,28 +47,36 @@ export default function AdminPage() {
           <div className="flex flex-col w-1/4 max-w-1/5 justify-center gap-y-4">
             <button
               type="submit"
-              className="btn-ntfh"
+              className={`btn-ntfh transform-gpu hover:scale-110 focus:scale-110 ${
+                currentTable === "ongoing" ? " scale-110" : ""
+              }`}
               onClick={() => setCurrentTable("ongoing")}
             >
               <p className="text-gradient-ntfh">Ongoing games</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
+              className={
+                "btn-ntfh transform-gpu hover:scale-110 focus:scale-110"
+              }
               onClick={() => setCurrentTable("history")}
             >
               <p className="text-gradient-ntfh">Game history</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
+              className={
+                "btn-ntfh transform-gpu hover:scale-110 focus:scale-110"
+              }
               onClick={() => setCurrentTable("users")}
             >
               <p className="text-gradient-ntfh">Users</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
+              className={
+                "btn-ntfh transform-gpu hover:scale-110 focus:scale-110"
+              }
               onClick={() => setCurrentTable("achievements")}
             >
               <p className="text-gradient-ntfh">Achievements</p>

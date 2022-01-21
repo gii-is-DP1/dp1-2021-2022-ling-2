@@ -42,8 +42,7 @@ public class MarketCardIngameService {
     public MarketCardIngame findById(Integer id) throws DataAccessException {
         Optional<MarketCardIngame> enemyIngame = marketCardIngameRepository.findById(id);
         if (!enemyIngame.isPresent())
-            throw new DataAccessException("MarketCardIngame with id " + id + " was not found") {
-            };
+            throw new DataAccessException("MarketCardIngame with id " + id + " was not found") {};
         return enemyIngame.get();
     }
 
@@ -58,8 +57,7 @@ public class MarketCardIngameService {
     }
 
     /**
-     * Keep taking market cards from the pile and adding them to the market area
-     * while there are less than 5
+     * Keep taking market cards from the pile and adding them to the market area while there are less than 5
      * 
      * @author andrsdt
      */
@@ -77,8 +75,7 @@ public class MarketCardIngameService {
     }
 
     /**
-     * Create entities of each market card in the game passed as a parameter and
-     * persist them in the database.
+     * Create entities of each market card in the game passed as a parameter and persist them in the database.
      * 
      * @author andrsdt
      * @param game that the market cards will be initialized for
@@ -86,8 +83,8 @@ public class MarketCardIngameService {
     @Transactional
     public void initializeFromGame(Game game) {
         // Fetch all market cards from the database
-        List<MarketCard> allMarketCards = StreamSupport.stream(marketCardService.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        List<MarketCard> allMarketCards =
+                StreamSupport.stream(marketCardService.findAll().spliterator(), false).collect(Collectors.toList());
 
         Collections.shuffle(allMarketCards);
 
@@ -109,14 +106,13 @@ public class MarketCardIngameService {
     }
 
 
-     /**
+    /**
      * Executed when a player tries to buy a market card
      * 
      * @param marketCardIngameId
      */
     @Transactional
     public Game buyMarketCard(Integer marketCardIngameId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
         String username = TokenUtils.usernameFromToken(token);
         Player player = userService.findByUsername(username).getPlayer();
         Turn currentTurn = player.getGame().getCurrentTurn();

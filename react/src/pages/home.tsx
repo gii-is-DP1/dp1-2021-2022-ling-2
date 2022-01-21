@@ -63,8 +63,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // TODO extract this to app.tsx? so it runs even if the
-    // person without credentials never visits / route
     // Unregistered user creation
     if (!unregisteredUser?.username) {
       // if there aren't unregistered user credentials, ask for some
@@ -89,9 +87,6 @@ export default function Home() {
             <button type="submit" className="btn-ntfh mb-2">
               <p className="text-gradient-ntfh">Statistics</p>
             </button>
-          </Link>
-          <Link to={ROUTES.RANKING} className="btn-ntfh w-min">
-            <p className="text-gradient-ntfh">Ranking</p>
           </Link>
         </div>
         <button className="btn-ntfh w-min" onClick={handleShare}>

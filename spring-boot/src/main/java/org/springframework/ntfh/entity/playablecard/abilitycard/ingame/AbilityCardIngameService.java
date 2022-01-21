@@ -41,8 +41,7 @@ public class AbilityCardIngameService {
 
     public AbilityCardIngame findById(int id) {
         return abilityCardIngameRepository.findById(id)
-                .orElseThrow(() -> new DataAccessException("Ability card not found") {
-                });
+                .orElseThrow(() -> new DataAccessException("Ability card not found") {});
     }
 
     public void delete(AbilityCardIngame abilityCardIngame) {
@@ -50,8 +49,7 @@ public class AbilityCardIngameService {
     }
 
     /**
-     * Given a game, instantiate the abilityCardIngame entities for each of the
-     * players
+     * Given a game, instantiate the abilityCardIngame entities for each of the players
      * 
      * @author andrsdt
      * @param game that the ability cards will be initialized for
@@ -62,24 +60,21 @@ public class AbilityCardIngameService {
     }
 
     /**
-     * Given a player, fill his/her abilityPile with all the cards of his/her
-     * character
+     * Given a player, fill his/her abilityPile with all the cards of his/her character
      * 
      * @param player
      * @return
      */
     private void populateWithInitialCards(Player player) {
         CharacterTypeEnum character = player.getCharacterTypeEnum();
-        List<AbilityCard> allAbilityCardsForCharacter = StreamSupport
-                .stream(abilityCardService.findByCharacterTypeEnum(character).spliterator(), false)
-                .collect(Collectors.toList());
+        List<AbilityCard> allAbilityCardsForCharacter =
+                StreamSupport.stream(abilityCardService.findByCharacterTypeEnum(character).spliterator(), false)
+                        .collect(Collectors.toList());
 
         Collections.shuffle(allAbilityCardsForCharacter);
 
-        List<AbilityCardIngame> playerAbilityCards = allAbilityCardsForCharacter
-                .stream()
-                .map(abilityCard -> createFromAbilityCard(abilityCard, player))
-                .collect(Collectors.toList());
+        List<AbilityCardIngame> playerAbilityCards = allAbilityCardsForCharacter.stream()
+                .map(abilityCard -> createFromAbilityCard(abilityCard, player)).collect(Collectors.toList());
 
         player.setAbilityPile(playerAbilityCards);
 
@@ -88,8 +83,7 @@ public class AbilityCardIngameService {
     }
 
     /**
-     * Given a player, fill his/her hand with cards from their abilityPile until
-     * they have 4 or they run out of cards
+     * Given a player, fill his/her hand with cards from their abilityPile until they have 4 or they run out of cards
      * 
      * @param player
      */
@@ -113,8 +107,7 @@ public class AbilityCardIngameService {
     }
 
     /**
-     * Given a generic ability card and a player, create the specific Ingame entity
-     * for this player
+     * Given a generic ability card and a player, create the specific Ingame entity for this player
      * 
      * @author andrsdt
      * @param abilityCard
@@ -141,8 +134,8 @@ public class AbilityCardIngameService {
      */
     @Transactional
     public AbilityCardIngame createFromMarketCard(MarketCard marketCard, Player player) {
-        AbilityCardTypeEnum abilityCardTypeEnum = AbilityCardTypeEnum
-                .valueOf(marketCard.getMarketCardTypeEnum().toString());
+        AbilityCardTypeEnum abilityCardTypeEnum =
+                AbilityCardTypeEnum.valueOf(marketCard.getMarketCardTypeEnum().toString());
         AbilityCard abilityCard = abilityCardService.findByAbilityCardTypeEnum(abilityCardTypeEnum);
 
         return createFromAbilityCard(abilityCard, player);
@@ -150,7 +143,6 @@ public class AbilityCardIngameService {
 
     @Transactional
     public Game playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
-        // TODO make getting the turn more straightforward, maybe with a custom query
         String username = TokenUtils.usernameFromToken(token);
         Player player = userService.findByUsername(username).getPlayer();
         Turn currentTurn = player.getGame().getCurrentTurn();
@@ -159,6 +151,6 @@ public class AbilityCardIngameService {
 
         return player.getGame();
     }
-    
+
 
 }

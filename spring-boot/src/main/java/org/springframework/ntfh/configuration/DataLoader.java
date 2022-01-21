@@ -56,16 +56,18 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadInitialData() {
-        populateUsers(100);
-        createGamesInLobbyState(3);
-        createGamesInGameState(5);
-        createGamesInFinishedState(20);
+        // If this number is not enough, additional users will be created automatically
+        populateUsers(4);
+
+        createGamesInFinishedState(50);
+        createGamesInGameState(1);
+        createGamesInLobbyState(1);
     }
 
     private void populateUsers(Integer n) {
         // Fill a user bank with the number of users specified. Initially they are all "in the menu" and ready to join
         // games
-        usersFree = IntStream.range(1, n + 1).boxed().map(this::createTestUser).collect(Collectors.toList());
+        usersFree = IntStream.range(1, n + 1).boxed().map(i -> createTestUser()).collect(Collectors.toList());
     }
 
     /**
@@ -79,8 +81,10 @@ public class DataLoader implements CommandLineRunner {
     private void createGamesInFinishedState(Integer numberOfGames) {
         IntStream.range(0, numberOfGames).forEach(i -> {
             Game g = createGameInLobbyState();
-
             g = gameService.startGame(g.getId());
+
+            // Make the duration of the game something between 5 and 100 minutes
+            g.setStartTime(Timestamp.from(Instant.now().minus(random.nextInt(100) + 5L, ChronoUnit.MINUTES)));
 
             g.getPlayers().forEach(p -> {
                 User user = p.getUser();
@@ -97,8 +101,6 @@ public class DataLoader implements CommandLineRunner {
                 usersFree.add(user);
             });
             g = gameService.finishGame(g);
-            // Make the duration of the game something between 5 and 100 minutes
-            g.setStartTime(Timestamp.from(Instant.now().minus(random.nextInt(100) + 5L, ChronoUnit.MINUTES)));
         });
     }
 
@@ -123,6 +125,8 @@ public class DataLoader implements CommandLineRunner {
         // For every lobby, create users to fill them with players
         for (int j = 0; j < lobby.getMaxPlayers(); j++) {
             // Take a random user who is not playing a game
+            if (usersFree.isEmpty())
+                usersFree.add(createTestUser());
             User testUser = usersFree.get(random.nextInt(usersFree.size()));
 
             gameService.joinGame(lobby, testUser);
@@ -156,9 +160,9 @@ public class DataLoader implements CommandLineRunner {
         return gameService.createGame(game);
     }
 
-    private User createTestUser(Integer number) {
+    private User createTestUser() {
         User user = new User();
-        String username = "dummy" + number;
+        String username = "dummy" + testUserCount;
         user.setUsername(username);
         user.setEmail(username + "@mail.com");
         user.setPassword(username);
