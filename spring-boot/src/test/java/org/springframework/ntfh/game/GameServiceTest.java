@@ -7,7 +7,6 @@ import java.util.List;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -132,7 +131,7 @@ class GameServiceTest {
     void testFindPlayersByGameId() {
         List<Player> testerList = gameService.findPlayersByGameId(1);
 
-        assertThat(testerList.size()).isEqualTo(2);
+        assertThat(testerList).hasSize(2);
     }
 
     @Test
@@ -167,7 +166,7 @@ class GameServiceTest {
         playerTester.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngame.getId(), null, token);
 
-        assertThat(playerTester.getHand().size()).isEqualTo(2);
+        assertThat(playerTester.getHand()).hasSize(2);
     }
 
     @Test
@@ -225,13 +224,13 @@ class GameServiceTest {
         enemiesFighting.add(enemyIngame);
         gameTester.setEnemiesFighting(enemiesFighting);
 
-        assertThat(gameTester.getEnemiesFighting().contains(enemyIngame)).isTrue();
+        assertThat(gameTester.getEnemiesFighting()).contains(enemyIngame);
 
         abilityCardIngameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
 
         turnService.createNextTurn(gameTester);
 
-        assertThat(gameTester.getEnemiesFighting().contains(enemyIngame)).isFalse();
+        assertThat(gameTester.getEnemiesFighting()).doesNotContain(enemyIngame);
     }
 
     // H22 + E1

@@ -130,11 +130,11 @@ class EnemyIngameServiceTest {
         Integer ENEMIES_REFILLED = 3;
         new DealDamageCommand(50, gameTester.getPlayers().get(0), gameTester.getEnemiesFighting().get(0)).execute();
 
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(ENEMIES_AFTER_ONE_GET_KILLED);
+        assertThat(gameTester.getEnemiesFighting()).hasSize(ENEMIES_AFTER_ONE_GET_KILLED);
 
         enemyIngameService.refillTableWithEnemies(gameTester);
 
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(ENEMIES_REFILLED);
+        assertThat(gameTester.getEnemiesFighting()).hasSize(ENEMIES_REFILLED);
     }
 
     @Test

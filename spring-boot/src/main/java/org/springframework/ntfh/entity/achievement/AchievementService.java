@@ -61,11 +61,6 @@ public class AchievementService {
             throw new IllegalArgumentException("Achievement not found in the system");
         }
 
-        Optional<Achievement> sameNameOptional = achievementRepository.findOptionalByName(achievement.getName());
-        if (sameNameOptional.isPresent() && !(sameNameOptional.get().getId().equals(achievement.getId()))) {
-            throw new IllegalArgumentException("There is already an achievement with the same name");
-        }
-
         Achievement achievementInDB = achievementInDBOptional.get();
         if (!achievement.getVersion().equals(achievementInDB.getVersion())) {
             throw new OptimisticLockingFailureException(

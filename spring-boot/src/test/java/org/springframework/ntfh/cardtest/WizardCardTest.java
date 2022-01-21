@@ -39,7 +39,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class WizardCardTest {
+class WizardCardTest {
 
     @Autowired
     private GameService gameService;
@@ -124,7 +124,7 @@ public class WizardCardTest {
         wizard.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameWizard.getId(), null, tokenWizard);
 
-        assertThat(wizard.getDiscardPile().size()).isEqualTo(3); // one card discarded per enemy and the card played
+        assertThat(wizard.getDiscardPile()).hasSize(3); // one card discarded per enemy and the card played
         assertThat(slingerIngame.getRestrained()).isTrue();
         assertThat(berserkerIngame.getRestrained()).isTrue();
     }
@@ -146,7 +146,7 @@ public class WizardCardTest {
 
         assertThat(slingerIngame.getCurrentEndurance()).isZero();
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(1);
+        assertThat(rogue.getDiscardPile()).hasSize(1);
     }
 
     @Test
@@ -163,7 +163,7 @@ public class WizardCardTest {
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
         assertThat(berserkerIngame.getRestrained()).isTrue();
-        assertThat(wizard.getHand().size()).isEqualTo(1); // we draw 1 card
+        assertThat(wizard.getHand()).hasSize(1); // we draw 1 card
 
     }
 
@@ -181,7 +181,7 @@ public class WizardCardTest {
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
         assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).contains(AbilityCardTypeEnum.FLECHA_CORROSIVA);
-        assertThat(wizard.getDiscardPile().size()).isEqualTo(2); // we discard 1 and the played card is also discarded
+        assertThat(wizard.getDiscardPile()).hasSize(2); // we discard 1 and the played card is also discarded
 
         // any other card played after this one on the same enemy will cause 1 additional damage
 
@@ -232,8 +232,8 @@ public class WizardCardTest {
         new GiveWoundCommand(wizard).execute();
         new DiscardCommand(2, wizard).execute();
 
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(3);
-        assertThat(wizard.getDiscardPile().size()).isEqualTo(2);
+        assertThat(rogue.getDiscardPile()).hasSize(3);
+        assertThat(wizard.getDiscardPile()).hasSize(2);
         assertThat(wizard.getWounds()).isEqualTo(1);
 
         AbilityCard orbeCurativo = abilityCardService.findById(40);
@@ -245,9 +245,9 @@ public class WizardCardTest {
         wizard.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameWizard.getId(), null, tokenWizard);
 
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(1);
+        assertThat(rogue.getDiscardPile()).hasSize(1);
         assertThat(wizard.getWounds()).isZero();
-        assertThat(wizard.getDiscardPile().size()).isZero(); // the card played has the exile property, thus it didnt go
+        assertThat(wizard.getDiscardPile()).isEmpty();// the card played has the exile property, thus it didnt go
                                                              // to the discard pile
     }
 
@@ -272,7 +272,7 @@ public class WizardCardTest {
 
         new DiscardCommand(2, wizard).execute();
 
-        assertThat(wizard.getDiscardPile().size()).isEqualTo(2);
+        assertThat(wizard.getDiscardPile()).hasSize(2);
 
         AbilityCard reconstitucion = abilityCardService.findById(44);
         AbilityCardIngame abilityCardIngameWizard =
@@ -283,8 +283,8 @@ public class WizardCardTest {
         wizard.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameWizard.getId(), null, tokenWizard);
 
-        assertThat(wizard.getHand().size()).isEqualTo(1); // 1 card drawn
-        assertThat(wizard.getDiscardPile().size()).isEqualTo(1); // the card played is discarded but the other 2 have
+        assertThat(wizard.getHand()).hasSize(1); // 1 card drawn
+        assertThat(wizard.getDiscardPile()).hasSize(1); // the card played is discarded but the other 2 have
                                                                  // been recovered
     }
 
@@ -294,8 +294,8 @@ public class WizardCardTest {
         new DiscardCommand(3, wizard).execute();
         new DiscardCommand(2, rogue).execute();
 
-        assertThat(wizard.getDiscardPile().size()).isEqualTo(3);
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+        assertThat(wizard.getDiscardPile()).hasSize(3);
+        assertThat(rogue.getDiscardPile()).hasSize(2);
 
         AbilityCard torrenteDeLuz = abilityCardService.findById(45);
         AbilityCardIngame abilityCardIngameWizard =
@@ -306,8 +306,8 @@ public class WizardCardTest {
         wizard.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameWizard.getId(), berserkerIngame.getId(), tokenWizard);
 
-        assertThat(wizard.getDiscardPile().size()).isEqualTo(2);
-        assertThat(rogue.getDiscardPile().size()).isZero();
+        assertThat(wizard.getDiscardPile()).hasSize(2);
+        assertThat(rogue.getDiscardPile()).isEmpty();
         assertThat(wizard.getGlory()).isEqualTo(1);
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
     }
