@@ -124,7 +124,7 @@ public class RogueCardTest {
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
         assertThat(rogue.getGold()).isZero();
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(2); // discarded card and the card played
+        assertThat(rogue.getDiscardPile()).hasSize(2); // discarded card and the card played
 
         // the attack kills
 
@@ -136,7 +136,7 @@ public class RogueCardTest {
 
         assertThat(berserkerIngame.getCurrentEndurance()).isZero();
         assertThat(rogue.getGold()).isEqualTo(1);
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+        assertThat(rogue.getDiscardPile()).hasSize(2);
     }
 
     @Test
