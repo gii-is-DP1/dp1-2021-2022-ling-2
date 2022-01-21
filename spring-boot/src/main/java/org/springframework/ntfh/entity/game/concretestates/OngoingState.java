@@ -10,6 +10,8 @@ import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.statistic.Statistics;
+import org.springframework.ntfh.entity.statistic.StatisticsService;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
@@ -31,6 +33,9 @@ public class OngoingState implements GameState {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private StatisticsService statisticsService;
 
     @Override
     public void preState(Game game) {
@@ -95,11 +100,34 @@ public class OngoingState implements GameState {
             player.setGlory(player.getGlory() + additionalGlory);
         });
 
-        // Choose as the winner the one with more glory. If there is a tie, the leader is the winner
-        Player winner = players.stream().max(compareByGlory().thenComparing(compareByKills())).orElse(game.getLeader());
+        // Choose as the winner the one with more glory. If there is a tie, the one alive wins
+        Player winner =
+                players.stream().max(compareByGlory().thenComparing(compareByKills()).thenComparing(compareByAlive()))
+                        .orElse(game.getLeader());
         game.setWinner(winner);
         game.setFinishTime(Timestamp.from(Instant.now()));
         gameService.setNextState(game); // set state to FINISHED
+
+        // **************/
+        // Cosass del Roble (Space+Power Botton)
+        // ***************/
+
+        for (int i = 0; i < players.size(); i++) {
+            Statistics ms = new Statistics();
+            Player p = players.get(i);
+            ms.setUser(p.getUser());
+            ms.setDied(p.isDead());
+            ms.setGloryEarned(p.getGlory());
+            ms.setKillCount(p.getKills());
+            ms.setCharacter(p.getCharacterTypeEnum());
+            ms.setVictory(p.equals(winner));
+            Integer milliseconds = (int) (game.getFinishTime().getTime() - game.getStartTime().getTime());
+            ms.setDuration(milliseconds);
+
+            statisticsService.save(ms);
+        }
+
+
         return gameService.save(game);
     }
 
@@ -109,5 +137,9 @@ public class OngoingState implements GameState {
 
     private Comparator<Player> compareByKills() {
         return (p1, p2) -> p1.getKills().compareTo(p2.getKills());
+    }
+
+    private Comparator<Player> compareByAlive() {
+        return (p1, p2) -> p2.isDead().compareTo(p1.isDead());
     }
 }

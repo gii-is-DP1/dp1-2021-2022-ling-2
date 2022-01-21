@@ -33,10 +33,9 @@ export default function GamesHistoryTable(props: Props) {
     "Players",
   ];
 
-  const fetchTotalPages = async () => {
+  const fetchUserTotalPages = async () => {
     try {
-      const headers = { Authorization: "Bearer " + userToken };
-      const response = await axios.get("games/finished/count", { headers });
+      const response = await axios.get(`users/${username}/history/count`);
       setfinishedGameCount(response.data);
     } catch (error: any) {
       toast.error(error?.message);
@@ -49,6 +48,16 @@ export default function GamesHistoryTable(props: Props) {
         params: { page: page, size: gamesPerPage },
       });
       setFinishedGames(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const fetchTotalPages = async () => {
+    try {
+      const headers = { Authorization: "Bearer " + userToken };
+      const response = await axios.get("games/finished/count", { headers });
+      setfinishedGameCount(response.data);
     } catch (error: any) {
       toast.error(error?.message);
     }
@@ -90,7 +99,7 @@ export default function GamesHistoryTable(props: Props) {
 
   useEffect(() => {
     // Fetch the total number of users only once to set the totalPages variable
-    fetchTotalPages();
+    admin ? fetchTotalPages() : fetchUserTotalPages();
   }, []);
 
   return (

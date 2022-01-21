@@ -8,7 +8,6 @@ type Params = {
 export default function PlaceholderCard(params: Params) {
   const { counterclockwise } = params;
 
-  // TODO replace position translate with -space-x-12 in the renderer
   return (
     <img
       draggable={false}

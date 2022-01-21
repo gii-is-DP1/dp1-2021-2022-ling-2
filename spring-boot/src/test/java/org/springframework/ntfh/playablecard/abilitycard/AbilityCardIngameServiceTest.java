@@ -119,8 +119,8 @@ class AbilityCardIngameServiceTest {
         Integer HAND_SIZE = 4;
         Integer DECK_SIZE = 11;
 
-        assertThat(playerTester.getHand().size()).isEqualTo(HAND_SIZE);
-        assertThat(playerTester.getAbilityPile().size()).isEqualTo(DECK_SIZE);
+        assertThat(playerTester.getHand()).hasSize(HAND_SIZE);
+        assertThat(playerTester.getAbilityPile()).hasSize(DECK_SIZE);
     }
 
 
@@ -146,11 +146,11 @@ class AbilityCardIngameServiceTest {
         Integer HAND_AFTER_LOSING_ONE_CARD = 3;
         Integer HAND_AFTER_REFILL = 4;
 
-        assertThat(gameTester.getLeader().getHand().size()).isEqualTo(HAND_AFTER_LOSING_ONE_CARD);
+        assertThat(gameTester.getLeader().getHand()).hasSize(HAND_AFTER_LOSING_ONE_CARD);
 
         abilityCardIngameService.refillHandWithCards(gameTester.getLeader());
 
-        assertThat(playerTester.getHand().size()).isEqualTo(HAND_AFTER_REFILL);
+        assertThat(playerTester.getHand()).hasSize(HAND_AFTER_REFILL);
     }
 
 }

@@ -22,7 +22,7 @@ export default function Lobby() {
   const [time, setTime] = useState(Date.now()); // Used to fetch lobby users every 2 seconds
   const [game, setGame] = useState<Game>(templateGame); // current state of the lobby in the server. Updated perodically
   const history = useHistory();
-  const { gameId } = useParams<{ gameId: string }>(); // TODO maybe we should just pass this as a param to the component
+  const { gameId } = useParams<{ gameId: string }>();
   const { userToken } = useContext(UserContext);
   const loggedUser = tokenParser(useContext(UserContext));
   const [player, setPlayer] = useState<Player>(templatePlayer);
@@ -154,7 +154,6 @@ export default function Lobby() {
   }, []); // Only run once
 
   useEffect(() => {
-    // TODO extract timer to hook
     const interval = setInterval(() => setTime(Date.now()), REFRESH_RATE); // Useful later for fetching lobby users
     return () => {
       clearInterval(interval); // when the component is unmounted, clean up to prevent memory leaks

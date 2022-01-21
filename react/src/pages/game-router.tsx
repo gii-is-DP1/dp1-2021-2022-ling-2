@@ -12,12 +12,10 @@ import Lobby from "./lobby";
 export default function GameRouter() {
   const history = useHistory();
   const { gameId } = useParams<{ gameId: string }>();
-  // TODO route each game page to its own component depending on the state
   const [gameState, setGameState] = useState<GameStateEnum | null>(null);
 
   useEffect(() => {
     const fetchGame = async () => {
-      // TODO extract this common function to another file and replace it everywhere
       try {
         const response = await axios.get(`/games/${gameId}`);
         const _game = response.data;

@@ -27,8 +27,7 @@ public class UnregisteredUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public UnregisteredUser getCredentials() {
-        UnregisteredUser unregisteredUser = unregisteredUserService.create();
-        return unregisteredUser;
+        return unregisteredUserService.create();
     }
 
 }

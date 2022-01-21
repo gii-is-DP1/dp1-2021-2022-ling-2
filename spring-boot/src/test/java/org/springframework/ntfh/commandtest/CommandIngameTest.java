@@ -284,12 +284,12 @@ class CommandIngameTest {
         currentHand.add(pocionCurativaIngame);
         ranger.setHand(currentHand);
 
-        assertThat(currentHand.size()).isEqualTo(5);
+        assertThat(currentHand).hasSize(5);
         assertThat(ranger.getDiscardPile().size()).isZero();
 
         new ExileCommand(ranger, AbilityCardTypeEnum.POCION_CURATIVA).execute();
 
-        assertThat(currentHand.size()).isEqualTo(4);
+        assertThat(currentHand).hasSize(4);
         assertThat(ranger.getDiscardPile().size()).isZero();
     }
 
@@ -418,8 +418,8 @@ class CommandIngameTest {
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
         ranger.getHand().add(abilityCardIngame);
 
-        assertThat(ranger.getAbilityPile().size()).isEqualTo(11);
-        assertThat(ranger.getHand().size()).isEqualTo(5);
+        assertThat(ranger.getAbilityPile()).hasSize(11);
+        assertThat(ranger.getHand()).hasSize(5);
 
         new HandToAbilityPileCommand(ranger, companeroLobo.getAbilityCardTypeEnum()).execute();
 
@@ -471,7 +471,7 @@ class CommandIngameTest {
 
         new ReceiveDamageCommand(slingerIngame, rogue).execute();
 
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+        assertThat(rogue.getDiscardPile()).hasSize(2);
         assertThat(rogue.getWounds()).isZero();
 
         // recieve damage beyond their current ability pile, ads wound
@@ -522,7 +522,7 @@ class CommandIngameTest {
         abilityCardIngameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(),
                 token);
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+        assertThat(ranger.getDiscardPile()).hasSize(1);
 
         new RecoverCardCommand(ranger, AbilityCardTypeEnum.DISPARO_RAPIDO).execute();
 
@@ -538,11 +538,11 @@ class CommandIngameTest {
         abilityCardIngameService.playCard(abilityCardIngame.getId(), gameTester.getEnemiesFighting().get(0).getId(),
                 token);
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+        assertThat(ranger.getDiscardPile()).hasSize(1);
 
         new RecoverCardCommand(ranger, AbilityCardTypeEnum.COMPANERO_LOBO).execute();
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+        assertThat(ranger.getDiscardPile()).hasSize(1);
     }
 
     @Test
@@ -553,14 +553,14 @@ class CommandIngameTest {
         new DiscardCommand(1, ranger).execute();
         new RecoverCommand(ranger).execute();
 
-        assertThat(ranger.getAbilityPile().size()).isEqualTo(11);
+        assertThat(ranger.getAbilityPile()).hasSize(11);
         assertThat(ranger.getDiscardPile().size()).isZero();
 
         // try to recover one card from an empty discard pile to the draw pile
 
         new RecoverCommand(ranger).execute();
 
-        assertThat(ranger.getAbilityPile().size()).isEqualTo(11);
+        assertThat(ranger.getAbilityPile()).hasSize(11);
         assertThat(ranger.getDiscardPile().size()).isZero();
     }
 

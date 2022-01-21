@@ -177,7 +177,7 @@ public class RangerCardTest {
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
-        assertThat(ranger.getHand().size()).isEqualTo(1);
+        assertThat(ranger.getHand()).hasSize(1);
 
         // the next card in the pile is not a quickshot and so it will be returned to the draw pile
 
@@ -199,7 +199,7 @@ public class RangerCardTest {
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(2); // the card just played and the one discarded due to
+        assertThat(ranger.getDiscardPile()).hasSize(2); // the card just played and the one discarded due to
                                                                  // its effect
     }
 
@@ -226,7 +226,7 @@ public class RangerCardTest {
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
         assertThat(slingerIngame.getCurrentEndurance()).isZero();
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+        assertThat(rogue.getDiscardPile()).hasSize(2);
     }
 
     @Test
@@ -253,7 +253,7 @@ public class RangerCardTest {
         ranger.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); // just the recoger flechas that we just used
+        assertThat(ranger.getDiscardPile()).hasSize(1); // just the recoger flechas that we just used
         assertThat(ranger.getGold()).isEqualTo(1);
 
         // the card will not find any disparo rapido in the discard pile
@@ -266,7 +266,7 @@ public class RangerCardTest {
 
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(2);
+        assertThat(ranger.getDiscardPile()).hasSize(2);
         assertThat(ranger.getGold()).isEqualTo(2);
 
     }
@@ -289,7 +289,7 @@ public class RangerCardTest {
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
 
         assertThat(gameTester.getEnemiesFighting()).doesNotContain(berserkerIngame);
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(2);
+        assertThat(gameTester.getEnemiesFighting()).hasSize(2);
 
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngameService;
 import org.springframework.ntfh.entity.game.Game;
+import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.playablecard.abilitycard.AbilityCardTypeEnum;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngameService;
@@ -18,7 +19,9 @@ import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
 import org.springframework.ntfh.entity.turn.TurnStateType;
 import org.springframework.ntfh.util.State;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @State
 public class PlayerState implements TurnState {
 
@@ -33,6 +36,10 @@ public class PlayerState implements TurnState {
 
     @Autowired
     private TurnService turnService;
+
+    @Autowired
+    private GameService gameService;
+
 
     @Override
     public TurnStateType getNextState() {
@@ -94,7 +101,8 @@ public class PlayerState implements TurnState {
                 method.invoke(cardCommand, playerFrom, targetedEnemy);
             }
         } catch (Exception e) {
-            throw new IllegalArgumentException("Ability card type " + className + " is not implemented");
+            log.error("Error playing card ", e);
+            return;
         }
 
         // Make sure to move the card to the discard pile
@@ -104,12 +112,18 @@ public class PlayerState implements TurnState {
             player.getDiscardPile().add(abilityCardIngame);
         }
 
+        // End the game if playing this card has killed the last enemy
+        Game game = player.getGame();
+        if (!game.hasEnemiesLeft()) {
+            gameService.finishGame(game);
+            return;
+        }
+
         // End turn if plying this card has killed you
-        if (player.isDead()) {
+        if (Boolean.TRUE.equals(player.isDead())) {
             turnService.setNextState(currentTurn);
             turnService.setNextState(currentTurn);
         }
-
     }
 
     @Override

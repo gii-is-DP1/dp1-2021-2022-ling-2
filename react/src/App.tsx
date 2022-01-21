@@ -17,10 +17,10 @@ import LobbyBrowser from "./pages/lobby-browser";
 import Login from "./pages/login";
 import NotFound from "./pages/not-found";
 import Profile from "./pages/profile";
-import Ranking from "./pages/ranking";
 import SignUp from "./pages/signup";
 import Statistics from "./pages/statistics";
 import UserAchievements from "./pages/user-achievements";
+import UserStatistics from "./pages/user-statistics";
 
 export default function App() {
   const [userToken, setUserToken] = useLocalStorage("token", null);
@@ -64,7 +64,11 @@ export default function App() {
               component={CreateAchievement}
             />
             <Route exact path={ROUTES.STATISTICS} component={Statistics} />
-            <Route exact path={ROUTES.RANKING} component={Ranking} />
+            <Route
+              exact
+              path={ROUTES.USER_STATISTICS}
+              component={UserStatistics}
+            />
             <Route exact path={ROUTES.BROWSE_GAMES} component={LobbyBrowser} />
             <Route exact path={ROUTES.GAME} component={GameRouter} />
             <Route exact path={ROUTES.ADMIN_PAGE} component={AdminPage} />

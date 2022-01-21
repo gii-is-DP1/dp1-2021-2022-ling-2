@@ -37,7 +37,7 @@ public class AchievementService {
     }
 
     public Iterable<Achievement> findPageable(Pageable pageable) {
-        return achievementRepository.findPage(pageable);
+        return achievementRepository.findPage(pageable).getContent();
     }
 
     public Achievement findById(Integer id) throws DataAccessException {
@@ -55,15 +55,6 @@ public class AchievementService {
         // We always have to send an id because we are always editing existing
         // achievements.
 
-        if (!achievementRepository.existsById(achievement.getId())) {
-            throw new IllegalArgumentException("Achievement not found in the system");
-        }
-
-        Optional<Achievement> sameNameOptional = achievementRepository.findOptionalByName(achievement.getName());
-        if (sameNameOptional.isPresent() && !(sameNameOptional.get().getId().equals(achievement.getId()))) {
-            throw new IllegalArgumentException("There is already an achievement with the same name");
-        }
-
         if (Boolean.FALSE.equals(TokenUtils.tokenHasAnyAuthorities(token, "admin"))) {
             throw new NonMatchingTokenException("Only admins can edit achievements");
         }
@@ -76,7 +67,7 @@ public class AchievementService {
     public List<Achievement> findByUser(User user, Pageable pageable) {
         // This has to be done this way instead of using a custom query because having an achievement or not is not
         // stored in the database, but computed dynamically.
-        return findAll().stream().skip(pageable.getOffset()).filter(a -> userHasAchievement(user, a))
+        return findAll().stream().filter(a -> userHasAchievement(user, a)).skip(pageable.getOffset())
                 .limit(pageable.getPageSize()).collect(Collectors.toList());
     }
 
@@ -103,9 +94,9 @@ public class AchievementService {
             // Execute the method with the parameters
             Object res = method.invoke(achievementChecker, user, achievement.getCondition());
             return (Boolean) res;
-
         } catch (Exception e) {
-            throw new IllegalArgumentException("Condition for achievement " + className + " is not implemented");
+            log.error("Error while checking if user has achievement", e);
+            return false;
         }
     }
 

@@ -7,7 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.ntfh.entity.user.User;
-import org.springframework.ntfh.entity.user.UserRepository;
+import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthoritiesService {
 
     private AuthoritiesRepository authoritiesRepository;
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public AuthoritiesService(AuthoritiesRepository authoritiesRepository, UserRepository userRepository) {
+    public AuthoritiesService(AuthoritiesRepository authoritiesRepository, UserService userService) {
         this.authoritiesRepository = authoritiesRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public Set<Authorities> getAuthorities(User user) {
@@ -38,7 +38,7 @@ public class AuthoritiesService {
     @Transactional
     public void saveAuthorities(String username, String role) throws DataAccessException {
         Authorities authority = new Authorities();
-        User user = userRepository.findByUsername(username);
+        User user = userService.findByUsername(username);
 
         authority.setUser(user);
         authority.setAuthority(role);

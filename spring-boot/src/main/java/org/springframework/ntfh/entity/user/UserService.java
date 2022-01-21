@@ -89,7 +89,12 @@ public class UserService {
     }
 
     public User findByUsername(String username) throws DataAccessException {
-        return userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
+        if (!user.isPresent()) {
+            log.error("User " + username + " was not found");
+            throw new DataAccessException("User " + username + " was not found") {};
+        }
+        return user.get();
     }
 
     public Integer count() {

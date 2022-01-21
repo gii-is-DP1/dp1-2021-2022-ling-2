@@ -3,9 +3,7 @@ package org.springframework.ntfh.entity.game;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -80,15 +78,16 @@ public class Game extends BaseEntity {
     @JsonIgnore
     private List<Turn> turns = new ArrayList<>();
 
-    // TODO should these four be NotAudited? If they are audited,
-    // can they help with the statistics stuff? (Play X card Y times...)
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @NotAudited
     private List<EnemyIngame> enemiesInPile = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @NotAudited
     private List<EnemyIngame> enemiesFighting = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @NotAudited
     private List<MarketCardIngame> marketCardsInPile = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -138,5 +137,11 @@ public class Game extends BaseEntity {
     @Transient
     public Boolean getHasFinished() {
         return finishTime != null;
+    }
+
+    @Transient
+    @JsonIgnore
+    public boolean hasEnemiesLeft() {
+        return !(enemiesInPile.isEmpty() && enemiesFighting.isEmpty());
     }
 }

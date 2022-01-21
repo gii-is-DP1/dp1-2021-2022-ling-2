@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     scale: {
       50: "0.5",
+      110: "1.1",
       150: "1.5",
       200: "2",
       250: "2.5",
@@ -14,7 +15,6 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        // TODO this should be in /public/ folder
         wood: "url('images/backgrounds/wood.png')",
         felt: "url('images/backgrounds/felt.png')",
         fabric: "url('images/backgrounds/fabric.png')",

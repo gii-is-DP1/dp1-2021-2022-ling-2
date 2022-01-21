@@ -212,7 +212,7 @@ public class MarketCardTest {
 
         new DiscardCommand(4, warrior).execute();
 
-        assertThat(warrior.getDiscardPile().size()).isEqualTo(4);
+        assertThat(warrior.getDiscardPile()).hasSize(4);
 
         AbilityCard armaduraDePlacas = abilityCardService.findById(67);
         AbilityCardIngame abilityCardIngameWarrior =
@@ -223,7 +223,7 @@ public class MarketCardTest {
         warrior.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), null, tokenWarrior);
 
-        assertThat(warrior.getDiscardPile().size()).isEqualTo(1); // recovered the 4 cards but then discards, thats why
+        assertThat(warrior.getDiscardPile()).hasSize(1); // recovered the 4 cards but then discards, thats why
                                                                   // this is 1
     }
 
@@ -237,6 +237,7 @@ public class MarketCardTest {
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
+
         assertThat(berserkerIngame.getRestrained()).isTrue();
     }
 
@@ -250,8 +251,9 @@ public class MarketCardTest {
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
+
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); // the card should be discarded
+        assertThat(ranger.getDiscardPile()).hasSize(1); // the card should be discarded
 
         // case where proficiency is applied
 
@@ -282,7 +284,7 @@ public class MarketCardTest {
         ranger.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
 
-        assertThat(ranger.getHand().size()).isEqualTo(3); // added 3 cards to the hand
+        assertThat(ranger.getHand()).hasSize(3); // added 3 cards to the hand
 
     }
 
@@ -336,7 +338,7 @@ public class MarketCardTest {
         ranger.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
 
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); // recover 1 card
-        assertThat(ranger.getHand().size()).isEqualTo(1); // draw 1 card
+        assertThat(ranger.getDiscardPile()).hasSize(1); // recover 1 card
+        assertThat(ranger.getHand()).hasSize(1); // draw 1 card
     }
 }

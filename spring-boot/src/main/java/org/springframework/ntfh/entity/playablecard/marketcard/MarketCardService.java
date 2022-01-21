@@ -19,7 +19,6 @@ public class MarketCardService {
         return marketCardRepository.findAll();
     }
 
-    // TODO throw exception instead of using optional
     public Optional<MarketCard> findMarketCardById(Integer id) {
         return marketCardRepository.findById(id);
     }

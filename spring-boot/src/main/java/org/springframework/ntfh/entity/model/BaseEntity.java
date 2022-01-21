@@ -50,7 +50,6 @@ public class BaseEntity {
         return version;
     }
 
-    // TODO delete if not used
     @JsonIgnore
     public boolean isNew() {
         return this.id == null;

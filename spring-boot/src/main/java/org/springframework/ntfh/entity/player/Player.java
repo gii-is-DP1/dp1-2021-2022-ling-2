@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -57,7 +56,6 @@ public class Player extends BaseEntity {
     // Should not change when user's character is changed. Once the
     // row is created in the databse, it stays the same
     @ManyToOne
-    @JoinColumn(name = "character_id", referencedColumnName = "id") // TODO redundant referenceColumnName?
     private Character character;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -90,7 +88,6 @@ public class Player extends BaseEntity {
 
     @Transient
     public Integer getTurnOrder() {
-        // TODO test if this works
         return (game == null || game.getPlayers().isEmpty()) ? null : game.getPlayers().indexOf(this);
     }
 }

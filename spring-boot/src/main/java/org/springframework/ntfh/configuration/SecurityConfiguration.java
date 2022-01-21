@@ -31,8 +31,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     DataSource dataSource;
 
-    String adminString = "admin";
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors() // enable CORS requests
@@ -47,23 +45,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Allow to login
                 .antMatchers(HttpMethod.POST, "/users/login").permitAll()
                 // Allow admins to list all the users
-                .antMatchers(HttpMethod.GET, "/users").hasAuthority(adminString)
+                .antMatchers(HttpMethod.GET, "/users").hasAuthority("admin")
                 // Allow everyone to get user number
                 .antMatchers(HttpMethod.GET, "/users/count").permitAll()
                 // Update user's profile
-                .antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", adminString)
+                .antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("user", "admin")
                 // Update user's current character
                 .antMatchers(HttpMethod.PUT, "/users/{userId}/character/{characterId}").hasAuthority("user")
                 // Everyone can see a user's profile
                 .antMatchers(HttpMethod.GET, "/users/{userId}").permitAll()
                 // An admin can delete a user
-                .antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority(adminString)
+                .antMatchers(HttpMethod.DELETE, "/users/{userId}").hasAuthority("admin")
                 // An admin can ban a user
-                .antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority(adminString)
+                .antMatchers(HttpMethod.PUT, "/users/{userId}/ban").hasAuthority("admin")
                 // Everyone can see a user's match history
                 .antMatchers(HttpMethod.GET, "/users/{userId}/history").permitAll()
-                // Set character
-                .antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAuthority("user")
+                .antMatchers(HttpMethod.GET, "/users/{userId}/history/count").permitAll()
                 // See earned achievements
                 .antMatchers(HttpMethod.GET, "/users/{userId}/achievements").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/{userId}/achievements/count").permitAll()
@@ -110,13 +107,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                                                                    // market cards
                 .antMatchers(HttpMethod.POST, "/market-cards/buy/{marketCardIngameId}").hasAuthority("user")
 
-                .antMatchers("/admin/**").hasAuthority(adminString) // access to admin info
+                .antMatchers("/admin/**").hasAuthority("admin") // access to admin info
                 // RANKING ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/statistics/games/count").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/ranking/glory").permitAll()
-                .antMatchers(HttpMethod.GET, "/statistics/ranking/kills").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/users/{userId}/games/count").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/users/{userId}").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/global").permitAll()
                 // OTHER ENDPOINTS
                 .anyRequest().denyAll() // else, deny
                 .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
@@ -143,6 +139,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10, new SecureRandom("NoTiMeFoRhErOeS$sEeD".getBytes()));
+        return new BCryptPasswordEncoder(10, new SecureRandom("N0TiM3FoRhErOe5$sEeD".getBytes()));
     }
 }
