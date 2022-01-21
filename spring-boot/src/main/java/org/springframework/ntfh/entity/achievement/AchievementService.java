@@ -55,15 +55,6 @@ public class AchievementService {
         // We always have to send an id because we are always editing existing
         // achievements.
 
-        if (!achievementRepository.existsById(achievement.getId())) {
-            throw new IllegalArgumentException("Achievement not found in the system");
-        }
-
-        Optional<Achievement> sameNameOptional = achievementRepository.findOptionalByName(achievement.getName());
-        if (sameNameOptional.isPresent() && !(sameNameOptional.get().getId().equals(achievement.getId()))) {
-            throw new IllegalArgumentException("There is already an achievement with the same name");
-        }
-
         if (Boolean.FALSE.equals(TokenUtils.tokenHasAnyAuthorities(token, "admin"))) {
             throw new NonMatchingTokenException("Only admins can edit achievements");
         }
