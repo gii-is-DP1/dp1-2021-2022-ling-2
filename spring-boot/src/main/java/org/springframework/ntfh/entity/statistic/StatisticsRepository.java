@@ -22,10 +22,10 @@ public interface StatisticsRepository extends CrudRepository<Statistics, Integer
     @Query("SELECT u.username, COUNT(g) as wins FROM User u JOIN u.players ps JOIN ps.game g WHERE g.winner.user = u GROUP BY u.username ORDER BY wins DESC")
     List<List<Object>> rankingByWins(Pageable pageable);
 
-    @Query("SELECT u.username, COUNT(g) as glory FROM User u JOIN u.players ps JOIN ps.game g WHERE g.winner.user = u GROUP BY u.username ORDER BY glory DESC")
+    @Query("SELECT s.user.username, SUM(s.gloryEarned) as glory FROM Statistics s GROUP BY s.user.username ORDER BY glory DESC")
     List<List<Object>> rankingByGlory(Pageable pageable);
 
-    @Query("SELECT u.username, COUNT(g) as kills FROM User u JOIN u.players ps JOIN ps.game g WHERE g.winner.user = u GROUP BY u.username ORDER BY kills DESC")
+    @Query("SELECT s.user.username, SUM(s.killCount) as kills FROM Statistics s GROUP BY s.user.username ORDER BY kills DESC")
     List<List<Object>> rankingByKills(Pageable pageable);
 
     // *********For User Statistics*************
