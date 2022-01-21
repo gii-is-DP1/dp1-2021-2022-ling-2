@@ -127,8 +127,9 @@ class AchievementServiceTest {
     void testFindByUser() {
         Pageable pageable = PageRequest.of(0, 10);
         List<Achievement> userAchievements = achievementService.findByUser(user1, pageable);
+        Integer initialAchievement = 1;
 
-        assertThat(userAchievements.size()).isEqualTo(1);
+        assertThat(userAchievements).hasSize(initialAchievement);
         assertThat(userAchievements.get(0)).isEqualTo(achievementService.findById(1));
     }
 
@@ -151,10 +152,9 @@ class AchievementServiceTest {
     @Test
     void testFindAllTypes() {
         List<AchievementType> achievementTypes = achievementService.findAllTypes();
+        Integer allTypes = 6;
 
-        assertThat(achievementTypes).isNotEmpty();
-        assertThat(achievementTypes.size()).isEqualTo(6);
-        assertThat(achievementTypes).contains(AchievementType.CREATE_ACCOUNT).contains(AchievementType.EARN_X_GLORY).contains(AchievementType.KILL_X_ENEMIES).contains(AchievementType.PLAY_X_DISTINCT_CHARACTERS).contains(AchievementType.PLAY_X_GAMES).contains(AchievementType.WIN_X_GAMES);
+        assertThat(achievementTypes).isNotEmpty().hasSize(allTypes).contains(AchievementType.CREATE_ACCOUNT).contains(AchievementType.EARN_X_GLORY).contains(AchievementType.KILL_X_ENEMIES).contains(AchievementType.PLAY_X_DISTINCT_CHARACTERS).contains(AchievementType.PLAY_X_GAMES).contains(AchievementType.WIN_X_GAMES);
     }
 
     @Test
