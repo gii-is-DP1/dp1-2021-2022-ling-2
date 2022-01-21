@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.statistic.metaStatistic;
+package org.springframework.ntfh.entity.statistic;
 
 import java.sql.Timestamp;
 import java.util.EnumMap;
@@ -16,10 +16,10 @@ import org.springframework.ntfh.entity.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MetaStatisticService {
+public class StatisticService {
 
     @Autowired
-    private MetaStatisticRepository metaStatisticRepository;
+    private StatisticRepository statisticsRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -30,11 +30,11 @@ public class MetaStatisticService {
     // *******For Global Statistics********
     @Transactional
     public Integer getTotalNumberOfGames() {
-        return metaStatisticRepository.numberOfGamesTotal();
+        return statisticsRepository.numberOfGamesTotal();
     }
 
     public List<User> getListUsersByNumberOfGames(Pageable pageable) {
-        return metaStatisticRepository.listUserByNumberOfGames(pageable);
+        return statisticsRepository.listUserByNumberOfGames(pageable);
     }
 
     public Double getAvgGamesPlayed() {
@@ -49,35 +49,39 @@ public class MetaStatisticService {
     }
 
     public Integer getTotalPlayedTime() {
-        return metaStatisticRepository.globalDurationOfGames();
+        return statisticsRepository.globalDurationOfGames();
     }
 
 
     // ******User Statistics********
 
-    // Duration
+    // Number of games played by the user
+    public int countFinishedByUser(User user) {
+        return gameRepository.countFinishedByUser(user, GameStateType.FINISHED);
+    }
+
     public Timestamp getAvgDurationOfGames(User user) {
-        Double seconds = metaStatisticRepository.avgUserDurationOfGames(user);
+        Double seconds = statisticsRepository.avgUserDurationOfGames(user);
         return new Timestamp(seconds.longValue() * 1000);
     }
 
     public Timestamp getMinTimePlayedUser(User user) {
-        Integer seconds = metaStatisticRepository.minDurationOfGames(user);
+        Integer seconds = statisticsRepository.minDurationOfGames(user);
         return new Timestamp(seconds * 1000);
     }
 
     public Timestamp getMaxTimePlayedUser(User user) {
-        Integer seconds = metaStatisticRepository.maxDurationOfGames(user);
+        Integer seconds = statisticsRepository.maxDurationOfGames(user);
         return new Timestamp(seconds * 1000);
     }
 
     // Number of games and Wins
     public Integer getNumGamesPlayedUser(User user) {
-        return metaStatisticRepository.findNumberOfGamesByUser(user);
+        return statisticsRepository.findNumberOfGamesByUser(user);
     }
 
     public Integer getNumVictoriesByUser(User user) {
-        return metaStatisticRepository.findNumberOfVictoriesByUser(user);
+        return statisticsRepository.findNumberOfVictoriesByUser(user);
     }
 
     public Double getWinRatio(User user) {
@@ -86,18 +90,18 @@ public class MetaStatisticService {
 
     // Characters
     public Map<CharacterTypeEnum, Long> getListPlayedCharactersByUser(User user) {
-        List<List<Object>> listOfLists = metaStatisticRepository.listCharactersPlayedByUser(user);
+        List<List<Object>> listOfLists = statisticsRepository.listCharactersPlayedByUser(user);
         Map<CharacterTypeEnum, Long> res = new EnumMap<>(CharacterTypeEnum.class);
         listOfLists.forEach(pair -> res.put((CharacterTypeEnum) pair.get(0), (Long) pair.get(1)));
         return res;
     }
 
     public Integer getNumGamesPlayedWithCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findNumberOfGamesWithCharacter(user, character);
+        return statisticsRepository.findNumberOfGamesWithCharacter(user, character);
     }
 
     public Integer getNumGamesWonWithCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findNumberOfWinsWithCharacter(user, character);
+        return statisticsRepository.findNumberOfWinsWithCharacter(user, character);
     }
 
     public Double getWinRatioCharacter(User user, CharacterTypeEnum character) {
@@ -107,11 +111,11 @@ public class MetaStatisticService {
 
     // Deaths
     public Integer getDeathsbyUser(User user) {
-        return metaStatisticRepository.findNumberOfDeathsbyUser(user);
+        return statisticsRepository.findNumberOfDeathsbyUser(user);
     }
 
     public Integer getDeathsWithCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findNumberOfDeathsbyUser(user);
+        return statisticsRepository.findNumberOfDeathsbyUser(user);
     }
 
     public Double getDeathRatioWithCharacter(User user, CharacterTypeEnum character) {
@@ -126,59 +130,59 @@ public class MetaStatisticService {
 
     // Kills
     public Integer getKillsUser(User user) {
-        return metaStatisticRepository.findTotalNumberOfkillsByUser(user);
+        return statisticsRepository.findTotalNumberOfkillsByUser(user);
     }
 
     public Integer getMaxKillsInOneGame(User user) {
-        return metaStatisticRepository.findMaxNumberOfkillsByUser(user);
+        return statisticsRepository.findMaxNumberOfkillsByUser(user);
     }
 
 
     public Double getAvgKillsUser(User user) {
-        return metaStatisticRepository.findAVGNumberOfkillsByUser(user);
+        return statisticsRepository.findAVGNumberOfkillsByUser(user);
     }
 
 
     public Integer getKillsUserWithCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findMaxNumberOfkillsByUserWithCharacter(user, character);
+        return statisticsRepository.findMaxNumberOfkillsByUserWithCharacter(user, character);
     }
 
     public Integer getMaxKillsUserWithCharacterInOneGame(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findMaxNumberOfkillsByUserWithCharacter(user, character);
+        return statisticsRepository.findMaxNumberOfkillsByUserWithCharacter(user, character);
     }
 
     public Double getAvgKillsUserWithCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findAVGNumberOfkillsByUserWithCharacter(user, character);
+        return statisticsRepository.findAVGNumberOfkillsByUserWithCharacter(user, character);
     }
 
     // Glory
     public Integer getUserTotalGloryPoints(User user) {
-        return metaStatisticRepository.findTotalGloryPointsByUser(user);
+        return statisticsRepository.findTotalGloryPointsByUser(user);
     }
 
     public Integer getMaxUserGloryPointsEarned(User user) {
-        return metaStatisticRepository.findMaxGloryPointsByUser(user);
+        return statisticsRepository.findMaxGloryPointsByUser(user);
     }
 
     public Double getAvgGloryPointsEarned(User user) {
-        return metaStatisticRepository.findAVGGloryPointsByUser(user);
+        return statisticsRepository.findAVGGloryPointsByUser(user);
     }
 
     public Integer getTotalUserGloryPointsCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findTotalGloryPointsByUserWithCharacter(user, character);
+        return statisticsRepository.findTotalGloryPointsByUserWithCharacter(user, character);
     }
 
     public Integer getMaxUserGloryPointsCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findMaxGloryPointsByUserWithCharacter(user, character);
+        return statisticsRepository.findMaxGloryPointsByUserWithCharacter(user, character);
     }
 
     public Double getAvgUserGloryPointsCharacter(User user, CharacterTypeEnum character) {
-        return metaStatisticRepository.findAVGGloryPointsByUserWithCharacter(user, character);
+        return statisticsRepository.findAVGGloryPointsByUserWithCharacter(user, character);
     }
 
 
     // Other services
-    public MetaStatistic save(MetaStatistic metaStatistic) {
-        return metaStatisticRepository.save(metaStatistic);
+    public Statistics save(Statistics statistic) {
+        return statisticsRepository.save(statistic);
     }
 }

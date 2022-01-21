@@ -10,8 +10,8 @@ import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.Player;
-import org.springframework.ntfh.entity.statistic.metaStatistic.MetaStatistic;
-import org.springframework.ntfh.entity.statistic.metaStatistic.MetaStatisticService;
+import org.springframework.ntfh.entity.statistic.Statistics;
+import org.springframework.ntfh.entity.statistic.StatisticService;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
@@ -35,7 +35,7 @@ public class OngoingState implements GameState {
     private GameService gameService;
 
     @Autowired
-    private MetaStatisticService metaStatisticService;
+    private StatisticService statisticsService;
 
     @Override
     public void preState(Game game) {
@@ -111,7 +111,7 @@ public class OngoingState implements GameState {
         // ***************/
 
         for (int i = 0; i < players.size(); i++) {
-            MetaStatistic ms = new MetaStatistic();
+            Statistics ms = new Statistics();
             Player p = players.get(i);
             ms.setUser(p.getUser());
             ms.setDied(p.isDead());
@@ -127,7 +127,7 @@ public class OngoingState implements GameState {
             Integer duration = (int) (game.getFinishTime().getTime() - game.getStartTime().getTime());
             ms.setDuration(duration);
 
-            metaStatisticService.save(ms);
+            statisticsService.save(ms);
         }
 
 

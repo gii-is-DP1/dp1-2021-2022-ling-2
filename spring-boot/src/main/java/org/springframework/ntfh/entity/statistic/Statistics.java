@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.statistic.metaStatistic;
+package org.springframework.ntfh.entity.statistic;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "meta_statistics")
-public class MetaStatistic extends BaseEntity {
+@Table(name = "statistics")
+public class Statistics extends BaseEntity {
 
     @NotNull
     @ManyToOne(optional = false)

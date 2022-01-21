@@ -1,4 +1,4 @@
-package org.springframework.ntfh.entity.statistic.metaStatistic.pojo;
+package org.springframework.ntfh.entity.statistic.pojo;
 
 import java.sql.Timestamp;
 import java.util.Map;
