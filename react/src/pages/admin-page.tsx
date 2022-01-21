@@ -47,28 +47,36 @@ export default function AdminPage() {
           <div className="flex flex-col w-1/4 max-w-1/5 justify-center gap-y-4">
             <button
               type="submit"
-              className="btn-ntfh"
+              className={`btn-ntfh transform-gpu hover:scale-110 focus:scale-110 ${
+                currentTable === "ongoing" ? " scale-110" : ""
+              }`}
               onClick={() => setCurrentTable("ongoing")}
             >
               <p className="text-gradient-ntfh">Ongoing games</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
+              className={
+                "btn-ntfh transform-gpu hover:scale-110 focus:scale-110"
+              }
               onClick={() => setCurrentTable("history")}
             >
               <p className="text-gradient-ntfh">Game history</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
+              className={
+                "btn-ntfh transform-gpu hover:scale-110 focus:scale-110"
+              }
               onClick={() => setCurrentTable("users")}
             >
               <p className="text-gradient-ntfh">Users</p>
             </button>
             <button
               type="submit"
-              className="btn-ntfh"
+              className={
+                "btn-ntfh transform-gpu hover:scale-110 focus:scale-110"
+              }
               onClick={() => setCurrentTable("achievements")}
             >
               <p className="text-gradient-ntfh">Achievements</p>
