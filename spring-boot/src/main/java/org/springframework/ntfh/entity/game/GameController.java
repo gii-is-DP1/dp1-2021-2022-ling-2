@@ -107,7 +107,7 @@ public class GameController {
     @DeleteMapping("{gameId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteGame(@PathVariable("gameId") Game game, @RequestHeader("Authorization") User userToken) {
-        if (!userToken.hasAnyAuthorities("admin") && game.getStateType() != GameStateType.LOBBY) {
+        if (Boolean.FALSE.equals(userToken.hasAnyAuthorities("admin")) && game.getStateType() != GameStateType.LOBBY) {
             throw new NonMatchingTokenException("Only admins can delete games that are not in lobby");
         }
         gameService.delete(game);
