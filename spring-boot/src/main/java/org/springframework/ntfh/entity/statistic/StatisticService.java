@@ -1,6 +1,7 @@
 package org.springframework.ntfh.entity.statistic;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,9 +29,8 @@ public class StatisticService {
     private GameRepository gameRepository;
 
     // *******For Global Statistics********
-    @Transactional
-    public Integer getTotalNumberOfGames() {
-        return statisticsRepository.numberOfGamesTotal();
+    public Integer countFinishedGames() {
+        return gameRepository.countByStateType(GameStateType.FINISHED);
     }
 
     public List<User> getListUsersByNumberOfGames(Pageable pageable) {
@@ -44,7 +44,7 @@ public class StatisticService {
             userCounter++;
             it.next();
         }
-        Double res = (double) (getTotalNumberOfGames() / userCounter);
+        Double res = (double) (countFinishedGames() / userCounter);
         return res;
     }
 
@@ -62,16 +62,22 @@ public class StatisticService {
 
     public Timestamp getAvgDurationOfGames(User user) {
         Double milliseconds = statisticsRepository.avgUserDurationOfGames(user);
+        if (milliseconds == null)
+            return null;
         return new Timestamp(milliseconds.longValue());
     }
 
     public Timestamp getMinTimePlayedUser(User user) {
         Integer milliseconds = statisticsRepository.minDurationOfGames(user);
+        if (milliseconds == null)
+            return null;
         return new Timestamp(milliseconds.longValue());
     }
 
     public Timestamp getMaxTimePlayedUser(User user) {
         Integer milliseconds = statisticsRepository.maxDurationOfGames(user);
+        if (milliseconds == null)
+            return null;
         return new Timestamp(milliseconds.longValue());
     }
 
@@ -104,8 +110,16 @@ public class StatisticService {
         return statisticsRepository.findNumberOfWinsWithCharacter(user, character);
     }
 
+    public Map<CharacterTypeEnum, Double> getListWinRatioByCharacter(User user) {
+        Map<CharacterTypeEnum, Double> res = new EnumMap<>(CharacterTypeEnum.class);
+        Arrays.asList(CharacterTypeEnum.values()).forEach(type -> res.put(type, getWinRatioCharacter(user, type)));
+        return res;
+    }
+
     public Double getWinRatioCharacter(User user, CharacterTypeEnum character) {
-        return (double) getNumGamesWonWithCharacter(user, character) / getNumGamesPlayedWithCharacter(user, character);
+        Integer wonGames = getNumGamesWonWithCharacter(user, character);
+        Integer totalGames = getNumGamesPlayedWithCharacter(user, character);
+        return (double) wonGames / totalGames;
     }
 
 

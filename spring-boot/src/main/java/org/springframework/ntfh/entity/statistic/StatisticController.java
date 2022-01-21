@@ -34,6 +34,7 @@ public class StatisticController {
                 .longestMatch(statisticsService.getMaxTimePlayedUser(user))
                 .averageDuration(statisticsService.getAvgDurationOfGames(user))
                 .charactersPlayed(statisticsService.getListPlayedCharactersByUser(user))
+                .charactersWinRates(statisticsService.getListWinRatioByCharacter(user))
                 .killCount(statisticsService.getKillsUser(user))
                 .gloryEarned(statisticsService.getUserTotalGloryPoints(user)) //
                 .build(); // Build and return
@@ -43,5 +44,11 @@ public class StatisticController {
     @ResponseStatus(HttpStatus.OK)
     public Integer gamesPlayedByUser(@PathVariable("userId") User user) {
         return statisticsService.countFinishedByUser(user);
+    }
+
+    @GetMapping("games/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer countFinishedGames() {
+        return statisticsService.countFinishedGames();
     }
 }

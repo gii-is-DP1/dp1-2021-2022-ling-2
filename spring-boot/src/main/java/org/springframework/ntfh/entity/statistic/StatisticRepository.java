@@ -14,7 +14,7 @@ public interface StatisticRepository extends CrudRepository<Statistics, Integer>
 
     // Number of games
     @Query("Select COUNT(g) FROM Game g")
-    Integer numberOfGamesTotal();
+    Integer countGames();
 
     @Query("SELECT u from User u inner join u.players ps ORDER BY SIZE(ps) DESC")
     List<User> listUserByNumberOfGames(Pageable pageable);
