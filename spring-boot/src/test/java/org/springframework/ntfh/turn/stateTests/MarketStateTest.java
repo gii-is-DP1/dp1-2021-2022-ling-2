@@ -168,7 +168,7 @@ class MarketStateTest {
         turnService.setNextState(gameTester.getCurrentTurn());
         Integer FULL_MARKET = 5;
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET);
 
         MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
         MarketCardIngame pocionCurativaIngame =
@@ -180,7 +180,7 @@ class MarketStateTest {
         Integer FULL_MARKET_LESS_ONE = 4;
         Integer GOLD_LEFT = 2;
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET_LESS_ONE);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET_LESS_ONE);
         assertThat(ranger.getGold()).isEqualTo(GOLD_LEFT);
         assertThat(ranger.getHand().get(ranger.getHand().size() - 1).getAbilityCardTypeEnum())
                 .isEqualTo(AbilityCardTypeEnum.POCION_CURATIVA);
@@ -195,7 +195,7 @@ class MarketStateTest {
         turnService.setNextState(gameTester.getCurrentTurn());
         Integer FULL_MARKET = 5;
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET);
 
         MarketCard armaduraPlacas = marketCardService.findMarketCardById(12).get();
         MarketCardIngame armaduraPlacasIngame =
@@ -216,7 +216,7 @@ class MarketStateTest {
         turnService.setNextState(gameTester.getCurrentTurn());
         Integer FULL_MARKET = 5;
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET);
 
         MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
         MarketCardIngame pocionCurativaIngame =

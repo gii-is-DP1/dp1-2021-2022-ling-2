@@ -115,9 +115,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void createGamesInLobbyState(Integer numberOfGames) {
-        IntStream.range(0, numberOfGames).forEach(i -> {
-            createGameInLobbyState();
-        });
+        IntStream.range(0, numberOfGames).forEach(i -> createGameInLobbyState());
     }
 
     private Game createGameInLobbyState() {

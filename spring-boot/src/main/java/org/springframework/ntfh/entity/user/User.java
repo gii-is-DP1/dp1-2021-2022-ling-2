@@ -80,6 +80,6 @@ public class User extends BaseEntity {
         if (getPlayers().isEmpty())
             return null;
         Player lastPlayerInList = getPlayers().get(getPlayers().size() - 1);
-        return lastPlayerInList.getGame().getHasFinished() ? null : lastPlayerInList;
+        return Boolean.TRUE.equals(lastPlayerInList.getGame().getHasFinished()) ? null : lastPlayerInList;
     }
 }

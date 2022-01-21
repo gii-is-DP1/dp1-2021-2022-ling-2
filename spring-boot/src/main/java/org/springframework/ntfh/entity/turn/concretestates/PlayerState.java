@@ -105,7 +105,7 @@ public class PlayerState implements TurnState {
         }
 
         // End turn if plying this card has killed you
-        if (player.isDead()) {
+        if (Boolean.TRUE.equals(player.isDead())) {
             turnService.setNextState(currentTurn);
             turnService.setNextState(currentTurn);
         }

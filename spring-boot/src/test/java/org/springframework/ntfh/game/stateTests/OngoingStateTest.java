@@ -130,9 +130,9 @@ class OngoingStateTest {
         Integer INITIAL_NUMBER_OF_CARDS = 4;
         
         assertThat(gameTester.getHasStarted()).isTrue();
-        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(INITIAL_NUMBER_OF_ENEMIES);
-        assertThat(ranger.getHand().size()).isEqualTo(INITIAL_NUMBER_OF_CARDS);
-        assertThat(rogue.getHand().size()).isEqualTo(INITIAL_NUMBER_OF_CARDS);
+        assertThat(gameTester.getEnemiesFighting()).hasSize(INITIAL_NUMBER_OF_ENEMIES);
+        assertThat(ranger.getHand()).hasSize(INITIAL_NUMBER_OF_CARDS);
+        assertThat(rogue.getHand()).hasSize(INITIAL_NUMBER_OF_CARDS);
     }
 
     @Test
@@ -184,7 +184,7 @@ class OngoingStateTest {
         String token = TokenUtils.generateJWTToken(warrior.getUser());
         ongoingState.playCard(pasoAtrasIngame.getId(), null, token);
 
-        assertThat(warrior.getHand().size()).isEqualTo(2);
+        assertThat(warrior.getHand()).hasSize(2);
     }
 
     @Test
@@ -206,7 +206,7 @@ class OngoingStateTest {
         Integer FULL_MARKET_LESS_ONE = 4;
         Integer GOLD_LEFT = 2;
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET_LESS_ONE);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET_LESS_ONE);
         assertThat(ranger.getGold()).isEqualTo(GOLD_LEFT);
         assertThat(ranger.getHand().get(ranger.getHand().size()-1).getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.POCION_CURATIVA);
     }

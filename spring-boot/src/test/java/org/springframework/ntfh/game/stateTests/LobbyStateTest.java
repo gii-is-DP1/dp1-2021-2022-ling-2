@@ -136,7 +136,7 @@ class LobbyStateTest {
         gameTester.setMaxPlayers(3);
         lobbyState.joinGame(gameTester, user3);
 
-        assertThat(gameTester.getPlayers().size()).isEqualTo(3);
+        assertThat(gameTester.getPlayers()).hasSize(3);
     }
 
     @Test
@@ -146,7 +146,7 @@ class LobbyStateTest {
         gameTester.setMaxPlayers(3);
         lobbyState.joinGame(gameTester, user3);
 
-        assertThat(gameTester.getPlayers().size()).isEqualTo(3);
+        assertThat(gameTester.getPlayers()).hasSize(3);
 
         assertThrows(IllegalArgumentException.class, () -> lobbyState.joinGame(gameTester, user3));
     }
@@ -165,11 +165,11 @@ class LobbyStateTest {
         gameTester.setMaxPlayers(3);
         lobbyState.joinGame(gameTester, user3);
 
-        assertThat(gameTester.getPlayers().size()).isEqualTo(3);
+        assertThat(gameTester.getPlayers()).hasSize(3);
 
         lobbyState.removePlayer(gameTester.getId(), user3.getUsername());
 
-        assertThat(gameTester.getPlayers().size()).isEqualTo(2);
+        assertThat(gameTester.getPlayers()).hasSize(2);
     }
 
     @Test
