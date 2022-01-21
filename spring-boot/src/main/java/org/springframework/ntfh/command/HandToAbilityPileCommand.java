@@ -18,6 +18,7 @@ public class HandToAbilityPileCommand implements Command {
     public void execute() {
         List<AbilityCardIngame> inHand = playerFrom.getHand();
         List<AbilityCardIngame> abilityPile = playerFrom.getAbilityPile();
+
         for (AbilityCardIngame card : inHand) {
             AbilityCardTypeEnum cardEnum = card.getAbilityCardTypeEnum();
             if (cardEnum == cardToReturn) {
@@ -25,7 +26,7 @@ public class HandToAbilityPileCommand implements Command {
                 playerFrom.setAbilityPile(abilityPile);
                 inHand.remove(card);
                 playerFrom.setHand(inHand);
-                break;
+                return;
             }
         }
     }
