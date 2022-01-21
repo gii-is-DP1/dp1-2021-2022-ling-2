@@ -14,4 +14,3 @@ export const USER_STATISTICS = "/profile/:username/statistics";
 export const ALL_ACHIEVEMENTS = "/achievements";
 export const CREATE_ACHIEVEMENT = "/achievements/new";
 export const USER_ACHIEVEMENTS = "/profile/:username/achievements";
-export const RANKING = "/ranking";

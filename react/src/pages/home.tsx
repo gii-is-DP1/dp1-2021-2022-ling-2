@@ -88,9 +88,6 @@ export default function Home() {
               <p className="text-gradient-ntfh">Statistics</p>
             </button>
           </Link>
-          <Link to={ROUTES.RANKING} className="btn-ntfh w-min">
-            <p className="text-gradient-ntfh">Ranking</p>
-          </Link>
         </div>
         <button className="btn-ntfh w-min" onClick={handleShare}>
           <p className="text-gradient-ntfh">Share!</p>
