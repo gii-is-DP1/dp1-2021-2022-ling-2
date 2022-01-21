@@ -2,6 +2,7 @@ package org.springframework.ntfh.entity.statistic.metaStatistic;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -13,18 +14,18 @@ import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.model.BaseEntity;
 import org.springframework.ntfh.entity.user.User;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name="meta_statistics")
 public class MetaStatistic extends BaseEntity {
     
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name="user")
     private User user;
 
