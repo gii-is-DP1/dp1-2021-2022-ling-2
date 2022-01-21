@@ -1,8 +1,13 @@
 package org.springframework.ntfh.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
 import org.springframework.ntfh.entity.enemy.EnemyModifierType;
+import org.springframework.ntfh.entity.enemy.EnemyType;
 import org.springframework.ntfh.entity.enemy.ingame.EnemyIngame;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.playablecard.abilitycard.ingame.AbilityCardIngame;
 import org.springframework.ntfh.entity.player.Player;
 
@@ -20,6 +25,16 @@ public class ReceiveDamageCommand implements Command {
         Integer damage = enemyFrom.getCurrentEndurance();
         EnemyModifierType enemyModifier = enemyFrom.getEnemy().getEnemyModifierType();
         CharacterTypeEnum characterClass = playerTo.getCharacterTypeEnum();
+        Game game = playerTo.getGame();
+        List<EnemyType> listEnemiesFighting = new ArrayList<>();
+        for(EnemyIngame enemy : game.getEnemiesFighting()){
+            listEnemiesFighting.add(enemy.getEnemy().getEnemyType());
+        }
+
+        if(listEnemiesFighting.contains(EnemyType.ROGHKILLER)){
+            damage++;
+        }
+        
         if (Boolean.TRUE.equals(enemyFrom.getRestrained()))
             damage = 0;
 
