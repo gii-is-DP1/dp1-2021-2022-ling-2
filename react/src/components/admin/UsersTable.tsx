@@ -22,7 +22,7 @@ export default function UsersTable() {
       const headers = { Authorization: "Bearer " + userToken };
       const response = await axios.get("users", {
         headers,
-        params: { page: page },
+        params: { page: page, size: usersPerPage },
       });
       setUserList(response.data);
     } catch (error: any) {

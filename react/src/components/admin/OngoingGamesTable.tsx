@@ -16,7 +16,7 @@ export default function OngoingGamesTable() {
   const fetchGamesOngoing = async () => {
     try {
       const response = await axios.get("games/ongoing", {
-        params: { page: page },
+        params: { page: page, size: gamesPerPage },
       });
       setGameList(response.data);
     } catch (error: any) {

@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "../../api/axiosConfig";
 import * as ROUTES from "../../constants/routes";
 import userContext from "../../context/user";
-import tokenParser from "../../helpers/tokenParser";
 import { Achievement } from "../../interfaces/Achievement";
 
 type Params = {
@@ -16,8 +15,13 @@ export default function AchievementsTable(params: Params) {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const { userToken } = useContext(userContext);
   const location = useLocation();
+  const [page, setPage] = useState(0);
+  const [achievementCount, setAchievementCount] = useState(0);
+  const achievementsPerPage = 5;
+  const totalPages = Math.floor(achievementCount / achievementsPerPage);
 
   const isInAdminConsole = () => location.pathname === "/admin";
+
   const prettifyAchievements = (achievementsInput: Achievement[]) =>
     achievementsInput.forEach(
       (a) =>
@@ -29,7 +33,9 @@ export default function AchievementsTable(params: Params) {
 
   const fetchUserAchievements = async () => {
     try {
-      const response = await axios.get(`/users/${user}/achievements`);
+      const response = await axios.get(`/users/${user}/achievements`, {
+        params: { page: page, size: achievementsPerPage },
+      });
       prettifyAchievements(response.data);
       setAchievements(response.data);
     } catch (error: any) {
@@ -39,7 +45,9 @@ export default function AchievementsTable(params: Params) {
 
   const fetchAllAchievements = async () => {
     try {
-      const response = await axios.get(`/achievements`);
+      const response = await axios.get(`/achievements`, {
+        params: { page: page, size: achievementsPerPage },
+      });
       prettifyAchievements(response.data);
       setAchievements(response.data);
     } catch (error: any) {
@@ -47,9 +55,38 @@ export default function AchievementsTable(params: Params) {
     }
   };
 
+  const fetchTotalPages = async () => {
+    try {
+      const response = await axios.get("achievements/count");
+      setAchievementCount(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const fetchUserPages = async () => {
+    try {
+      const response = await axios.get(`/users/${user}/achievements/count`);
+      setAchievementCount(response.data);
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
+
+  const handleSetPage = (amount: number) => {
+    const newPage = page + amount;
+    // Make sure the page is not out of bounds before updating
+    if (totalPages >= newPage && newPage >= 0) setPage(newPage);
+  };
+
+  useEffect(() => {
+    // Fetch the total number of users only once to set the totalPages variable
+    user ? fetchUserPages() : fetchTotalPages();
+  }, []);
+
   useEffect(() => {
     user ? fetchUserAchievements() : fetchAllAchievements();
-  }, []);
+  }, [page, setPage]);
 
   const handleDeleteAchievement = async (achievement: Achievement) => {
     try {
@@ -57,6 +94,8 @@ export default function AchievementsTable(params: Params) {
       await axios.delete(`achievements/${achievement.id}`, {
         headers,
       });
+      setAchievementCount(achievementCount - 1);
+      toast.success("Achievement deleted");
       user ? fetchUserAchievements() : fetchAllAchievements();
     } catch (error: any) {
       toast.error(error?.message);
@@ -74,28 +113,32 @@ export default function AchievementsTable(params: Params) {
                   scope="col"
                   className="px-10 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider"
                 >
-                  Achievements
+                  {isInAdminConsole() ? (
+                    <button className="btn-ntfh">
+                      <Link
+                        to={ROUTES.CREATE_ACHIEVEMENT}
+                        className="flex items-center"
+                      >
+                        <p className="text-gradient-ntfh">New achievement</p>
+                      </Link>
+                    </button>
+                  ) : (
+                    "Achievements"
+                  )}
                 </th>
-                {isInAdminConsole() && (
-                  <>
-                    <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Edit</span>
-                    </th>
-                    <th
-                      scope="col"
-                      className="text-left text-xs font-sm text-gray-200 uppercase tracking-wider"
-                    >
-                      <button className="btn-ntfh">
-                        <Link
-                          to={ROUTES.CREATE_ACHIEVEMENT}
-                          className="flex items-center"
-                        >
-                          <p className="text-gradient-ntfh">New</p>
-                        </Link>
-                      </button>
-                    </th>
-                  </>
-                )}
+                <th></th>
+                <th
+                  scope="col"
+                  className="flex justify-end text-table-th space-x-5 text-lg"
+                >
+                  <p>
+                    {page + 1}/{totalPages + 1}
+                  </p>
+                  <div>
+                    <button onClick={() => handleSetPage(-1)}>⬅️</button>
+                    <button onClick={() => handleSetPage(+1)}>➡️</button>
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody className="bg-gray-900 divide-y divide-gray-600">
@@ -113,29 +156,29 @@ export default function AchievementsTable(params: Params) {
                       </div>
                     </div>
                   </td>
-                  {isInAdminConsole() && (
-                    <>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Link
-                          className="text-indigo-300 hover:text-indigo-500"
-                          to={ROUTES.EDIT_ACHIEVEMENT.replace(
-                            ":achievementId",
-                            achievement.id.toString()
-                          )}
-                        >
-                          Edit
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          className="text-red-300 hover:text-red-500"
-                          onClick={() => handleDeleteAchievement(achievement)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </>
-                  )}
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    {isInAdminConsole() && (
+                      <Link
+                        className="text-indigo-300 hover:text-indigo-500"
+                        to={ROUTES.EDIT_ACHIEVEMENT.replace(
+                          ":achievementId",
+                          achievement.id.toString()
+                        )}
+                      >
+                        Edit
+                      </Link>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    {isInAdminConsole() && (
+                      <button
+                        className="text-red-300 hover:text-red-500"
+                        onClick={() => handleDeleteAchievement(achievement)}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

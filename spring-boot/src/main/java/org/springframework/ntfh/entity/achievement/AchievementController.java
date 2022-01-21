@@ -1,6 +1,8 @@
 package org.springframework.ntfh.entity.achievement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,14 +26,20 @@ public class AchievementController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Achievement> getAll() {
-        return this.achievementService.findAll();
+    public Iterable<Achievement> getPage(@PageableDefault(page = 0, size = 5) final Pageable pageable) {
+        return achievementService.findPageable(pageable);
     }
 
     @GetMapping("types")
     @ResponseStatus(HttpStatus.OK)
     public Iterable<AchievementType> getTypes() {
         return this.achievementService.findAllTypes();
+    }
+
+    @GetMapping("count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getAchievementCount() {
+        return this.achievementService.count();
     }
 
     @GetMapping("{achievementId}")

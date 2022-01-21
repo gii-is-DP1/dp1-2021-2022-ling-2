@@ -115,8 +115,15 @@ public class UserController {
 
     @GetMapping("{userId}/achievements")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Achievement> achievements(@PathVariable("userId") User user) {
-        return achievementService.findByUser(user);
+    public Iterable<Achievement> getAchievements(@PathVariable("userId") User user,
+            @PageableDefault(page = 0, size = 5) final Pageable pageable) {
+        return achievementService.findByUser(user, pageable);
+    }
+
+    @GetMapping("{userId}/achievements/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getUserAchievementCount(@PathVariable("userId") User user) {
+        return achievementService.countByUser(user);
     }
 
     /**
