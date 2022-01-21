@@ -184,7 +184,7 @@ public class RangerCardTest {
         abilityCardIngameService.playCard(abilityCardIngameRanger2.getId(), berserkerIngame.getId(), tokenRanger);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(ranger.getHand().size()).isZero();
+        assertThat(ranger.getHand()).isEmpty();
     }
 
     @Test
