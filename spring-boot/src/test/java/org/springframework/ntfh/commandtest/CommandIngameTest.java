@@ -254,6 +254,7 @@ class CommandIngameTest {
     void testDrawCommand() {
 
         // draw a card from the ability pile
+
         Integer initialHand = ranger.getHand().size();
         new DrawCommand(1, ranger).execute();
         Integer currentHand = ranger.getHand().size();
@@ -323,6 +324,7 @@ class CommandIngameTest {
 
     @Test
     void testGiveGold() {
+
         // give gold to a player
 
         Integer initialGold = ranger.getGold();
@@ -350,6 +352,7 @@ class CommandIngameTest {
 
     @Test
     void testGiveGuard() {
+        
         // add guard
 
         Integer guardApplied = 1;

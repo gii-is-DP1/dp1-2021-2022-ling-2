@@ -23,7 +23,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query("SELECT u from User u inner join u.players ps ORDER BY SIZE(ps) DESC")
     Page<User> maxNumberOfGamesPlayed(Pageable pageable);
 
-    // TODO return List<Object> with both user and stats
     // User with more games won (list with 1 element)
     @Query("SELECT u from User u inner join u.players ps WHERE ps.game.winner = ps ORDER BY SIZE(ps) DESC")
     Page<User> maxNumberOfGamesWon(Pageable pageable);

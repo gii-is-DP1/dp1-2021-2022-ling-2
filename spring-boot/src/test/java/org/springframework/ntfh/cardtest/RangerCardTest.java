@@ -45,7 +45,6 @@ class RangerCardTest {
     @Autowired
     private GameService gameService;
 
-
     @Autowired
     private UserService userService;
 

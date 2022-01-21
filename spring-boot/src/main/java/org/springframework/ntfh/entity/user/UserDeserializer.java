@@ -63,5 +63,4 @@ public class UserDeserializer extends JsonDeserializer<User> {
             }
         }
     }
-
 }
