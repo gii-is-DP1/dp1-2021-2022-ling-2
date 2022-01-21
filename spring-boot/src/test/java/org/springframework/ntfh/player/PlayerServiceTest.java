@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -130,7 +129,6 @@ class PlayerServiceTest {
     }
 
     @Test
-    @Disabled
     void testCreatePlayer() {
         User user = userService.findByUsername("user4");
         Player tester = playerService.createPlayer(user);
