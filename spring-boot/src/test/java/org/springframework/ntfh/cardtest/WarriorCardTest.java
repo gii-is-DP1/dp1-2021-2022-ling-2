@@ -123,7 +123,7 @@ public class WarriorCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(3);
-        assertThat(warrior.getDiscardPile().size()).isEqualTo(2); // the card we just played and the discarded from the
+        assertThat(warrior.getDiscardPile()).hasSize(2); // the card we just played and the discarded from the
                                                                   // effect
     }
 
@@ -156,7 +156,7 @@ public class WarriorCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(warrior.getDiscardPile().size()).isEqualTo(2); // the card we just played and the discarded from the
+        assertThat(warrior.getDiscardPile()).hasSize(2); // the card we just played and the discarded from the
                                                                   // effect
     }
 
@@ -195,7 +195,7 @@ public class WarriorCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
-        assertThat(warrior.getHand().size()).isEqualTo(1);
+        assertThat(warrior.getHand()).hasSize(1);
 
         // second espadazo in a turn will not trigger the draw command
 
@@ -219,7 +219,7 @@ public class WarriorCardTest {
         warrior.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), null, tokenWarrior);
 
-        assertThat(warrior.getHand().size()).isEqualTo(2);
+        assertThat(warrior.getHand()).hasSize(2);
     }
 
     @Test
@@ -246,7 +246,7 @@ public class WarriorCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
-        assertThat(warrior.getDiscardPile().size()).isEqualTo(1); // the card that added 0 damage is still in the
+        assertThat(warrior.getDiscardPile()).hasSize(1); // the card that added 0 damage is still in the
                                                                   // ability pile
 
         // the card found deals 2 damage
@@ -263,7 +263,7 @@ public class WarriorCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
-        assertThat(warrior.getDiscardPile().size()).isEqualTo(1); // the card that provided the bonus damage is still in
+        assertThat(warrior.getDiscardPile()).hasSize(1); // the card that provided the bonus damage is still in
                                                                   // the ability pile
     }
 
@@ -283,7 +283,7 @@ public class WarriorCardTest {
         warrior.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), null, tokenWarrior);
 
-        assertThat(warrior.getHand().size()).isEqualTo(1); // the card drawn
+        assertThat(warrior.getHand()).hasSize(1); // the card drawn
         assertThat(warrior.getGlory()).isEqualTo(1);
         assertThat(rogue.getDiscardPile().size()).isZero();
     }
