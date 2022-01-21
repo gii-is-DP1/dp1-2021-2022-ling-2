@@ -25,11 +25,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * This advice is necessary because MockMvc is not a real servlet environment,
- * therefore it does not redirect error responses to [ErrorController], which
- * produces validation response. So we need to fake it in tests. It's not ideal,
- * but at least we can use classic MockMvc tests for testing error response +
- * document it.
+ * This advice is necessary because MockMvc is not a real servlet environment, therefore it does not redirect error
+ * responses to [ErrorController], which produces validation response. So we need to fake it in tests. It's not ideal,
+ * but at least we can use classic MockMvc tests for testing error response + document it.
  */
 @ControllerAdvice
 public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandler {
@@ -70,8 +68,7 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(BannedUserException.class)
-    public ResponseEntity<Object> bannedUserExceptionHandler(HttpServletRequest request,
-            BannedUserException ex) {
+    public ResponseEntity<Object> bannedUserExceptionHandler(HttpServletRequest request, BannedUserException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
@@ -82,8 +79,7 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Object> illegalStateExceptionHandler(HttpServletRequest request,
-            IllegalStateException ex) {
+    public ResponseEntity<Object> illegalStateExceptionHandler(HttpServletRequest request, IllegalStateException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
@@ -103,26 +99,20 @@ public class ExceptionHandlerConfiguration extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(RollbackException.class)
-    public ResponseEntity<Object> rollbackExceptionHandler(HttpServletRequest request,
-            RollbackException ex) {
-        // TODO redirect this exception to its appropiate handler so the return message
-        // is clearer
+    public ResponseEntity<Object> rollbackExceptionHandler(HttpServletRequest request, RollbackException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<Object> numberFormatExceptionHandler(HttpServletRequest request,
-            NumberFormatException ex) {
+    public ResponseEntity<Object> numberFormatExceptionHandler(HttpServletRequest request, NumberFormatException ex) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatus status, WebRequest request) {
+            HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = ex.getBindingResult().getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .reduce((s1, s2) -> s1 + ". " + s2).orElse("");
+                .map(DefaultMessageSourceResolvable::getDefaultMessage).reduce((s1, s2) -> s1 + ". " + s2).orElse("");
         return buildResponseEntity(message, HttpStatus.BAD_REQUEST);
     }
 }

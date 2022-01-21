@@ -30,8 +30,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(
-        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 class MarketCardIngameServiceTest {
 
@@ -59,8 +58,6 @@ class MarketCardIngameServiceTest {
 
     @BeforeEach
     void init() {
-        /**************** Copypasted section ******************************/
-        // TODO copypaste from CommandIngameTest, maybe extract to a method?
         gameTester = new Game();
         gameTester.setName("test game");
         gameTester.setHasScenes(false);
@@ -82,10 +79,9 @@ class MarketCardIngameServiceTest {
         playerTester.setCharacter(warriorCharacter);
 
         gameService.startGame(gameTester.getId());
-        /******************************************************************/
 
-        cardTester = marketCardIngameService
-                .createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
+        cardTester =
+                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(3).get(), gameTester);
     }
 
     @AfterEach
@@ -101,18 +97,17 @@ class MarketCardIngameServiceTest {
     void testFindById() {
         MarketCardIngame testerCard = marketCardIngameService.findById(cardTester.getId());
 
-        assertThat(testerCard.getMarketCard().getMarketCardTypeEnum())
-                .isEqualTo(MarketCardTypeEnum.POCION_CURATIVA);
+        assertThat(testerCard.getMarketCard().getMarketCardTypeEnum()).isEqualTo(MarketCardTypeEnum.POCION_CURATIVA);
     }
 
     @Test
     void testSave() {
-        cardTester = marketCardIngameService
-                .createFromMarketCard(marketCardService.findMarketCardById(1).get(), gameTester);
+        cardTester =
+                marketCardIngameService.createFromMarketCard(marketCardService.findMarketCardById(1).get(), gameTester);
         marketCardIngameService.save(cardTester);
 
-        assertThat(marketCardIngameService.findById(cardTester.getId()).getMarketCard()
-                .getMarketCardTypeEnum()).isEqualTo(MarketCardTypeEnum.DAGA_ELFICA);
+        assertThat(marketCardIngameService.findById(cardTester.getId()).getMarketCard().getMarketCardTypeEnum())
+                .isEqualTo(MarketCardTypeEnum.DAGA_ELFICA);
     }
 
     @Test
@@ -155,8 +150,7 @@ class MarketCardIngameServiceTest {
     @Test
     void testCreateFromMarketCard() {
         // TestMethod made in the init()
-        assertThat(cardTester.getMarketCard().getMarketCardTypeEnum())
-                .isEqualTo(MarketCardTypeEnum.POCION_CURATIVA);
+        assertThat(cardTester.getMarketCard().getMarketCardTypeEnum()).isEqualTo(MarketCardTypeEnum.POCION_CURATIVA);
     }
 
 }

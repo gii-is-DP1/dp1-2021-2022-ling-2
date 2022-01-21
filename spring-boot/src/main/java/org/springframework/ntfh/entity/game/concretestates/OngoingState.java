@@ -34,7 +34,6 @@ public class OngoingState implements GameState {
 
     @Override
     public void preState(Game game) {
-        // TODO create the first turn bla bla
         turnService.initializeFromGame(game);
         log.info("Game with id " + game.getId() + " was created with players: " + game.getPlayers());
     }
