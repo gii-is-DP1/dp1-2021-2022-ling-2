@@ -131,7 +131,7 @@ class GameServiceTest {
     void testFindPlayersByGameId() {
         List<Player> testerList = gameService.findPlayersByGameId(1);
 
-        assertThat(testerList.size()).isEqualTo(2);
+        assertThat(testerList).hasSize(2);
     }
 
     @Test
@@ -166,7 +166,7 @@ class GameServiceTest {
         playerTester.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngame.getId(), null, token);
 
-        assertThat(playerTester.getHand().size()).isEqualTo(2);
+        assertThat(playerTester.getHand()).hasSize(2);
     }
 
     @Test

@@ -126,25 +126,25 @@ class MarketCardIngameServiceTest {
         marketCardIngameService.initializeFromGame(gameTester);
         gameService.setNextTurnState(gameTester.getCurrentTurn());
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET);
 
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(cardTester.getMarketCard());
         marketCardIngameService.buyMarketCard(market.get(0).getId(), playerToken);
         Integer FULL_MARKET_LESS_ONE = 4;
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET_LESS_ONE);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET_LESS_ONE);
 
         marketCardIngameService.refillMarketWithCards(gameTester);
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET);
     }
 
     @Test
     void testInitializeFromGame() {
         marketCardIngameService.initializeFromGame(gameTester);
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET);
     }
 
     @Test

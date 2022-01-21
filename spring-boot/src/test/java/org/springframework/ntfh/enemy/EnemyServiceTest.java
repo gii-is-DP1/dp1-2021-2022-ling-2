@@ -65,11 +65,11 @@ class EnemyServiceTest {
     void testEnemyCategoryType() {
         List<Enemy> warlords = enemyService.findByEnemyCategoryType(EnemyCategoryType.WARLORD);
 
-        assertThat(warlords.size()).isEqualTo(WARLORD_COUNT);
+        assertThat(warlords).hasSize(WARLORD_COUNT);
 
         List<Enemy> enemies = enemyService.findByEnemyCategoryType(EnemyCategoryType.HORDE);
 
-        assertThat(enemies.size()).isEqualTo(HORDE_COUNT);
+        assertThat(enemies).hasSize(HORDE_COUNT);
     }
 
 }
