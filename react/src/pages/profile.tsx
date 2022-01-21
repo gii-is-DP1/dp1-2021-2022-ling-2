@@ -15,6 +15,15 @@ import { User } from "../interfaces/User";
  *
  * @author andrsdt
  */
+
+type UserStatsPOJO = {
+  username: string;
+  totalMatchesPlayed: number;
+  totalMatchesWon: number;
+  fastestMatchDuration: number;
+  longestMatchDuration: number;
+};
+
 export default function Profile() {
   const { username: profileUsername } = useParams<{ username: string }>(); // hook
   const history = useHistory(); // hook

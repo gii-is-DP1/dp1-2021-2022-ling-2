@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
+import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.user.User;
@@ -51,10 +52,17 @@ public class StatisticsController {
         return null;
     }
 
-    @GetMapping("{userId}/games/count")
+    @GetMapping("users/{userId}/games/count")
     @ResponseStatus(HttpStatus.OK)
     public Integer gamesPlayedByUser(@PathVariable("userId") User user) {
         return statisticsService.countFinishedByUser(user);
+    }
+
+
+    @GetMapping("games/{gameId}/statistics")
+    @ResponseStatus(HttpStatus.OK)
+    public GameStatsPOJO getGameStatistics(@PathVariable("gameId") Game game) {
+        return statisticsService.getGameStatistics(game);
     }
 
 }

@@ -112,6 +112,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/admin/**").hasAuthority(adminString) // access to admin info
                 // RANKING ENDPOINTS
+                .antMatchers(HttpMethod.GET, "/statistics/users/{userId}/games/count").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/users/{userId}/games/statistics").permitAll()
                 .antMatchers(HttpMethod.GET, "/statistics/games/count").permitAll()
                 .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
                 .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
