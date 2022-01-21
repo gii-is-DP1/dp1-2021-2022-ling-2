@@ -62,7 +62,8 @@ class PlayerServiceTest {
     void teardown() {
         try {
             playerService.delete(currentPlayer);
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Test
@@ -130,7 +131,6 @@ class PlayerServiceTest {
     }
 
     @Test
-    @Disabled
     void testCreatePlayer() {
         User user = userService.findByUsername("user4");
         Player tester = playerService.createPlayer(user);

@@ -4,14 +4,13 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.ntfh.entity.achievement.AchievementService;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.game.GameService;
+import org.springframework.ntfh.entity.statistic.StatisticsService;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserController;
 import org.springframework.ntfh.entity.user.UserService;
@@ -57,6 +57,9 @@ class UserControllerTest {
 
     @MockBean
     AchievementService achievementService;
+
+    @MockBean
+    StatisticsService statisticsService;
 
     @MockBean
     DataSource dataSource;

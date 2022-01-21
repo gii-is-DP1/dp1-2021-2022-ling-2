@@ -3,11 +3,10 @@ package org.springframework.ntfh.playablecard.abilitycard;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import javax.sql.DataSource;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,12 +27,12 @@ import org.springframework.test.web.servlet.MockMvc;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AbilityCardIngameController.class)
 public class AbilityCardIngameControllerTest {
-    
+
     @Autowired
-	MockMvc mockMvc;
+    MockMvc mockMvc;
 
     @MockBean
-	DataSource dataSource;
+    DataSource dataSource;
 
     @MockBean
     private AbilityCardIngameService abilityCardIngameService;
@@ -45,8 +44,8 @@ public class AbilityCardIngameControllerTest {
     private UserService userService;
 
     @BeforeEach
-    void setup(){
-        Game game1= new Game();
+    void setup() {
+        Game game1 = new Game();
         game1.setId(1);
 
         // when(marketCardIngameService.buyMarketCard(anyInt(), anyString())).thenReturn(game1);
@@ -55,13 +54,12 @@ public class AbilityCardIngameControllerTest {
 
     @Test
     @WithMockUser("user1")
-    void playCard_success() throws Exception{
-        final String POST_JSON=
-        "{\"enemyId\":\"2\"}";
-        
-        mockMvc.perform(post("/ability-cards/12")
-        .header("authorization","Bearer "+TokenUtils.USER_TOKEN)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(POST_JSON)).andExpect(status().isOk());
+    void playCard_success() throws Exception {
+        final String POST_JSON = "{\"enemyId\":\"2\"}";
+
+        mockMvc.perform(
+                post("/ability-cards/12").with(csrf()).header("authorization", "Bearer " + TokenUtils.USER_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
+                .andExpect(status().isOk());
     }
 }
