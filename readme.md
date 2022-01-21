@@ -58,10 +58,34 @@ cd ./react/
 Now we execute the service with the appropiate nodejs command:
 
 ```
-npm run start
+npm run build
 ```
 
-From now on, our application will be located at localhost:3000. Enjoy!
+After that, we will se a message like this one:
+```
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+```
+
+Following these steps, we will see the last message, telling us that everything was OK:
+
+```
+   ┌──────────────────────────────────────────────────┐
+   │                                                  │
+   │   Serving!                                       │
+   │                                                  │
+   │   - Local:            http://localhost:3000      │
+   │   - On Your Network:  http://192.168.1.48:3000   │
+   │                                                  │
+   │   Copied local address to clipboard!             │
+   │                                                  │
+   └──────────────────────────────────────────────────┘
+```
+
+The application is now ready to run. Enjoy!
 
 ## Tools used
 
