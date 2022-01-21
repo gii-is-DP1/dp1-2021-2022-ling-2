@@ -198,18 +198,6 @@ class GameServiceTest {
         assertThat(gameTester.getId()).isEqualTo(gameService.findGameById(gameTester.getId()).getId());
     }
 
-    // H7 - E1
-    @Test
-    @Disabled
-    // TODO check this in the controller. This is not checked in the service anymore
-    public void testCreateFromLobbyNotEnoughPlayers() {
-        User user2 = userService.findByUsername("user2");
-        gameService.removePlayer(gameTester.getId(), "user2", TokenUtils.generateJWTToken(user2));
-        Integer gameId = gameTester.getId();
-
-        assertThrows(IllegalArgumentException.class, () -> gameService.startGame(gameId));
-    }
-
     // H21 + E1
     @Test
     void testRegularBountyCollection() {
