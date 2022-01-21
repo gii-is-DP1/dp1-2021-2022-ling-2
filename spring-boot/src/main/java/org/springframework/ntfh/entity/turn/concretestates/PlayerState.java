@@ -102,7 +102,7 @@ public class PlayerState implements TurnState {
             }
         } catch (Exception e) {
             log.error("Error playing card ", e);
-            return;
+            throw new IllegalArgumentException(className + " cannot be played now");
         }
 
         // Make sure to move the card to the discard pile
