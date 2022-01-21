@@ -38,7 +38,7 @@ public class PopulateData {
     @Autowired
     private CharacterService characterService;
 
-    private Random random;
+    private Random random = new Random();
 
     private Integer testUserCount = 1;
 
@@ -50,8 +50,6 @@ public class PopulateData {
 
     public void loadInitialData() {
         // If this number is not enough, additional users will be created automatically
-        random = new Random();
-
         populateUsers(25);
 
         createGamesInFinishedState(30);
@@ -73,7 +71,7 @@ public class PopulateData {
      * @param numberOfGames number of games to create and finish
      * @param numberOfUsers number of users that will play those games
      */
-    private void createGamesInFinishedState(Integer numberOfGames) {
+    public void createGamesInFinishedState(Integer numberOfGames) {
         IntStream.range(0, numberOfGames).forEach(i -> {
             Game g = createGameInLobbyState();
             g = gameService.startGame(g.getId());
