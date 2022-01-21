@@ -7,7 +7,6 @@ import java.util.List;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -196,18 +195,6 @@ class GameServiceTest {
     @Test
     void testCreateFromLobby() {
         assertThat(gameTester.getId()).isEqualTo(gameService.findGameById(gameTester.getId()).getId());
-    }
-
-    // H7 - E1
-    @Test
-    @Disabled
-    // TODO check this in the controller. This is not checked in the service anymore
-    public void testCreateFromLobbyNotEnoughPlayers() {
-        User user2 = userService.findByUsername("user2");
-        gameService.removePlayer(gameTester.getId(), "user2", TokenUtils.generateJWTToken(user2));
-        Integer gameId = gameTester.getId();
-
-        assertThrows(IllegalArgumentException.class, () -> gameService.startGame(gameId));
     }
 
     // H21 + E1
