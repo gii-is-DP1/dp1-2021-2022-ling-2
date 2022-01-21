@@ -39,7 +39,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class WarriorCardTest {
+class WarriorCardTest {
 
     @Autowired
     private GameService gameService;
@@ -205,7 +205,7 @@ public class WarriorCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(warrior.getHand().size()).isZero();
+        assertThat(warrior.getHand()).isEmpty();
     }
 
     @Test
@@ -272,7 +272,7 @@ public class WarriorCardTest {
 
         new DiscardCommand(2, rogue).execute();
 
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+        assertThat(rogue.getDiscardPile()).hasSize(2);
 
         AbilityCard vozDeAliento = abilityCardService.findById(30);
         AbilityCardIngame abilityCardIngameWarrior =
@@ -285,6 +285,6 @@ public class WarriorCardTest {
 
         assertThat(warrior.getHand()).hasSize(1); // the card drawn
         assertThat(warrior.getGlory()).isEqualTo(1);
-        assertThat(rogue.getDiscardPile().size()).isZero();
+        assertThat(rogue.getDiscardPile()).isEmpty();
     }
 }

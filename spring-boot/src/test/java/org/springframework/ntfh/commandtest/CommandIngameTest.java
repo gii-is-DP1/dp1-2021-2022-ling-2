@@ -240,7 +240,7 @@ class CommandIngameTest {
         new DiscardCommand(8, ranger).execute();
         new DrawCommand(8, ranger).execute();
 
-        assertThat(ranger.getDiscardPile().size()).isZero();
+        assertThat(ranger.getDiscardPile()).isEmpty();
         assertThat(ranger.getWounds()).isNotZero();
     }
 
@@ -262,7 +262,7 @@ class CommandIngameTest {
         new ExileCommand(ranger, AbilityCardTypeEnum.POCION_CURATIVA).execute();
 
         assertThat(currentHand).hasSize(4);
-        assertThat(ranger.getDiscardPile().size()).isZero();
+        assertThat(ranger.getDiscardPile()).isEmpty();
     }
 
     @Test
@@ -466,7 +466,7 @@ class CommandIngameTest {
 
         new RecoverCardCommand(ranger, AbilityCardTypeEnum.DISPARO_RAPIDO).execute();
 
-        assertThat(ranger.getDiscardPile().size()).isZero();
+        assertThat(ranger.getDiscardPile()).isEmpty();
 
         // search for a card that isnt in the discard pile, after not finding the command doesnt
         // make any
@@ -494,14 +494,14 @@ class CommandIngameTest {
         new RecoverCommand(ranger).execute();
 
         assertThat(ranger.getAbilityPile()).hasSize(11);
-        assertThat(ranger.getDiscardPile().size()).isZero();
+        assertThat(ranger.getDiscardPile()).isEmpty();
 
         // try to recover one card from an empty discard pile to the draw pile
 
         new RecoverCommand(ranger).execute();
 
         assertThat(ranger.getAbilityPile()).hasSize(11);
-        assertThat(ranger.getDiscardPile().size()).isZero();
+        assertThat(ranger.getDiscardPile()).isEmpty();
     }
 
 

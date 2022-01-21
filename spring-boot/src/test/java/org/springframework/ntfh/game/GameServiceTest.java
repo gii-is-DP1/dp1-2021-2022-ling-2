@@ -224,13 +224,13 @@ class GameServiceTest {
         enemiesFighting.add(enemyIngame);
         gameTester.setEnemiesFighting(enemiesFighting);
 
-        assertThat(gameTester.getEnemiesFighting().contains(enemyIngame)).isTrue();
+        assertThat(gameTester.getEnemiesFighting()).contains(enemyIngame);
 
         abilityCardIngameService.playCard(trampaIngame.getId(), enemyIngame.getId(), token);
 
         turnService.createNextTurn(gameTester);
 
-        assertThat(gameTester.getEnemiesFighting().contains(enemyIngame)).isFalse();
+        assertThat(gameTester.getEnemiesFighting()).doesNotContain(enemyIngame);
     }
 
     // H22 + E1
