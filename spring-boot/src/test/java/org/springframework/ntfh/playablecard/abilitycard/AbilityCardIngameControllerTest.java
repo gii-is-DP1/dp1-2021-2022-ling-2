@@ -48,7 +48,6 @@ class AbilityCardIngameControllerTest {
         Game game1 = new Game();
         game1.setId(1);
 
-        // when(marketCardIngameService.buyMarketCard(anyInt(), anyString())).thenReturn(game1);
         when(abilityCardIngameService.playCard(anyInt(), anyInt(), anyString())).thenReturn(game1);
     }
 
