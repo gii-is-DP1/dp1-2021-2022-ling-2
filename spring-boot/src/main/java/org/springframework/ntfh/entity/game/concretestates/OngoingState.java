@@ -34,9 +34,6 @@ public class OngoingState implements GameState {
     @Autowired
     private GameService gameService;
 
-    @Autowired
-    private StatisticsService statisticsService;
-
     @Override
     public void preState(Game game) {
         turnService.initializeFromGame(game);
@@ -107,27 +104,6 @@ public class OngoingState implements GameState {
         game.setWinner(winner);
         game.setFinishTime(Timestamp.from(Instant.now()));
         gameService.setNextState(game); // set state to FINISHED
-
-        // **************/
-        // Cosass del Roble (Space+Power Botton)
-        // ***************/
-
-        for (int i = 0; i < players.size(); i++) {
-            Statistics ms = new Statistics();
-            Player p = players.get(i);
-            ms.setUser(p.getUser());
-            ms.setDied(p.isDead());
-            ms.setGloryEarned(p.getGlory());
-            ms.setKillCount(p.getKills());
-            ms.setCharacter(p.getCharacterTypeEnum());
-            ms.setVictory(p.equals(winner));
-            Integer milliseconds = (int) (game.getFinishTime().getTime() - game.getStartTime().getTime());
-            ms.setDuration(milliseconds);
-
-            statisticsService.save(ms);
-        }
-
-
         return gameService.save(game);
     }
 
