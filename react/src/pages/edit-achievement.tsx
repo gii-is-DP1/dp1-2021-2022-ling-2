@@ -50,6 +50,7 @@ export default function EditAchievement() {
     try {
       const payload = {
         id: achievement?.id, // Needed to identify the achievement
+        version: achievement?.version,
         name: name,
         description: description,
         condition: condition ?? 0,

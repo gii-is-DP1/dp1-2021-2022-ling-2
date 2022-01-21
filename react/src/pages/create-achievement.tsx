@@ -15,9 +15,8 @@ export default function CreateAchievement() {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [condition, setCondition] = useState<number | undefined>(undefined);
-  const [achievementType, setAchievementType] = useState<string | undefined>(
-    undefined
-  );
+  const [achievementType, setAchievementType] =
+    useState<string>("CREATE_ACCOUNT");
   const [achievementTypeOptions, setAchievementTypeOptions] = useState<
     string[]
   >([]);
@@ -31,7 +30,7 @@ export default function CreateAchievement() {
         name: name,
         description: description,
         condition: condition ?? 0,
-        type: achievementType,
+        type: achievementType ?? "CREATE_ACCOUNT",
       };
       await axios.post("/achievements/new", payload, {
         headers: { Authorization: "Bearer " + userToken },

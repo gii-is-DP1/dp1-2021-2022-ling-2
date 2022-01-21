@@ -9,6 +9,7 @@ import org.springframework.ntfh.entity.user.User;
 
 public interface StatisticsRepository extends CrudRepository<Statistics, Integer> {
 
+    Iterable<Statistics> findByuser(User user);
 
     // ********For Global Statistics***********
 

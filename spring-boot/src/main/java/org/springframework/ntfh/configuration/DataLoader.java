@@ -57,11 +57,11 @@ public class DataLoader implements CommandLineRunner {
 
     private void loadInitialData() {
         // If this number is not enough, additional users will be created automatically
-        populateUsers(4);
+        populateUsers(25);
 
-        createGamesInFinishedState(50);
-        createGamesInGameState(1);
-        createGamesInLobbyState(1);
+        createGamesInFinishedState(30);
+        createGamesInGameState(4);
+        createGamesInLobbyState(2);
     }
 
     private void populateUsers(Integer n) {
