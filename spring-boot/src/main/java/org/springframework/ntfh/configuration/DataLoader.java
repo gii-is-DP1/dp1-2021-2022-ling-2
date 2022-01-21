@@ -56,9 +56,9 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadInitialData() {
-        populateUsers(5);
-        createGamesInLobbyState(0);
-        createGamesInGameState(0);
+        populateUsers(50);
+        createGamesInLobbyState(2);
+        createGamesInGameState(3);
         createGamesInFinishedState(30);
     }
 
@@ -79,8 +79,10 @@ public class DataLoader implements CommandLineRunner {
     private void createGamesInFinishedState(Integer numberOfGames) {
         IntStream.range(0, numberOfGames).forEach(i -> {
             Game g = createGameInLobbyState();
-
             g = gameService.startGame(g.getId());
+
+            // Make the duration of the game something between 5 and 100 minutes
+            g.setStartTime(Timestamp.from(Instant.now().minus(random.nextInt(100) + 5L, ChronoUnit.MINUTES)));
 
             g.getPlayers().forEach(p -> {
                 User user = p.getUser();
@@ -97,8 +99,6 @@ public class DataLoader implements CommandLineRunner {
                 usersFree.add(user);
             });
             g = gameService.finishGame(g);
-            // Make the duration of the game something between 5 and 100 minutes
-            g.setStartTime(Timestamp.from(Instant.now().minus(random.nextInt(100) + 5L, ChronoUnit.MINUTES)));
         });
     }
 

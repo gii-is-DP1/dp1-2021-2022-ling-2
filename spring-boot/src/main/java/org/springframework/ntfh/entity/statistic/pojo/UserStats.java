@@ -4,7 +4,9 @@ import java.sql.Timestamp;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
+import lombok.Builder;
 
+@Builder
 public class UserStats {
     // POJO for parsing to JSON
     public Integer matchesPlayed;

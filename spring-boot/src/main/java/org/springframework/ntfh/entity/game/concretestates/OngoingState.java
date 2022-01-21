@@ -100,8 +100,10 @@ public class OngoingState implements GameState {
             player.setGlory(player.getGlory() + additionalGlory);
         });
 
-        // Choose as the winner the one with more glory. If there is a tie, the leader is the winner
-        Player winner = players.stream().max(compareByGlory().thenComparing(compareByKills())).orElse(game.getLeader());
+        // Choose as the winner the one with more glory. If there is a tie, the one alive wins
+        Player winner =
+                players.stream().max(compareByGlory().thenComparing(compareByKills()).thenComparing(compareByAlive()))
+                        .orElse(game.getLeader());
         game.setWinner(winner);
         game.setFinishTime(Timestamp.from(Instant.now()));
         gameService.setNextState(game); // set state to FINISHED
@@ -118,14 +120,9 @@ public class OngoingState implements GameState {
             ms.setGloryEarned(p.getGlory());
             ms.setKillCount(p.getKills());
             ms.setCharacter(p.getCharacterTypeEnum());
-            if (p.equals(winner)) {
-                ms.setVictory(true);
-            } else {
-                ms.setVictory(false);
-            }
-
-            Integer duration = (int) (game.getFinishTime().getTime() - game.getStartTime().getTime());
-            ms.setDuration(duration);
+            ms.setVictory(p.equals(winner));
+            Integer milliseconds = (int) (game.getFinishTime().getTime() - game.getStartTime().getTime());
+            ms.setDuration(milliseconds);
 
             statisticsService.save(ms);
         }
@@ -140,5 +137,9 @@ public class OngoingState implements GameState {
 
     private Comparator<Player> compareByKills() {
         return (p1, p2) -> p1.getKills().compareTo(p2.getKills());
+    }
+
+    private Comparator<Player> compareByAlive() {
+        return (p1, p2) -> p2.isDead().compareTo(p1.isDead());
     }
 }

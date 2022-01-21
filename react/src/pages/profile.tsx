@@ -1,14 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user";
-import tokenParser from "../helpers/tokenParser";
 import { Game } from "../interfaces/Game";
-import { Player } from "../interfaces/Player";
 import { User } from "../interfaces/User";
 
 /**
@@ -17,24 +14,24 @@ import { User } from "../interfaces/User";
  */
 
 type UserStatsPOJO = {
-  username: string;
-  totalMatchesPlayed: number;
-  totalMatchesWon: number;
-  fastestMatchDuration: number;
-  longestMatchDuration: number;
+  averageDuration?: string;
+  charactersPlayed?: object;
+  charactersWinRates?: object;
+  fastestMatch?: string;
+  gloryEarned?: number;
+  killCount?: number;
+  longestMatch?: string;
+  matchesPlayed?: number;
+  matchesWon?: number;
 };
 
 export default function Profile() {
   const { username: profileUsername } = useParams<{ username: string }>(); // hook
   const history = useHistory(); // hook
 
-  const { userToken } = useContext(userContext);
-  const loggedUser = tokenParser(useContext(userContext)); // hook
   const [userProfile, setUserProfile] = useState<User | null>(null);
   const [userGamesHistory, setUserGamesHistory] = useState<Game[]>([]);
-  const [matchesWon, setMatchesWon] = useState(1402);
-  const [fastestMatch, setFastestMatch] = useState("26m54s");
-  const [longestMatch, setLongestMatch] = useState("1h48m");
+  const [userStats, setUserStats] = useState<UserStatsPOJO>({});
 
   useEffect(() => {
     const fetchGameHistory = async () => {
@@ -67,7 +64,7 @@ export default function Profile() {
     const fetchUserStatistics = async () => {
       try {
         const response = await axios.get(`statistics/users/${profileUsername}`);
-        const userStats = response.data as UserStatsPOJO;
+        setUserStats(response.data);
       } catch (error: any) {
         toast.error(error?.message);
       }
@@ -93,10 +90,20 @@ export default function Profile() {
             {/* username, email, matches, fastest and longest matches, stats and edit buttons */}
             <span>Username: {userProfile?.username}</span>
             <span>Email: {userProfile?.email}</span>
+            <h1 className="pt-5 font-bold">Statistics</h1>
             <span>Matches played: {userGamesHistory.length}</span>
-            <span>Matches won: {matchesWon}</span>
-            <span>Fastest match: {fastestMatch}</span>
-            <span>Longest match: {longestMatch}</span>
+            <span>Matches won: {userStats.matchesWon ?? 0}</span>
+            <span>Fastest match: {userStats.fastestMatch ?? "--:--:--"}</span>
+            <span>Longest match: {userStats.longestMatch ?? "--:--:--"}</span>
+            <span>
+              Average match duration: {userStats.averageDuration ?? "--:--:--"}
+            </span>
+            <span>Total glory earned: {userStats.gloryEarned ?? 0}</span>
+            <span>Total kill count: {userStats.killCount ?? 0}</span>
+            {/* <span>Characters played: {userStats.charactersPlayed ?? ""}</span> */}
+            {/* <span>
+              Characters win rates: {userStats.charactersWinRates ?? ""}
+            </span> */}
             <div className="flex flex-wrap space-x-3">
               <Link
                 to={ROUTES.EDIT_PROFILE.replace(":username", profileUsername)}

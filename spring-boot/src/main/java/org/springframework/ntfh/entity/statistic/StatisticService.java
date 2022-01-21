@@ -61,18 +61,18 @@ public class StatisticService {
     }
 
     public Timestamp getAvgDurationOfGames(User user) {
-        Double seconds = statisticsRepository.avgUserDurationOfGames(user);
-        return new Timestamp(seconds.longValue() * 1000);
+        Double milliseconds = statisticsRepository.avgUserDurationOfGames(user);
+        return new Timestamp(milliseconds.longValue());
     }
 
     public Timestamp getMinTimePlayedUser(User user) {
-        Integer seconds = statisticsRepository.minDurationOfGames(user);
-        return new Timestamp(seconds * 1000);
+        Integer milliseconds = statisticsRepository.minDurationOfGames(user);
+        return new Timestamp(milliseconds.longValue());
     }
 
     public Timestamp getMaxTimePlayedUser(User user) {
-        Integer seconds = statisticsRepository.maxDurationOfGames(user);
-        return new Timestamp(seconds * 1000);
+        Integer milliseconds = statisticsRepository.maxDurationOfGames(user);
+        return new Timestamp(milliseconds.longValue());
     }
 
     // Number of games and Wins

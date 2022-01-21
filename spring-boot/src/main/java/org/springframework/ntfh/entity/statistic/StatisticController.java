@@ -27,18 +27,16 @@ public class StatisticController {
     @GetMapping("users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public UserStats getUserStats(@PathVariable("userId") User user) {
-        UserStats userstats = new UserStats();
-
-        userstats.matchesPlayed = statisticsService.getNumGamesPlayedUser(user);
-        userstats.matchesWon = statisticsService.getNumVictoriesByUser(user);
-        userstats.fastestMatch = statisticsService.getMinTimePlayedUser(user);
-        userstats.longestMatch = statisticsService.getMaxTimePlayedUser(user);
-        userstats.averageDuration = statisticsService.getAvgDurationOfGames(user);
-        userstats.killCount = statisticsService.getKillsUser(user);
-        userstats.gloryEarned = statisticsService.getUserTotalGloryPoints(user);
-        userstats.charactersPlayed = statisticsService.getListPlayedCharactersByUser(user);
-
-        return userstats;
+        return UserStats.builder() // Start building the custom object
+                .matchesPlayed(statisticsService.getNumGamesPlayedUser(user))
+                .matchesWon(statisticsService.getNumVictoriesByUser(user))
+                .fastestMatch(statisticsService.getMinTimePlayedUser(user))
+                .longestMatch(statisticsService.getMaxTimePlayedUser(user))
+                .averageDuration(statisticsService.getAvgDurationOfGames(user))
+                .charactersPlayed(statisticsService.getListPlayedCharactersByUser(user))
+                .killCount(statisticsService.getKillsUser(user))
+                .gloryEarned(statisticsService.getUserTotalGloryPoints(user)) //
+                .build(); // Build and return
     }
 
     @GetMapping("users/{userId}/games/count")
