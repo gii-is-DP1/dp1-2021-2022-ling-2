@@ -17,7 +17,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     Boolean existsByEmail(String email);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     // User with more games played (list with 1 element)
     @Query("SELECT u from User u inner join u.players ps ORDER BY SIZE(ps) DESC")
