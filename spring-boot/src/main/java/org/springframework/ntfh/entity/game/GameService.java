@@ -117,9 +117,6 @@ public class GameService {
 
     @Transactional
     public Game removePlayer(Integer gameId, String username, String token) {
-        // TODO make sure that the one trying to remove the player is either the player
-        // himself or the host
-        // TODO check token in controller, getting the game via a Converter
         Game game = this.findGameById(gameId);
         String tokenUsername = TokenUtils.usernameFromToken(token);
 

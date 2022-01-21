@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 public class WinXGames implements Achievement {
 
     public Boolean check(User user, Integer numRequested) {
-        // TODO implement with query?
         Long numWonGames = user.getPlayers().stream().filter(p -> p.equals(p.getGame().getWinner())).count();
         return numWonGames >= numRequested;
     }

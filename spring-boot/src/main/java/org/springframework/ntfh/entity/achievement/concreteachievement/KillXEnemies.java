@@ -6,7 +6,6 @@ import org.springframework.ntfh.entity.user.User;
 public class KillXEnemies implements Achievement {
 
     public Boolean check(User user, Integer numRequested) {
-        // TODO implement with query?
         Integer killedEnemies = user.getPlayers().stream().mapToInt(Player::getKills).sum();
         return killedEnemies >= numRequested;
     }

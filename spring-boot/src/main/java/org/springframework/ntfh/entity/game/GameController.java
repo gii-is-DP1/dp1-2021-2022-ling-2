@@ -94,8 +94,6 @@ public class GameController {
     @PostMapping("new")
     @ResponseStatus(HttpStatus.CREATED)
     public Game createGame(@RequestBody Game game) throws IllegalArgumentException {
-        // TODO check here the input validations (e.g. spectatorsAllowed is not null)
-        // if they are not checked in hte entity
         return gameService.createGame(game);
     }
 

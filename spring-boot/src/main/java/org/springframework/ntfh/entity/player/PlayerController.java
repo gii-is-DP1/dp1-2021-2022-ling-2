@@ -23,7 +23,6 @@ public class PlayerController {
     @ResponseStatus(HttpStatus.OK)
     public void setCharacter(@PathVariable("playerId") Integer playerId,
             @PathVariable("characterId") Integer characterId, @RequestHeader("Authorization") String token) {
-        // TODO use converters for this
         playerService.updateCharacter(playerId, characterId);
     }
 }

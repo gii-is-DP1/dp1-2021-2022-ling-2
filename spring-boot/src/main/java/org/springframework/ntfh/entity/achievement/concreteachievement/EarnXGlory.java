@@ -6,7 +6,6 @@ import org.springframework.ntfh.entity.user.User;
 public class EarnXGlory implements Achievement {
 
     public Boolean check(User user, Integer numRequested) {
-        // TODO implement with query?
         Integer earnedGlory = user.getPlayers().stream().mapToInt(Player::getGlory).sum();
         return earnedGlory >= numRequested;
     }

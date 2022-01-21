@@ -7,7 +7,6 @@ public class PlayXDistinctCharacters implements Achievement {
 
     @Override
     public Boolean check(User user, Integer numRequested) {
-        // TODO implement with query?
         Long distinctPlayersPlayedByUser =
                 user.getPlayers().stream().map(Player::getCharacterTypeEnum).distinct().count();
         return distinctPlayersPlayedByUser >= numRequested;

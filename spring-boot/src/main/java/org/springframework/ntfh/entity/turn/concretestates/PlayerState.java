@@ -55,8 +55,6 @@ public class PlayerState implements TurnState {
     @Override
     public void playCard(Integer abilityCardIngameId, Integer enemyId, String token) {
 
-        // TODO throw exception if the one sending the request is not the card owner
-
         AbilityCardIngame abilityCardIngame = abilityCardIngameService.findById(abilityCardIngameId);
         AbilityCardTypeEnum abilityCardTypeEnum = abilityCardIngame.getAbilityCard().getAbilityCardTypeEnum();
         Player playerFrom = abilityCardIngame.getPlayer();
