@@ -87,7 +87,9 @@ class CommandIngameTest {
 
     protected Player rogue;
 
-    protected EnemyIngame enemyIngame;
+    protected EnemyIngame slingerIngame;
+
+    protected EnemyIngame berserkerIngame;
 
     @BeforeEach
     public void init() {
@@ -116,7 +118,9 @@ class CommandIngameTest {
 
         gameService.startGame(gameTester.getId());
         Enemy SLINGER = enemyService.findEnemyById(12).get();
-        enemyIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
+        slingerIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
+        Enemy BERSERKER = enemyService.findEnemyById(15).get();
+        berserkerIngame = enemyIngameService.createFromEnemy(BERSERKER, gameTester);
     }
 
     @AfterEach
@@ -162,38 +166,62 @@ class CommandIngameTest {
     @Test
     void testDealDamageCommand() {
 
+        EnemyIngame shriekkniferIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(30).get(), gameTester);
+        EnemyIngame gurdrukIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(28).get(), gameTester);
+
+        List<EnemyIngame> listEnemiesFighting = new ArrayList<>();
+        listEnemiesFighting.add(shriekkniferIngame);
+        listEnemiesFighting.add(berserkerIngame);
+        listEnemiesFighting.add(slingerIngame);
+        gameTester.setEnemiesFighting(listEnemiesFighting);
+
         // Deal damage to a monster
 
-        EnemyIngame enemyIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(12).get(), gameTester);
-        Integer initialEndurance = enemyIngame.getCurrentEndurance();
-        new DealDamageCommand(1, ranger, enemyIngame).execute();
+        Integer initialEndurance = slingerIngame.getCurrentEndurance();
+        new DealDamageCommand(1, ranger, slingerIngame).execute();
 
-        assertThat(enemyIngame.getCurrentEndurance()).isEqualTo(initialEndurance - 1);
+        assertThat(slingerIngame.getCurrentEndurance()).isEqualTo(initialEndurance - 1);
 
         // effects on kill of the enemy on the table
 
-        EnemyIngame enemyIngame2 = enemyIngameService.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
         Integer baseGlory = ranger.getGlory();
         Integer baseGold = ranger.getGold();
         Integer baseKills = ranger.getKills();
-        Integer gloryAdded = enemyIngame2.getEnemy().getBaseGlory() + enemyIngame2.getEnemy().getExtraGlory();
-        Integer goldAdded = enemyIngame2.getEnemy().getGold();
-        new DealDamageCommand(10, ranger, enemyIngame2).execute();
+        Integer gloryAdded = berserkerIngame.getEnemy().getBaseGlory() + berserkerIngame.getEnemy().getExtraGlory();
+        Integer goldAdded = berserkerIngame.getEnemy().getGold();
+        new DealDamageCommand(10, ranger, berserkerIngame).execute();
 
         assertThat(ranger.getGlory()).isEqualTo(baseGlory + gloryAdded);
         assertThat(ranger.getGold()).isEqualTo(baseGold + goldAdded);
         assertThat(ranger.getKills()).isEqualTo(baseKills + 1);
-        assertThat(gameTester.getEnemiesFighting()).doesNotContain(enemyIngame2);
+        assertThat(gameTester.getEnemiesFighting()).doesNotContain(berserkerIngame);
 
-        // if for any reason we dealt damage to an enemy who is already at 0 his endurance wouldnt
-        // change,
-        // although this
-        // case cant really be
-        // accessed by the game since it removes the enemy once it dies
+        // if for any reason we dealt damage to an enemy who is already at 0 his endurance wouldnt change
 
-        new DealDamageCommand(2, ranger, enemyIngame2).execute();
+        new DealDamageCommand(2, ranger, berserkerIngame).execute();
 
-        assertThat(enemyIngame2.getCurrentEndurance()).isZero();
+        assertThat(berserkerIngame.getCurrentEndurance()).isZero();
+
+        // horde boss Shrieknifer is present on table and he applies his ability
+
+        berserkerIngame.setCurrentEndurance(6);
+        ranger.setGlory(0);
+
+        new DealDamageCommand(1, ranger, shriekkniferIngame).execute();
+
+        assertThat(ranger.getGlory()).isEqualTo(2);
+
+        new DealDamageCommand(1, ranger, berserkerIngame).execute();
+
+        assertThat(ranger.getGlory()).isEqualTo(3);
+
+        // horde boss gurdruk is target of an attack and he applies his ability
+
+        new DealDamageCommand(1, ranger, gurdrukIngame).execute();
+
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(1);
+
+
     }
 
     @Test
@@ -368,15 +396,15 @@ class CommandIngameTest {
 
         // gives gold on the kill of an enemy
 
-        enemyIngame.setCurrentEndurance(0);
-        new GoldOnKillCommand(1, enemyIngame, ranger).execute();
+        slingerIngame.setCurrentEndurance(0);
+        new GoldOnKillCommand(1, slingerIngame, ranger).execute();
 
         assertThat(ranger.getGold()).isEqualTo(1);
 
         // it will not give the gold if the enemy is still alive
 
-        enemyIngame.setCurrentEndurance(1);
-        new GoldOnKillCommand(100, enemyIngame, ranger);
+        slingerIngame.setCurrentEndurance(1);
+        new GoldOnKillCommand(100, slingerIngame, ranger);
 
         assertThat(ranger.getGold()).isEqualTo(1);
     }
@@ -441,7 +469,7 @@ class CommandIngameTest {
 
         // recieve damage, not enough to wound
 
-        new ReceiveDamageCommand(enemyIngame, rogue).execute();
+        new ReceiveDamageCommand(slingerIngame, rogue).execute();
 
         assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
         assertThat(rogue.getWounds()).isZero();
@@ -449,11 +477,10 @@ class CommandIngameTest {
         // recieve damage beyond their current ability pile, ads wound
 
         // instantiate a hard hitting enemy
-        EnemyIngame enemyIngame2 = enemyIngameService.createFromEnemy(enemyService.findEnemyById(15).get(), gameTester);
 
-        new ReceiveDamageCommand(enemyIngame2, rogue).execute();
-        new ReceiveDamageCommand(enemyIngame2, rogue).execute();
-        new ReceiveDamageCommand(enemyIngame2, rogue).execute();
+        new ReceiveDamageCommand(berserkerIngame, rogue).execute();
+        new ReceiveDamageCommand(berserkerIngame, rogue).execute();
+        new ReceiveDamageCommand(berserkerIngame, rogue).execute();
 
         assertThat(rogue.getAbilityPile().size()).isNotZero();
         assertThat(rogue.getDiscardPile().size()).isNotZero();
@@ -461,10 +488,24 @@ class CommandIngameTest {
 
         // recieve damage and this damage kills
 
-        new ReceiveDamageCommand(enemyIngame, rogue).execute();
+        new ReceiveDamageCommand(slingerIngame, rogue).execute();
 
         assertThat(rogue.getWounds()).isEqualTo(2);
         assertThat(rogue.isDead()).isTrue();
+
+        // receive damage and the roghkiller warlord ability is active
+
+        EnemyIngame roghkillerIngame = enemyIngameService.createFromEnemy(enemyService.findEnemyById(29).get(), gameTester);
+        List<EnemyIngame> listEnemiesFighting = gameTester.getEnemiesFighting();
+        listEnemiesFighting.add(roghkillerIngame);
+        gameTester.setEnemiesFighting(listEnemiesFighting);
+
+        rogue.setWounds(0);
+
+        new ReceiveDamageCommand(slingerIngame, rogue).execute();
+
+        assertThat(rogue.getDiscardPile().size()).isEqualTo(3); //the slinger dealt 1 more damage as expected
+        
     }
 
     @Test
@@ -529,17 +570,17 @@ class CommandIngameTest {
 
         // check if the enemy is restrained after executing the command
 
-        assertThat(enemyIngame.getRestrained()).isFalse();
+        assertThat(slingerIngame.getRestrained()).isFalse();
 
-        new RestrainCommand(enemyIngame).execute();
+        new RestrainCommand(slingerIngame).execute();
 
-        assertThat(enemyIngame.getRestrained()).isTrue();
+        assertThat(slingerIngame.getRestrained()).isTrue();
 
         // Check if we restrain an already restrained enemy it will still be restrained
 
-        new RestrainCommand(enemyIngame).execute();
+        new RestrainCommand(slingerIngame).execute();
 
-        assertThat(enemyIngame.getRestrained()).isTrue();
+        assertThat(slingerIngame.getRestrained()).isTrue();
     }
 
     @Test

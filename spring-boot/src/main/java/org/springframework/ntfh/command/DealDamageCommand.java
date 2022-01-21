@@ -1,5 +1,6 @@
 package org.springframework.ntfh.command;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.ntfh.entity.enemy.EnemyType;
@@ -33,6 +34,18 @@ public class DealDamageCommand implements Command {
 
         if (warlords.contains(targetedEnemyType)) {
             new GiveGloryCommand(1, playerFrom).execute();
+            if(targetedEnemyType.equals(warlords.get(0))){
+                new DiscardCommand(1, playerFrom).execute();
+            }
+        }
+
+        List<EnemyType> enemiesFightingTypesList = new ArrayList<>();
+        for(EnemyIngame enemy:playerFrom.getGame().getEnemiesFighting()){
+            enemiesFightingTypesList.add(enemy.getEnemy().getEnemyType());
+        }
+
+        if (enemiesFightingTypesList.contains(EnemyType.SHRIEKKNIFER) && damage==1){
+            new GiveGloryCommand(1, playerFrom).execute();
         }
 
         targetedEnemy.setCurrentEndurance(currentEndurance - damage);
@@ -42,7 +55,7 @@ public class DealDamageCommand implements Command {
 
             if (targetedEnemy.getPlayedCardsOnMeInTurn().contains(AbilityCardTypeEnum.TRAMPA)) {
                 Integer enemyDefeatedGlory = targetedEnemy.getEnemy().getBaseGlory();
-                new GiveGloryCommand(enemyDefeatedGlory, playerFrom);
+                new GiveGloryCommand(enemyDefeatedGlory, playerFrom).execute();
 
             } else {
 

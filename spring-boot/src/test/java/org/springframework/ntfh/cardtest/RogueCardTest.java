@@ -1,6 +1,8 @@
 package org.springframework.ntfh.cardtest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -216,14 +218,15 @@ public class RogueCardTest {
         assertThat(berserkerIngame.getRestrained()).isTrue();
         assertThat(rogue.getGold()).isZero();
 
-        // ! TODO Test rogue doesnt have enough gold, i dont know how to do the assert throws
+        // rogue doesnt have enough gold,
 
-        /*
-         * hand.add(abilityCardIngameRogue); rogue.setHand(hand);
-         * 
-         * abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
-         * assertThrows(IllegalStateException)
-         */
+        hand.add(abilityCardIngameRogue); rogue.setHand(hand);
+
+        Integer cardPlayedId = abilityCardIngameRogue.getId();
+        Integer berserkerIngameId = berserkerIngame.getId();
+         
+        assertThrows(IllegalArgumentException.class, ()->abilityCardIngameService.playCard(cardPlayedId, berserkerIngameId, tokenRogue));
+         
     }
 
     @Test
