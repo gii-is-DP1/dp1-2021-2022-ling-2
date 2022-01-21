@@ -44,14 +44,6 @@ public class GameService {
 
     /*******************************/
 
-    public Integer gameCount() {
-        return (int) gameRepository.count();
-    }
-
-    public Integer countByStateType(GameStateType stateType) {
-        return (int) gameRepository.countByStateType(stateType);
-    }
-
     public Iterable<Game> findAll() {
         return gameRepository.findAll();
     }
@@ -67,6 +59,30 @@ public class GameService {
 
     public List<Player> findPlayersByGameId(int id) throws DataAccessException {
         return gameRepository.getPlayersByGameId(id);
+    }
+
+    public Integer gameCount() {
+        return (int) gameRepository.count();
+    }
+
+    public Integer countByStateType(GameStateType stateType) {
+        return (int) gameRepository.countByStateType(stateType);
+    }
+
+    public Iterable<Game> findByStateType(GameStateType stateType) {
+        return gameRepository.findByStateType(stateType, Pageable.unpaged()).getContent();
+    }
+
+    public Iterable<Game> findByStateTypePageable(GameStateType stateType, Pageable pageable) {
+        return gameRepository.findByStateType(stateType, pageable).getContent();
+    }
+
+    public Integer countFinishedByUser(User user) {
+        return gameRepository.countFinishedByUser(user, GameStateType.FINISHED);
+    }
+
+    public Iterable<Game> findFinishedByUser(User user, Pageable pageable) {
+        return gameRepository.findFinishedByUser(user, GameStateType.FINISHED, pageable).getContent();
     }
 
     public Turn getCurrentTurnByGameId(Integer gameId) {
@@ -180,17 +196,5 @@ public class GameService {
 
         GameState newState = getState(game);
         newState.preState(game); // Execute the preState method right after setting the new state
-    }
-
-    public Iterable<Game> findByStateType(GameStateType stateType) {
-        return gameRepository.findByStateType(stateType, Pageable.unpaged());
-    }
-
-    public Iterable<Game> findByStateTypePageable(GameStateType stateType, Pageable pageable) {
-        return gameRepository.findByStateType(stateType, pageable);
-    }
-
-    public Iterable<Game> findFinishedByUser(User user) {
-        return gameRepository.findFinishedByUser(user, GameStateType.FINISHED);
     }
 }

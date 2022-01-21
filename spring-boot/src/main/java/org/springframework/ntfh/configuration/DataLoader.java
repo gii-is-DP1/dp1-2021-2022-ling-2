@@ -56,10 +56,10 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadInitialData() {
-        populateUsers(100);
-        createGamesInLobbyState(3);
-        createGamesInGameState(5);
-        createGamesInFinishedState(20);
+        populateUsers(5);
+        createGamesInLobbyState(0);
+        createGamesInGameState(0);
+        createGamesInFinishedState(30);
     }
 
     private void populateUsers(Integer n) {

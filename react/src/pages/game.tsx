@@ -107,7 +107,6 @@ export default function Game() {
         toast.error(error?.message);
       }
     };
-    // history.push(ROUTES.GAME_SUMMARY.replace(":gameId", gameId));
     document.title = "NTFH - Game " + gameId;
     loggedUser.username && fetchUser();
     return function cleanup() {
@@ -182,19 +181,6 @@ export default function Game() {
             )}
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
-            {/* Positioning of button */}
-            {isPlayersTurn(turn, loggedUser.username) && (
-              <div className="fixed p-8 space-y-2">
-                <div className="btn-ntfh">
-                  <p className="text-2xl text-gradient-ntfh">
-                    {turn?.stateType.replace("_STATE", "").toLowerCase()}
-                  </p>
-                </div>
-                <button className="btn-ntfh" onClick={handleTurnNextState}>
-                  <p className="text-2xl text-gradient-ntfh">Next State</p>
-                </button>
-              </div>
-            )}
             {/* Top player names */}
             <div className="flex-none flex justify-between items-center p-2 text-white text-3xl">
               <p>{players[3] && players[3].user.username}</p>
@@ -250,7 +236,25 @@ export default function Game() {
                   {players[0] && <PlayerZoneHorizontal player={players[0]} />}
                   {/* Bottom left (My hand) */}
                 </div>
-                <div className="self-end">{/* Blank space */}</div>
+                <div className="self-end h-full">
+                  {isPlayersTurn(turn, loggedUser.username) && (
+                    <div className="flex flex-col space-y-2 items-center transform-gpu -translate-x-12 -translate-y-8">
+                      <div className="btn-ntfh">
+                        <p className="text-2xl text-gradient-ntfh">
+                          {turn?.stateType.replace("_", " ")}
+                        </p>
+                      </div>
+                      <button
+                        className="btn-ntfh"
+                        onClick={handleTurnNextState}
+                      >
+                        <p className="text-2xl text-gradient-ntfh">
+                          Next state
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <div
                   className={`col-span-2 self-end justify-self-end max-w-xs 2xl:max-w-sm ${
                     isPlayersTurn(turn, players[1]?.user?.username)

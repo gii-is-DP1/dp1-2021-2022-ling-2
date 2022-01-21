@@ -57,7 +57,6 @@ public class Player extends BaseEntity {
     // Should not change when user's character is changed. Once the
     // row is created in the databse, it stays the same
     @ManyToOne
-    @JoinColumn(name = "character_id", referencedColumnName = "id") // TODO redundant referenceColumnName?
     private Character character;
 
     @OneToMany(cascade = CascadeType.ALL)

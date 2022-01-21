@@ -8,8 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-    // TODO is @Query needed?
-    @Query("select u from User u")
+    @Query("SELECT u from User u")
     Page<User> findAllPage(Pageable pageable);
 
     Optional<User> findByEmail(String email);

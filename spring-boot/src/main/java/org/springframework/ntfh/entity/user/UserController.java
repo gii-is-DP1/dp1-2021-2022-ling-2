@@ -109,8 +109,15 @@ public class UserController {
 
     @GetMapping("{userId}/history")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Game> getfindByUser(@PathVariable("userId") User user) {
-        return gameService.findFinishedByUser(user);
+    public Iterable<Game> getFinishedByUser(@PathVariable("userId") User user,
+            @PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        return gameService.findFinishedByUser(user, pageable);
+    }
+
+    @GetMapping("{userId}/history/count")
+    @ResponseStatus(HttpStatus.OK)
+    public Integer countFinishedByUser(@PathVariable("userId") User user) {
+        return gameService.countFinishedByUser(user);
     }
 
     @GetMapping("{userId}/achievements")
