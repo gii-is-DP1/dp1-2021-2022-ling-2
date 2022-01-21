@@ -9,7 +9,7 @@ import org.springframework.ntfh.entity.player.Player;
 public class Trampa {
     public void execute(Player playerFrom, EnemyIngame targetedEnemy){
         targetedEnemy.getPlayedCardsOnMeInTurn().add(AbilityCardTypeEnum.TRAMPA);
-        new ReceiveDamageCommand(targetedEnemy, playerFrom);
+        new ReceiveDamageCommand(targetedEnemy, playerFrom).execute();
         new DealDamageCommand(targetedEnemy.getCurrentEndurance(), playerFrom, targetedEnemy).execute();
     }
 }

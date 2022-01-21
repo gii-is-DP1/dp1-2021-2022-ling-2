@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -307,8 +306,6 @@ public class RogueCardTest {
     }
 
     @Test
-    @Disabled
-    // ! TODO Trampa se está comportando como quiere, por algún motivo no está tomando el daño el rogue, no esta
     // entrando en el receive damage
     void trampa() {
 
@@ -323,14 +320,9 @@ public class RogueCardTest {
         rogue.setHand(hand);
         abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
-        Integer discards = rogue.getDiscardPile().size();
-        Integer pile = rogue.getAbilityPile().size();
-        Boolean tes = berserkerIngame.getRestrained();
-
         assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).isNotEmpty().contains(AbilityCardTypeEnum.TRAMPA);
         assertThat(berserkerIngame.getCurrentEndurance()).isZero();
-        assertThat(rogue.getDiscardPile().size()).isEqualTo(7); // the full force of the attack (6 discards) and then
+        assertThat(rogue.getDiscardPile()).hasSize(7); // the full force of the attack (6 discards) and then
                                                                 // the card played
-
     }
 }
