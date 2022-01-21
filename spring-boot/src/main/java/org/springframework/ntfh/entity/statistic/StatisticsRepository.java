@@ -13,9 +13,6 @@ public interface StatisticsRepository extends CrudRepository<Statistics, Integer
 
     // ********For Global Statistics***********
 
-    @Query("SELECT u from User u inner join u.players ps ORDER BY SIZE(ps) DESC")
-    List<User> listUserByNumberOfGames(Pageable pageable);
-
     // Duration
     @Query("Select SUM(s.duration) FROM Statistics s")
     Integer globalDurationOfGames();
@@ -32,8 +29,6 @@ public interface StatisticsRepository extends CrudRepository<Statistics, Integer
     // *********For User Statistics*************
 
     int countByUser(User user);
-
-    // Duration Related Queries
 
     @Query("Select MIN(s.duration) FROM Statistics s WHERE s.user= ?1")
     Integer minDurationOfGames(User user);
@@ -61,49 +56,11 @@ public interface StatisticsRepository extends CrudRepository<Statistics, Integer
     @Query("Select COUNT(*) FROM Statistics s Where s.user = ?1 and s.character = ?2 and s.victory = TRUE")
     Integer findNumberOfWinsWithCharacter(User user, CharacterTypeEnum character);
 
-    // Death Related Queries
-    @Query("Select COUNT(*) From Statistics s Where s.user = ?1 and s.died = TRUE")
-    Integer findNumberOfDeathsbyUser(User user);
-
-    @Query("Select COUNT(*) From Statistics s Where s.user =?1 and s.character=?2")
-    Integer findNumberOfDeathsbyUserWithCharacter(User user, CharacterTypeEnum character);
-
     // KillCOUNT Related Queries
     @Query("Select SUM(s.killCount) FROM Statistics s Where s.user =?1")
     Integer findTotalNumberOfkillsByUser(User user);
 
-    @Query("Select MAX(s.killCount) FROM Statistics s Where s.user =?1")
-    Integer findMaxNumberOfkillsByUser(User user);
-
-    @Query("Select AVG(s.killCount) FROM Statistics s Where s.user =?1")
-    Double findAVGNumberOfkillsByUser(User user);
-
-    @Query("Select SUM(s.killCount) FROM Statistics s Where s.user =?1 and s.character =?2")
-    Integer findTotalNumberOfkillsByUserWithCharacter(User user, CharacterTypeEnum character);
-
-    @Query("Select MAX(s.killCount) FROM Statistics s Where s.user =?1 and s.character =?2")
-    Integer findMaxNumberOfkillsByUserWithCharacter(User user, CharacterTypeEnum character);
-
-    @Query("Select AVG(s.killCount) FROM Statistics s Where s.user =?1 and s.character =?2")
-    Double findAVGNumberOfkillsByUserWithCharacter(User user, CharacterTypeEnum character);
-
-
     // GloryEarned Related Queries
     @Query("Select SUM(s.gloryEarned) FROM Statistics s Where s.user =?1")
     Integer findTotalGloryPointsByUser(User user);
-
-    @Query("Select MAX(s.gloryEarned) FROM Statistics s Where s.user =?1")
-    Integer findMaxGloryPointsByUser(User user);
-
-    @Query("Select AVG(s.gloryEarned) FROM Statistics s Where s.user =?1")
-    Double findAVGGloryPointsByUser(User user);
-
-    @Query("Select SUM(s.gloryEarned) FROM Statistics s Where s.user =?1 and s.character =?2")
-    Integer findTotalGloryPointsByUserWithCharacter(User user, CharacterTypeEnum character);
-
-    @Query("Select MAX(s.gloryEarned) FROM Statistics s Where s.user =?1 and s.character =?2")
-    Integer findMaxGloryPointsByUserWithCharacter(User user, CharacterTypeEnum character);
-
-    @Query("Select AVG(s.gloryEarned) FROM Statistics s Where s.user =?1 and s.character =?2")
-    Double findAVGGloryPointsByUserWithCharacter(User user, CharacterTypeEnum character);
 }

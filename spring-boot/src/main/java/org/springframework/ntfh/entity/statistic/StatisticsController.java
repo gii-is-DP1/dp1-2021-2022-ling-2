@@ -41,6 +41,13 @@ public class StatisticsController {
                 .build(); // Build and return
     }
 
+    /**
+     * Get a custom object with statistics to show in a player's profile
+     * 
+     * @author andrsdt
+     * @param user
+     * @return
+     **/
     @GetMapping("global")
     @ResponseStatus(HttpStatus.OK)
     public GlobalStats getGlobalStats() {
@@ -53,7 +60,6 @@ public class StatisticsController {
                 .rankingByKills(statisticsService.getRankingByKills()) //
                 .totalUsers(statisticsService.countUsers()) //
                 .build(); // Build and return
-
     }
 
     @GetMapping("users/{userId}/games/count")
