@@ -82,7 +82,9 @@ export default function GameSummary() {
                       <tr key={p.id}>
                         <td className="text-table-td">{rankingEmojis[i]}</td>
                         <td className="text-table-td">{p.characterTypeEnum}</td>
-                        <td className="text-table-td">{p.user?.username}</td>
+                        <td className="text-table-td">
+                          {p.user?.username ?? "(deleted)"}
+                        </td>
                         <td className="text-table-td">
                           {p.dead ? "☠️" : "😀"}
                         </td>

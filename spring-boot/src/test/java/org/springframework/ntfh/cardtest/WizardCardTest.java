@@ -39,7 +39,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class WizardCardTest {
+class WizardCardTest {
 
     @Autowired
     private GameService gameService;
@@ -247,7 +247,7 @@ public class WizardCardTest {
 
         assertThat(rogue.getDiscardPile()).hasSize(1);
         assertThat(wizard.getWounds()).isZero();
-        assertThat(wizard.getDiscardPile().size()).isZero(); // the card played has the exile property, thus it didnt go
+        assertThat(wizard.getDiscardPile()).isEmpty();// the card played has the exile property, thus it didnt go
                                                              // to the discard pile
     }
 
@@ -307,7 +307,7 @@ public class WizardCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWizard.getId(), berserkerIngame.getId(), tokenWizard);
 
         assertThat(wizard.getDiscardPile()).hasSize(2);
-        assertThat(rogue.getDiscardPile().size()).isZero();
+        assertThat(rogue.getDiscardPile()).isEmpty();
         assertThat(wizard.getGlory()).isEqualTo(1);
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
     }

@@ -20,6 +20,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.ntfh.entity.statistic.StatisticsService;
 import org.springframework.ntfh.entity.user.authorities.AuthoritiesService;
 import org.springframework.ntfh.exceptions.BannedUserException;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
@@ -41,6 +42,9 @@ public class UserService {
 
     @Autowired
     private AuthoritiesService authoritiesService;
+
+    @Autowired
+    private StatisticsService statisticsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -147,6 +151,7 @@ public class UserService {
             userInDB.setPassword(encodedParamPassword);
             log.info("Password updated for user " + user.getUsername());
         }
+
         if (!user.getVersion().equals(userInDB.getVersion())) {
             throw new OptimisticLockingFailureException("Outdated user version") {};
         }
@@ -179,8 +184,16 @@ public class UserService {
 
     @Transactional
     public void deleteUser(User user) {
+
+        // Delete statistics references before deleting user. This way, we can still count his/her stats towards
+        // global count, and prevent having a bidirectional relationship just for this, which would affect performance
+
+        statisticsService.findByUser(user).forEach(s -> s.setUser(null));
+
         user.getPlayers().forEach(p -> p.setUser(null)); // Delete references before deleting user
+
         this.userRepository.deleteById(user.getId());
+
         log.info(userString + user.getUsername() + " deleted");
     }
 }

@@ -20,8 +20,7 @@ import lombok.Setter;
 @Table(name = "statistics")
 public class Statistics extends BaseEntity {
 
-    @NotNull
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "user")
     private User user;
 

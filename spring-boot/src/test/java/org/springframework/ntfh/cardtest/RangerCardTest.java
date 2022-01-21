@@ -40,7 +40,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
-public class RangerCardTest {
+class RangerCardTest {
 
     @Autowired
     private GameService gameService;
@@ -184,7 +184,7 @@ public class RangerCardTest {
         abilityCardIngameService.playCard(abilityCardIngameRanger2.getId(), berserkerIngame.getId(), tokenRanger);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(ranger.getHand().size()).isZero();
+        assertThat(ranger.getHand()).isEmpty();
     }
 
     @Test

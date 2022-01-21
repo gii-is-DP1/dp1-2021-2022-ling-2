@@ -196,7 +196,7 @@ class OngoingStateTest {
         turnService.setNextState(gameTester.getCurrentTurn());
         Integer FULL_MARKET = 5;
 
-        assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
+        assertThat(gameTester.getMarketCardsForSale()).hasSize(FULL_MARKET);
 
         MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
         MarketCardIngame pocionCurativaIngame = marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);

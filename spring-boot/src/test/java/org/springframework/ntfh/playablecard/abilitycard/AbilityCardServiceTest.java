@@ -55,13 +55,10 @@ class AbilityCardServiceTest {
         List<AbilityCard> testerList =
                 Lists.newArrayList(abilityCardService.findByCharacterTypeEnum(CharacterTypeEnum.RANGER));
 
-        assertThat(testerList.contains(abilityCardService.findById(1))).isTrue();
-        assertThat(testerList.contains(abilityCardService.findById(2))).isTrue();
-        assertThat(testerList.contains(abilityCardService.findById(4))).isTrue();
-        assertThat(testerList.contains(abilityCardService.findById(10))).isTrue();
-        assertThat(testerList.contains(abilityCardService.findById(11))).isTrue();
-        assertThat(testerList.contains(abilityCardService.findById(13))).isTrue();
-        assertThat(testerList.contains(abilityCardService.findById(15))).isTrue();
+        assertThat(testerList).contains(abilityCardService.findById(1)).contains(abilityCardService.findById(2))
+        .contains(abilityCardService.findById(4)).contains(abilityCardService.findById(10))
+        .contains(abilityCardService.findById(11)).contains(abilityCardService.findById(13))
+        .contains(abilityCardService.findById(15));
     }
 
     @Test

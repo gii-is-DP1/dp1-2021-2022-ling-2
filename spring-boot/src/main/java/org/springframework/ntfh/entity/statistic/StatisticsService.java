@@ -219,4 +219,8 @@ public class StatisticsService {
     public Statistics save(Statistics statistic) {
         return statisticsRepository.save(statistic);
     }
+
+    public Iterable<Statistics> findByUser(User user) {
+        return statisticsRepository.findByuser(user);
+    }
 }

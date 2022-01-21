@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.exceptions.NonMatchingTokenException;
@@ -54,6 +55,17 @@ public class AchievementService {
         // If we are sending a petition with a non-existing id, we throw an exception.
         // We always have to send an id because we are always editing existing
         // achievements.
+
+        Optional<Achievement> achievementInDBOptional = achievementRepository.findById(achievement.getId());
+        if (!achievementInDBOptional.isPresent()) {
+            throw new IllegalArgumentException("Achievement not found in the system");
+        }
+
+        Achievement achievementInDB = achievementInDBOptional.get();
+        if (!achievement.getVersion().equals(achievementInDB.getVersion())) {
+            throw new OptimisticLockingFailureException(
+                    "This achievement is being modified by someone else. Please, try again later") {};
+        }
 
         if (Boolean.FALSE.equals(TokenUtils.tokenHasAnyAuthorities(token, "admin"))) {
             throw new NonMatchingTokenException("Only admins can edit achievements");
