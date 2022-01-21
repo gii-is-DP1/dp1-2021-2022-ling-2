@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-// TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
@@ -54,8 +53,6 @@ class TurnServiceTest {
 
     @BeforeEach
     void setup() {
-        /**************** Copypasted section ******************************/
-        // TODO copypaste from CommandIngameTest, maybe extract to a method?
         Game gameTester = new Game();
         gameTester.setName("test game");
         gameTester.setHasScenes(false);
@@ -77,7 +74,6 @@ class TurnServiceTest {
         playerTester.setCharacter(warriorCharacter);
 
         gameService.startGame(gameTester.getId());
-        /******************************************************************/
 
         turnTester = turnService.findturnById(1).get();
     }
@@ -139,7 +135,6 @@ class TurnServiceTest {
 
     @Test
     void testGetState() {
-        // TODO Needs improvement
         assertThat(turnService.getState(turnTester).getNextState()).isEqualTo(TurnStateType.MARKET_STATE);
     }
 

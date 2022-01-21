@@ -23,7 +23,6 @@ import lombok.Setter;
 @Entity
 public class Turn extends BaseEntity {
 
-    // TODO is this bidirectionality needed? I think yes
     @ManyToOne
     @JoinColumn(name = "game_id") // TODO needed?
     @JsonIgnore
@@ -31,7 +30,7 @@ public class Turn extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "player_id") // TODO needed?
-    @JsonIgnoreProperties({ "glory", "kills", "gold", "wounds", "characterType" })
+    @JsonIgnoreProperties({"glory", "kills", "gold", "wounds", "characterType"})
     private Player player;
 
     @ManyToOne(optional = true)

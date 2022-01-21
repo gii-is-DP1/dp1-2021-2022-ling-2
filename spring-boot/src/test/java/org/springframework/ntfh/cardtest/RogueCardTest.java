@@ -37,318 +37,300 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(
-		includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 public class RogueCardTest {
-    
+
     @Autowired
-	private GameService gameService;
+    private GameService gameService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private CharacterService characterService;
+    @Autowired
+    private CharacterService characterService;
 
-	@Autowired
-	private AbilityCardIngameService abilityCardIngameService;
+    @Autowired
+    private AbilityCardIngameService abilityCardIngameService;
 
-	@Autowired
-	private EnemyService enemyService;
+    @Autowired
+    private EnemyService enemyService;
 
-	@Autowired
-	private EnemyIngameService enemyIngameService;
+    @Autowired
+    private EnemyIngameService enemyIngameService;
 
-	@Autowired
-	private AbilityCardService abilityCardService;
+    @Autowired
+    private AbilityCardService abilityCardService;
 
-	protected Game gameTester;
+    protected Game gameTester;
 
-	protected Player ranger;
+    protected Player ranger;
 
-	protected Player rogue;
+    protected Player rogue;
 
-	protected EnemyIngame slingerIngame;
+    protected EnemyIngame slingerIngame;
 
-	protected EnemyIngame berserkerIngame;
+    protected EnemyIngame berserkerIngame;
 
-	@BeforeEach
-	public void init() {
+    @BeforeEach
+    public void init() {
 
-		gameTester = new Game();
-		gameTester.setName("test game");
-		gameTester.setHasScenes(false);
-		gameTester.setSpectatorsAllowed(false);
-		gameTester.setMaxPlayers(2);
-		gameTester.setStateType(GameStateType.LOBBY);
-		gameTester = gameService.save(gameTester);
+        gameTester = new Game();
+        gameTester.setName("test game");
+        gameTester.setHasScenes(false);
+        gameTester.setSpectatorsAllowed(false);
+        gameTester.setMaxPlayers(2);
+        gameTester.setStateType(GameStateType.LOBBY);
+        gameTester = gameService.save(gameTester);
 
-		User user1 = userService.findUser("user1");
-		User user2 = userService.findUser("user2");
+        User user1 = userService.findByUsername("user1");
+        User user2 = userService.findByUsername("user2");
 
-		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
-		gameTester = gameService.joinGame(gameTester, user2);
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
-		rogue = gameTester.getPlayers().get(0);
-		ranger = gameTester.getPlayers().get(1);
+        rogue = gameTester.getPlayers().get(0);
+        ranger = gameTester.getPlayers().get(1);
 
-		Character rangerCharacter = characterService.findById(2);
-		Character rogueCharacter = characterService.findById(4);
+        Character rangerCharacter = characterService.findById(2);
+        Character rogueCharacter = characterService.findById(4);
 
-		ranger.setCharacter(rangerCharacter);
-		rogue.setCharacter(rogueCharacter);
+        ranger.setCharacter(rangerCharacter);
+        rogue.setCharacter(rogueCharacter);
 
-		gameService.startGame(gameTester.getId());
-		Enemy SLINGER = enemyService.findEnemyById(9).get();
-		slingerIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
+        gameService.startGame(gameTester.getId());
+        Enemy SLINGER = enemyService.findEnemyById(9).get();
+        slingerIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
         Enemy BERSERKER = enemyService.findEnemyById(14).get();
         berserkerIngame = enemyIngameService.createFromEnemy(BERSERKER, gameTester);
-	}
+    }
 
-	@AfterEach
-	public void teardown() {
-		gameService.delete(gameTester);
-	}
+    @AfterEach
+    public void teardown() {
+        gameService.delete(gameTester);
+    }
 
-	@Test
-	void testAlCorazon(){
+    @Test
+    void testAlCorazon() {
 
-		//the attack doesnt kill and doesnt activate gold on kill
+        // the attack doesnt kill and doesnt activate gold on kill
 
-		AbilityCard alCorazon = abilityCardService.findById(46);
-        AbilityCardIngame abilityCardIngameRogue =
-                abilityCardIngameService.createFromAbilityCard(alCorazon, rogue);
+        AbilityCard alCorazon = abilityCardService.findById(46);
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(alCorazon, rogue);
         String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRogue);
         rogue.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-                berserkerIngame.getId(), tokenRogue);
-        
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
+
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
-		assertThat(rogue.getGold()).isZero();
-		assertThat(rogue.getDiscardPile().size()).isEqualTo(2); //discarded card and the card played
+        assertThat(rogue.getGold()).isZero();
+        assertThat(rogue.getDiscardPile().size()).isEqualTo(2); // discarded card and the card played
 
-		//the attack kills
+        // the attack kills
 
-		List<AbilityCardIngame> discardPile = new ArrayList<>();
-		rogue.setDiscardPile(discardPile);
-		hand.add(abilityCardIngameRogue);
+        List<AbilityCardIngame> discardPile = new ArrayList<>();
+        rogue.setDiscardPile(discardPile);
+        hand.add(abilityCardIngameRogue);
         rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-		berserkerIngame.getId(), tokenRogue);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
-		assertThat(berserkerIngame.getCurrentEndurance()).isZero();
-		assertThat(rogue.getGold()).isEqualTo(1);
-		assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
-	}
+        assertThat(berserkerIngame.getCurrentEndurance()).isZero();
+        assertThat(rogue.getGold()).isEqualTo(1);
+        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+    }
 
-	@Test
-	void testAtaqueFurtivo(){
-		
-		//the attack doesnt kill and doesnt activate gold on kill
+    @Test
+    void testAtaqueFurtivo() {
 
-		AbilityCard alCorazon = abilityCardService.findById(48);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(alCorazon, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				berserkerIngame.getId(), tokenRogue);
-				
-		assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-		assertThat(rogue.getGold()).isZero();
-		
-		
-		//the attack kills
+        // the attack doesnt kill and doesnt activate gold on kill
 
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-		slingerIngame.getId(), tokenRogue);
-		
-		assertThat(slingerIngame.getCurrentEndurance()).isZero();
-		assertThat(rogue.getGold()).isEqualTo(1);
-	}
+        AbilityCard alCorazon = abilityCardService.findById(48);
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(alCorazon, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
-	@Test
-	void testBallestaPrecisa(){
+        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
+        assertThat(rogue.getGold()).isZero();
 
-		//the attack deals the base amount of damage
 
-		List<EnemyIngame> listEnemiesFighting = List.of(berserkerIngame);
-		gameTester.setEnemiesFighting(listEnemiesFighting);
-		AbilityCard ballestaPrecisa = abilityCardService.findById(51);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(ballestaPrecisa, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				berserkerIngame.getId(), tokenRogue);
-				
-		assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-		assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).contains(AbilityCardTypeEnum.BALLESTA_PRECISA);
-		
-		//this type of attack has already been used in this turn so damage is incremented
+        // the attack kills
 
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-		berserkerIngame.getId(), tokenRogue);
-		
-		assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(1);
-		assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).contains(AbilityCardTypeEnum.BALLESTA_PRECISA);
-	}
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), slingerIngame.getId(), tokenRogue);
 
-	@Test
-	void testEnganar(){
+        assertThat(slingerIngame.getCurrentEndurance()).isZero();
+        assertThat(rogue.getGold()).isEqualTo(1);
+    }
 
-		//The rogue has the gold needed to perform the action
+    @Test
+    void testBallestaPrecisa() {
 
-		new GiveGoldCommand(2, rogue).execute();
+        // the attack deals the base amount of damage
 
-		assertThat(rogue.getGold()).isEqualTo(2);
+        List<EnemyIngame> listEnemiesFighting = List.of(berserkerIngame);
+        gameTester.setEnemiesFighting(listEnemiesFighting);
+        AbilityCard ballestaPrecisa = abilityCardService.findById(51);
+        AbilityCardIngame abilityCardIngameRogue =
+                abilityCardIngameService.createFromAbilityCard(ballestaPrecisa, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
-		AbilityCard enganar = abilityCardService.findById(56);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(enganar, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				berserkerIngame.getId(), tokenRogue);
-				
-		assertThat(berserkerIngame.getRestrained()).isTrue();
-		assertThat(rogue.getGold()).isZero();
+        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
+        assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).contains(AbilityCardTypeEnum.BALLESTA_PRECISA);
 
-		// ! TODO Test rogue doesnt have enough gold, i dont know how to do the assert throws
+        // this type of attack has already been used in this turn so damage is incremented
 
-/*		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				berserkerIngame.getId(), tokenRogue);
-		assertThrows(IllegalStateException)*/
-	}
+        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(1);
+        assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).contains(AbilityCardTypeEnum.BALLESTA_PRECISA);
+    }
 
-	@Test
-	void testEnLasSombras(){
+    @Test
+    void testEnganar() {
 
-		AbilityCard enLasSombras = abilityCardService.findById(54);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(enLasSombras, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				berserkerIngame.getId(), tokenRogue);
-				
-		assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
-		assertThat(rogue.getGuard()).isEqualTo(2);
-	}
+        // The rogue has the gold needed to perform the action
 
-	@Test
-	void testRobarBolsillos(){
+        new GiveGoldCommand(2, rogue).execute();
 
-		//The ally doesnt have gold
-	
-		AbilityCard robarBolsillos = abilityCardService.findById(57);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(robarBolsillos, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				null, tokenRogue);
-				
-		assertThat(rogue.getGold()).isZero();
-		assertThat(ranger.getGold()).isZero();
+        assertThat(rogue.getGold()).isEqualTo(2);
 
-		//The ally does have gold to be stolen
+        AbilityCard enganar = abilityCardService.findById(56);
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(enganar, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
-		new GiveGoldCommand(1, ranger).execute();
+        assertThat(berserkerIngame.getRestrained()).isTrue();
+        assertThat(rogue.getGold()).isZero();
 
-		assertThat(ranger.getGold()).isEqualTo(1);
+        // ! TODO Test rogue doesnt have enough gold, i dont know how to do the assert throws
 
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				null, tokenRogue);
-		
-		assertThat(rogue.getGold()).isEqualTo(1);
-		assertThat(ranger.getGold()).isZero();
-	}
+        /*
+         * hand.add(abilityCardIngameRogue); rogue.setHand(hand);
+         * 
+         * abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
+         * assertThrows(IllegalStateException)
+         */
+    }
 
-	@Test
-	void testSaqueoOro(){
+    @Test
+    void testEnLasSombras() {
 
-		List<EnemyIngame> enemiesFighting = List.of(berserkerIngame, slingerIngame);
-		gameTester.setEnemiesFighting(enemiesFighting);
-		AbilityCard saqueoOro = abilityCardService.findById(58);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(saqueoOro, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				null, tokenRogue);
-				
-		assertThat(rogue.getGold()).isEqualTo(4);
-	}
+        AbilityCard enLasSombras = abilityCardService.findById(54);
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(enLasSombras, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
-	@Test
-	void testSaqueoOroGloria(){
+        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
+        assertThat(rogue.getGuard()).isEqualTo(2);
+    }
 
-		List<EnemyIngame> enemiesFighting = List.of(berserkerIngame, slingerIngame);
-		gameTester.setEnemiesFighting(enemiesFighting);
-		AbilityCard saqueoOroGloria = abilityCardService.findById(59);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(saqueoOroGloria, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				null, tokenRogue);
-				
-		assertThat(rogue.getGold()).isEqualTo(2);
-		assertThat(rogue.getGlory()).isEqualTo(2);
-	}
+    @Test
+    void testRobarBolsillos() {
 
-	@Test
-	@Disabled
-	// ! TODO Trampa se está comportando como quiere, por algún motivo no está tomando el daño el rogue, no esta entrando en el receive damage
-	void trampa(){
+        // The ally doesnt have gold
 
-		List<EnemyIngame> enemiesFighting = new ArrayList<>();
-		enemiesFighting.add(berserkerIngame);
-		gameTester.setEnemiesFighting(enemiesFighting);
-		AbilityCard trampa = abilityCardService.findById(60);
-		AbilityCardIngame abilityCardIngameRogue =
-				abilityCardIngameService.createFromAbilityCard(trampa, rogue);
-		String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRogue);
-		rogue.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-				berserkerIngame.getId(), tokenRogue);
+        AbilityCard robarBolsillos = abilityCardService.findById(57);
+        AbilityCardIngame abilityCardIngameRogue =
+                abilityCardIngameService.createFromAbilityCard(robarBolsillos, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), null, tokenRogue);
 
-		Integer discards = rogue.getDiscardPile().size();
-		Integer pile = rogue.getAbilityPile().size();
-		Boolean tes = berserkerIngame.getRestrained();
-		
-		assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).isNotEmpty().contains(AbilityCardTypeEnum.TRAMPA);
-		assertThat(berserkerIngame.getCurrentEndurance()).isZero();
-		assertThat(rogue.getDiscardPile().size()).isEqualTo(7); //the full force of the attack (6 discards) and then the card played
-		
-	}
+        assertThat(rogue.getGold()).isZero();
+        assertThat(ranger.getGold()).isZero();
+
+        // The ally does have gold to be stolen
+
+        new GiveGoldCommand(1, ranger).execute();
+
+        assertThat(ranger.getGold()).isEqualTo(1);
+
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), null, tokenRogue);
+
+        assertThat(rogue.getGold()).isEqualTo(1);
+        assertThat(ranger.getGold()).isZero();
+    }
+
+    @Test
+    void testSaqueoOro() {
+
+        List<EnemyIngame> enemiesFighting = List.of(berserkerIngame, slingerIngame);
+        gameTester.setEnemiesFighting(enemiesFighting);
+        AbilityCard saqueoOro = abilityCardService.findById(58);
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(saqueoOro, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), null, tokenRogue);
+
+        assertThat(rogue.getGold()).isEqualTo(4);
+    }
+
+    @Test
+    void testSaqueoOroGloria() {
+
+        List<EnemyIngame> enemiesFighting = List.of(berserkerIngame, slingerIngame);
+        gameTester.setEnemiesFighting(enemiesFighting);
+        AbilityCard saqueoOroGloria = abilityCardService.findById(59);
+        AbilityCardIngame abilityCardIngameRogue =
+                abilityCardIngameService.createFromAbilityCard(saqueoOroGloria, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), null, tokenRogue);
+
+        assertThat(rogue.getGold()).isEqualTo(2);
+        assertThat(rogue.getGlory()).isEqualTo(2);
+    }
+
+    @Test
+    @Disabled
+    // ! TODO Trampa se está comportando como quiere, por algún motivo no está tomando el daño el rogue, no esta
+    // entrando en el receive damage
+    void trampa() {
+
+        List<EnemyIngame> enemiesFighting = new ArrayList<>();
+        enemiesFighting.add(berserkerIngame);
+        gameTester.setEnemiesFighting(enemiesFighting);
+        AbilityCard trampa = abilityCardService.findById(60);
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(trampa, rogue);
+        String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRogue);
+        rogue.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
+
+        Integer discards = rogue.getDiscardPile().size();
+        Integer pile = rogue.getAbilityPile().size();
+        Boolean tes = berserkerIngame.getRestrained();
+
+        assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).isNotEmpty().contains(AbilityCardTypeEnum.TRAMPA);
+        assertThat(berserkerIngame.getCurrentEndurance()).isZero();
+        assertThat(rogue.getDiscardPile().size()).isEqualTo(7); // the full force of the attack (6 discards) and then
+                                                                // the card played
+
+    }
 }

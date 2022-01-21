@@ -30,31 +30,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @MappedSuperclass
 public class BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer id;
 
-	// ! TODO Implement versioning
-	@Version
-	@Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
-	protected Integer version;
+    @Version
+    @Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
+    protected Integer version;
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getVersion() {
-		return version;
-	}
+    public Integer getVersion() {
+        return version;
+    }
 
-	// TODO delete if not used
-	@JsonIgnore
-	public boolean isNew() {
-		return this.id == null;
-	}
+    // TODO delete if not used
+    @JsonIgnore
+    public boolean isNew() {
+        return this.id == null;
+    }
 
 }

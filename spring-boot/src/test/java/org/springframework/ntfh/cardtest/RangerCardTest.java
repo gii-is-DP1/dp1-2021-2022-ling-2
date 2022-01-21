@@ -38,270 +38,258 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(
-		includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 public class RangerCardTest {
-    
+
     @Autowired
-	private GameService gameService;
+    private GameService gameService;
 
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private CharacterService characterService;
+    @Autowired
+    private CharacterService characterService;
 
-	@Autowired
-	private AbilityCardIngameService abilityCardIngameService;
+    @Autowired
+    private AbilityCardIngameService abilityCardIngameService;
 
-	@Autowired
-	private EnemyService enemyService;
+    @Autowired
+    private EnemyService enemyService;
 
-	@Autowired
-	private EnemyIngameService enemyIngameService;
+    @Autowired
+    private EnemyIngameService enemyIngameService;
 
-	@Autowired
-	private AbilityCardService abilityCardService;
+    @Autowired
+    private AbilityCardService abilityCardService;
 
-	protected Game gameTester;
+    protected Game gameTester;
 
-	protected Player ranger;
+    protected Player ranger;
 
-	protected Player rogue;
+    protected Player rogue;
 
-	protected EnemyIngame slingerIngame;
+    protected EnemyIngame slingerIngame;
 
-	protected EnemyIngame berserkerIngame;
+    protected EnemyIngame berserkerIngame;
 
-	@BeforeEach
-	public void init() {
+    @BeforeEach
+    public void init() {
 
-		gameTester = new Game();
-		gameTester.setName("test game");
-		gameTester.setHasScenes(false);
-		gameTester.setSpectatorsAllowed(false);
-		gameTester.setMaxPlayers(2);
-		gameTester.setStateType(GameStateType.LOBBY);
-		gameTester = gameService.save(gameTester);
+        gameTester = new Game();
+        gameTester.setName("test game");
+        gameTester.setHasScenes(false);
+        gameTester.setSpectatorsAllowed(false);
+        gameTester.setMaxPlayers(2);
+        gameTester.setStateType(GameStateType.LOBBY);
+        gameTester = gameService.save(gameTester);
 
-		User user1 = userService.findUser("user1");
-		User user2 = userService.findUser("user2");
+        User user1 = userService.findByUsername("user1");
+        User user2 = userService.findByUsername("user2");
 
-		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
-		gameTester = gameService.joinGame(gameTester, user2);
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
-		ranger = gameTester.getPlayers().get(0);
-		rogue = gameTester.getPlayers().get(1);
+        ranger = gameTester.getPlayers().get(0);
+        rogue = gameTester.getPlayers().get(1);
 
-		Character rangerCharacter = characterService.findById(2);
-		Character rogueCharacter = characterService.findById(4);
+        Character rangerCharacter = characterService.findById(2);
+        Character rogueCharacter = characterService.findById(4);
 
-		ranger.setCharacter(rangerCharacter);
-		rogue.setCharacter(rogueCharacter);
+        ranger.setCharacter(rangerCharacter);
+        rogue.setCharacter(rogueCharacter);
 
-		gameService.startGame(gameTester.getId());
-		Enemy SLINGER = enemyService.findEnemyById(12).get();
-		slingerIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
+        gameService.startGame(gameTester.getId());
+        Enemy SLINGER = enemyService.findEnemyById(12).get();
+        slingerIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
         Enemy BERSERKER = enemyService.findEnemyById(15).get();
         berserkerIngame = enemyIngameService.createFromEnemy(BERSERKER, gameTester);
-	}
+    }
 
-	@AfterEach
-	public void teardown() {
-		gameService.delete(gameTester);
-	}
+    @AfterEach
+    public void teardown() {
+        gameService.delete(gameTester);
+    }
 
-	@Test
-	void testCompaneroLobo(){
-		
-		AbilityCard companeroLobo = abilityCardService.findById(1);
+    @Test
+    void testCompaneroLobo() {
+
+        AbilityCard companeroLobo = abilityCardService.findById(1);
         AbilityCardIngame abilityCardIngameRanger =
                 abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
-        
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
+
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-		assertThat(ranger.getGuard()).isEqualTo(2);
-	}
-    
-	@Test
-	void disparoCertero(){
+        assertThat(ranger.getGuard()).isEqualTo(2);
+    }
 
-		Integer gameId = gameTester.getId();
-		Turn currentTurn = gameService.getCurrentTurnByGameId(gameId);
-		TurnStateType initialTurnState = currentTurn.getStateType();
+    @Test
+    void disparoCertero() {
 
-		AbilityCard disparoCertero = abilityCardService.findById(2);
+        Integer gameId = gameTester.getId();
+        Turn currentTurn = gameService.getCurrentTurnByGameId(gameId);
+        TurnStateType initialTurnState = currentTurn.getStateType();
+
+        AbilityCard disparoCertero = abilityCardService.findById(2);
         AbilityCardIngame abilityCardIngameRanger =
                 abilityCardIngameService.createFromAbilityCard(disparoCertero, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
-        
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
+
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(3);
-		assertThat(currentTurn.getStateType()).isNotEqualTo(initialTurnState); //the game has changed from player phase to market phase
-		
-	}
+        assertThat(currentTurn.getStateType()).isNotEqualTo(initialTurnState); // the game has changed from player phase
+                                                                               // to market phase
 
-	@Test
-	void disparoRapido(){
+    }
 
-		//creation of different cards for this test
+    @Test
+    void disparoRapido() {
 
-		AbilityCard disparoRapido = abilityCardService.findById(4);
-		AbilityCard disparoRapido2 = abilityCardService.findById(5);
-		AbilityCard companeroLobo = abilityCardService.findById(1);
+        // creation of different cards for this test
+
+        AbilityCard disparoRapido = abilityCardService.findById(4);
+        AbilityCard disparoRapido2 = abilityCardService.findById(5);
+        AbilityCard companeroLobo = abilityCardService.findById(1);
         AbilityCardIngame abilityCardIngameRanger =
                 abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
-		AbilityCardIngame abilityCardIngameRanger2 =
+        AbilityCardIngame abilityCardIngameRanger2 =
                 abilityCardIngameService.createFromAbilityCard(disparoRapido2, ranger);
-        AbilityCardIngame companeroLoboIngame =
-                abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
-        
-		// the next card in the pile is a disparoRapido, and thus it should go to the hand
+        AbilityCardIngame companeroLoboIngame = abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
 
-		String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
-        List<AbilityCardIngame> hand = new ArrayList<>();
-        hand.add(abilityCardIngameRanger);
-		List<AbilityCardIngame> abilityPile = new ArrayList<>();
-		abilityPile.add(abilityCardIngameRanger2);
-		abilityPile.add(companeroLoboIngame);
-        ranger.setHand(hand);
-		ranger.setAbilityPile(abilityPile);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
+        // the next card in the pile is a disparoRapido, and thus it should go to the hand
 
-		assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
-		assertThat(ranger.getHand().size()).isEqualTo(1);
-
-		//the next card in the pile is not a quickshot and so it will be returned to the draw pile
-
-		abilityCardIngameService.playCard(abilityCardIngameRanger2.getId(),
-		berserkerIngame.getId(), tokenRanger);
-
-		assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-		assertThat(ranger.getHand().size()).isZero();
-	}
-
-	@Test
-	void testEnLaDiana(){
-
-		AbilityCard enLaDiana = abilityCardService.findById(10);
-        AbilityCardIngame abilityCardIngameRanger =
-                abilityCardIngameService.createFromAbilityCard(enLaDiana, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
+        List<AbilityCardIngame> abilityPile = new ArrayList<>();
+        abilityPile.add(abilityCardIngameRanger2);
+        abilityPile.add(companeroLoboIngame);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
-        
-        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
-		assertThat(ranger.getDiscardPile().size()).isEqualTo(2); //the card just played and the one discarded due to its effect
-	}
+        ranger.setAbilityPile(abilityPile);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
 
-	@Test
-	void testLluviaDeFlechas(){
+        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(5);
+        assertThat(ranger.getHand().size()).isEqualTo(1);
 
-		//initialize the enemies on table to allow for the lluvia de flechas to reach them
-		//we use list instead of listof to avoid it giving an error if an enemy (the slinger) dies and is attempted to be removed
+        // the next card in the pile is not a quickshot and so it will be returned to the draw pile
 
-		List<EnemyIngame> listEnemiesFighting = new ArrayList<>();
-		listEnemiesFighting.add(berserkerIngame);
-		listEnemiesFighting.add(slingerIngame);
-		gameTester.setEnemiesFighting(listEnemiesFighting);
+        abilityCardIngameService.playCard(abilityCardIngameRanger2.getId(), berserkerIngame.getId(), tokenRanger);
 
-
-		AbilityCard enLaDiana = abilityCardService.findById(11);
-        AbilityCardIngame abilityCardIngameRanger =
-                abilityCardIngameService.createFromAbilityCard(enLaDiana, ranger);
-        String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
-        List<AbilityCardIngame> hand = new ArrayList<>();
-        hand.add(abilityCardIngameRanger);
-        ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                null, tokenRanger);
-        
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-		assertThat(slingerIngame.getCurrentEndurance()).isZero();
-		assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
-	}
+        assertThat(ranger.getHand().size()).isZero();
+    }
 
-	@Test
-	void testRecogerFlechas(){
+    @Test
+    void testEnLaDiana() {
 
-		//test normal conditions
+        AbilityCard enLaDiana = abilityCardService.findById(10);
+        AbilityCardIngame abilityCardIngameRanger = abilityCardIngameService.createFromAbilityCard(enLaDiana, ranger);
+        String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRanger);
+        ranger.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
 
-		AbilityCard disparoRapido = abilityCardService.findById(4);
-		AbilityCard companeroLobo = abilityCardService.findById(1);
+        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(2); // the card just played and the one discarded due to
+                                                                 // its effect
+    }
+
+    @Test
+    void testLluviaDeFlechas() {
+
+        // initialize the enemies on table to allow for the lluvia de flechas to reach them
+        // we use list instead of listof to avoid it giving an error if an enemy (the slinger) dies and is attempted to
+        // be removed
+
+        List<EnemyIngame> listEnemiesFighting = new ArrayList<>();
+        listEnemiesFighting.add(berserkerIngame);
+        listEnemiesFighting.add(slingerIngame);
+        gameTester.setEnemiesFighting(listEnemiesFighting);
+
+
+        AbilityCard enLaDiana = abilityCardService.findById(11);
+        AbilityCardIngame abilityCardIngameRanger = abilityCardIngameService.createFromAbilityCard(enLaDiana, ranger);
+        String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRanger);
+        ranger.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
+
+        assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
+        assertThat(slingerIngame.getCurrentEndurance()).isZero();
+        assertThat(rogue.getDiscardPile().size()).isEqualTo(2);
+    }
+
+    @Test
+    void testRecogerFlechas() {
+
+        // test normal conditions
+
+        AbilityCard disparoRapido = abilityCardService.findById(4);
+        AbilityCard companeroLobo = abilityCardService.findById(1);
         AbilityCardIngame abilityCardIngameRanger2 =
                 abilityCardIngameService.createFromAbilityCard(disparoRapido, ranger);
-        AbilityCardIngame companeroLoboIngame =
-                abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
+        AbilityCardIngame companeroLoboIngame = abilityCardIngameService.createFromAbilityCard(companeroLobo, ranger);
 
-		List<AbilityCardIngame> discardPile = new ArrayList<>();
-		discardPile.add(abilityCardIngameRanger2);
-		ranger.setDiscardPile(discardPile);
+        List<AbilityCardIngame> discardPile = new ArrayList<>();
+        discardPile.add(abilityCardIngameRanger2);
+        ranger.setDiscardPile(discardPile);
 
-		AbilityCard recogerFlechas = abilityCardService.findById(13);
+        AbilityCard recogerFlechas = abilityCardService.findById(13);
         AbilityCardIngame abilityCardIngameRanger =
                 abilityCardIngameService.createFromAbilityCard(recogerFlechas, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                null, tokenRanger);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
 
-		assertThat(ranger.getDiscardPile().size()).isEqualTo(1); //just the recoger flechas that we just used
-		assertThat(ranger.getGold()).isEqualTo(1);
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); // just the recoger flechas that we just used
+        assertThat(ranger.getGold()).isEqualTo(1);
 
-		// the card will not find any disparo rapido in the discard pile
+        // the card will not find any disparo rapido in the discard pile
 
-		hand.add(abilityCardIngameRanger);
-		ranger.setHand(hand);
-		discardPile.clear();
-		discardPile.add(companeroLoboIngame);
-		ranger.setDiscardPile(discardPile);
+        hand.add(abilityCardIngameRanger);
+        ranger.setHand(hand);
+        discardPile.clear();
+        discardPile.add(companeroLoboIngame);
+        ranger.setDiscardPile(discardPile);
 
-		abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-		null, tokenRanger);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
 
-		assertThat(ranger.getDiscardPile().size()).isEqualTo(2);
-		assertThat(ranger.getGold()).isEqualTo(2);
-		
-	}
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(2);
+        assertThat(ranger.getGold()).isEqualTo(2);
 
-	@Test
-	void testSupervivencia(){
+    }
 
-		List<EnemyIngame> listEnemiesFighting = new ArrayList<>();
-		listEnemiesFighting.add(berserkerIngame);
-		listEnemiesFighting.add(slingerIngame);
-		gameTester.setEnemiesFighting(listEnemiesFighting);
+    @Test
+    void testSupervivencia() {
+
+        List<EnemyIngame> listEnemiesFighting = new ArrayList<>();
+        listEnemiesFighting.add(berserkerIngame);
+        listEnemiesFighting.add(slingerIngame);
+        gameTester.setEnemiesFighting(listEnemiesFighting);
 
 
-		AbilityCard enLaDiana = abilityCardService.findById(15);
-        AbilityCardIngame abilityCardIngameRanger =
-                abilityCardIngameService.createFromAbilityCard(enLaDiana, ranger);
+        AbilityCard enLaDiana = abilityCardService.findById(15);
+        AbilityCardIngame abilityCardIngameRanger = abilityCardIngameService.createFromAbilityCard(enLaDiana, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
 
-		assertThat(gameTester.getEnemiesFighting()).doesNotContain(berserkerIngame);
-		assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(2);
-        
-	}
+        assertThat(gameTester.getEnemiesFighting()).doesNotContain(berserkerIngame);
+        assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(2);
+
+    }
 }

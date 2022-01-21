@@ -41,7 +41,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-// TODO Improve the teardown to increase the speed of the test
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
@@ -149,8 +148,6 @@ class GameServiceTest {
         assertThat(gameTester.getId()).isEqualTo(gameService.findGameById(gameTester.getId()).getId());
     }
 
-    // TODO negative test. delete game which is ONGOING
-    // TODO postiive parametrized test. delete game which is in state LOBBY or FINISHED
     @Test
     void testDeleteGame() {
         gameTester.setStateType(GameStateType.LOBBY);

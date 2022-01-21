@@ -40,144 +40,141 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@DataJpaTest(
-		includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 public class MarketCardTest {
-    
+
     @Autowired
-	private GameService gameService;
+    private GameService gameService;
 
     @Autowired
     private TurnService turnService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@Autowired
-	private CharacterService characterService;
+    @Autowired
+    private CharacterService characterService;
 
-	@Autowired
-	private AbilityCardIngameService abilityCardIngameService;
+    @Autowired
+    private AbilityCardIngameService abilityCardIngameService;
 
-	@Autowired
-	private EnemyService enemyService;
+    @Autowired
+    private EnemyService enemyService;
 
-	@Autowired
-	private EnemyIngameService enemyIngameService;
+    @Autowired
+    private EnemyIngameService enemyIngameService;
 
-	@Autowired
-	private AbilityCardService abilityCardService;
+    @Autowired
+    private AbilityCardService abilityCardService;
 
-	protected Game gameTester;
+    protected Game gameTester;
 
-	protected Player ranger;
+    protected Player ranger;
 
-	protected Player rogue;
+    protected Player rogue;
 
     protected Player wizard;
 
-	protected Player warrior;
+    protected Player warrior;
 
-	protected EnemyIngame slingerIngame;
+    protected EnemyIngame slingerIngame;
 
     protected EnemyIngame berserkerIngame;
 
-	@BeforeEach
-	public void init() {
+    @BeforeEach
+    public void init() {
 
-		gameTester = new Game();
-		gameTester.setName("test game");
-		gameTester.setHasScenes(false);
-		gameTester.setSpectatorsAllowed(false);
-		gameTester.setMaxPlayers(4);
-		gameTester.setStateType(GameStateType.LOBBY);
-		gameTester = gameService.save(gameTester);
+        gameTester = new Game();
+        gameTester.setName("test game");
+        gameTester.setHasScenes(false);
+        gameTester.setSpectatorsAllowed(false);
+        gameTester.setMaxPlayers(4);
+        gameTester.setStateType(GameStateType.LOBBY);
+        gameTester = gameService.save(gameTester);
 
-		User user1 = userService.findUser("user1");
-		User user2 = userService.findUser("user2");
-        User user3 = userService.findUser("user3");
-        User user4 = userService.findUser("user4");
+        User user1 = userService.findByUsername("user1");
+        User user2 = userService.findByUsername("user2");
+        User user3 = userService.findByUsername("user3");
+        User user4 = userService.findByUsername("user4");
 
-		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
-		gameTester = gameService.joinGame(gameTester, user2);
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
         gameTester = gameService.joinGame(gameTester, user3);
         gameTester = gameService.joinGame(gameTester, user4);
 
-		ranger = gameTester.getPlayers().get(0);
-		rogue = gameTester.getPlayers().get(1);
+        ranger = gameTester.getPlayers().get(0);
+        rogue = gameTester.getPlayers().get(1);
         warrior = gameTester.getPlayers().get(2);
         wizard = gameTester.getPlayers().get(3);
 
-		Character rangerCharacter = characterService.findById(2);
-		Character rogueCharacter = characterService.findById(4);
-		Character warriorCharacter = characterService.findById(6);
+        Character rangerCharacter = characterService.findById(2);
+        Character rogueCharacter = characterService.findById(4);
+        Character warriorCharacter = characterService.findById(6);
         Character wizardCharacter = characterService.findById(8);
 
-		ranger.setCharacter(rangerCharacter);
-		rogue.setCharacter(rogueCharacter);
+        ranger.setCharacter(rangerCharacter);
+        rogue.setCharacter(rogueCharacter);
         wizard.setCharacter(wizardCharacter);
         warrior.setCharacter(warriorCharacter);
 
-		gameService.startGame(gameTester.getId());
-		Enemy SLINGER = enemyService.findEnemyById(12).get();
-		slingerIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
+        gameService.startGame(gameTester.getId());
+        Enemy SLINGER = enemyService.findEnemyById(12).get();
+        slingerIngame = enemyIngameService.createFromEnemy(SLINGER, gameTester);
         Enemy BERSERKER = enemyService.findEnemyById(15).get();
         berserkerIngame = enemyIngameService.createFromEnemy(BERSERKER, gameTester);
-	}
+    }
 
-	@AfterEach
-	public void teardown() {
-		gameService.delete(gameTester);
-	}
+    @AfterEach
+    public void teardown() {
+        gameService.delete(gameTester);
+    }
 
     @Test
-    void testAlabardaOrca(){
+    void testAlabardaOrca() {
 
-        //card deals full damage
+        // card deals full damage
 
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of rogue
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of rogue
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of warrior
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of warrior
 
         AbilityCard alabardaOrca = abilityCardService.findById(68);
         AbilityCardIngame abilityCardIngameWarrior =
-        abilityCardIngameService.createFromAbilityCard(alabardaOrca, warrior);
+                abilityCardIngameService.createFromAbilityCard(alabardaOrca, warrior);
         String tokenWarrior = TokenUtils.generateJWTToken(warrior.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameWarrior);
-		warrior.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(),
-				berserkerIngame.getId(), tokenWarrior);
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameWarrior);
+        warrior.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
 
-        //card deals 3 damage due to a lack of full proficiency
+        // card deals 3 damage due to a lack of full proficiency
 
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of wizard
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of wizard
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of ranger
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of ranger
 
-        berserkerIngame.setCurrentEndurance(6); //heal the enemy to allow for a correct calculation
+        berserkerIngame.setCurrentEndurance(6); // heal the enemy to allow for a correct calculation
         AbilityCardIngame abilityCardIngameRanger =
-        abilityCardIngameService.createFromAbilityCard(alabardaOrca, ranger);
+                abilityCardIngameService.createFromAbilityCard(alabardaOrca, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         hand.clear();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(3);
     }
 
     @Test
-    void testArcoCompuesto(){
+    void testArcoCompuesto() {
 
-        //card deals full damage
-        
+        // card deals full damage
+
         AbilityCard arcoCompuesto = abilityCardService.findById(69);
         AbilityCardIngame abilityCardIngameRanger =
                 abilityCardIngameService.createFromAbilityCard(arcoCompuesto, ranger);
@@ -185,36 +182,33 @@ public class MarketCardTest {
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
-        
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
+
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(2);
-        
-        //card deals 3 damage
-        
+
+        // card deals 3 damage
+
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of rogue
-        
-        berserkerIngame.setCurrentEndurance(6); //heal the enemy to allow for a correct calculation
-        AbilityCardIngame abilityCardIngameRogue =
-        abilityCardIngameService.createFromAbilityCard(arcoCompuesto, rogue);
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of rogue
+
+        berserkerIngame.setCurrentEndurance(6); // heal the enemy to allow for a correct calculation
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(arcoCompuesto, rogue);
         String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
         hand.clear();
         hand.add(abilityCardIngameRogue);
         rogue.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-                berserkerIngame.getId(), tokenRogue);
-        
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
+
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(3);
     }
 
     @Test
-    void testArmaduraDePlacas(){
+    void testArmaduraDePlacas() {
 
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of rogue
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of rogue
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of warrior
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of warrior
 
         new DiscardCommand(4, warrior).execute();
 
@@ -222,84 +216,78 @@ public class MarketCardTest {
 
         AbilityCard armaduraDePlacas = abilityCardService.findById(67);
         AbilityCardIngame abilityCardIngameWarrior =
-        abilityCardIngameService.createFromAbilityCard(armaduraDePlacas, warrior);
+                abilityCardIngameService.createFromAbilityCard(armaduraDePlacas, warrior);
         String tokenWarrior = TokenUtils.generateJWTToken(warrior.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameWarrior);
-		warrior.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(),
-				null, tokenWarrior);
-        
-        assertThat(warrior.getDiscardPile().size()).isEqualTo(1); //recovered the 4 cards but then discards, thats why this is 1
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameWarrior);
+        warrior.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), null, tokenWarrior);
+
+        assertThat(warrior.getDiscardPile().size()).isEqualTo(1); // recovered the 4 cards but then discards, thats why
+                                                                  // this is 1
     }
 
     @Test
-    void testCapaElfica(){
+    void testCapaElfica() {
 
         AbilityCard capaElfica = abilityCardService.findById(66);
-        AbilityCardIngame abilityCardIngameRanger =
-                abilityCardIngameService.createFromAbilityCard(capaElfica, ranger);
+        AbilityCardIngame abilityCardIngameRanger = abilityCardIngameService.createFromAbilityCard(capaElfica, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
         assertThat(berserkerIngame.getRestrained()).isTrue();
     }
 
     @Test
-    void testDagaElfica(){
+    void testDagaElfica() {
 
         AbilityCard dagaElfica = abilityCardService.findById(61);
-        AbilityCardIngame abilityCardIngameRanger =
-                abilityCardIngameService.createFromAbilityCard(dagaElfica, ranger);
+        AbilityCardIngame abilityCardIngameRanger = abilityCardIngameService.createFromAbilityCard(dagaElfica, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                berserkerIngame.getId(), tokenRanger);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), berserkerIngame.getId(), tokenRanger);
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); //the card should be discarded
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); // the card should be discarded
 
         // case where proficiency is applied
 
         turnService.setNextState(gameTester.getCurrentTurn());
-        turnService.setNextState(gameTester.getCurrentTurn()); //turn of rogue
-        
-        berserkerIngame.setCurrentEndurance(6); //heal the enemy to allow for a correct calculation
-        AbilityCardIngame abilityCardIngameRogue =
-        abilityCardIngameService.createFromAbilityCard(dagaElfica, rogue);
+        turnService.setNextState(gameTester.getCurrentTurn()); // turn of rogue
+
+        berserkerIngame.setCurrentEndurance(6); // heal the enemy to allow for a correct calculation
+        AbilityCardIngame abilityCardIngameRogue = abilityCardIngameService.createFromAbilityCard(dagaElfica, rogue);
         String tokenRogue = TokenUtils.generateJWTToken(rogue.getUser());
         hand.add(abilityCardIngameRogue);
         rogue.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(),
-                berserkerIngame.getId(), tokenRogue);
-        
+        abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
+
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(rogue.getDiscardPile().size()).isZero(); //the card should return to the ability pile since he has proficiency
+        assertThat(rogue.getDiscardPile().size()).isZero(); // the card should return to the ability pile since he has
+                                                            // proficiency
     }
 
     @Test
-    void testElixirDeConcentracion(){
+    void testElixirDeConcentracion() {
 
         AbilityCard elixirDeConcentracion = abilityCardService.findById(65);
         AbilityCardIngame abilityCardIngameRanger =
-        abilityCardIngameService.createFromAbilityCard(elixirDeConcentracion, ranger);
+                abilityCardIngameService.createFromAbilityCard(elixirDeConcentracion, ranger);
         String tokenRanger = TokenUtils.generateJWTToken(ranger.getUser());
-		List<AbilityCardIngame> hand = new ArrayList<>();
-		hand.add(abilityCardIngameRanger);
-		ranger.setHand(hand);
-		abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-				null, tokenRanger);
-        
+        List<AbilityCardIngame> hand = new ArrayList<>();
+        hand.add(abilityCardIngameRanger);
+        ranger.setHand(hand);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
+
         assertThat(ranger.getHand().size()).isEqualTo(3); // added 3 cards to the hand
 
     }
 
     @Test
-    void testPiedraDeAmolar(){
+    void testPiedraDeAmolar() {
 
         List<EnemyIngame> listEnemiesFighting = List.of(berserkerIngame);
         gameTester.setEnemiesFighting(listEnemiesFighting);
@@ -310,14 +298,14 @@ public class MarketCardTest {
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                null, tokenRanger);
-        
-        assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).isNotEmpty().contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
+
+        assertThat(berserkerIngame.getPlayedCardsOnMeInTurn()).isNotEmpty()
+                .contains(AbilityCardTypeEnum.PIEDRA_DE_AMOLAR);
     }
 
     @Test
-    void testPocionCurativa(){
+    void testPocionCurativa() {
 
         new GiveWoundCommand(ranger).execute();
 
@@ -330,15 +318,14 @@ public class MarketCardTest {
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                null, tokenRanger);
-        
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
+
         assertThat(ranger.getWounds()).isZero();
         assertThat(ranger.getDiscardPile().size()).isZero();
     }
 
     @Test
-    void testVialDeConjuracion(){
+    void testVialDeConjuracion() {
 
         AbilityCard vialDeConjuracion = abilityCardService.findById(64);
         AbilityCardIngame abilityCardIngameRanger =
@@ -347,10 +334,9 @@ public class MarketCardTest {
         List<AbilityCardIngame> hand = new ArrayList<>();
         hand.add(abilityCardIngameRanger);
         ranger.setHand(hand);
-        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(),
-                null, tokenRanger);
-        
-        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); //recover 1 card
-        assertThat(ranger.getHand().size()).isEqualTo(1); //draw 1 card
+        abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
+
+        assertThat(ranger.getDiscardPile().size()).isEqualTo(1); // recover 1 card
+        assertThat(ranger.getHand().size()).isEqualTo(1); // draw 1 card
     }
 }

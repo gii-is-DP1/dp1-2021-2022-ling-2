@@ -70,7 +70,6 @@ public class GameService {
     }
 
     public Turn getCurrentTurnByGameId(Integer gameId) {
-        // TODO move to TurnService?
         List<Turn> turns = gameRepository.getTurnsByGameId(gameId);
         return turns.isEmpty() ? null : turns.get(turns.size() - 1);
     }
@@ -78,7 +77,7 @@ public class GameService {
     @Transactional
     public Game createGame(Game game) {
         // Security measure to ensure that only the requested properties are set by the
-        // requester
+        // sender
         Game newGame = new Game();
         newGame.setName(game.getName());
         newGame.setHasScenes(game.getHasScenes());
