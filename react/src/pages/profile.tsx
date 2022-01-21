@@ -1,14 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useHistory, useParams } from "react-router-dom";
 import axios from "../api/axiosConfig";
 import GamesHistoryTable from "../components/admin/GamesHistoryTable";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import userContext from "../context/user";
-import tokenParser from "../helpers/tokenParser";
-import { Game } from "../interfaces/Game";
-import { Player } from "../interfaces/Player";
 import { User } from "../interfaces/User";
 
 /**
@@ -16,34 +12,9 @@ import { User } from "../interfaces/User";
  * @author andrsdt
  */
 export default function Profile() {
-  const { username: profileUsername } = useParams<{ username: string }>(); // hook
   const history = useHistory(); // hook
-
-  const { userToken } = useContext(userContext);
-  const loggedUser = tokenParser(useContext(userContext)); // hook
+  const { username: profileUsername } = useParams<{ username: string }>(); // hook
   const [userProfile, setUserProfile] = useState<User | null>(null);
-  const [userGamesHistory, setUserGamesHistory] = useState<Game[]>([]);
-  const [matchesWon, setMatchesWon] = useState(1402);
-  const [fastestMatch, setFastestMatch] = useState("26m54s");
-  const [longestMatch, setLongestMatch] = useState("1h48m");
-
-  useEffect(() => {
-    const fetchGameHistory = async () => {
-      try {
-        // TODO remove auth if not needed
-        const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get(`users/${profileUsername}/history`, {
-          headers,
-        });
-        setUserGamesHistory(response.data);
-      } catch (error: any) {
-        toast.error(error?.message);
-      }
-    };
-
-    fetchGameHistory();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     document.title = `NTFH - ${profileUsername}'s profile`;
@@ -73,23 +44,17 @@ export default function Profile() {
             </button>
           </Link>
         </span>
-        <span className="flex flex-row justify-around">
-          <div className="flex flex-col max-w-1/3 justify-center items-center space-y-4 text-2xl bg-felt border-20 border-gray-900 rounded-3xl m-8 shadow-2xl p-6">
-            {/* username, email, matches, fastest and longest matches, stats and edit buttons */}
-            <span>Username: {userProfile?.username}</span>
-            <span>Email: {userProfile?.email}</span>
-            <span>Matches played: {userGamesHistory.length}</span>
-            <span>Matches won: {matchesWon}</span>
-            <span>Fastest match: {fastestMatch}</span>
-            <span>Longest match: {longestMatch}</span>
-            <div className="flex flex-wrap space-x-3">
-              <Link
-                to={ROUTES.EDIT_PROFILE.replace(":username", profileUsername)}
-              >
-                <button type="submit" className="btn-ntfh">
-                  <p className="text-2xl text-gradient-ntfh">Edit</p>
-                </button>
-              </Link>
+        <span className="flex flex-row justify-around ">
+          <div className="flex flex-col max-w-1/3 space-y-4 text-2xl bg-felt border-20 border-gray-900 rounded-3xl m-8 shadow-2xl p-6">
+            <div className="flex flex-col -space-y-2">
+              <span className="font-semibold">Username</span>
+              <span>{userProfile?.username}</span>
+            </div>
+            <div className="flex flex-col -space-y-2 pt-6 ">
+              <span className="font-semibold">Email</span>
+              <span>{userProfile?.email}</span>
+            </div>
+            <div className="flex flex-col space-y-3">
               <Link
                 to={ROUTES.USER_ACHIEVEMENTS.replace(
                   ":username",
@@ -100,9 +65,28 @@ export default function Profile() {
                   <p className="text-2xl text-gradient-ntfh">Achievements</p>
                 </button>
               </Link>
+              <span className="flex space-x-2">
+                <Link
+                  to={ROUTES.USER_STATISTICS.replace(
+                    ":username",
+                    profileUsername
+                  )}
+                >
+                  <button type="submit" className="btn-ntfh">
+                    <p className="text-2xl text-gradient-ntfh">Stats</p>
+                  </button>
+                </Link>
+                <Link
+                  to={ROUTES.EDIT_PROFILE.replace(":username", profileUsername)}
+                >
+                  <button type="submit" className="btn-ntfh">
+                    <p className="text-2xl text-gradient-ntfh">Edit</p>
+                  </button>
+                </Link>
+              </span>
             </div>
           </div>
-          <div className="flex flex-col w-2/3">
+          <div className="flex flex-col w-3/4">
             {/* match history table */}
             <GamesHistoryTable />
           </div>

@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function UsersInLobby(props: Props) {
-  const { game } = props; // destructuring props // TODO in other files too
+  const { game } = props; // destructuring props
   // user: the one who is logged in
   const { userToken } = useContext(UserContext);
   const loggedUser: TokenUser = tokenParser(useContext(UserContext)); // user who is logged in
@@ -68,7 +68,7 @@ export default function UsersInLobby(props: Props) {
             : a.user.username > b.user.username
             ? -1
             : 0
-        ) // arbitrary but consistent order
+        )
         .map((player: Player, idx) => (
           <li key={idx} className="bg-green-700 rounded-xl p-2 text-white">
             {!playerIsHost(player) && userIsHost(loggedUser) && (

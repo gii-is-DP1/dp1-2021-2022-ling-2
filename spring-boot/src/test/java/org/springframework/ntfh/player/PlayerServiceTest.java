@@ -61,7 +61,8 @@ class PlayerServiceTest {
     void teardown() {
         try {
             playerService.delete(currentPlayer);
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Test

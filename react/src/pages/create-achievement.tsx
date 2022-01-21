@@ -9,7 +9,6 @@ import hasAuthority from "../helpers/hasAuthority";
 import HomeButton from "../components/common/home-button";
 
 export default function CreateAchievement() {
-  // TODO set type
   const history = useHistory();
   const { userToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook
@@ -37,7 +36,7 @@ export default function CreateAchievement() {
       await axios.post("/achievements/new", payload, {
         headers: { Authorization: "Bearer " + userToken },
       });
-      toast.success("Achievement edited successfully");
+      toast.success("Achievement created successfully");
       sendToAdminPage();
     } catch (error: any) {
       toast.error(error?.message);

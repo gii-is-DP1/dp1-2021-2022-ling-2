@@ -27,8 +27,6 @@ export default function CreateLobby() {
   const handleCreateLobby = async (event: React.MouseEvent) => {
     event.preventDefault();
     try {
-      // TODO should the initial player be passed here in the payload?
-      // or should this be handled in the server?
       const payload = {
         name: gameName,
         maxPlayers: maxPlayers,

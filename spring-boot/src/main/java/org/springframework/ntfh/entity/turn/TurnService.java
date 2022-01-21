@@ -161,8 +161,8 @@ public class TurnService {
         // there is no next player, the next player will be the first player (circular
         // list)
         List<Player> alivePlayers = game.getAlivePlayersInTurnOrder();
-        if (alivePlayers.isEmpty()) {
-            // If there are no alive players, the game is over
+        if (alivePlayers.isEmpty() || (game.getEnemiesInPile().isEmpty() && game.getEnemiesFighting().isEmpty())) {
+            // If there are no alive players or no enemies to attack, the game is over
             gameService.finishGame(game);
             return;
         }

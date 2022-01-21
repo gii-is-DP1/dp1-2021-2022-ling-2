@@ -7,7 +7,6 @@ import { TokenUser } from "../interfaces/TokenUser";
  * @return Object with username, password and authority list
  */
 const tokenParser = (context: { userToken: string }): TokenUser => {
-  // TODO rename to parseToken
   const token: string = context.userToken;
   if (!token || token === "")
     return { username: "", password: "", authorities: [] };

@@ -62,8 +62,6 @@ public class MarketState implements TurnState {
     @Override
     public void buyMarketCard(Integer marketCardIngameId, String token) {
 
-        // TODO throw exception if not player's turn?
-
         String username = TokenUtils.usernameFromToken(token);
         User user = userService.findByUsername(username);
         Player player = user.getPlayer();
