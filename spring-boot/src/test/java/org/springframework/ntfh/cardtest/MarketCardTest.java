@@ -323,7 +323,7 @@ public class MarketCardTest {
         abilityCardIngameService.playCard(abilityCardIngameRanger.getId(), null, tokenRanger);
 
         assertThat(ranger.getWounds()).isZero();
-        assertThat(ranger.getDiscardPile().size()).isZero();
+        assertThat(ranger.getDiscardPile()).isEmpty();
     }
 
     @Test
