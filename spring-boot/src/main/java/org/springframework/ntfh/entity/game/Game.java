@@ -91,9 +91,11 @@ public class Game extends BaseEntity {
     private List<MarketCardIngame> marketCardsInPile = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @NotAudited
     private List<MarketCardIngame> marketCardsForSale = new ArrayList<>();
 
     @NotNull
+    @NotAudited
     @Enumerated(EnumType.STRING)
     private GameStateType stateType;
 
