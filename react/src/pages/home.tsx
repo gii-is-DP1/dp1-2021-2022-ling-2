@@ -63,8 +63,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // TODO extract this to app.tsx? so it runs even if the
-    // person without credentials never visits / route
     // Unregistered user creation
     if (!unregisteredUser?.username) {
       // if there aren't unregistered user credentials, ask for some

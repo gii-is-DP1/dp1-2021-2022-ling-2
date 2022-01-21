@@ -39,11 +39,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchGameHistory = async () => {
       try {
-        // TODO remove auth if not needed
-        const headers = { Authorization: "Bearer " + userToken };
-        const response = await axios.get(`users/${profileUsername}/history`, {
-          headers,
-        });
+        const response = await axios.get(`users/${profileUsername}/history`);
         setUserGamesHistory(response.data);
       } catch (error: any) {
         toast.error(error?.message);

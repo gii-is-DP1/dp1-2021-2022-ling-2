@@ -90,7 +90,6 @@ public class Player extends BaseEntity {
 
     @Transient
     public Integer getTurnOrder() {
-        // TODO test if this works
         return (game == null || game.getPlayers().isEmpty()) ? null : game.getPlayers().indexOf(this);
     }
 }

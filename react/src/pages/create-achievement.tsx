@@ -9,7 +9,6 @@ import hasAuthority from "../helpers/hasAuthority";
 import HomeButton from "../components/common/home-button";
 
 export default function CreateAchievement() {
-  // TODO set type
   const history = useHistory();
   const { userToken } = useContext(userContext); // hook
   const loggedUser = tokenParser(useContext(userContext)); // hook

@@ -70,7 +70,7 @@ export default function Game() {
       const response = await axios.get(`/games/${gameId}`);
       const _game: IGame = response.data;
       setGame(_game);
-      if (_game.hasFinished) history.push(ROUTES.HOME); // TODO redirect to endgame summary
+      if (_game.hasFinished) window.location.reload();
     } catch (error: any) {
       toast.error(error?.message);
       if (error?.status >= 400) history.push(ROUTES.BROWSE_GAMES);
@@ -92,7 +92,6 @@ export default function Game() {
   };
 
   useEffect(() => {
-    // TODO extract timer to hook
     const interval = setInterval(() => setTime(Date.now()), REFRESH_RATE); // Useful later for fetching lobby users
     return () => {
       clearInterval(interval); // when the component is unmounted, clean up to prevent memory leaks
@@ -129,7 +128,7 @@ export default function Game() {
   }, [game]);
 
   useEffect(() => {
-    fetchGame(); // TODO needed?
+    fetchGame();
     if (isSpectator(user)) {
       // if user is spectator, render a toast
       toast("Spectator", {
@@ -183,12 +182,12 @@ export default function Game() {
             )}
           </div>
           <div className="flex-1 bg-wood bg-repeat-round h-screen px-16 flex flex-col justify-center">
-            {/* TODO Positioning of button */}
+            {/* Positioning of button */}
             {isPlayersTurn(turn, loggedUser.username) && (
               <div className="fixed p-8 space-y-2">
                 <div className="btn-ntfh">
                   <p className="text-2xl text-gradient-ntfh">
-                    {turn?.stateType}
+                    {turn?.stateType.replace("_STATE", "").toLowerCase()}
                   </p>
                 </div>
                 <button className="btn-ntfh" onClick={handleTurnNextState}>

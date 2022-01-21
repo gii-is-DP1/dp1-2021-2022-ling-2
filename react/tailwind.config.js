@@ -14,7 +14,6 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        // TODO this should be in /public/ folder
         wood: "url('images/backgrounds/wood.png')",
         felt: "url('images/backgrounds/felt.png')",
         fabric: "url('images/backgrounds/fabric.png')",

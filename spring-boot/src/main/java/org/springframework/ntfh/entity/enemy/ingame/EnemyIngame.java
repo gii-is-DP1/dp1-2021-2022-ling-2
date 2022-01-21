@@ -46,8 +46,6 @@ public class EnemyIngame extends BaseEntity {
     @NotNull
     private Boolean restrained;
 
-    // TODO rename variable to something more meaningful (playerCardsOnMe sounds
-    // like played ON the character, not on the enemy)
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = AbilityCardTypeEnum.class)
     @CollectionTable(name = "card_played_on_enemy_in_turn", joinColumns = @JoinColumn(name = "enemy_id"))

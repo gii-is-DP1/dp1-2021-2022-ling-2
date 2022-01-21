@@ -9,7 +9,6 @@ import { Player } from "../interfaces/Player";
 import { templateGame } from "../templates/game";
 
 export default function GameSummary() {
-  // TODO don't send the game itself but statistics about the game
   const [game, setGame] = useState<Game>(templateGame);
   const { gameId } = useParams<{ gameId: string }>();
   const history = useHistory();
@@ -18,8 +17,6 @@ export default function GameSummary() {
 
   useEffect(() => {
     const fetchGame = async () => {
-      // TODO extract this common function to another file and replace it everywhere
-
       try {
         const response = await axios.get(`/games/${gameId}`);
         const _game = response.data;

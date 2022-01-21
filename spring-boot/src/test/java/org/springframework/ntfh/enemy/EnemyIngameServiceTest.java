@@ -29,8 +29,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@DataJpaTest(
-        includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
+@DataJpaTest(includeFilters = {@ComponentScan.Filter(Service.class), @ComponentScan.Filter(State.class)})
 @Import({BCryptPasswordEncoder.class})
 class EnemyIngameServiceTest {
 
@@ -61,8 +60,6 @@ class EnemyIngameServiceTest {
 
     @BeforeEach
     void init() {
-        /**************** Copypasted section ******************************/
-        // TODO copypaste from CommandIngameTest, maybe extract to a method?
         gameTester = new Game();
         gameTester.setName("test game");
         gameTester.setHasScenes(false);
@@ -84,7 +81,6 @@ class EnemyIngameServiceTest {
         playerTester.setCharacter(warriorCharacter);
 
         gameService.startGame(gameTester.getId());
-        /******************************************************************/
     }
 
     @Test
@@ -132,8 +128,7 @@ class EnemyIngameServiceTest {
     void testRefillTableWithEnemies() {
         Integer ENEMIES_AFTER_ONE_GET_KILLED = 2;
         Integer ENEMIES_REFILLED = 3;
-        new DealDamageCommand(50, gameTester.getPlayers().get(0),
-                gameTester.getEnemiesFighting().get(0)).execute();
+        new DealDamageCommand(50, gameTester.getPlayers().get(0), gameTester.getEnemiesFighting().get(0)).execute();
 
         assertThat(gameTester.getEnemiesFighting().size()).isEqualTo(ENEMIES_AFTER_ONE_GET_KILLED);
 
