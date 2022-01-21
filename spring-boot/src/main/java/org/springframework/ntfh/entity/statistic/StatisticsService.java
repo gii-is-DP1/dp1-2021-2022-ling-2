@@ -47,10 +47,6 @@ public class StatisticsService {
         return statisticsRepository.globalDurationOfGames() / 1000 / 3600;
     }
 
-    public List<User> getUsersOrderedByNumberOfGames(Pageable pageable) {
-        return statisticsRepository.listUserByNumberOfGames(pageable);
-    }
-
     public List<Pair<String, Long>> getRankingByWins() {
         Pageable topFive = PageRequest.of(0, 5);
         return statisticsRepository.rankingByWins(topFive).stream()
@@ -110,10 +106,6 @@ public class StatisticsService {
         return statisticsRepository.findNumberOfVictoriesByUser(user);
     }
 
-    public Double getWinRatio(User user) {
-        return (double) getNumVictoriesByUser(user) / getNumGamesPlayedUser(user);
-    }
-
     // Characters
     public Map<CharacterTypeEnum, Long> getListPlayedCharactersByUser(User user) {
         List<List<Object>> listOfLists = statisticsRepository.listCharactersPlayedByUser(user);
@@ -142,78 +134,15 @@ public class StatisticsService {
         return (double) wonGames / totalGames;
     }
 
-
-    // Deaths
-    public Integer getDeathsbyUser(User user) {
-        return statisticsRepository.findNumberOfDeathsbyUser(user);
-    }
-
-    public Integer getDeathsWithCharacter(User user, CharacterTypeEnum character) {
-        return statisticsRepository.findNumberOfDeathsbyUser(user);
-    }
-
-    public Double getDeathRatioWithCharacter(User user, CharacterTypeEnum character) {
-        return (double) getDeathsWithCharacter(user, character) / getDeathsbyUser(user);
-    }
-
-    public Double getDeathRatio(User user) {
-        Integer numOfGamesByUser = gameRepository.findFinishedByUser(user, GameStateType.FINISHED, Pageable.unpaged())
-                .getNumberOfElements();
-        return (double) getDeathsbyUser(user) / numOfGamesByUser;
-    }
-
     // Kills
     public Integer getKillsUser(User user) {
         return statisticsRepository.findTotalNumberOfkillsByUser(user);
-    }
-
-    public Integer getMaxKillsInOneGame(User user) {
-        return statisticsRepository.findMaxNumberOfkillsByUser(user);
-    }
-
-
-    public Double getAvgKillsUser(User user) {
-        return statisticsRepository.findAVGNumberOfkillsByUser(user);
-    }
-
-
-    public Integer getKillsUserWithCharacter(User user, CharacterTypeEnum character) {
-        return statisticsRepository.findMaxNumberOfkillsByUserWithCharacter(user, character);
-    }
-
-    public Integer getMaxKillsUserWithCharacterInOneGame(User user, CharacterTypeEnum character) {
-        return statisticsRepository.findMaxNumberOfkillsByUserWithCharacter(user, character);
-    }
-
-    public Double getAvgKillsUserWithCharacter(User user, CharacterTypeEnum character) {
-        return statisticsRepository.findAVGNumberOfkillsByUserWithCharacter(user, character);
     }
 
     // Glory
     public Integer getUserTotalGloryPoints(User user) {
         return statisticsRepository.findTotalGloryPointsByUser(user);
     }
-
-    public Integer getMaxUserGloryPointsEarned(User user) {
-        return statisticsRepository.findMaxGloryPointsByUser(user);
-    }
-
-    public Double getAvgGloryPointsEarned(User user) {
-        return statisticsRepository.findAVGGloryPointsByUser(user);
-    }
-
-    public Integer getTotalUserGloryPointsCharacter(User user, CharacterTypeEnum character) {
-        return statisticsRepository.findTotalGloryPointsByUserWithCharacter(user, character);
-    }
-
-    public Integer getMaxUserGloryPointsCharacter(User user, CharacterTypeEnum character) {
-        return statisticsRepository.findMaxGloryPointsByUserWithCharacter(user, character);
-    }
-
-    public Double getAvgUserGloryPointsCharacter(User user, CharacterTypeEnum character) {
-        return statisticsRepository.findAVGGloryPointsByUserWithCharacter(user, character);
-    }
-
 
     // Other services
     public Statistics save(Statistics statistic) {
