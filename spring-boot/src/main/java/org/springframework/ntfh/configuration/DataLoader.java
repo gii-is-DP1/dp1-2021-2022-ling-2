@@ -1,9 +1,14 @@
 package org.springframework.ntfh.configuration;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.ntfh.entity.character.Character;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 /** @see https://stackoverflow.com/a/61019382/12169711 */
 @Component
+@Transactional
 public class DataLoader implements CommandLineRunner {
 
     @Autowired
@@ -39,6 +45,10 @@ public class DataLoader implements CommandLineRunner {
 
     private Integer testLobbyCount = 1;
 
+    private List<User> usersFree = new ArrayList<>(); // Users who are not taken
+    private List<User> usersInLobby = new ArrayList<>(); // Users currently in a lobby
+    private List<User> usersInGame = new ArrayList<>(); // Users currently in a game
+
     @Override
     public void run(String... args) throws Exception {
         random = new Random();
@@ -46,97 +56,97 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void loadInitialData() {
-        createGamesInLobbyState(2);
-        createGamesInGameState(3);
-        createGamesInFinishedState(4);
-
-        createUsersWithTwoGamesPlayed();
+        populateUsers(100);
+        createGamesInLobbyState(3);
+        createGamesInGameState(5);
+        createGamesInFinishedState(20);
     }
 
-    private void createUsersWithTwoGamesPlayed() {
-        User user1 = createTestUser(testUserCount);
-        testUserCount++;
-
-        User user2 = createTestUser(testUserCount);
-        testUserCount++;
-
-        User user3 = createTestUser(testUserCount);
-        testUserCount++;
-
-        // Create and finish game 1 with User1, User2
-        Game game1 = createLobby("testLobby1", true, true, 2);
-        gameService.joinGame(game1, user1);
-        gameService.joinGame(game1, user2);
-
-        Player player1 = game1.getPlayers().get(0);
-        player1.setCharacter(characterService.findById(1));
-
-        Player player2 = game1.getPlayers().get(1);
-        player2.setCharacter(characterService.findById(3));
-
-        game1 = gameService.startGame(game1.getId());
-        gameService.finishGame(game1);
-
-        // Create and finish game 2 with User1, User3
-        Game game2 = createLobby("testLobby2", true, true, 3);
-        gameService.joinGame(game2, user1);
-        gameService.joinGame(game2, user3);
-
-        Player player3 = game2.getPlayers().get(0);
-        player3.setCharacter(characterService.findById(1));
-
-        Player player4 = game2.getPlayers().get(1);
-        player4.setCharacter(characterService.findById(3));
-
-        game2 = gameService.startGame(game2.getId());
-        gameService.finishGame(game2);
+    private void populateUsers(Integer n) {
+        // Fill a user bank with the number of users specified. Initially they are all "in the menu" and ready to join
+        // games
+        usersFree = IntStream.range(1, n + 1).boxed().map(this::createTestUser).collect(Collectors.toList());
     }
 
-    private void createGamesInFinishedState(Integer number) {
-        createGamesInLobbyState(number).forEach(g -> {
+    /**
+     * Example. if games=100 and users=4, there will be 100 games played with variations of these users, so these 4 will
+     * have rich stats about wins, glory, kills, gold...
+     * 
+     * @author andrsdt
+     * @param numberOfGames number of games to create and finish
+     * @param numberOfUsers number of users that will play those games
+     */
+    private void createGamesInFinishedState(Integer numberOfGames) {
+        IntStream.range(0, numberOfGames).forEach(i -> {
+            Game g = createGameInLobbyState();
+
             g = gameService.startGame(g.getId());
+
+            g.getPlayers().forEach(p -> {
+                User user = p.getUser();
+                removeIfContaining(usersInLobby, user);
+                usersInGame.add(user);
+
+                // Make sure there is some dynamic data
+                p.setGlory(random.nextInt(20));
+                p.setKills(random.nextInt(15));
+                p.setGold(random.nextInt(10));
+                p.setWounds(random.nextInt(p.getCharacter().getBaseHealth() + 1));
+
+                removeIfContaining(usersInGame, user);
+                usersFree.add(user);
+            });
             g = gameService.finishGame(g);
+            // Make the duration of the game something between 5 and 100 minutes
+            g.setStartTime(Timestamp.from(Instant.now().minus(random.nextInt(100) + 5L, ChronoUnit.MINUTES)));
         });
     }
 
-    private void createGamesInGameState(Integer number) {
-        createGamesInLobbyState(number).forEach(g -> gameService.startGame(g.getId()));
+    private void createGamesInGameState(Integer numberOfGames) {
+        IntStream.range(0, numberOfGames).forEach(i -> {
+            Game g = createGameInLobbyState();
+            g.getPlayers().forEach(p -> {
+                User user = p.getUser();
+                removeIfContaining(usersInLobby, user);
+                usersInGame.add(user);
+            });
+            gameService.startGame(g.getId());
+        });
     }
 
-    private List<Game> createGamesInLobbyState(Integer number) {
+    private void createGamesInLobbyState(Integer numberOfGames) {
+        IntStream.range(0, numberOfGames).forEach(i -> {
+            createGameInLobbyState();
+        });
+    }
 
-        List<Game> games = new ArrayList<>();
+    private Game createGameInLobbyState() {
+        Game lobby = createRandomLobby();
+        // For every lobby, create users to fill them with players
+        for (int j = 0; j < lobby.getMaxPlayers(); j++) {
+            // Take a random user who is not playing a game
+            User testUser = usersFree.get(random.nextInt(usersFree.size()));
 
-        // Create as many lobbies as requested in number parameter
-        for (int i = 0; i < number; i++) {
-            Boolean hasScenes = random.nextBoolean();
-            Boolean spectatorsAllowed = random.nextBoolean();
-            Integer maxPlayers = random.nextInt(2) + 2; // Random between 2 and 4
-            Game lobby = createLobby("Test lobby " + testLobbyCount, hasScenes, spectatorsAllowed, maxPlayers);
-            testLobbyCount++;
+            gameService.joinGame(lobby, testUser);
 
-            // For every lobby, create users to fill them with players
-            for (int j = 0; j < maxPlayers; j++) {
-                User testUser = createTestUser(testUserCount);
-                gameService.joinGame(lobby, testUser);
-                Player player = testUser.getPlayer();
+            removeIfContaining(usersFree, testUser);
+            usersInLobby.add(testUser);
 
-                List<CharacterTypeEnum> charactersChosen =
-                        lobby.getPlayers().stream().filter(p -> p.getCharacter() != null)
-                                .map(p -> p.getCharacter().getCharacterTypeEnum()).collect(Collectors.toList());
+            Player player = testUser.getPlayer();
 
-                // Ensure there are no repeated characters
-                Character randomCharacter = null;
-                do {
-                    randomCharacter = characterService.findById(random.nextInt(8) + 1);
-                } while (charactersChosen.contains(randomCharacter.getCharacterTypeEnum()));
+            List<CharacterTypeEnum> charactersChosen = lobby.getPlayers().stream().filter(p -> p.getCharacter() != null)
+                    .map(p -> p.getCharacter().getCharacterTypeEnum()).collect(Collectors.toList());
 
-                player.setCharacter(randomCharacter);
-                playerService.savePlayer(player);
-            }
-            games.add(lobby);
+            // Ensure there are no repeated characters
+            Character randomCharacter = null;
+            do {
+                randomCharacter = characterService.findById(random.nextInt(8) + 1);
+            } while (charactersChosen.contains(randomCharacter.getCharacterTypeEnum()));
+
+            player.setCharacter(randomCharacter);
+            playerService.savePlayer(player);
         }
-        return games;
+        return lobby;
     }
 
     private Game createLobby(String name, Boolean hasScenes, Boolean spectatorsAllowed, Integer maxPlayers) {
@@ -150,11 +160,28 @@ public class DataLoader implements CommandLineRunner {
 
     private User createTestUser(Integer number) {
         User user = new User();
-        String username = "TestUser" + number;
+        String username = "dummy" + number;
         user.setUsername(username);
         user.setEmail(username + "@mail.com");
         user.setPassword(username);
         testUserCount++;
         return userService.createUser(user);
+    }
+
+    private Game createRandomLobby() {
+        Boolean hasScenes = random.nextBoolean();
+        Boolean spectatorsAllowed = random.nextBoolean();
+        Integer maxPlayers = random.nextInt(3) + 2; // Random between 2 and 4
+        Game lobby = createLobby("Test lobby " + testLobbyCount, hasScenes, spectatorsAllowed, maxPlayers);
+        testLobbyCount++;
+        return lobby;
+    }
+
+    /**
+     * this aux method is necessary because the common list.remove does not work since the pointer in memory to the
+     * player changes when retrieved from the database
+     */
+    private void removeIfContaining(List<User> list, User user) {
+        list.stream().filter(u -> u.getId().equals(user.getId())).findAny().ifPresent(list::remove);
     }
 }

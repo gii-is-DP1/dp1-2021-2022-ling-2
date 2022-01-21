@@ -28,9 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author andrsdt
  */
-@RestController()
-@CrossOrigin(origins = "http://localhost:3000")
+@RestController
 @RequestMapping(value = "/users")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
 
     @Autowired
@@ -92,6 +92,7 @@ public class UserController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.CREATED)
+    // TODO 🔼 do this in the rest of controllers that return no body
     public void register(@RequestBody User user) {
         this.userService.createUser(user);
     }
@@ -125,9 +126,7 @@ public class UserController {
      */
     @DeleteMapping("{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable("userId") String username, @RequestHeader("Authorization") String token) {
-        // TODO better parse username to user with a converter? saw that in the slides
-        User user = userService.findUser(username);
+    public void deleteUser(@PathVariable("userId") User user, @RequestHeader("Authorization") String token) {
         userService.deleteUser(user);
     }
 

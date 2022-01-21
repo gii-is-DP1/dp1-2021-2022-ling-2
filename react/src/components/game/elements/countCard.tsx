@@ -11,7 +11,7 @@ type Params = {
 
 /**
  *
- * @param { count } count number to be resplaying on the card
+ * @param { count } count number to be desplaying on the card
  * @returns Component of a standard card back with a counter on top
  */
 export default function CountCard(params: Params) {

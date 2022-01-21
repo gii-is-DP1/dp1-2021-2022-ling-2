@@ -1,11 +1,8 @@
-import { useContext, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-import axios from "../api/axiosConfig";
 import AchievementsTable from "../components/admin/AchievementsTable";
 import HomeButton from "../components/common/home-button";
 import * as ROUTES from "../constants/routes";
-import { Achievement } from "../interfaces/Achievement";
 import userContext from "../context/user";
 import tokenParser from "../helpers/tokenParser";
 
@@ -14,21 +11,7 @@ import tokenParser from "../helpers/tokenParser";
  * @author andrsdt
  */
 export default function AllAchievements() {
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
   const loggedUser = tokenParser(useContext(userContext));
-
-  useEffect(() => {
-    const fetchAllAchievements = async () => {
-      try {
-        const response = await axios.get(`/achievements`);
-        setAchievements(response.data);
-      } catch (error: any) {
-        toast.error(error?.message);
-      }
-    };
-    fetchAllAchievements();
-  }, []);
-
   return (
     <>
       <HomeButton />
@@ -39,7 +22,7 @@ export default function AllAchievements() {
           </button>
         </span>
         <div className="w-3/4 2xl:w-1/2">
-          <AchievementsTable achievements={achievements} />
+          <AchievementsTable />
           {loggedUser.username && (
             <button className="btn-ntfh">
               <Link

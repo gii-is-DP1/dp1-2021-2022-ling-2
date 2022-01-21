@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /*
  * To change this license header, choose License Headers in Project Properties. To change this template file, choose
@@ -33,7 +35,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and() // enable CORS requests
+        http.cors() // enable CORS requests
+                .and() // enable CSRF
                 .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests() // antMatchers:
                 .antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll() // static resources
@@ -69,13 +72,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // PLAYER ENDPOINTS
                 .antMatchers(HttpMethod.PUT, "/players/{playerId}/character/{characterId}").hasAuthority("user")
                 // GAME ENDPOINTS
-                .antMatchers(HttpMethod.GET, "/games").hasAuthority("admin").antMatchers(HttpMethod.POST, "/games")
-                .hasAuthority("user") // Allow users to create new games
-                // Allow admins to see past games
-                .antMatchers(HttpMethod.GET, "/games/lobby").permitAll() // Allow everyone to see lobbies
-                .antMatchers(HttpMethod.GET, "/games/ongoing") // Allow everyone to see ongoing games
-                .permitAll().antMatchers(HttpMethod.GET, "/games/finished").permitAll()
+                .antMatchers(HttpMethod.GET, "/games").hasAuthority("admin") // Allow admins to see all games
+                .antMatchers(HttpMethod.POST, "/games").hasAuthority("user") // Allow users to create new games
                 .antMatchers(HttpMethod.GET, "/games/count").permitAll() // Allow everyone to see how many games are
+                .antMatchers(HttpMethod.GET, "/games/lobby").permitAll() // Allow everyone to see lobbies
+                .antMatchers(HttpMethod.GET, "/games/ongoing").permitAll() // Allow everyone to see ongoing games
+                .antMatchers(HttpMethod.GET, "/games/finished").permitAll()// Allow everyone to see finished games
+                .antMatchers(HttpMethod.GET, "/games/ongoing/count").permitAll() // Allow everyone to see past games
                 .antMatchers(HttpMethod.GET, "/games/finished/count").permitAll() // Allow everyone to see past games
                 .antMatchers(HttpMethod.GET, "/games/{gameId}").permitAll() // Allow everyone to see a game
                 .antMatchers(HttpMethod.PUT, "/games/{gameId}").hasAuthority("user") // Allow users to update a game
@@ -84,43 +87,48 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/games/new").hasAuthority("user") // Allow users to create games
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/add/{username}").hasAuthority("user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/remove/{username}").hasAuthority("user")
-                .antMatchers(HttpMethod.DELETE, "/games/{gameId}").hasAuthority("user")
+                .antMatchers(HttpMethod.DELETE, "/games/{gameId}").hasAnyAuthority("admin", "user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/start").hasAuthority("user")
                 .antMatchers(HttpMethod.POST, "/games/{gameId}/turn/next").hasAuthority("user")
-                .antMatchers(HttpMethod.POST, "/ability-cards/{abilityCardIngameId}").hasAuthority("user") // Allow
-                                                                                                           // users to
-                                                                                                           // play cards
-                .antMatchers(HttpMethod.POST, "/market-cards/buy/{marketCardIngameId}").hasAuthority("user")
-                // Allow users to buy cards in the market
+                .antMatchers(HttpMethod.GET, "/games/ongoing/count").hasAuthority("user")
+                .antMatchers(HttpMethod.GET, "/games/finished/count").hasAuthority("user")
                 // ACHIEVEMENT ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
-                .antMatchers(HttpMethod.PUT, "/achievements").hasAuthority(adminString) // Update achievement
-                .antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll() // Everyone can see an
-                                                                                          // achievement
+                .antMatchers(HttpMethod.GET, "/achievements/types").hasAuthority("admin")
+                .antMatchers(HttpMethod.POST, "/achievements/new").hasAuthority("admin")
+                .antMatchers(HttpMethod.PUT, "/achievements").hasAuthority("admin") // Update achievement
+                .antMatchers(HttpMethod.GET, "/achievements/{achievementId}").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/achievements/{achievementId}").hasAuthority("admin")
                 // SCENE ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/scenes/count").permitAll() // Allow everyone to get the number of scenes
+                // ABILITY CARD ENDPOINTS
+                .antMatchers(HttpMethod.POST, "/ability-cards/{abilityCardIngameId}").hasAuthority("user")
                 // MARKET CARD ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/market-cards/{gameId}").permitAll() // Allow everyone to list a game's
                                                                                    // market cards
-                // HORDE ENEMIES ENDPOINTS
-                .antMatchers(HttpMethod.GET, "/horde-enemies/{gameId}").permitAll() // Allow everyone to list a game's
-                                                                                    // horde enemies
-                // WARLORDS ENDPOINTS
-                .antMatchers(HttpMethod.GET, "/warlords/{gameId}").permitAll() // Allow everyone to list a game's
-                                                                               // warlord
-                                                                               // ADMIN ENDPOINTS
-                .antMatchers("/admin/**").hasAuthority(adminString) // access to admin info
-                // OTHER ENDPOINTS
-                .anyRequest().denyAll(); // else, deny
+                .antMatchers(HttpMethod.POST, "/market-cards/buy/{marketCardIngameId}").hasAuthority("user")
 
+                .antMatchers("/admin/**").hasAuthority(adminString) // access to admin info
+                // RANKING ENDPOINTS
+                .antMatchers(HttpMethod.GET, "/statistics/games/count").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/wins").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/glory").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/ranking/kills").permitAll()
+                // OTHER ENDPOINTS
+                .anyRequest().denyAll() // else, deny
+                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         // Configuración para que funcione la consola de administración
         // de la BD H2 (deshabilitar las cabeceras de protección contra
         // ataques de tipo csrf y habilitar los framesets si su contenido
         // se sirve desde esta misma página.
 
-        http.csrf().disable(); // TODO csrf token in JSON for better security
-
         http.headers().frameOptions().sameOrigin();
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/h2-console/**");
     }
 
     @Override
@@ -133,7 +141,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10, new SecureRandom("NTFHseed".getBytes()));
+        return new BCryptPasswordEncoder(10, new SecureRandom("NoTiMeFoRhErOeS$sEeD".getBytes()));
     }
-
 }

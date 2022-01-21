@@ -2,10 +2,8 @@ package org.springframework.ntfh.turn.stateTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,11 +68,11 @@ class MarketStateTest {
     @Autowired
     private MarketCardIngameService marketCardIngameService;
 
-	protected Game gameTester;
+    protected Game gameTester;
 
     protected Player ranger;
 
-	protected Player rogue;
+    protected Player rogue;
 
     protected User user1, user2, user3;
 
@@ -85,30 +83,30 @@ class MarketStateTest {
     protected TurnStateType actualState;
 
     @BeforeEach
-	void init() {
-		gameTester = new Game();
-		gameTester.setName("test game");
-		gameTester.setHasScenes(false);
-		gameTester.setSpectatorsAllowed(false);
-		gameTester.setMaxPlayers(2);
-		gameTester.setStateType(GameStateType.LOBBY);
-		gameTester = gameService.save(gameTester);
+    void init() {
+        gameTester = new Game();
+        gameTester.setName("test game");
+        gameTester.setHasScenes(false);
+        gameTester.setSpectatorsAllowed(false);
+        gameTester.setMaxPlayers(2);
+        gameTester.setStateType(GameStateType.LOBBY);
+        gameTester = gameService.save(gameTester);
 
-        user1 = userService.findUser("user1");
-		user2 = userService.findUser("user2");
-        user3 = userService.findUser("user3"); //User used for joining users test
+        user1 = userService.findByUsername("user1");
+        user2 = userService.findByUsername("user2");
+        user3 = userService.findByUsername("user3"); // User used for joining users test
 
-		gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
-		gameTester = gameService.joinGame(gameTester, user2);
+        gameTester = gameService.joinGame(gameTester, user1); // first player -> leader
+        gameTester = gameService.joinGame(gameTester, user2);
 
-		ranger = gameTester.getPlayers().get(0);
-		rogue = gameTester.getPlayers().get(1);
+        ranger = gameTester.getPlayers().get(0);
+        rogue = gameTester.getPlayers().get(1);
 
-		Character rangerCharacter = characterService.findById(2);
-		Character rogueCharacter = characterService.findById(4);
+        Character rangerCharacter = characterService.findById(2);
+        Character rogueCharacter = characterService.findById(4);
 
-		ranger.setCharacter(rangerCharacter);
-		rogue.setCharacter(rogueCharacter);
+        ranger.setCharacter(rangerCharacter);
+        rogue.setCharacter(rogueCharacter);
 
         turnService.initializeFromGame(gameTester);
 
@@ -125,7 +123,8 @@ class MarketStateTest {
     void teardown() {
         try {
             turnService.delete(turnTester.getId());
-        } catch (Exception exception) {}
+        } catch (Exception exception) {
+        }
     }
 
     @Test
@@ -140,7 +139,7 @@ class MarketStateTest {
 
         marketState.postState(gameTester);
 
-        assertThat(ranger.getDiscardPile().size()).isNotZero();
+        assertThat(ranger.getHand().size()).isNotZero();
     }
 
     @Test
@@ -172,7 +171,8 @@ class MarketStateTest {
         assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
 
         MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
-        MarketCardIngame pocionCurativaIngame = marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
+        MarketCardIngame pocionCurativaIngame =
+                marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
         Integer marketCardIngameId = market.get(0).getId();
@@ -182,7 +182,8 @@ class MarketStateTest {
 
         assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET_LESS_ONE);
         assertThat(ranger.getGold()).isEqualTo(GOLD_LEFT);
-        assertThat(ranger.getHand().get(ranger.getHand().size()-1).getAbilityCardTypeEnum()).isEqualTo(AbilityCardTypeEnum.POCION_CURATIVA);
+        assertThat(ranger.getHand().get(ranger.getHand().size() - 1).getAbilityCardTypeEnum())
+                .isEqualTo(AbilityCardTypeEnum.POCION_CURATIVA);
     }
 
     @Test
@@ -197,7 +198,8 @@ class MarketStateTest {
         assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
 
         MarketCard armaduraPlacas = marketCardService.findMarketCardById(12).get();
-        MarketCardIngame armaduraPlacasIngame = marketCardIngameService.createFromMarketCard(armaduraPlacas, gameTester);
+        MarketCardIngame armaduraPlacasIngame =
+                marketCardIngameService.createFromMarketCard(armaduraPlacas, gameTester);
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(armaduraPlacasIngame.getMarketCard());
         Integer marketCardIngameId = market.get(0).getId();
@@ -217,12 +219,13 @@ class MarketStateTest {
         assertThat(gameTester.getMarketCardsForSale().size()).isEqualTo(FULL_MARKET);
 
         MarketCard pocionCurativa = marketCardService.findMarketCardById(3).get();
-        MarketCardIngame pocionCurativaIngame = marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
+        MarketCardIngame pocionCurativaIngame =
+                marketCardIngameService.createFromMarketCard(pocionCurativa, gameTester);
         List<MarketCardIngame> market = gameTester.getMarketCardsForSale();
         market.get(0).setMarketCard(pocionCurativaIngame.getMarketCard());
         Integer marketCardIngameId = market.get(0).getId();
 
         assertThrows(IllegalArgumentException.class, () -> marketState.buyMarketCard(marketCardIngameId, playerToken));
     }
-    
+
 }

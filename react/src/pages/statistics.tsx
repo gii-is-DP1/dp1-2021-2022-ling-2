@@ -13,7 +13,7 @@ export default function Statistics() {
   useEffect(() => {
     const fetchGameHistoryCount = async () => {
       try {
-        const response = await axios.get(`games/history/count`);
+        const response = await axios.get(`statistics/games/count`);
         setGamesHistoryCount(response.data);
       } catch (error: any) {
         toast.error(error?.message);
@@ -28,7 +28,7 @@ export default function Statistics() {
       <div className="flex flex-col h-screen bg-wood p-8 items-center">
         <span className="text-center pb-8">
           <button type="submit" className="btn-ntfh">
-            <p className="text-5xl text-gradient-ntfh">Statistics</p>
+            <p className="text-5xl text-gradient-ntfh">Global statistics</p>
           </button>
         </span>
         <div className="flex flex-col bg-felt rounded-3xl border-20 border-gray-900 p-8 text-2xl">

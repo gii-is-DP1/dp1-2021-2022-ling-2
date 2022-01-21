@@ -1,6 +1,8 @@
 package org.springframework.ntfh.entity.game;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.user.User;
@@ -22,8 +24,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/games")
+
 public class GameController {
 
     @Autowired
@@ -33,7 +36,6 @@ public class GameController {
      * @return List of all the games ever played
      * @author pabrobcam
      */
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Game> getAll() {
@@ -47,27 +49,33 @@ public class GameController {
     }
 
     @GetMapping("ongoing")
-    public Iterable<Game> getOngoing() {
-        return gameService.findByStateType(GameStateType.ONGOING);
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Game> getOngoingPageable(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        return gameService.findByStateTypePageable(GameStateType.ONGOING, pageable);
     }
 
     @GetMapping("finished")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Game> getPastGames() {
-        return gameService.findByStateType(GameStateType.FINISHED);
+    public Iterable<Game> getFinishedPageable(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        return gameService.findByStateTypePageable(GameStateType.FINISHED, pageable);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("ongoing/count")
+    public Integer getOngoingCount() {
+        return gameService.countByStateType(GameStateType.ONGOING);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("finished/count")
+    public Integer getFinishedCount() {
+        return gameService.countByStateType(GameStateType.FINISHED);
     }
 
     @GetMapping("count")
     @ResponseStatus(HttpStatus.OK)
     public Integer getCount() {
         return gameService.gameCount();
-    }
-
-
-    @GetMapping("finished/count")
-    @ResponseStatus(HttpStatus.OK)
-    public Integer getPastGamesCount() {
-        return gameService.countByStateType(GameStateType.FINISHED);
     }
 
     @GetMapping("{gameId}")
@@ -80,7 +88,6 @@ public class GameController {
      * This endpoint handles the creation of a new game from a lobby
      * 
      * @param lobby object with the preferences for the game
-     * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
     @PostMapping("new")
@@ -92,16 +99,18 @@ public class GameController {
     }
 
     /**
-     * This endpoint handles the creation of a new game from a lobby
+     * This endpoint handles the deletion of a game
      * 
      * @param lobby object with the preferences for the game
-     * @return id of the game so the user can be redirected from the lobby
      * @author andrsdt
      */
     @DeleteMapping("{gameId}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteGame(@PathVariable("gameId") Integer gameId) {
-        gameService.deleteGame(gameId);
+    public void deleteGame(@PathVariable("gameId") Game game, @RequestHeader("Authorization") User userToken) {
+        if (!userToken.hasAnyAuthorities("admin") && game.getStateType() != GameStateType.LOBBY) {
+            throw new NonMatchingTokenException("Only admins can delete games that are not in lobby");
+        }
+        gameService.delete(game);
     }
 
     /**
@@ -123,7 +132,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public Game joinGame(@PathVariable("gameId") Game game, @PathVariable("username") User user,
             @RequestHeader("Authorization") User tokenUser) {
-        // ! PABLO AND ALEX take this example as a reference
         if (!user.equals(tokenUser))
             throw new NonMatchingTokenException("The user who is trying to join the game is not the one logged in");
         Game updatedgame = gameService.joinGame(game, user);

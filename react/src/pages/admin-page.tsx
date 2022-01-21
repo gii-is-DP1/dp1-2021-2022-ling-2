@@ -39,16 +39,7 @@ export default function AdminPage() {
         toast.error(error?.message);
       }
     };
-    const fetchAllAchievements = async () => {
-      try {
-        const response = await axios.get(`/achievements`);
-        setAchievements(response.data);
-      } catch (error: any) {
-        toast.error(error?.message);
-      }
-    };
     if (currentTable === "ongoing") fetchGameHistory();
-    if (currentTable === "achievements") fetchAllAchievements();
   }, [currentTable]);
 
   useEffect(() => {
@@ -104,13 +95,9 @@ export default function AdminPage() {
           </div>
           <div className="flex flex-col w-full items-center justify-start pl-12 pt-12">
             {currentTable === "ongoing" && <OngoingGamesTable />}
-            {currentTable === "history" && (
-              <GamesHistoryTable data={gamesHistory} />
-            )}
+            {currentTable === "history" && <GamesHistoryTable admin />}
             {currentTable === "users" && <UsersTable />}
-            {currentTable === "achievements" && (
-              <AchievementsTable achievements={achievements} />
-            )}
+            {currentTable === "achievements" && <AchievementsTable />}
           </div>
         </span>
       </div>

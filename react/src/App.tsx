@@ -5,8 +5,9 @@ import * as ROUTES from "./constants/routes";
 import unregisteredUserContext from "./context/unregisteredUser";
 import userContext from "./context/user";
 import useLocalStorage from "./hooks/useLocalStorage";
-import AllAchievements from "./pages/all-achievements";
 import AdminPage from "./pages/admin-page";
+import AllAchievements from "./pages/all-achievements";
+import CreateAchievement from "./pages/create-achievement";
 import CreateLobby from "./pages/create-lobby";
 import EditAchievement from "./pages/edit-achievement";
 import EditProfile from "./pages/edit-profile";
@@ -16,6 +17,7 @@ import LobbyBrowser from "./pages/lobby-browser";
 import Login from "./pages/login";
 import NotFound from "./pages/not-found";
 import Profile from "./pages/profile";
+import Ranking from "./pages/ranking";
 import SignUp from "./pages/signup";
 import Statistics from "./pages/statistics";
 import UserAchievements from "./pages/user-achievements";
@@ -56,7 +58,13 @@ export default function App() {
               path={ROUTES.USER_ACHIEVEMENTS}
               component={UserAchievements}
             />
+            <Route
+              exact
+              path={ROUTES.CREATE_ACHIEVEMENT}
+              component={CreateAchievement}
+            />
             <Route exact path={ROUTES.STATISTICS} component={Statistics} />
+            <Route exact path={ROUTES.RANKING} component={Ranking} />
             <Route exact path={ROUTES.BROWSE_GAMES} component={LobbyBrowser} />
             <Route exact path={ROUTES.GAME} component={GameRouter} />
             <Route exact path={ROUTES.ADMIN_PAGE} component={AdminPage} />

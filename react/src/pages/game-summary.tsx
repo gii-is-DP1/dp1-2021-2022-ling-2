@@ -34,8 +34,8 @@ export default function GameSummary() {
 
   const rankingSort = (p1: Player, p2: Player): number => {
     // Sorting criteria for deciding the winner: Sort by glory. If equal, sort by kills.
-    const compareGlory = p1.glory - p2.glory;
-    return compareGlory === 0 ? p1.kills - p2.kills : compareGlory;
+    const compareGlory = p2.glory - p1.glory;
+    return compareGlory === 0 ? p2.kills - p1.kills : compareGlory;
   };
 
   return (
@@ -84,7 +84,7 @@ export default function GameSummary() {
                         <td className="text-table-td">{p.characterTypeEnum}</td>
                         <td className="text-table-td">{p.user?.username}</td>
                         <td className="text-table-td">
-                          {p.dead ? "😀" : "🖖"}
+                          {p.dead ? "☠️" : "😀"}
                         </td>
                         <td className="text-table-td">{p.glory}</td>
                         <td className="text-table-td">{p.gold}</td>

@@ -12,26 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/market-cards")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class MarketCardIngameController {
-    
-
 
     @Autowired
     private MarketCardIngameService marketCardIngameService;
 
-
     @PostMapping("/buy/{marketCardIngameId}")
-    public ResponseEntity<Game> buyMarketCard(@PathVariable("marketCardIngameId") Integer marketCardIngameId, 
+    public ResponseEntity<Game> buyMarketCard(@PathVariable("marketCardIngameId") Integer marketCardIngameId,
             @RequestHeader("Authorization") String token) {
         Game game = marketCardIngameService.buyMarketCard(marketCardIngameId, token);
         return new ResponseEntity<>(game, HttpStatus.OK);
     }
-
-
-
-
-
-
 }

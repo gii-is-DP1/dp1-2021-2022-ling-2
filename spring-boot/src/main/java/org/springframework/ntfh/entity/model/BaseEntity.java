@@ -12,10 +12,13 @@
  */
 package org.springframework.ntfh.entity.model;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -31,12 +34,21 @@ public class BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Integer id;
 
+	// ! TODO Implement versioning
+	@Version
+	@Column(name = "OPTLOCK", nullable = false, columnDefinition = "integer default 0")
+	protected Integer version;
+
 	public Integer getId() {
 		return id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getVersion() {
+		return version;
 	}
 
 	// TODO delete if not used

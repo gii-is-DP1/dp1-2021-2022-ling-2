@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router";
 import axios from "../../../api/axiosConfig";
 import { BASE_IMAGE_PATH } from "../../../constants/paths";
 import GameContext from "../../../context/game";
@@ -18,7 +17,6 @@ export default function AbilityCard(params: Params) {
   const { card, selected, setSelected } = params;
   const { userToken } = useContext(UserContext);
   const { setGame } = useContext(GameContext);
-  const { gameId } = useParams<{ gameId: string }>(); // get params from react router link
 
   const abilityCardTypeEnum = card.abilityCard.abilityCardTypeEnum;
   const characterTypeEnum = card.abilityCard.characterTypeEnum;
