@@ -205,7 +205,7 @@ public class WarriorCardTest {
         abilityCardIngameService.playCard(abilityCardIngameWarrior.getId(), berserkerIngame.getId(), tokenWarrior);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(warrior.getHand().size()).isZero();
+        assertThat(warrior.getHand()).isEmpty();
     }
 
     @Test
@@ -285,6 +285,6 @@ public class WarriorCardTest {
 
         assertThat(warrior.getHand()).hasSize(1); // the card drawn
         assertThat(warrior.getGlory()).isEqualTo(1);
-        assertThat(rogue.getDiscardPile().size()).isZero();
+        assertThat(rogue.getDiscardPile()).isEmpty();
     }
 }
