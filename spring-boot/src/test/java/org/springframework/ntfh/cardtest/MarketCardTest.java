@@ -268,7 +268,7 @@ public class MarketCardTest {
         abilityCardIngameService.playCard(abilityCardIngameRogue.getId(), berserkerIngame.getId(), tokenRogue);
 
         assertThat(berserkerIngame.getCurrentEndurance()).isEqualTo(4);
-        assertThat(rogue.getDiscardPile().size()).isZero(); // the card should return to the ability pile since he has
+        assertThat(rogue.getDiscardPile()).isEmpty();// the card should return to the ability pile since he has
                                                             // proficiency
     }
 
