@@ -110,6 +110,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/stats/ranking/wins").permitAll()
                 .antMatchers(HttpMethod.GET, "/stats/ranking/glory").permitAll()
                 .antMatchers(HttpMethod.GET, "/stats/ranking/kills").permitAll()
+                .antMatchers(HttpMethod.GET, "/statistics/user/{userId}").hasAuthority("user")
                 // OTHER ENDPOINTS
                 .anyRequest().denyAll() // else, deny
                 .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
