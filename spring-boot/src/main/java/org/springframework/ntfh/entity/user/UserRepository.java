@@ -1,6 +1,6 @@
 package org.springframework.ntfh.entity.user;
 
-import java.security.Timestamp;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

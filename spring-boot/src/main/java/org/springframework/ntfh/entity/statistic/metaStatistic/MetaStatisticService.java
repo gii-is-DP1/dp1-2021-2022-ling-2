@@ -2,7 +2,6 @@ package org.springframework.ntfh.entity.statistic.metaStatistic;
 
 import java.util.Iterator;
 import java.util.List;
-import java.sql.Timestamp;
 
 import javax.transaction.Transactional;
 

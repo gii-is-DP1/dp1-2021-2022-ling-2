@@ -3,13 +3,18 @@ package org.springframework.ntfh.entity.game.concretestates;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
 import org.springframework.ntfh.entity.game.GameState;
 import org.springframework.ntfh.entity.game.GameStateType;
 import org.springframework.ntfh.entity.player.Player;
+import org.springframework.ntfh.entity.statistic.metaStatistic.MetaStatistic;
+import org.springframework.ntfh.entity.statistic.metaStatistic.MetaStatisticService;
 import org.springframework.ntfh.entity.turn.Turn;
 import org.springframework.ntfh.entity.turn.TurnService;
 import org.springframework.ntfh.entity.turn.TurnState;
@@ -31,6 +36,9 @@ public class OngoingState implements GameState {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private MetaStatisticService metaStatisticService;
 
     @Override
     public void preState(Game game) {
@@ -106,8 +114,27 @@ public class OngoingState implements GameState {
         // Cosass del Roble (Space+Power Botton)
         //***************/
 
+        for(int i=0; i<players.size();i++){
+            MetaStatistic ms=new MetaStatistic();
+            Player p = players.get(i);
+            ms.setUser(p.getUser());
+            ms.setDied(p.isDead());
+            ms.setGloryEarned(p.getGlory());
+            ms.setKillCount(p.getKills());
+            ms.setCharacter(p.getCharacterTypeEnum());
+            if(p.equals(winner)){
+                ms.setVictory(true);
+            }else{
+                ms.setVictory(false);
+            }
 
-        
+            Integer duration=(int) (game.getFinishTime().getTime()-game.getStartTime().getTime());
+            ms.setDuration(duration);
+            
+            metaStatisticService.save(ms);
+        }
+
+
         return gameService.save(game);
     }
 
