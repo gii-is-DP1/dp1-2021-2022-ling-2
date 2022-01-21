@@ -1,16 +1,15 @@
 package org.springframework.ntfh.entity.user;
 
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ntfh.entity.achievement.Achievement;
 import org.springframework.ntfh.entity.achievement.AchievementService;
 import org.springframework.ntfh.entity.game.Game;
 import org.springframework.ntfh.entity.game.GameService;
+import org.springframework.ntfh.entity.statistic.StatisticsService;
 import org.springframework.ntfh.util.TokenUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,16 +40,19 @@ public class UserController {
     @Autowired
     private AchievementService achievementService;
 
+    @Autowired
+    private StatisticsService statisticsService;
+
     @GetMapping
-    public ResponseEntity<Iterable<User>> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
-        List<User> users = this.userService.findPage(pageable);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<User> findPage(@PageableDefault(page = 0, size = 10) final Pageable pageable) {
+        return this.userService.findPage(pageable);
     }
 
     @GetMapping("count")
-    public ResponseEntity<Integer> getCount() {
-        Integer userCount = this.userService.count();
-        return new ResponseEntity<>(userCount, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Integer getCount() {
+        return this.userService.count();
     }
 
     /**
@@ -74,8 +76,8 @@ public class UserController {
      * 
      */
     @PutMapping
-    public ResponseEntity<Map<String, String>> updateUser(@RequestBody User user,
-            @RequestHeader("Authorization") String token) {
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, String> updateUser(@RequestBody User user, @RequestHeader("Authorization") String token) {
         User updatedUser = userService.updateUser(user, token);
         Boolean sentByAdmin = TokenUtils.tokenHasAnyAuthorities(token, "admin");
         Boolean editingOwnProfile = TokenUtils.usernameFromToken(token).equals(user.getUsername());
@@ -86,7 +88,7 @@ public class UserController {
             String tokenWithUpdatedData = TokenUtils.generateJWTToken(updatedUser);
             returnBody = Map.of("authorization", tokenWithUpdatedData);
         }
-        return new ResponseEntity<>(returnBody, HttpStatus.OK);
+        return returnBody;
     }
 
     @PostMapping("register")
@@ -96,9 +98,10 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, String> login(@RequestBody User user) {
         String token = userService.loginUser(user);
-        return new ResponseEntity<>(Map.of("authorization", token), HttpStatus.OK);
+        return Map.of("authorization", token);
     }
 
     @PutMapping("{userId}/ban")
@@ -117,7 +120,7 @@ public class UserController {
     @GetMapping("{userId}/history/count")
     @ResponseStatus(HttpStatus.OK)
     public Integer countFinishedByUser(@PathVariable("userId") User user) {
-        return gameService.countFinishedByUser(user);
+        return statisticsService.countFinishedByUser(user);
     }
 
     @GetMapping("{userId}/achievements")
