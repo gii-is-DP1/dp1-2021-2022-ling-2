@@ -24,17 +24,14 @@ import lombok.Setter;
 public class Turn extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "game_id") // TODO needed?
     @JsonIgnore
     private Game game;
 
     @ManyToOne
-    @JoinColumn(name = "player_id") // TODO needed?
     @JsonIgnoreProperties({"glory", "kills", "gold", "wounds", "characterType"})
     private Player player;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "scene_id") // TODO needed?
     private Scene currentScene;
 
     @NotNull

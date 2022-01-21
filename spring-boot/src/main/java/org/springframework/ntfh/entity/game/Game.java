@@ -138,4 +138,10 @@ public class Game extends BaseEntity {
     public Boolean getHasFinished() {
         return finishTime != null;
     }
+
+    @Transient
+    @JsonIgnore
+    public boolean hasEnemiesLeft() {
+        return !(enemiesInPile.isEmpty() && enemiesFighting.isEmpty());
+    }
 }
