@@ -1,4 +1,4 @@
-package org.springframework.ntfh.configuration;
+package org.springframework.ntfh.populate;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.ntfh.entity.character.Character;
 import org.springframework.ntfh.entity.character.CharacterService;
 import org.springframework.ntfh.entity.character.CharacterTypeEnum;
@@ -22,10 +21,10 @@ import org.springframework.ntfh.entity.user.User;
 import org.springframework.ntfh.entity.user.UserService;
 import org.springframework.stereotype.Component;
 
-/** @see https://stackoverflow.com/a/61019382/12169711 */
 @Component
 @Transactional
-public class DataLoader implements CommandLineRunner {
+/** @see https://stackoverflow.com/a/61019382/12169711 */
+public class PopulateData {
 
     @Autowired
     private GameService gameService;
@@ -49,14 +48,10 @@ public class DataLoader implements CommandLineRunner {
     private List<User> usersInLobby = new ArrayList<>(); // Users currently in a lobby
     private List<User> usersInGame = new ArrayList<>(); // Users currently in a game
 
-    @Override
-    public void run(String... args) throws Exception {
-        random = new Random();
-        loadInitialData();
-    }
-
-    private void loadInitialData() {
+    public void loadInitialData() {
         // If this number is not enough, additional users will be created automatically
+        random = new Random();
+
         populateUsers(25);
 
         createGamesInFinishedState(30);
@@ -64,7 +59,7 @@ public class DataLoader implements CommandLineRunner {
         createGamesInLobbyState(2);
     }
 
-    private void populateUsers(Integer n) {
+    public void populateUsers(Integer n) {
         // Fill a user bank with the number of users specified. Initially they are all "in the menu" and ready to join
         // games
         usersFree = IntStream.range(1, n + 1).boxed().map(i -> createTestUser()).collect(Collectors.toList());
