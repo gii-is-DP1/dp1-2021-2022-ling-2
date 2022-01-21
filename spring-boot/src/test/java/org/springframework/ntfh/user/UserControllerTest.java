@@ -97,7 +97,6 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = "admin", password = "admin", roles = "admin")
     void findPage_success() throws Exception {
-        // Mock the userService.findPage() method
         mockMvc.perform(get("/users").param("page", "1").param("size", "2").header("authorization",
                 "Bearer " + TokenUtils.ADMIN_TOKEN)).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].username", is("user3"))).andExpect(jsonPath("$[1].username", is("user4")));
@@ -106,8 +105,6 @@ class UserControllerTest {
     @Test
     @WithMockUser("user")
     void findByUsername_success() throws Exception {
-        // Mock the userService.findByUsername() method
-
         final String USERNAME = "user1";
 
         mockMvc.perform(get("/users/" + USERNAME)).andExpect(status().isOk())
@@ -127,16 +124,15 @@ class UserControllerTest {
     void register_success() throws Exception {
         final String POST_JSON =
                 "{\"username\":\"testUser\",\"email\":\"testUser@mail.com\",\"password\":\"testUser\"}";
-        mockMvc.perform(post("/users/register").with(csrf()).header("Authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON).content(POST_JSON)).andExpect(status().isCreated());
+        mockMvc.perform(post("/users/register").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
+                .andExpect(status().isCreated());
     }
 
     @Test
     void login_success() throws Exception {
         final String POST_JSON = "{\"username\":\"user1\",\"password\":\"user1\"}";
-        mockMvc.perform(post("/users/login").with(csrf()).header("authorization", "Bearer " + TokenUtils.ADMIN_TOKEN)
-                .contentType(MediaType.APPLICATION_JSON).content(POST_JSON)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
+        mockMvc.perform(post("/users/login").with(csrf()).contentType(MediaType.APPLICATION_JSON).content(POST_JSON))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.authorization", is(TokenUtils.USER_TOKEN)));
     }
 
     @Test
