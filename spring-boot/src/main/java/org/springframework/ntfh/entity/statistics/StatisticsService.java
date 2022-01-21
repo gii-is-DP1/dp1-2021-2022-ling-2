@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
@@ -29,22 +30,22 @@ public class StatisticsService {
 
     public User maxNumberOfGamesPlayed() {
         Pageable firstResult = PageRequest.of(0, 1);
-        return userRepository.maxNumberOfGamesPlayed(firstResult).get(0);
+        return userRepository.maxNumberOfGamesPlayed(firstResult).getContent().get(0);
     }
 
     public User maxNumberOfGamesWon() {
         Pageable firstResult = PageRequest.of(0, 1);
-        return userRepository.maxNumberOfGamesWon(firstResult).get(0);
+        return userRepository.maxNumberOfGamesWon(firstResult).getContent().get(0);
     }
 
     public Game longestGame() {
         Pageable firstResult = PageRequest.of(0, 1);
-        return gameRepository.gameWithMaxDuration(GameStateType.FINISHED, firstResult).get(0);
+        return gameRepository.gameWithMaxDuration(GameStateType.FINISHED, firstResult).getContent().get(0);
     }
 
     public Game shortestGame() {
         Pageable firstResult = PageRequest.of(0, 1);
-        return gameRepository.gameWithMinDuration(GameStateType.FINISHED, firstResult).get(0);
+        return gameRepository.gameWithMinDuration(GameStateType.FINISHED, firstResult).getContent().get(0);
     }
 
     public Integer totalGameDuration() {
@@ -58,7 +59,7 @@ public class StatisticsService {
     }
 
     public Double averagePlayersPerGame() {
-        // ! NOT WORKING
+        // ! TODO NOT WORKING
         // return gameRepository.averagePlayersPerGame();
         return null;
     }
@@ -71,7 +72,7 @@ public class StatisticsService {
 
     public List<Pair<String, Integer>> rankingByWonGames() {
         Pageable topFive = PageRequest.of(0, 5);
-        List<User> query = userRepository.rankingByWonGames(topFive);
+        Page<User> query = userRepository.rankingByWonGames(topFive);
         // We are given the list of sorted users. We want to return a map with the username as key and the number of won
         // games as value.
         return query.stream().map(user -> Pair.of(user.getUsername(), user.getPlayers().size()))
@@ -80,13 +81,13 @@ public class StatisticsService {
 
     public Map<String, Integer> rankingByTotalGlory() {
         Pageable topFive = PageRequest.of(0, 5);
-        List<Object> res = userRepository.rankingByTotalGlory(topFive);
+        Page<Object> res = userRepository.rankingByTotalGlory(topFive);
         return null;
     }
 
     public Map<String, Integer> rankingByTotalKills() {
         Pageable topFive = PageRequest.of(0, 5);
-        List<Object> res = userRepository.rankingByTotalKills(topFive);
+        Page<Object> res = userRepository.rankingByTotalKills(topFive);
         return null;
     }
 

@@ -1,6 +1,7 @@
 package org.springframework.ntfh.entity.game;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,7 +19,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
     @Query("SELECT g.players FROM Game g WHERE g.id = ?1")
     List<Player> getPlayersByGameId(int gameId);
 
-    List<Game> findByStateType(GameStateType stateType, Pageable pageable);
+    Page<Game> findByStateType(GameStateType stateType, Pageable pageable);
 
     int countByStateType(GameStateType stateType);
 
@@ -30,11 +31,11 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 
     // Duration by game
     @Query("SELECT g FROM Game g WHERE g.stateType = ?1 ORDER BY FUNCTION('TIMESTAMPDIFF', 'MICROSECOND', g.startTime, g.finishTime) DESC")
-    List<Game> gameWithMaxDuration(GameStateType statetype, Pageable pageable);
+    Page<Game> gameWithMaxDuration(GameStateType statetype, Pageable pageable);
 
     // // Duration by game
     @Query("SELECT g FROM Game g WHERE g.stateType = ?1 ORDER BY FUNCTION('TIMESTAMPDIFF', 'MICROSECOND', g.startTime, g.finishTime) ASC")
-    List<Game> gameWithMinDuration(GameStateType statetype, Pageable pageable);
+    Page<Game> gameWithMinDuration(GameStateType statetype, Pageable pageable);
 
     @Query("SELECT SIZE(g.players),COUNT(g) FROM Game g")
     List<Object> averagePlayersPerGame();
