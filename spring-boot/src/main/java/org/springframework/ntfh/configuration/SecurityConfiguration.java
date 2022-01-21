@@ -66,6 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/users/{userId}/character").hasAuthority("user")
                 // See earned achievements
                 .antMatchers(HttpMethod.GET, "/users/{userId}/achievements").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/{userId}/achievements/count").permitAll()
                 // UNREGISTERED USER ENDPOINTS
                 // Allow to request unregistered user credentials
                 .antMatchers(HttpMethod.POST, "/unregistered-users").permitAll()
@@ -94,6 +95,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/games/finished/count").hasAuthority("user")
                 // ACHIEVEMENT ENDPOINTS
                 .antMatchers(HttpMethod.GET, "/achievements").permitAll() // Allow everyone to list all achievements
+                .antMatchers(HttpMethod.GET, "/achievements/count").permitAll()
                 .antMatchers(HttpMethod.GET, "/achievements/types").hasAuthority("admin")
                 .antMatchers(HttpMethod.POST, "/achievements/new").hasAuthority("admin")
                 .antMatchers(HttpMethod.PUT, "/achievements").hasAuthority("admin") // Update achievement

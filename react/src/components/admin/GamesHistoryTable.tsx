@@ -46,7 +46,7 @@ export default function GamesHistoryTable(props: Props) {
   const fetchUserFinishedGames = async () => {
     try {
       const response = await axios.get(`users/${username}/history`, {
-        params: { page: page },
+        params: { page: page, size: gamesPerPage },
       });
       setFinishedGames(response.data);
     } catch (error: any) {
@@ -57,7 +57,7 @@ export default function GamesHistoryTable(props: Props) {
   const fetchAllFinishedGames = async () => {
     try {
       const response = await axios.get(`games/finished`, {
-        params: { page: page },
+        params: { page: page, size: gamesPerPage },
       });
       setFinishedGames(response.data);
     } catch (error: any) {
